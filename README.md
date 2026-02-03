@@ -228,16 +228,16 @@ Ovencord stands on the shoulders of giants:
 
 ## 🗺️ Roadmap
 
-- [x] Migrate `@ovencord/rest` to `@ovencord/rest`
-- [x] Migrate `@ovencord/ws` to `@ovencord/ws`  
-- [x] Migrate `@ovencord/collection` to `@ovencord/collection`
-- [x] Migrate `@ovencord/util` to `@ovencord/util`
-- [ ] Create `@ovencord/core` (high-level client)
-- [ ] Create `@ovencord/voice` (Bun-native voice support)
-- [ ] Performance benchmarks vs discord.js
-- [ ] 100% test coverage
-- [ ] Documentation site
-- [ ] Migration guide for discord.js users
+- [x] Refactor `@ovencord/rest` for Bun-native performance
+- [x] Refactor `@ovencord/ws` for Bun-native stability
+- [x] Optimize `@ovencord/collection` for high-throughput
+- [x] Standardize `@ovencord/util` shared utilities
+- [/] Stabilize `@ovencord/core` high-level client
+- [/] Port `@ovencord/voice` to Bun-native Zig/FFmpeg
+- [ ] Comprehensive performance benchmarks vs discord.js
+- [ ] Achieve 100% monorepo test coverage
+- [ ] Launch official documentation site (ovencord.dev)
+- [ ] Release discord.js to Ovencord migration guide
 
 ---
 
