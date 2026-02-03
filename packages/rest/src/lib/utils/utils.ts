@@ -1,3 +1,4 @@
+import { createHash } from 'node:crypto';
 import type { RESTPatchAPIChannelJSONBody, Snowflake } from 'discord-api-types/v10';
 import type { REST } from '../REST.js';
 import { RateLimitError } from '../errors/RateLimitError.js';
@@ -11,7 +12,6 @@ import type {
 } from './types.js';
 
 function serializeSearchParam(value: unknown): string | null {
-	// eslint-disable-next-line @typescript-eslint/switch-exhaustiveness-check
 	switch (typeof value) {
 		case 'string':
 			return value;
@@ -25,7 +25,6 @@ function serializeSearchParam(value: unknown): string | null {
 				return Number.isNaN(value.getTime()) ? null : value.toISOString();
 			}
 
-			// eslint-disable-next-line @typescript-eslint/no-base-to-string
 			if (typeof value.toString === 'function' && value.toString !== Object.prototype.toString) return value.toString();
 			return null;
 		default:
@@ -95,7 +94,7 @@ export function hasSublimit(bucketRoute: string, body?: unknown, method?: string
  * @param error - The error thrown by the network request
  * @returns Whether the error indicates a retry should be attempted
  */
-export function shouldRetry(error: Error | NodeJS.ErrnoException) {
+export function shouldRetry(error: Error & { code?: string }) {
 	// Retry for possible timed out requests
 	if (error.name === 'AbortError') return true;
 	// Downlevel ECONNRESET to retry as it may be recoverable
@@ -195,7 +194,55 @@ export function normalizeTimeout(timeout: GetTimeoutFunction | number, route: st
 	if (typeof timeout === 'number') {
 		return Math.max(0, timeout);
 	}
-
 	const result = timeout(route, requestBody);
 	return Math.max(0, result);
+}
+
+/**
+ * Generates a UUID v5 according to RFC 4122
+ *
+ * @param value - The value to hash
+ * @param namespace - The namespace UUID
+ */
+export function uuidv5(value: string | Uint8Array, namespace: string): string {
+    // 1. Verify namespace is a valid UUID
+    if (!/^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$/i.test(namespace)) {
+        throw new TypeError('Invalid namespace UUID');
+    }
+
+    // 2. Parse namespace UUID into bytes
+    const namespaceBytes = new Uint8Array(16);
+    const hex = namespace.replace(/-/g, '');
+    for (let i = 0; i < 16; i++) {
+        namespaceBytes[i] = Number.parseInt(hex.slice(i * 2, i * 2 + 2), 16);
+    }
+
+    // 3. Convert value to bytes if string
+    const valueBytes = typeof value === 'string' ? new TextEncoder().encode(value) : value;
+
+    // 4. Concatenate namespace and value
+    const data = new Uint8Array(namespaceBytes.length + valueBytes.length);
+    data.set(namespaceBytes);
+    data.set(valueBytes, namespaceBytes.length);
+
+    // 5. Hash with SHA-1
+    const buffer = createHash('sha1').update(data).digest();
+    const hash = new Uint8Array(buffer);
+
+    // 6. Set version to 5 (0101)
+    hash[6] = (hash[6]! & 0x0f) | 0x50;
+
+    // 7. Set variant to RFC 4122 (10xx)
+    hash[8] = (hash[8]! & 0x3f) | 0x80;
+
+    // 8. Convert to hex string with dashes
+    const hexHash = Array.from(hash, (byte) => byte.toString(16).padStart(2, '0'));
+    
+    return [
+        hexHash.slice(0, 4).join(''),
+        hexHash.slice(4, 6).join(''),
+        hexHash.slice(6, 8).join(''),
+        hexHash.slice(8, 10).join(''),
+        hexHash.slice(10, 16).join('')
+    ].join('-');
 }

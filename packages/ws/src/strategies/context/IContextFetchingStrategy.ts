@@ -1,4 +1,4 @@
-import type { Awaitable } from '@discordjs/util';
+import type { Awaitable } from '@ovencord/util';
 import type { APIGatewayBotInfo } from 'discord-api-types/v10';
 import type { SessionInfo, WebSocketManager, WebSocketManagerOptions } from '../../ws/WebSocketManager.js';
 

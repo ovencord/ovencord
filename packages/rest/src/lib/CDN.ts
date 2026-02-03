@@ -1,4 +1,4 @@
-/* eslint-disable jsdoc/check-param-names */
+
 import { CDNRoutes } from 'discord-api-types/v10';
 import {
 	ALLOWED_EXTENSIONS,
@@ -382,7 +382,6 @@ export class CDN {
 			animated,
 		}: Readonly<MakeURLOptions> = {},
 	): string {
-		// eslint-disable-next-line no-param-reassign
 		extension = String(extension).toLowerCase();
 
 		if (!allowedExtensions.includes(extension)) {

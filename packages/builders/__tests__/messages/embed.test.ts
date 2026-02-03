@@ -1,4 +1,4 @@
-import { embedLength } from '@discordjs/util';
+import { embedLength } from '@ovencord/util';
 import { describe, test, expect } from 'vitest';
 import { EmbedBuilder } from '../../src/index.js';
 

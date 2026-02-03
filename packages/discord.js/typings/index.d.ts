@@ -2,11 +2,11 @@ import { Buffer } from 'node:buffer';
 import { ChildProcess } from 'node:child_process';
 import { Stream } from 'node:stream';
 import { MessagePort, Worker } from 'node:worker_threads';
-import { ApplicationCommandOptionAllowedChannelType, MessageActionRowComponentBuilder } from '@discordjs/builders';
-import { Collection, ReadonlyCollection } from '@discordjs/collection';
-import { BaseImageURLOptions, ImageURLOptions, RawFile, REST, RESTOptions, EmojiURLOptions } from '@discordjs/rest';
-import { Awaitable, FileBodyEncodable, JSONEncodable } from '@discordjs/util';
-import { WebSocketManager, WebSocketManagerOptions } from '@discordjs/ws';
+import { ApplicationCommandOptionAllowedChannelType, MessageActionRowComponentBuilder } from '@ovencord/builders';
+import { Collection, ReadonlyCollection } from '@ovencord/collection';
+import { BaseImageURLOptions, ImageURLOptions, RawFile, REST, RESTOptions, EmojiURLOptions } from '@ovencord/rest';
+import { Awaitable, FileBodyEncodable, JSONEncodable } from '@ovencord/util';
+import { WebSocketManager, WebSocketManagerOptions } from '@ovencord/ws';
 import { AsyncEventEmitter } from '@vladfrangu/async_event_emitter';
 import {
   ActivityFlags,
@@ -1080,7 +1080,7 @@ export class ContainerComponent extends Component<APIContainerComponent> {
   public readonly components: ComponentInContainer[];
 }
 
-export { Collection, type ReadonlyCollection } from '@discordjs/collection';
+export { Collection, type ReadonlyCollection } from '@ovencord/collection';
 
 export interface CollectorEventTypes<Key, Value, Extras extends unknown[] = []> {
   collect: [Value, ...Extras];
@@ -7343,7 +7343,7 @@ export type Serialized<Value> = Value extends bigint | symbol | (() => any)
 
 /**
  * @remarks
- * Use `DiscordGatewayAdapterLibraryMethods` from `@discordjs/voice` instead.
+ * Use `DiscordGatewayAdapterLibraryMethods` from `@ovencord/voice` instead.
  */
 export interface InternalDiscordGatewayAdapterLibraryMethods {
   destroy(): void;
@@ -7353,7 +7353,7 @@ export interface InternalDiscordGatewayAdapterLibraryMethods {
 
 /**
  * @remarks
- * Use `DiscordGatewayAdapterImplementerMethods` from `@discordjs/voice` instead.
+ * Use `DiscordGatewayAdapterImplementerMethods` from `@ovencord/voice` instead.
  */
 export interface InternalDiscordGatewayAdapterImplementerMethods {
   destroy(): void;
@@ -7362,7 +7362,7 @@ export interface InternalDiscordGatewayAdapterImplementerMethods {
 
 /**
  * @remarks
- * Use `DiscordGatewayAdapterCreator` from `@discordjs/voice` instead.
+ * Use `DiscordGatewayAdapterCreator` from `@ovencord/voice` instead.
  */
 export type InternalDiscordGatewayAdapterCreator = (
   methods: InternalDiscordGatewayAdapterLibraryMethods,
@@ -7371,9 +7371,9 @@ export type InternalDiscordGatewayAdapterCreator = (
 // #endregion
 
 // External
-export * from '@discordjs/builders';
-export * from '@discordjs/formatters';
-export * from '@discordjs/rest';
-export * from '@discordjs/util';
-export * from '@discordjs/ws';
+export * from '@ovencord/builders';
+export * from '@ovencord/formatters';
+export * from '@ovencord/rest';
+export * from '@ovencord/util';
+export * from '@ovencord/ws';
 export * from 'discord-api-types/v10';

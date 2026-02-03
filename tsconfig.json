@@ -16,6 +16,7 @@
     "allowImportingTsExtensions": false,
     "module": "ESNext",
     "moduleResolution": "Bundler",
+    "baseUrl": ".",
     "resolveJsonModule": true,
     "resolvePackageJsonExports": true,
     "resolvePackageJsonImports": true,
@@ -32,9 +33,12 @@
     "forceConsistentCasingInFileNames": true,
     "isolatedModules": true,
     "experimentalDecorators": true,
-    "lib": ["ESNext", "esnext.disposable"],
+    "lib": ["ESNext", "esnext.disposable", "DOM"],
     "target": "ESNext",
-    "useDefineForClassFields": true
+    "useDefineForClassFields": true,
+    "paths": {
+      "@ovencord/*": ["packages/*/src"]
+    }
   },
   "exclude": ["node_modules"]
 }

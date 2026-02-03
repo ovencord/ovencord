@@ -1,4 +1,4 @@
-import type { JSONEncodable } from '@discordjs/util';
+import type { JSONEncodable } from '@ovencord/util';
 import type {
 	APIApplicationCommandSubcommandOption,
 	APIApplicationCommandSubcommandGroupOption,

@@ -1,4 +1,4 @@
-import { Events } from 'discord.js';
+import { Events } from '@ovencord/discord.js';
 
 /** @type {import('./index.js').Event<Events.ClientReady>} */
 export default {

@@ -1,4 +1,4 @@
-import { Client, GatewayIntentBits } from 'discord.js';
+import { Client, GatewayIntentBits } from '@ovencord/discord.js';
 import { loadEvents } from './util/loaders.ts';
 
 // Initialize the client

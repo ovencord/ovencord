@@ -1,1 +1,1 @@
-export * from '@discordjs/util';
+export * from '@ovencord/util';

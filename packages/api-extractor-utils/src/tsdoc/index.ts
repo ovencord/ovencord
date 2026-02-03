@@ -1,4 +1,4 @@
-import type { ApiModel, ApiItem } from '@discordjs/api-extractor-model';
+import type { ApiModel, ApiItem } from '@ovencord/api-extractor-model';
 import {
 	type DocNode,
 	type DocPlainText,

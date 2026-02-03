@@ -1,35 +1,23 @@
 {
 	"$schema": "https://json.schemastore.org/package.json",
-	"name": "@discordjs/api-extractor-utils",
+	"name": "@ovencord/api-extractor-utils",
 	"version": "1.0.0",
 	"description": "Utilities for api-extractor",
 	"private": true,
 	"scripts": {
-		"build": "tsc --noEmit && tsup",
-		"lint": "prettier --check . && cross-env TIMING=1 eslint --format=pretty src",
-		"format": "prettier --write . && cross-env TIMING=1 eslint --fix --format=pretty src",
-		"fmt": "pnpm run format"
+		"test": "bun test",
+		"typecheck": "tsc --noEmit",
+		"lint": "eslint src"
 	},
-	"exports": {
-		".": {
-			"require": {
-				"types": "./dist/index.d.ts",
-				"default": "./dist/index.js"
-			},
-			"import": {
-				"types": "./dist/index.d.mts",
-				"default": "./dist/index.mjs"
-			}
-		}
-	},
-	"main": "./dist/index.js",
-	"module": "./dist/index.mjs",
-	"types": "./dist/index.d.ts",
+	"exports": "./src/index.ts",
+	"main": "./src/index.ts",
+	"module": "./src/index.ts",
+	"types": "./src/index.ts",
 	"directories": {
 		"lib": "src"
 	},
 	"files": [
-		"dist"
+		"src"
 	],
 	"contributors": [
 		"Suneet Tipirneni <suneettipirneni@icloud.com>"
@@ -46,23 +34,21 @@
 	"homepage": "https://discord.js.org",
 	"funding": "https://github.com/discordjs/discord.js?sponsor",
 	"dependencies": {
-		"@discordjs/api-extractor-model": "workspace:^",
-		"@microsoft/tsdoc": "~0.15.1"
+		"@microsoft/tsdoc": "~0.15.1",
+		"@ovencord/api-extractor-model": "workspace:^"
 	},
 	"devDependencies": {
-		"@types/node": "^24.10.2",
 		"cross-env": "^10.1.0",
-		"eslint": "^9.39.1",
+		"eslint": "^9.39.2",
 		"eslint-config-neon": "^0.2.9",
 		"eslint-formatter-compact": "^9.0.1",
 		"eslint-formatter-pretty": "^7.0.0",
 		"prettier": "^3.7.4",
-		"terser": "^5.44.1",
-		"tsup": "^8.5.1",
-		"turbo": "^2.6.3",
-		"typescript": "~5.9.3"
+		"typescript": "^5.9.3",
+		"@types/bun": "latest",
+		"typescript-eslint": "^8.54.0"
 	},
 	"engines": {
-		"node": ">=22.12.0"
+		"bun": ">=1.0.0"
 	}
 }

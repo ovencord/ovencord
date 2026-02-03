@@ -1,7 +1,7 @@
 // Copyright (c) Microsoft Corporation. All rights reserved. Licensed under the MIT license.
 // See LICENSE in the project root for license information.
 
-import type { ReleaseTag } from '@discordjs/api-extractor-model';
+import type { ReleaseTag } from '@ovencord/api-extractor-model';
 import type * as tsdoc from '@microsoft/tsdoc';
 import { VisitorState } from './VisitorState.js';
 

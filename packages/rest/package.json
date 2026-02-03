@@ -6,8 +6,7 @@
 	"scripts": {
 		"test": "bun test",
 		"typecheck": "tsc --noEmit",
-		"lint": "eslint src",
-		"format": "bun format"
+		"lint": "eslint src"
 	},
 	"type": "module",
 	"exports": "./src/index.ts",
@@ -41,11 +40,8 @@
 	"dependencies": {
 		"@ovencord/collection": "workspace:^",
 		"@ovencord/util": "workspace:^",
-		"@sapphire/async-queue": "^1.5.5",
 		"@sapphire/snowflake": "^3.5.5",
-		"@vladfrangu/async_event_emitter": "^2.4.7",
-		"discord-api-types": "^0.38.36",
-		"uuid": "^13.0.0"
+		"discord-api-types": "^0.38.36"
 	},
 	"devDependencies": {
 		"@types/bun": "latest",
@@ -59,5 +55,9 @@
 	"publishConfig": {
 		"access": "public",
 		"provenance": true
-	}
+	},
+	"module": "./src/index.ts",
+	"files": [
+		"src"
+	]
 }

@@ -1,4 +1,4 @@
-import { Events } from 'discord.js';
+import { Events } from '@ovencord/discord.js';
 import { loadCommands } from '../util/loaders.js';
 
 const commands = await loadCommands(new URL('../commands/', import.meta.url));

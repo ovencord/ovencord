@@ -8,8 +8,8 @@ import {
 	ApiDeclaredItem,
 	ApiItemContainerMixin,
 	ApiItemKind,
-} from '@discordjs/api-extractor-model';
-import { generatePath } from '@discordjs/api-extractor-utils';
+} from '@ovencord/api-extractor-model';
+import { generatePath } from '@ovencord/api-extractor-utils';
 import { DocNodeKind } from '@microsoft/tsdoc';
 import type { DocLinkTag, DocCodeSpan, DocNode, DocParagraph, DocPlainText } from '@microsoft/tsdoc';
 import { resolveMembers } from './generateSplitDocumentation.js';

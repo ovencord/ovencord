@@ -271,7 +271,7 @@ export class Documentation {
 	public serializeNew() {
 		return {
 			metadata: {
-				toolPackage: '@discordjs/docgen',
+				toolPackage: '@ovencord/docgen',
 				toolVersion: Documentation.FORMAT_VERSION,
 				schemaVersion: 1_011,
 				oldestForwardsCompatibleVersion: 1_001,

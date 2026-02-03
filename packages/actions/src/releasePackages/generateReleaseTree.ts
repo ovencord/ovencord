@@ -2,7 +2,7 @@ import { info, warning } from '@actions/core';
 import type { PackageJSON, PackumentVersion } from '@npm/types';
 import { $, file, write } from 'bun';
 
-const nonNodePackages = new Set(['@discordjs/proxy-container']);
+const nonNodePackages = new Set(['@ovencord/proxy-container']);
 
 interface pnpmTreeDependency {
 	from: string;

@@ -1,4 +1,4 @@
-import { channelLink } from '@discordjs/formatters';
+import { channelLink } from '@ovencord/formatters';
 import type { ChannelType } from 'discord-api-types/v10';
 import type { User } from '../../users/User.js';
 import type { Channel } from '../Channel.js';

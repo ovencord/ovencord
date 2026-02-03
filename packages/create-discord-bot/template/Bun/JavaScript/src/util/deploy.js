@@ -1,5 +1,5 @@
-import { API } from '@discordjs/core/http-only';
-import { REST } from 'discord.js';
+import { API } from '@ovencord/core/http-only';
+import { REST } from '@ovencord/discord.js';
 import { loadCommands } from './loaders.js';
 
 const commands = await loadCommands(new URL('../commands/', import.meta.url));

@@ -1,5 +1,5 @@
 import { createServer } from 'node:http';
-import { REST } from '@discordjs/rest';
+import { REST } from '@ovencord/rest';
 import supertest from 'supertest';
 import { MockAgent, setGlobalDispatcher, type Interceptable } from 'undici';
 import type { MockInterceptor } from 'undici/types/mock-interceptor.js';

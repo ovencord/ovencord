@@ -3,7 +3,7 @@
 // Copyright (c) Microsoft Corporation. All rights reserved. Licensed under the MIT license.
 // See LICENSE in the project root for license information.
 
-import { ReleaseTag, releaseTagGetTagName } from '@discordjs/api-extractor-model';
+import { ReleaseTag, releaseTagGetTagName } from '@ovencord/api-extractor-model';
 import { Text, InternalError } from '@rushstack/node-core-library';
 import * as ts from 'typescript';
 import { AstDeclaration } from '../analyzer/AstDeclaration.js';

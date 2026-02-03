@@ -43,8 +43,17 @@ declare global {
 		 */
 		interface Process {
 			cwd(): string;
+			env: Record<string, string | undefined>;
+			platform: string;
 		}
+
+		interface Timeout extends Number {}
 	}
+	
+	// Global declarations
+	var process: NodeJS.Process;
+	var __dirname: string;
+	var __filename: string;
 }
 
 export {};

@@ -1,4 +1,4 @@
-import type { FileBodyEncodable, FileBodyEncodableResult, JSONEncodable, RawFile } from '@discordjs/util';
+import type { FileBodyEncodable, FileBodyEncodableResult, JSONEncodable, RawFile } from '@ovencord/util';
 import type {
 	APIActionRowComponent,
 	APIAllowedMentions,

@@ -97,10 +97,10 @@ export * from './util/ValidationError.js';
 export * from './Assertions.js';
 
 // We expose this type in our public API. We shouldn't assume every user of builders is also using REST
-export type { RawFile } from '@discordjs/util';
+export type { RawFile } from '@ovencord/util';
 
 /**
- * The {@link https://github.com/discordjs/discord.js/blob/main/packages/builders#readme | @discordjs/builders} version
+ * The {@link https://github.com/discordjs/discord.js/blob/main/packages/builders#readme | @ovencord/builders} version
  * that you are currently using.
  *
  * @privateRemarks This needs to explicitly be `string` so it is not typed as a "const string" that gets injected by esbuild.

@@ -1,6 +1,6 @@
 /* eslint-disable jsdoc/check-param-names */
 
-import type { RequestData, REST } from '@discordjs/rest';
+import type { RequestData, REST } from '@ovencord/rest';
 import {
 	Routes,
 	type RESTGetAPIStickerPackResult,

@@ -2,7 +2,7 @@
 // See LICENSE in the project root for license information.
 
 import * as path from 'node:path';
-import type { ApiPackage } from '@discordjs/api-extractor-model';
+import type { ApiPackage } from '@ovencord/api-extractor-model';
 import { TSDocConfigFile } from '@microsoft/tsdoc-config';
 import {
 	FileSystem,

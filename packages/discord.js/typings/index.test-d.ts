@@ -1,8 +1,8 @@
 /* eslint-disable no-lone-blocks, @typescript-eslint/unbound-method, @typescript-eslint/ban-ts-comment, no-param-reassign, id-length */
 import type { ChildProcess } from 'node:child_process';
 import type { Worker } from 'node:worker_threads';
-import type { ChatInputCommandBuilder, ContextMenuCommandBuilder } from '@discordjs/builders';
-import type { ReadonlyCollection } from '@discordjs/collection';
+import type { ChatInputCommandBuilder, ContextMenuCommandBuilder } from '@ovencord/builders';
+import type { ReadonlyCollection } from '@ovencord/collection';
 import type {
   APIButtonComponent,
   APIButtonComponentWithCustomId,

@@ -13,7 +13,7 @@ import {
 	ApiDeclaredItem,
 	type ApiMethod,
 	type ApiMethodSignature,
-} from '@discordjs/api-extractor-model';
+} from '@ovencord/api-extractor-model';
 import type { DocNode, DocParagraph, DocPlainText } from '@microsoft/tsdoc';
 import { type Meaning, ModuleSource } from '@microsoft/tsdoc/lib-commonjs/beta/DeclarationReference.js';
 import type { DocBlockJSON } from './tsdoc/CommentBlock.js';

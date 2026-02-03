@@ -1,4 +1,4 @@
-import type { RawFile } from '@discordjs/rest';
+import type { RawFile } from '@ovencord/rest';
 import type { APIInteractionResponseCallbackData } from 'discord-api-types/v10';
 
 export interface DescriptiveRawFile extends RawFile {

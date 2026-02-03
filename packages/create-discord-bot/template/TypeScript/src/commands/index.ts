@@ -1,4 +1,4 @@
-import type { RESTPostAPIApplicationCommandsJSONBody, CommandInteraction } from 'discord.js';
+import type { RESTPostAPIApplicationCommandsJSONBody, CommandInteraction } from '@ovencord/discord.js';
 import { z } from 'zod';
 import type { StructurePredicate } from '../util/loaders.ts';
 

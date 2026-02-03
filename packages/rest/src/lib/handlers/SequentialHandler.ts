@@ -1,4 +1,4 @@
-import { AsyncQueue } from '@sapphire/async-queue';
+import { AsyncQueue } from '../utils/AsyncQueue.js';
 import type { REST } from '../REST.js';
 import type { IHandler } from '../interfaces/Handler.js';
 import { RESTEvents } from '../utils/constants.js';

@@ -1,7 +1,7 @@
 // Copyright (c) Microsoft Corporation. All rights reserved. Licensed under the MIT license.
 // See LICENSE in the project root for license information.
 
-import { ReleaseTag } from '@discordjs/api-extractor-model';
+import { ReleaseTag } from '@ovencord/api-extractor-model';
 import * as tsdoc from '@microsoft/tsdoc';
 import { PackageJsonLookup, Sort, InternalError } from '@rushstack/node-core-library';
 import ts from 'typescript';

@@ -1,4 +1,4 @@
-import { Events } from 'discord.js';
+import { Events } from '@ovencord/discord.js';
 import type { Event } from './index.ts';
 import { loadCommands } from '../util/loaders.ts';
 

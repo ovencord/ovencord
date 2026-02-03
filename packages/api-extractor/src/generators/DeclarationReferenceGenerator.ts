@@ -2,7 +2,7 @@
 // See LICENSE in the project root for license information.
 
 import { dirname } from 'node:path';
-import { Navigation, Meaning } from '@discordjs/api-extractor-model';
+import { Navigation, Meaning } from '@ovencord/api-extractor-model';
 import {
 	DeclarationReference,
 	ModuleSource,

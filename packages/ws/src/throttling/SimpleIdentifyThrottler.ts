@@ -1,6 +1,7 @@
-import { setTimeout as sleep } from 'node:timers/promises';
-import { Collection } from '@discordjs/collection';
+import { Collection } from '@ovencord/collection';
 import { AsyncQueue } from '@sapphire/async-queue';
+
+const sleep = Bun.sleep;
 import type { IIdentifyThrottler } from './IIdentifyThrottler.js';
 
 /**

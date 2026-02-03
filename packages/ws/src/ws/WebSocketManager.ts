@@ -1,5 +1,5 @@
-import type { Collection } from '@discordjs/collection';
-import { range, type Awaitable } from '@discordjs/util';
+import type { Collection } from '@ovencord/collection';
+import { range, type Awaitable } from '@ovencord/util';
 import { AsyncEventEmitter } from '@vladfrangu/async_event_emitter';
 import type {
 	APIGatewayBotInfo,
@@ -56,7 +56,7 @@ export interface SessionInfo {
 export interface RequiredWebSocketManagerOptions {
 	/**
 	 * Function for retrieving the information returned by the `/gateway/bot` endpoint.
-	 * We recommend using a REST client that respects Discord's rate limits, such as `@discordjs/rest`.
+	 * We recommend using a REST client that respects Discord's rate limits, such as `@ovencord/rest`.
 	 *
 	 * @example
 	 * ```ts

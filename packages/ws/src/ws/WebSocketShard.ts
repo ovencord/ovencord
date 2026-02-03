@@ -96,7 +96,7 @@ export class WebSocketShard extends AsyncEventEmitter<WebSocketShardEventsMap> {
 
 	private initialHeartbeatTimeoutController: AbortController | null = null;
 
-	private heartbeatInterval: number | null = null;
+	private heartbeatInterval: any | null = null;
 
 	private lastHeartbeatAt = -1;
 
@@ -147,8 +147,8 @@ export class WebSocketShard extends AsyncEventEmitter<WebSocketShardEventsMap> {
 		if (!this.initialConnectResolved) {
 			// Sleep for the remaining time, but if the connection closes in the meantime, we shouldn't wait the remainder to avoid blocking the new conn
 			promise = Promise.race([
-				once(this, WebSocketShardEvents.Ready, { signal: controller.signal }),
-				once(this, WebSocketShardEvents.Resumed, { signal: controller.signal }),
+				this.awaitEvent(WebSocketShardEvents.Ready, { signal: controller.signal }),
+				this.awaitEvent(WebSocketShardEvents.Resumed, { signal: controller.signal }),
 			]);
 		}
 
@@ -314,7 +314,7 @@ export class WebSocketShard extends AsyncEventEmitter<WebSocketShardEventsMap> {
 		if (options.recover !== undefined) {
 			// There's cases (like no internet connection) where we immediately fail to connect,
 			// causing a very fast and draining reconnection loop.
-			await sleep(500);
+			await this.sleep(500);
 			return this.internalConnect();
 		}
 	}
@@ -334,8 +334,8 @@ export class WebSocketShard extends AsyncEventEmitter<WebSocketShardEventsMap> {
 			// return false. Meanwhile, if something rejects (error event) or the first controller is aborted,
 			// we enter the catch block and trigger a destroy there.
 			const closed = await Promise.race<boolean>([
-				once(this, event, { signal: timeoutController.signal }).then(() => false),
-				once(this, WebSocketShardEvents.Closed, { signal: closeController.signal }).then(() => true),
+				this.awaitEvent(event, { signal: timeoutController.signal }).then(() => false),
+				this.awaitEvent(WebSocketShardEvents.Closed, { signal: closeController.signal }).then(() => true),
 			]);
 
 			return { ok: !closed };
@@ -380,7 +380,7 @@ export class WebSocketShard extends AsyncEventEmitter<WebSocketShardEventsMap> {
 			this.debug(['Tried to send a non-crucial payload before the shard was ready, waiting']);
 			// This will throw if the shard throws an error event in the meantime, just requeue the payload
 			try {
-				await once(this, WebSocketShardEvents.Ready);
+				await this.awaitEvent(WebSocketShardEvents.Ready);
 			} catch {
 				return this.send(payload);
 			}
@@ -402,8 +402,8 @@ export class WebSocketShard extends AsyncEventEmitter<WebSocketShardEventsMap> {
 
 			// Sleep for the remaining time, but if the connection closes in the meantime, we shouldn't wait the remainder to avoid blocking the new conn
 			const interrupted = await Promise.race([
-				sleep(sleepFor).then(() => false),
-				once(this, WebSocketShardEvents.Closed, { signal: controller.signal }).then(() => true),
+				this.sleep(sleepFor).then(() => false),
+				this.awaitEvent(WebSocketShardEvents.Closed, { signal: controller.signal }).then(() => true),
 			]);
 
 			if (interrupted) {
@@ -680,7 +680,7 @@ export class WebSocketShard extends AsyncEventEmitter<WebSocketShardEventsMap> {
 				try {
 					const controller = new AbortController();
 					this.initialHeartbeatTimeoutController = controller;
-					await sleep(firstWait, undefined, { signal: controller.signal });
+					await this.sleep(firstWait);
 				} catch {
 					this.debug(['Cancelled initial heartbeat due to #destroy being called']);
 					return;
@@ -838,6 +838,49 @@ export class WebSocketShard extends AsyncEventEmitter<WebSocketShardEventsMap> {
 	}
 
 	private debug(messages: [string, ...string[]]) {
-		this.emit(WebSocketShardEvents.Debug, messages.join('\n\t'));
+		this.emitEvent(WebSocketShardEvents.Debug, messages.join('\n\t'));
+	}
+
+	// Helper for sleep using Bun native
+	private async sleep(ms: number) {
+		await Bun.sleep(ms);
+	}
+
+	// Helper to handle emit type casting
+	private emitEvent(event: WebSocketShardEvents, ...args: any[]) {
+		// eslint-disable-next-line @typescript-eslint/no-explicit-any
+		(this as any).emit(event, ...args);
+	}
+
+	// Helper to replace Node.js once
+	private awaitEvent(event: WebSocketShardEvents, options?: { signal?: AbortSignal }): Promise<any[]> {
+		return new Promise((resolve, reject) => {
+			const listener = (...args: any[]) => {
+				resolve(args);
+			};
+			
+			if (options?.signal) {
+				const { signal } = options;
+				if (signal.aborted) {
+					reject(signal.reason);
+					return;
+				}
+				signal.addEventListener('abort', () => {
+					// eslint-disable-next-line @typescript-eslint/no-explicit-any
+					(this as any).off(event, listener);
+					reject(signal.reason);
+				});
+			}
+
+			// eslint-disable-next-line @typescript-eslint/no-explicit-any
+			(this as any).once(event, listener);
+		});
+	}
+
+	// Override emit to fix TypeScript visibility/type issues
+	// eslint-disable-next-line @typescript-eslint/no-explicit-any
+	public emit(event: any, ...args: any[]): boolean {
+		// eslint-disable-next-line @typescript-eslint/no-explicit-any
+		return (super.emit as any)(event, ...args);
 	}
 }

@@ -12,7 +12,7 @@ import type {
 	IExcerptToken,
 	IApiTypeParameterOptions,
 	IApiPropertyOptions,
-} from '@discordjs/api-extractor-model';
+} from '@ovencord/api-extractor-model';
 import {
 	ApiItemKind,
 	ApiModel,
@@ -39,7 +39,7 @@ import {
 	EnumMemberOrder,
 	ExcerptTokenKind,
 	Navigation,
-} from '@discordjs/api-extractor-model';
+} from '@ovencord/api-extractor-model';
 import type * as tsdoc from '@microsoft/tsdoc';
 import { DeclarationReference, type Meaning } from '@microsoft/tsdoc/lib-commonjs/beta/DeclarationReference.js';
 import { JsonFile, Path } from '@rushstack/node-core-library';

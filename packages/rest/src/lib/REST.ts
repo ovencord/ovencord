@@ -1,7 +1,7 @@
 import { Collection } from '@ovencord/collection';
 import { DiscordSnowflake } from '@sapphire/snowflake';
-import { AsyncEventEmitter } from '@vladfrangu/async_event_emitter';
-import { v5 as uuidV5 } from 'uuid';
+import { AsyncEventEmitter } from './utils/AsyncEventEmitter.js';
+import { uuidv5 as uuidV5 } from './utils/utils.js';
 import { CDN } from './CDN.js';
 import { BurstHandler } from './handlers/BurstHandler.js';
 import { SequentialHandler } from './handlers/SequentialHandler.js';
@@ -71,9 +71,9 @@ export class REST extends AsyncEventEmitter<RestEvents> {
 
 	#token: string | null = null;
 
-	private hashTimer!: NodeJS.Timeout | number;
+	private hashTimer!: ReturnType<typeof setTimeout> | number;
 
-	private handlerTimer!: NodeJS.Timeout | number;
+	private handlerTimer!: ReturnType<typeof setTimeout> | number;
 
 	public readonly options: RESTOptions;
 
@@ -355,9 +355,13 @@ export class REST extends AsyncEventEmitter<RestEvents> {
 					// Use provided content type or default to application/octet-stream
 					const contentType = file.contentType ?? 'application/octet-stream';
 
-					formData.append(fileKey, new Blob([file.data], { type: contentType }), file.name);
+					formData.append(fileKey, new Blob([file.data as any], { type: contentType }), file.name);
 				} else {
-					formData.append(fileKey, new Blob([`${file.data}`], { type: file.contentType }), file.name);
+					formData.append(
+						fileKey,
+						new Blob([`${file.data}`], { type: file.contentType } as BlobPropertyBag),
+						file.name,
+					);
 				}
 			}
 
@@ -366,7 +370,7 @@ export class REST extends AsyncEventEmitter<RestEvents> {
 			if (request.body != null) {
 				if (request.appendToFormData) {
 					for (const [key, value] of Object.entries(request.body as Record<string, unknown>)) {
-						formData.append(key, value);
+						formData.append(key, value as string | Blob);
 					}
 				} else {
 					formData.append('payload_json', JSON.stringify(request.body));

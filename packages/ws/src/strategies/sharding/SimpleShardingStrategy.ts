@@ -1,4 +1,4 @@
-import { Collection } from '@discordjs/collection';
+import { Collection } from '@ovencord/collection';
 import type { GatewaySendPayload } from 'discord-api-types/v10';
 import type { WebSocketManager } from '../../ws/WebSocketManager.js';
 import { WebSocketShard, WebSocketShardEvents, type WebSocketShardDestroyOptions } from '../../ws/WebSocketShard.js';

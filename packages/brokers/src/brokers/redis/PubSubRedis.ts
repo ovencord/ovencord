@@ -8,7 +8,7 @@ import { BaseRedisBroker } from './BaseRedis.js';
  * @example
  * ```ts
  * // publisher.js
- * import { PubSubRedisBroker } from '@discordjs/brokers';
+ * import { PubSubRedisBroker } from '@ovencord/brokers';
  * import Redis from 'ioredis';
  *
  * const broker = new PubSubRedisBroker(new Redis());
@@ -17,7 +17,7 @@ import { BaseRedisBroker } from './BaseRedis.js';
  * await broker.destroy();
  *
  * // subscriber.js
- * import { PubSubRedisBroker } from '@discordjs/brokers';
+ * import { PubSubRedisBroker } from '@ovencord/brokers';
  * import Redis from 'ioredis';
  *
  * const broker = new PubSubRedisBroker(new Redis());

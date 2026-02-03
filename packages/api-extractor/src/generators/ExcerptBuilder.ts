@@ -6,7 +6,7 @@ import {
 	type IExcerptToken,
 	type IExcerptTokenRange,
 	type IExcerptTokenRangeWithTypeParameters,
-} from '@discordjs/api-extractor-model';
+} from '@ovencord/api-extractor-model';
 import type { DeclarationReference } from '@microsoft/tsdoc/lib-commonjs/beta/DeclarationReference';
 import * as ts from 'typescript';
 import type { AstDeclaration } from '../analyzer/AstDeclaration.js';

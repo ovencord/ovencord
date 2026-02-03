@@ -8,16 +8,19 @@
     // Completeness
     "skipDefaultLibCheck": true,
 
+    "moduleResolution": "Bundler",
+    "baseUrl": ".",
+    "paths": {
+        "@ovencord/*": ["../*/src"]
+    },
     "types": [
-      "@discordjs/builders",
-      "@discordjs/util",
-      "@discordjs/collection",
-      "@discordjs/rest",
-      "@discordjs/ws",
+      "@ovencord/builders",
+      "@ovencord/util",
+      "@ovencord/collection",
+      "@ovencord/rest",
+      "@ovencord/ws",
       "discord-api-types/v10",
-      "node",
-      "tsd",
-      "undici",
+      "bun-types",
       "@sapphire/snowflake"
     ]
   }
