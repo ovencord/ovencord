@@ -13,4 +13,4 @@ import { createEnum  } from './Enums.js';
  * @type {Status}
  * @ignore
  */
-exports.Status = createEnum(['Ready', 'Idle', 'WaitingForGuilds']);
+export const Status = createEnum(['Ready', 'Idle', 'WaitingForGuilds']);

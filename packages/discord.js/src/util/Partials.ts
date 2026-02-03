@@ -36,7 +36,7 @@ import { createEnum  } from './Enums.js';
  * @type {Partials}
  * @ignore
  */
-exports.Partials = createEnum([
+export const Partials = createEnum([
   'User',
   'Channel',
   'GuildMember',

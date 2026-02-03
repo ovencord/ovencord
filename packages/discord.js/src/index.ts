@@ -56,7 +56,7 @@ export { resolveColor } from './util/Util.js';
 export { resolveSKUId } from './util/Util.js';
 export { verifyString } from './util/Util.js';
 
-export { version } from '../package.json.js';
+export { version } from '../package.json' with { type: 'json' };
 
 // Managers
 export { ApplicationCommandManager } from './managers/ApplicationCommandManager.js';
@@ -172,7 +172,6 @@ export { MediaChannel } from './structures/MediaChannel.js';
 export { MediaGalleryComponent } from './structures/MediaGalleryComponent.js';
 export { MediaGalleryItem } from './structures/MediaGalleryItem.js';
 export { MentionableSelectMenuComponent } from './structures/MentionableSelectMenuComponent.js';
-export { MentionableSelectMenuInteraction } from './structures/MentionableSelectMenuInteraction.js';
 export { MentionableSelectMenuInteraction } from './structures/MentionableSelectMenuInteraction.js';
 export { Message } from './structures/Message.js';
 export { MessageCollector } from './structures/MessageCollector.js';

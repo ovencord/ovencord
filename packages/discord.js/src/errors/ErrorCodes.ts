@@ -274,4 +274,4 @@ const keys = [
  * @type {DiscordjsErrorCodes}
  * @ignore
  */
-const ErrorCodes = Object.fromEntries(keys.map(key => [key, key]));
+export const ErrorCodes = Object.fromEntries(keys.map(key => [key, key]));

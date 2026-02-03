@@ -1,6 +1,6 @@
 import { ErrorCodes  } from './ErrorCodes.js';
 
-const Messages = {
+export const Messages = {
   [ErrorCodes.ClientInvalidOption]: (prop, must) => `The ${prop} option must be ${must}`,
   [ErrorCodes.ClientInvalidProvidedShards]: 'None of the provided shards were valid.',
   [ErrorCodes.ClientMissingIntents]: 'Valid intents must be provided for the Client.',

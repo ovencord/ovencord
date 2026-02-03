@@ -91,7 +91,7 @@
  * @type {Events}
  * @ignore
  */
-exports.Events = {
+export const Events = {
   ApplicationCommandPermissionsUpdate: 'applicationCommandPermissionsUpdate',
   AutoModerationActionExecution: 'autoModerationActionExecution',
   AutoModerationRuleCreate: 'autoModerationRuleCreate',
