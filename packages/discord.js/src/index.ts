@@ -10,7 +10,7 @@ export { ShardingManager } from './sharding/ShardingManager.js';
 export { DiscordjsError } from './errors/DJSError.js';
 export { DiscordjsTypeError } from './errors/DJSError.js';
 export { DiscordjsRangeError } from './errors/DJSError.js';
-exports.DiscordjsErrorCodes = require('./errors/ErrorCodes.js').ErrorCodes;
+export { ErrorCodes as DiscordjsErrorCodes } from './errors/ErrorCodes.js';
 
 // Utilities
 export { ActivityFlagsBitField } from './util/ActivityFlagsBitField.js';

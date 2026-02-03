@@ -3,8 +3,9 @@ import { ChannelType, MessageType, ComponentType, ImageFormat, StickerFormatType
 /**
  * Max bulk deletable message age
  *
- * @typedef {number} MaxBulkDeletableMessageAge
+ * @type {number}
  */
+export const MaxBulkDeletableMessageAge = 1_209_600_000;
 
 
 /**
