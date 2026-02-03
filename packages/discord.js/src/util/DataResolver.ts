@@ -1,11 +1,10 @@
 
-import { Buffer  } from 'node:buffer';
+import { Buffer } from 'node:buffer';
 import fs from 'node:fs/promises';
 import path from 'node:path';
-import { lazy  } from '@ovencord/util';
-import { fetch  } from 'undici';
-import { DiscordjsError, DiscordjsTypeError, ErrorCodes  } from '../errors/index.js';
-import { BaseInvite  } from '../structures/BaseInvite.js';
+import { lazy } from '@ovencord/util';
+import { DiscordjsError, DiscordjsTypeError, ErrorCodes } from '../errors/index.js';
+import { BaseInvite } from '../structures/BaseInvite.js';
 
 // Fixes circular dependencies.
 const getGuildTemplate = lazy(() => require('../structures/GuildTemplate.js').GuildTemplate);
@@ -32,9 +31,8 @@ const getGuildTemplate = lazy(() => require('../structures/GuildTemplate.js').Gu
  * @param {string} data The string to resolve
  * @param {RegExp} regex The RegExp used to extract the code
  * @returns {string}
- * @private
  */
-function resolveCode(data, regex) {
+export function resolveCode(data, regex) {
   return regex.exec(data)?.[1] ?? data;
 }
 
@@ -43,9 +41,8 @@ function resolveCode(data, regex) {
  *
  * @param {InviteResolvable} data The invite resolvable to resolve
  * @returns {string}
- * @private
  */
-function resolveInviteCode(data) {
+export function resolveInviteCode(data) {
   return resolveCode(data, BaseInvite.InvitesPattern);
 }
 
@@ -54,9 +51,8 @@ function resolveInviteCode(data) {
  *
  * @param {GuildTemplateResolvable} data The template resolvable to resolve
  * @returns {string}
- * @private
  */
-function resolveGuildTemplateCode(data) {
+export function resolveGuildTemplateCode(data) {
   return resolveCode(data, getGuildTemplate().GuildTemplatesPattern);
 }
 
@@ -87,9 +83,8 @@ function resolveGuildTemplateCode(data) {
  *
  * @param {BufferResolvable|Stream} resource The buffer or stream resolvable to resolve
  * @returns {Promise<ResolvedFile>}
- * @private
  */
-async function resolveFile(resource) {
+export async function resolveFile(resource) {
   if (Buffer.isBuffer(resource)) return { data: resource };
 
   if (typeof resource[Symbol.asyncIterator] === 'function') {
@@ -128,9 +123,8 @@ async function resolveFile(resource) {
  * @param {Base64Resolvable} data The base 64 resolvable you want to resolve
  * @param {string} [contentType='image/jpg'] The content type of the data
  * @returns {string}
- * @private
  */
-function resolveBase64(data, contentType = 'image/jpg') {
+export function resolveBase64(data, contentType = 'image/jpg') {
   if (Buffer.isBuffer(data)) return `data:${contentType};base64,${data.toString('base64')}`;
   return data;
 }
@@ -140,9 +134,8 @@ function resolveBase64(data, contentType = 'image/jpg') {
  *
  * @param {BufferResolvable|Base64Resolvable} image The image to be resolved
  * @returns {Promise<?string>}
- * @private
  */
-async function resolveImage(image) {
+export async function resolveImage(image) {
   if (!image) return null;
   if (typeof image === 'string' && image.startsWith('data:')) {
     return image;
@@ -151,10 +144,3 @@ async function resolveImage(image) {
   const file = await resolveFile(image);
   return resolveBase64(file.data);
 }
-
-exports.resolveCode = resolveCode;
-exports.resolveInviteCode = resolveInviteCode;
-exports.resolveGuildTemplateCode = resolveGuildTemplateCode;
-exports.resolveImage = resolveImage;
-exports.resolveBase64 = resolveBase64;
-exports.resolveFile = resolveFile;

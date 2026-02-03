@@ -5,76 +5,69 @@ import { DiscordjsRangeError, ErrorCodes  } from '../errors/index.js';
 /**
  * Data structure that makes it easy to interact with a bitfield.
  */
-class BitField {
+export class BitField {
   /**
    * Numeric bitfield flags.
-   * <info>Defined in extension classes</info>
-   *
-   * @type {Object}
-   * @memberof BitField
-   * @abstract
    */
-  static Flags = {};
+  static Flags: Record<string, any> = {};
 
   /**
-   * @type {number|bigint}
-   * @memberof BitField
-   * @private
+   * Default bit value.
    */
-  static DefaultBit = 0;
+  static DefaultBit: number | bigint = 0;
 
   /**
-   * @param {BitFieldResolvable} [bits=this.constructor.DefaultBit] Bit(s) to read from
+   * Bitfield of the packed bits.
    */
-  constructor(bits = this.constructor.DefaultBit) {
-    /**
-     * Bitfield of the packed bits
-     *
-     * @type {number|bigint}
-     */
-    this.bitfield = this.constructor.resolve(bits);
+  public bitfield: number | bigint;
+
+  /**
+   * @param {any} [bits] Bit(s) to read from
+   */
+  constructor(bits: any = (BitField as any).DefaultBit) {
+    this.bitfield = (this.constructor as any).resolve(bits);
   }
 
   /**
    * Checks whether the bitfield has a bit, or any of multiple bits.
    *
-   * @param {BitFieldResolvable} bit Bit(s) to check for
+   * @param {any} bit Bit(s) to check for
    * @returns {boolean}
    */
-  any(bit) {
-    return (this.bitfield & this.constructor.resolve(bit)) !== this.constructor.DefaultBit;
+  any(bit: any): boolean {
+    return ((this.bitfield as any) & (this.constructor as any).resolve(bit)) !== (this.constructor as any).DefaultBit;
   }
 
   /**
    * Checks if this bitfield equals another
    *
-   * @param {BitFieldResolvable} bit Bit(s) to check for
+   * @param {any} bit Bit(s) to check for
    * @returns {boolean}
    */
-  equals(bit) {
-    return this.bitfield === this.constructor.resolve(bit);
+  equals(bit: any): boolean {
+    return this.bitfield === (this.constructor as any).resolve(bit);
   }
 
   /**
    * Checks whether the bitfield has a bit, or multiple bits.
    *
-   * @param {BitFieldResolvable} bit Bit(s) to check for
+   * @param {any} bit Bit(s) to check for
    * @returns {boolean}
    */
-  has(bit) {
-    const resolvedBit = this.constructor.resolve(bit);
-    return (this.bitfield & resolvedBit) === resolvedBit;
+  has(bit: any): boolean {
+    const resolvedBit = (this.constructor as any).resolve(bit);
+    return ((this.bitfield as any) & resolvedBit) === resolvedBit;
   }
 
   /**
    * Gets all given bits that are missing from the bitfield.
    *
-   * @param {BitFieldResolvable} bits Bit(s) to check for
-   * @param {...*} hasParams Additional parameters for the has method, if any
+   * @param {any} bits Bit(s) to check for
+   * @param {...any} hasParams Additional parameters for the has method, if any
    * @returns {string[]}
    */
-  missing(bits, ...hasParams) {
-    return new this.constructor(bits).remove(this).toArray(...hasParams);
+  missing(bits: any, ...hasParams: any[]): string[] {
+    return (new (this.constructor as any)(bits)).remove(this).toArray(...hasParams);
   }
 
   /**
@@ -82,41 +75,41 @@ class BitField {
    *
    * @returns {Readonly<BitField>}
    */
-  freeze() {
+  freeze(): Readonly<this> {
     return Object.freeze(this);
   }
 
   /**
    * Adds bits to these ones.
    *
-   * @param {...BitFieldResolvable} [bits] Bits to add
+   * @param {...any} bits Bits to add
    * @returns {BitField} These bits or new BitField if the instance is frozen.
    */
-  add(...bits) {
-    let total = this.constructor.DefaultBit;
+  add(...bits: any[]): this {
+    let total: any = (this.constructor as any).DefaultBit;
     for (const bit of bits) {
-      total |= this.constructor.resolve(bit);
+      total |= (this.constructor as any).resolve(bit);
     }
 
-    if (Object.isFrozen(this)) return new this.constructor(this.bitfield | total);
-    this.bitfield |= total;
+    if (Object.isFrozen(this)) return new (this.constructor as any)((this.bitfield as any) | total);
+    (this.bitfield as any) |= total;
     return this;
   }
 
   /**
    * Removes bits from these.
    *
-   * @param {...BitFieldResolvable} [bits] Bits to remove
+   * @param {...any} bits Bits to remove
    * @returns {BitField} These bits or new BitField if the instance is frozen.
    */
-  remove(...bits) {
-    let total = this.constructor.DefaultBit;
+  remove(...bits: any[]): this {
+    let total: any = (this.constructor as any).DefaultBit;
     for (const bit of bits) {
-      total |= this.constructor.resolve(bit);
+      total |= (this.constructor as any).resolve(bit);
     }
 
-    if (Object.isFrozen(this)) return new this.constructor(this.bitfield & ~total);
-    this.bitfield &= ~total;
+    if (Object.isFrozen(this)) return new (this.constructor as any)((this.bitfield as any) & ~total);
+    (this.bitfield as any) &= ~total;
     return this;
   }
 
@@ -124,13 +117,13 @@ class BitField {
    * Gets an object mapping field names to a {@link boolean} indicating whether the
    * bit is available.
    *
-   * @param {...*} hasParams Additional parameters for the has method, if any
+   * @param {...any} hasParams Additional parameters for the has method, if any
    * @returns {Object}
    */
-  serialize(...hasParams) {
-    const serialized = {};
-    for (const [flag, bit] of Object.entries(this.constructor.Flags)) {
-      if (isNaN(flag)) serialized[flag] = this.has(bit, ...hasParams);
+  serialize(...hasParams: any[]): Record<string, boolean> {
+    const serialized: Record<string, boolean> = {};
+    for (const [flag, bit] of Object.entries((this.constructor as any).Flags)) {
+      if (isNaN(flag as any)) serialized[flag] = this.has(bit);
     }
 
     return serialized;
@@ -139,53 +132,43 @@ class BitField {
   /**
    * Gets an {@link Array} of bitfield names based on the bits available.
    *
-   * @param {...*} hasParams Additional parameters for the has method, if any
+   * @param {...any} hasParams Additional parameters for the has method, if any
    * @returns {string[]}
    */
-  toArray(...hasParams) {
+  toArray(...hasParams: any[]): string[] {
     return [...this[Symbol.iterator](...hasParams)];
   }
 
-  toJSON() {
+  toJSON(): string | number {
     return typeof this.bitfield === 'number' ? this.bitfield : this.bitfield.toString();
   }
 
-  valueOf() {
+  valueOf(): number | bigint {
     return this.bitfield;
   }
 
-  *[Symbol.iterator](...hasParams) {
-    for (const bitName of Object.keys(this.constructor.Flags)) {
-      if (isNaN(bitName) && this.has(bitName, ...hasParams)) yield bitName;
+  *[Symbol.iterator](...hasParams: any[]): Generator<string> {
+    for (const bitName of Object.keys((this.constructor as any).Flags)) {
+      if (isNaN(bitName as any) && this.has(bitName)) yield bitName;
     }
   }
-
-  /**
-   * Data that can be resolved to give a bitfield. This can be:
-   * - A bit number (this can be a number literal or a value taken from {@link BitField.Flags})
-   * - A string bit number
-   * - An instance of BitField
-   * - An Array of BitFieldResolvable
-   *
-   * @typedef {number|string|bigint|BitField|BitFieldResolvable[]} BitFieldResolvable
-   */
 
   /**
    * Resolves bitfields to their numeric form.
    *
-   * @param {BitFieldResolvable} [bit] bit(s) to resolve
+   * @param {any} [bit] bit(s) to resolve
    * @returns {number|bigint}
    */
-  static resolve(bit) {
+  static resolve(bit: any): number | bigint {
     const { DefaultBit } = this;
     if (typeof DefaultBit === typeof bit && bit >= DefaultBit) return bit;
     if (bit instanceof BitField) return bit.bitfield;
     if (Array.isArray(bit)) {
-      return bit.map(bit_ => this.resolve(bit_)).reduce((prev, bit_) => prev | bit_, DefaultBit);
+      return bit.map(bit_ => this.resolve(bit_)).reduce((prev, bit_) => (prev as any) | (bit_ as any), DefaultBit);
     }
 
     if (typeof bit === 'string') {
-      if (!isNaN(bit)) return typeof DefaultBit === 'bigint' ? BigInt(bit) : Number(bit);
+      if (!isNaN(bit as any)) return typeof DefaultBit === 'bigint' ? BigInt(bit) : Number(bit);
       if (this.Flags[bit] !== undefined) return this.Flags[bit];
     }
 
@@ -193,4 +176,3 @@ class BitField {
   }
 }
 
-exports.BitField = BitField;

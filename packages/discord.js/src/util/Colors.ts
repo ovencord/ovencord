@@ -38,7 +38,7 @@
  * @type {Colors}
  * @ignore
  */
-exports.Colors = {
+export const Colors = {
   Aqua: 0x1abc9c,
   Blue: 0x3498db,
   Blurple: 0x5865f2,

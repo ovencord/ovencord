@@ -4,17 +4,10 @@
  *
  * @abstract
  */
-class BaseManager {
-  constructor(client) {
-    /**
-     * The client that instantiated this Manager
-     *
-     * @name BaseManager#client
-     * @type {Client}
-     * @readonly
-     */
-    Object.defineProperty(this, 'client', { value: client });
+export abstract class BaseManager {
+  public client: any;
+
+  constructor(client: any) {
+    this.client = client;
   }
 }
-
-exports.BaseManager = BaseManager;

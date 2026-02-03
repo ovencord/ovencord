@@ -6,39 +6,32 @@ import { flatten  } from '../util/Util.js';
  *
  * @abstract
  */
-class Base {
-  constructor(client) {
-    /**
-     * The client that instantiated this
-     *
-     * @name Base#client
-     * @type {Client}
-     * @readonly
-     */
-    Object.defineProperty(this, 'client', { value: client });
+export abstract class Base {
+  public client: any;
+
+  constructor(client: any) {
+    this.client = client;
   }
 
-  _clone() {
+  _clone(): any {
     return Object.assign(Object.create(this), this);
   }
 
-  _patch(data) {
+  _patch(data: any): any {
     return data;
   }
 
-  _update(data) {
+  _update(data: any): any {
     const clone = this._clone();
     this._patch(data);
     return clone;
   }
 
-  toJSON(...props) {
+  toJSON(...props: any[]): any {
     return flatten(this, ...props);
   }
 
-  valueOf() {
-    return this.id;
+  valueOf(): any {
+    return (this as any).id;
   }
 }
-
-exports.Base = Base;

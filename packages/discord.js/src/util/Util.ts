@@ -1,19 +1,18 @@
 
-import { parse  } from 'node:path';
-import { Collection  } from '@ovencord/collection';
-import { lazy  } from '@ovencord/util';
-import { ChannelType, RouteBases, Routes  } from 'discord-api-types/v10';
-import { fetch  } from 'undici';
-import { Colors  } from './Colors.js';
+import { parse } from 'node:path';
+import { Collection } from '@ovencord/collection';
+import { lazy } from '@ovencord/util';
+import { ChannelType, RouteBases, Routes } from 'discord-api-types/v10';
+import { Colors } from './Colors.js';
 // eslint-disable-next-line import-x/order
-import { DiscordjsError, DiscordjsRangeError, DiscordjsTypeError, ErrorCodes  } from '../errors/index.js';
+import { DiscordjsError, DiscordjsRangeError, DiscordjsTypeError, ErrorCodes } from '../errors/index.js';
 
 // Fixes circular dependencies.
 const getAttachment = lazy(() => require('../structures/Attachment.js').Attachment);
 const getGuildChannel = lazy(() => require('../structures/GuildChannel.js').GuildChannel);
 const getSKU = lazy(() => require('../structures/SKU.js').SKU);
 
-const isObject = data => typeof data === 'object' && data !== null;
+const isObject = (data: any): boolean => typeof data === 'object' && data !== null;
 
 /**
  * Flatten an object. Any properties that are collections will get converted to an array of keys.
@@ -22,7 +21,7 @@ const isObject = data => typeof data === 'object' && data !== null;
  * @param {...Object<string, boolean|string>} [props] Specific properties to include/exclude.
  * @returns {Object}
  */
-function flatten(obj, ...props) {
+export function flatten(obj: any, ...props: any[]): any {
   if (!isObject(obj)) return obj;
 
   const objProps = Object.keys(obj)
@@ -31,7 +30,7 @@ function flatten(obj, ...props) {
 
   const mergedProps = objProps.length ? Object.assign(...objProps, ...props) : Object.assign({}, ...props);
 
-  const out = {};
+  const out: any = {};
 
   // eslint-disable-next-line prefer-const
   for (let [prop, newProp] of Object.entries(mergedProps)) {
@@ -44,19 +43,19 @@ function flatten(obj, ...props) {
     const hasToJSON = elemIsObj && typeof element.toJSON === 'function';
 
     // If it's a Collection, make the array of keys
-    if (element instanceof Collection) out[newProp] = Array.from(element.keys());
+    if (element instanceof Collection) out[newProp as string] = Array.from(element.keys());
     // If the valueOf is a Collection, use its array of keys
-    else if (valueOf instanceof Collection) out[newProp] = Array.from(valueOf.keys());
+    else if (valueOf instanceof Collection) out[newProp as string] = Array.from(valueOf.keys());
     // If it's an array, call toJSON function on each element if present, otherwise flatten each element
-    else if (Array.isArray(element)) out[newProp] = element.map(elm => elm.toJSON?.() ?? flatten(elm));
+    else if (Array.isArray(element)) out[newProp as string] = element.map(elm => elm.toJSON?.() ?? flatten(elm));
     // If it's an object with a primitive `valueOf`, use that value
-    else if (typeof valueOf !== 'object') out[newProp] = valueOf;
+    else if (typeof valueOf !== 'object') out[newProp as string] = valueOf;
     // If it's an object with a toJSON function, use the return value of it
-    else if (hasToJSON) out[newProp] = element.toJSON();
+    else if (hasToJSON) out[newProp as string] = element.toJSON();
     // If element is an object, use the flattened version of it
-    else if (typeof element === 'object') out[newProp] = flatten(element);
+    else if (typeof element === 'object') out[newProp as string] = flatten(element);
     // If it's a primitive
-    else if (!elemIsObj) out[newProp] = element;
+    else if (!elemIsObj) out[newProp as string] = element;
   }
 
   return out;
@@ -75,7 +74,7 @@ function flatten(obj, ...props) {
  * @param {FetchRecommendedShardCountOptions} [options] Options for fetching the recommended shard count
  * @returns {Promise<number>} The recommended number of shards
  */
-async function fetchRecommendedShardCount(token, { guildsPerShard = 1_000, multipleOf = 1 } = {}) {
+export async function fetchRecommendedShardCount(token: string, { guildsPerShard = 1_000, multipleOf = 1 } = {}): Promise<number> {
   if (!token) throw new DiscordjsError(ErrorCodes.TokenMissing);
   const response = await fetch(RouteBases.api + Routes.gatewayBot(), {
     method: 'GET',
@@ -86,7 +85,7 @@ async function fetchRecommendedShardCount(token, { guildsPerShard = 1_000, multi
     throw response;
   }
 
-  const { shards } = await response.json();
+  const { shards }: any = await response.json();
   return Math.ceil((shards * (1_000 / guildsPerShard)) / multipleOf) * multipleOf;
 }
 
@@ -108,11 +107,11 @@ async function fetchRecommendedShardCount(token, { guildsPerShard = 1_000, multi
  * @param {string} text Emoji string to parse
  * @returns {?PartialEmoji}
  */
-function parseEmoji(text) {
+export function parseEmoji(text: string): any {
   const decodedText = text.includes('%') ? decodeURIComponent(text) : text;
   if (!decodedText.includes(':')) return { animated: false, name: decodedText, id: undefined };
   const match = /<?(?:(?<animated>a):)?(?<name>\w{2,32}):(?<id>\d{17,19})?>?/.exec(decodedText);
-  return match && { animated: Boolean(match.groups.animated), name: match.groups.name, id: match.groups.id };
+  return match && { animated: Boolean(match.groups!.animated), name: match.groups!.name, id: match.groups!.id };
 }
 
 /**
@@ -128,7 +127,7 @@ function parseEmoji(text) {
  * @param {Emoji|EmojiIdentifierResolvable} emoji Emoji identifier to resolve
  * @returns {?(PartialEmoji|PartialEmojiOnlyId)} Supplying a snowflake yields `PartialEmojiOnlyId`.
  */
-function resolvePartialEmoji(emoji) {
+export function resolvePartialEmoji(emoji: any): any {
   if (!emoji) return null;
   if (typeof emoji === 'string') return /^\d{17,19}$/.test(emoji) ? { id: emoji } : parseEmoji(emoji);
   const { id, name, animated } = emoji;
@@ -144,7 +143,7 @@ function resolvePartialEmoji(emoji) {
  * @returns {?GuildEmoji}
  * @private
  */
-function resolveGuildEmoji(client, emojiId) {
+export function resolveGuildEmoji(client: any, emojiId: string): any {
   for (const guild of client.guilds.cache.values()) {
     if (!guild.available) {
       continue;
@@ -177,7 +176,7 @@ function resolveGuildEmoji(client, emojiId) {
  * @returns {Error}
  * @private
  */
-function makeError(obj) {
+export function makeError(obj: any): Error {
   const err = new Error(obj.message);
   err.name = obj.name;
   err.stack = obj.stack;
@@ -191,7 +190,7 @@ function makeError(obj) {
  * @returns {MakeErrorOptions}
  * @private
  */
-function makePlainError(err) {
+export function makePlainError(err: Error): any {
   return {
     name: err.name,
     message: err.message,
@@ -219,7 +218,7 @@ const CategorySortableGroupTypes = [ChannelType.GuildCategory];
  * @returns {ChannelType[]}
  * @private
  */
-function getSortableGroupTypes(type) {
+export function getSortableGroupTypes(type: ChannelType): ChannelType[] {
   switch (type) {
     case ChannelType.GuildText:
     case ChannelType.GuildAnnouncement:
@@ -246,7 +245,7 @@ function getSortableGroupTypes(type) {
  * @returns {number}
  * @private
  */
-function moveElementInArray(array, element, newIndex, offset = false) {
+export function moveElementInArray(array: any[], element: any, newIndex: number, offset = false): number {
   const index = array.indexOf(element);
   const targetIndex = (offset ? index : 0) + newIndex;
   if (targetIndex > -1 && targetIndex < array.length) {
@@ -266,57 +265,16 @@ function moveElementInArray(array, element, newIndex, offset = false) {
  * @param {boolean} [allowEmpty=true] Whether an empty string should be allowed
  * @returns {string}
  */
-function verifyString(
-  data,
-  error = Error,
+export function verifyString(
+  data: any,
+  error: any = Error,
   errorMessage = `Expected a string, got ${data} instead.`,
   allowEmpty = true,
-) {
+): string {
   if (typeof data !== 'string') throw new error(errorMessage);
   if (!allowEmpty && data.length === 0) throw new error(errorMessage);
   return data;
 }
-
-/**
- * Can be a number, hex string, an RGB array like:
- * ```js
- * [255, 0, 255] // purple
- * ```
- * or one of the following strings:
- * - `Default`
- * - `White`
- * - `Aqua`
- * - `Green`
- * - `Blue`
- * - `Yellow`
- * - `Purple`
- * - `LuminousVividPink`
- * - `Fuchsia`
- * - `Gold`
- * - `Orange`
- * - `Red`
- * - `Grey`
- * - `Navy`
- * - `DarkAqua`
- * - `DarkGreen`
- * - `DarkBlue`
- * - `DarkPurple`
- * - `DarkVividPink`
- * - `DarkGold`
- * - `DarkOrange`
- * - `DarkRed`
- * - `DarkGrey`
- * - `DarkerGrey`
- * - `LightGrey`
- * - `DarkNavy`
- * - `Blurple`
- * - `Greyple`
- * - `DarkButNotBlack`
- * - `NotQuiteBlack`
- * - `Random`
- *
- * @typedef {string|number|number[]} ColorResolvable
- */
 
 /**
  * Resolves a ColorResolvable into a color number.
@@ -324,14 +282,14 @@ function verifyString(
  * @param {ColorResolvable} color Color to resolve
  * @returns {number} A color
  */
-function resolveColor(color) {
+export function resolveColor(color: any): number {
   let resolvedColor;
 
   if (typeof color === 'string') {
     if (color === 'Random') return Math.floor(Math.random() * (0xffffff + 1));
     if (color === 'Default') return 0;
     if (/^#?[\da-f]{6}$/i.test(color)) return Number.parseInt(color.replace('#', ''), 16);
-    resolvedColor = Colors[color];
+    resolvedColor = Colors[color as keyof typeof Colors];
   } else if (Array.isArray(color)) {
     resolvedColor = (color[0] << 16) + (color[1] << 8) + color[2];
   } else {
@@ -355,7 +313,7 @@ function resolveColor(color) {
  * @param {Collection} collection Collection of objects to sort
  * @returns {Collection}
  */
-function discordSort(collection) {
+export function discordSort(collection: Collection<string, any>): Collection<string, any> {
   const isGuildChannel = collection.first() instanceof getGuildChannel();
   return collection.toSorted(
     isGuildChannel
@@ -377,7 +335,7 @@ function discordSort(collection) {
  * @returns {Promise<BaseChannel[]|Role[]>} Updated item list, with `id` and `position` properties
  * @private
  */
-async function setPosition(item, position, relative, sorted, client, route, reason) {
+export async function setPosition(item: any, position: number, relative: boolean, sorted: Collection<string, any>, client: any, route: string, reason?: string): Promise<any[]> {
   let updatedItems = [...sorted.values()];
   moveElementInArray(updatedItems, item, position, relative);
   updatedItems = updatedItems.map((innerItem, index) => ({ id: innerItem.id, position: index }));
@@ -393,7 +351,7 @@ async function setPosition(item, position, relative, sorted, client, route, reas
  * @returns {string} Basename of the path
  * @private
  */
-function basename(path, ext) {
+export function basename(path: string, ext?: string): string {
   const res = parse(path);
   return ext && res.ext.startsWith(ext) ? res.name : res.base.split('?')[0];
 }
@@ -404,7 +362,7 @@ function basename(path, ext) {
  * @param {BufferResolvable|Stream} thing The thing to attach as attachment
  * @returns {string} filename to use
  */
-function findName(thing) {
+export function findName(thing: any): string {
   if (typeof thing === 'string') {
     return basename(thing);
   }
@@ -423,7 +381,7 @@ function findName(thing) {
  * @param {TextBasedChannels} channel The channel the string was sent in
  * @returns {string}
  */
-function cleanContent(str, channel) {
+export function cleanContent(str: string, channel: any): string {
   return str.replaceAll(
     /<(?:(?<type>@[!&]?|#)|(?:\/(?<commandName>[-_\p{L}\p{N}\p{sc=Deva}\p{sc=Thai} ]+):)|(?:a?:(?<emojiName>[\w]+):))(?<id>\d{17,19})>/gu,
     (match, type, commandName, emojiName, id) => {
@@ -468,17 +426,9 @@ function cleanContent(str, channel) {
  * @param {string} text The string to be converted
  * @returns {string}
  */
-function cleanCodeBlockContent(text) {
+export function cleanCodeBlockContent(text: string): string {
   return text.replaceAll('```', '`\u200B``');
 }
-
-/**
- * Represents the credentials used for a webhook in the form of its id and token.
- *
- * @typedef {Object} WebhookDataIdWithToken
- * @property {Snowflake} id The webhook's id
- * @property {string} token The webhook's token
- */
 
 /**
  * Parses a webhook URL for the id and token.
@@ -486,24 +436,14 @@ function cleanCodeBlockContent(text) {
  * @param {string} url The URL to parse
  * @returns {?WebhookDataIdWithToken} `null` if the URL is invalid, otherwise the id and the token
  */
-function parseWebhookURL(url) {
+export function parseWebhookURL(url: string): any {
   const matches =
     /https?:\/\/(?:ptb\.|canary\.)?discord\.com\/api(?:\/v\d{1,2})?\/webhooks\/(?<id>\d{17,19})\/(?<token>[\w-]{68})/i.exec(
       url,
     );
 
-  return matches && { id: matches.groups.id, token: matches.groups.token };
+  return matches && { id: matches.groups!.id, token: matches.groups!.token };
 }
-
-/**
- * Supportive data for interaction resolved data.
- *
- * @typedef {Object} SupportingInteractionResolvedData
- * @property {Client} client The client
- * @property {Guild} [guild] A guild
- * @property {GuildTextBasedChannel} [channel] A channel
- * @private
- */
 
 /**
  * Transforms the resolved data received from the API.
@@ -513,16 +453,16 @@ function parseWebhookURL(url) {
  * @returns {CommandInteractionResolvedData}
  * @private
  */
-function transformResolved(
-  { client, guild, channel },
-  { members, users, channels, roles, messages, attachments } = {},
-) {
-  const result = {};
+export function transformResolved(
+  { client, guild, channel }: any,
+  { members, users, channels, roles, messages, attachments }: any = {},
+): any {
+  const result: any = {};
 
   if (members) {
     result.members = new Collection();
     for (const [id, member] of Object.entries(members)) {
-      const user = users[id];
+      const user = (users as any)[id];
       result.members.set(id, guild?.members._add({ user, ...member }) ?? member);
     }
   }
@@ -530,28 +470,28 @@ function transformResolved(
   if (users) {
     result.users = new Collection();
     for (const user of Object.values(users)) {
-      result.users.set(user.id, client.users._add(user));
+      result.users.set((user as any).id, client.users._add(user));
     }
   }
 
   if (roles) {
     result.roles = new Collection();
     for (const role of Object.values(roles)) {
-      result.roles.set(role.id, guild?.roles._add(role) ?? role);
+      result.roles.set((role as any).id, guild?.roles._add(role) ?? role);
     }
   }
 
   if (channels) {
     result.channels = new Collection();
     for (const apiChannel of Object.values(channels)) {
-      result.channels.set(apiChannel.id, client.channels._add(apiChannel, guild) ?? apiChannel);
+      result.channels.set((apiChannel as any).id, client.channels._add(apiChannel, guild) ?? apiChannel);
     }
   }
 
   if (messages) {
     result.messages = new Collection();
     for (const message of Object.values(messages)) {
-      result.messages.set(message.id, channel?.messages?._add(message) ?? message);
+      result.messages.set((message as any).id, channel?.messages?._add(message) ?? message);
     }
   }
 
@@ -559,7 +499,7 @@ function transformResolved(
     result.attachments = new Collection();
     for (const attachment of Object.values(attachments)) {
       const patched = new (getAttachment())(attachment);
-      result.attachments.set(attachment.id, patched);
+      result.attachments.set((attachment as any).id, patched);
     }
   }
 
@@ -572,32 +512,8 @@ function transformResolved(
  * @param {SKUResolvable} resolvable The SKU resolvable to resolve
  * @returns {?Snowflake} The resolved SKU id, or `null` if the resolvable was invalid
  */
-function resolveSKUId(resolvable) {
+export function resolveSKUId(resolvable: any): string | null {
   if (typeof resolvable === 'string') return resolvable;
   if (resolvable instanceof getSKU()) return resolvable.id;
   return null;
 }
-
-// Public
-exports.cleanCodeBlockContent = cleanCodeBlockContent;
-exports.cleanContent = cleanContent;
-exports.discordSort = discordSort;
-exports.fetchRecommendedShardCount = fetchRecommendedShardCount;
-exports.flatten = flatten;
-exports.parseEmoji = parseEmoji;
-exports.parseWebhookURL = parseWebhookURL;
-exports.resolveColor = resolveColor;
-exports.resolveSKUId = resolveSKUId;
-exports.verifyString = verifyString;
-
-// Private
-exports.resolvePartialEmoji = resolvePartialEmoji;
-exports.resolveGuildEmoji = resolveGuildEmoji;
-exports.makeError = makeError;
-exports.makePlainError = makePlainError;
-exports.getSortableGroupTypes = getSortableGroupTypes;
-exports.moveElementInArray = moveElementInArray;
-exports.setPosition = setPosition;
-exports.basename = basename;
-exports.findName = findName;
-exports.transformResolved = transformResolved;

@@ -1,7 +1,14 @@
 
-import { isJSONEncodable  } from '@ovencord/util';
-import snakeCase from 'lodash.snakecase';
-import { AuthorizingIntegrationOwners  } from '../structures/AuthorizingIntegrationOwners.js';
+import { isJSONEncodable } from '@ovencord/util';
+import { AuthorizingIntegrationOwners } from '../structures/AuthorizingIntegrationOwners.js';
+
+/**
+ * Transforms a string to snake_case.
+ *
+ * @param {string} str The string to transform
+ * @returns {string}
+ */
+const snakeCase = (str: string): string => str.replace(/[A-Z]/g, letter => `_${letter.toLowerCase()}`);
 
 /**
  * Transforms camel-cased keys into snake cased keys
@@ -9,7 +16,7 @@ import { AuthorizingIntegrationOwners  } from '../structures/AuthorizingIntegrat
  * @param {*} obj The object to transform
  * @returns {*}
  */
-function toSnakeCase(obj) {
+export function toSnakeCase(obj: any): any {
   if (typeof obj !== 'object' || !obj) return obj;
   if (obj instanceof Date) return obj;
   if (isJSONEncodable(obj)) return toSnakeCase(obj.toJSON());
@@ -20,11 +27,11 @@ function toSnakeCase(obj) {
 /**
  * Transforms an API auto moderation action object to a camel-cased variant.
  *
- * @param {APIAutoModerationAction} autoModerationAction The action to transform
- * @returns {AutoModerationAction}
+ * @param {any} autoModerationAction The action to transform
+ * @returns {any}
  * @ignore
  */
-function _transformAPIAutoModerationAction(autoModerationAction) {
+export function _transformAPIAutoModerationAction(autoModerationAction: any): any {
   return {
     type: autoModerationAction.type,
     metadata: {
@@ -38,12 +45,12 @@ function _transformAPIAutoModerationAction(autoModerationAction) {
 /**
  * Transforms an API message interaction metadata object to a camel-cased variant.
  *
- * @param {Client} client The client
- * @param {APIMessageInteractionMetadata} messageInteractionMetadata The metadata to transform
- * @returns {MessageInteractionMetadata}
+ * @param {any} client The client
+ * @param {any} messageInteractionMetadata The metadata to transform
+ * @returns {any}
  * @ignore
  */
-function _transformAPIMessageInteractionMetadata(client, messageInteractionMetadata) {
+export function _transformAPIMessageInteractionMetadata(client: any, messageInteractionMetadata: any): any {
   return {
     id: messageInteractionMetadata.id,
     type: messageInteractionMetadata.type,
@@ -63,11 +70,11 @@ function _transformAPIMessageInteractionMetadata(client, messageInteractionMetad
 /**
  * Transforms a guild scheduled event recurrence rule object to a snake-cased variant.
  *
- * @param {GuildScheduledEventRecurrenceRuleOptions} recurrenceRule The recurrence rule to transform
- * @returns {APIGuildScheduledEventRecurrenceRule}
+ * @param {any} recurrenceRule The recurrence rule to transform
+ * @returns {any}
  * @ignore
  */
-function _transformGuildScheduledEventRecurrenceRule(recurrenceRule) {
+export function _transformGuildScheduledEventRecurrenceRule(recurrenceRule: any): any {
   return {
     start: new Date(recurrenceRule.startAt).toISOString(),
     frequency: recurrenceRule.frequency,
@@ -82,11 +89,11 @@ function _transformGuildScheduledEventRecurrenceRule(recurrenceRule) {
 /**
  * Transforms API incidents data to a camel-cased variant.
  *
- * @param {APIIncidentsData} data The incidents data to transform
- * @returns {IncidentActions}
+ * @param {any} data The incidents data to transform
+ * @returns {any}
  * @ignore
  */
-function _transformAPIIncidentsData(data) {
+export function _transformAPIIncidentsData(data: any): any {
   return {
     invitesDisabledUntil: data.invites_disabled_until ? new Date(data.invites_disabled_until) : null,
     dmsDisabledUntil: data.dms_disabled_until ? new Date(data.dms_disabled_until) : null,
@@ -98,11 +105,11 @@ function _transformAPIIncidentsData(data) {
 /**
  * Transforms a collectibles object to a camel-cased variant.
  *
- * @param {APICollectibles} collectibles The collectibles to transform
- * @returns {Collectibles}
+ * @param {any} collectibles The collectibles to transform
+ * @returns {any}
  * @ignore
  */
-function _transformCollectibles(collectibles) {
+export function _transformCollectibles(collectibles: any): any {
   if (!collectibles.nameplate) return { nameplate: null };
 
   return {
@@ -114,10 +121,3 @@ function _transformCollectibles(collectibles) {
     },
   };
 }
-
-exports.toSnakeCase = toSnakeCase;
-exports._transformAPIAutoModerationAction = _transformAPIAutoModerationAction;
-exports._transformAPIMessageInteractionMetadata = _transformAPIMessageInteractionMetadata;
-exports._transformGuildScheduledEventRecurrenceRule = _transformGuildScheduledEventRecurrenceRule;
-exports._transformAPIIncidentsData = _transformAPIIncidentsData;
-exports._transformCollectibles = _transformCollectibles;

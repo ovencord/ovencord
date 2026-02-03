@@ -1,2 +1,1 @@
-
-exports.MakeCacheOverrideSymbol = Symbol('djs.managers.makeCacheOverride');
+export const MakeCacheOverrideSymbol = Symbol('djs.managers.makeCacheOverride');

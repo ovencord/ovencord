@@ -8,58 +8,31 @@ import { BaseManager  } from './BaseManager.js';
  * @extends {BaseManager}
  * @abstract
  */
-class DataManager extends BaseManager {
-  constructor(client, holds) {
-    super(client);
+export abstract class DataManager extends BaseManager {
+  public holds: any;
 
-    /**
-     * The data structure belonging to this manager.
-     *
-     * @name DataManager#holds
-     * @type {Function}
-     * @private
-     * @readonly
-     */
-    Object.defineProperty(this, 'holds', { value: holds });
+  constructor(client: any, holds: any) {
+    super(client);
+    this.holds = holds;
   }
 
-  /**
-   * The cache of items for this manager.
-   *
-   * @type {Collection}
-   * @abstract
-   */
-  get cache() {
+  get cache(): any {
     throw new DiscordjsError(ErrorCodes.NotImplemented, 'get cache', this.constructor.name);
   }
 
-  /**
-   * Resolves a data entry to a data Object.
-   *
-   * @param {string | Object} idOrInstance The id or instance of something in this Manager
-   * @returns {?Object} An instance from this Manager
-   */
-  resolve(idOrInstance) {
+  resolve(idOrInstance: any): any {
     if (idOrInstance instanceof this.holds) return idOrInstance;
     if (typeof idOrInstance === 'string') return this.cache.get(idOrInstance) ?? null;
     return null;
   }
 
-  /**
-   * Resolves a data entry to an instance id.
-   *
-   * @param {string | Object} idOrInstance The id or instance of something in this Manager
-   * @returns {?Snowflake}
-   */
-  resolveId(idOrInstance) {
-    if (idOrInstance instanceof this.holds) return idOrInstance.id;
+  resolveId(idOrInstance: any): any {
+    if (idOrInstance instanceof this.holds) return (idOrInstance as any).id;
     if (typeof idOrInstance === 'string') return idOrInstance;
     return null;
   }
 
-  valueOf() {
+  override valueOf(): any {
     return this.cache;
   }
 }
-
-exports.DataManager = DataManager;

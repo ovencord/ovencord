@@ -9,89 +9,47 @@ import { Emoji  } from './Emoji.js';
  *
  * @extends {Base}
  */
-class SoundboardSound extends Base {
-  constructor(client, data) {
+export class SoundboardSound extends Base {
+  public soundId: string;
+  public available: boolean | null = null;
+  public name: string | null = null;
+  public volume: number | null = null;
+  public _emoji: any = null;
+  public guildId: string | null = null;
+  public user: any = null;
+
+  constructor(client: any, data: any) {
     super(client);
-
-    /**
-     * The id of this soundboard sound
-     *
-     * @type {Snowflake|string}
-     */
     this.soundId = data.sound_id;
-
     this._patch(data);
   }
 
-  _patch(data) {
+  override _patch(data: any) {
     if ('available' in data) {
-      /**
-       * Whether this soundboard sound is available
-       *
-       * @type {?boolean}
-       */
       this.available = data.available;
-    } else {
-      this.available ??= null;
     }
 
     if ('name' in data) {
-      /**
-       * The name of this soundboard sound
-       *
-       * @type {?string}
-       */
       this.name = data.name;
-    } else {
-      this.name ??= null;
     }
 
     if ('volume' in data) {
-      /**
-       * The volume (a double) of this soundboard sound, from 0 to 1
-       *
-       * @type {?number}
-       */
       this.volume = data.volume;
-    } else {
-      this.volume ??= null;
     }
 
     if ('emoji_id' in data) {
-      /**
-       * The raw emoji data of this soundboard sound
-       *
-       * @type {?Object}
-       * @private
-       */
       this._emoji = {
         id: data.emoji_id,
         name: data.emoji_name,
       };
-    } else {
-      this._emoji ??= null;
     }
 
     if ('guild_id' in data) {
-      /**
-       * The guild id of this soundboard sound
-       *
-       * @type {?Snowflake}
-       */
       this.guildId = data.guild_id;
-    } else {
-      this.guildId ??= null;
     }
 
     if ('user' in data) {
-      /**
-       * The user who created this soundboard sound
-       *
-       * @type {?User}
-       */
-      this.user = this.client.users._add(data.user);
-    } else {
-      this.user ??= null;
+      this.user = (this.client as any).users._add(data.user);
     }
   }
 
@@ -189,7 +147,7 @@ class SoundboardSound extends Base {
    * @param {SoundboardSound|APISoundboardSound} other The soundboard sound to compare it to
    * @returns {boolean}
    */
-  equals(other) {
+  equals(other: any) {
     if (other instanceof SoundboardSound) {
       return (
         this.soundId === other.soundId &&
@@ -216,4 +174,3 @@ class SoundboardSound extends Base {
   }
 }
 
-exports.SoundboardSound = SoundboardSound;
