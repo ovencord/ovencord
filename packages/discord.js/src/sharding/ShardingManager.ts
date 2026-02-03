@@ -2,7 +2,7 @@
 import fs from 'node:fs';
 import path from 'node:path';
 import process from 'node:process';
-import { setTimeout: sleep  } from 'node:timers/promises';
+import { setTimeout as sleep  } from 'node:timers/promises';
 import { Collection  } from '@ovencord/collection';
 import { range  } from '@ovencord/util';
 import { AsyncEventEmitter  } from '@vladfrangu/async_event_emitter';
@@ -20,7 +20,7 @@ import { Shard  } from './Shard.js';
  *
  * @extends {AsyncEventEmitter}
  */
-class ShardingManager extends AsyncEventEmitter {
+export class ShardingManager extends AsyncEventEmitter {
   /**
    * The mode to spawn shards with for a {@link ShardingManager}. Can be either one of:
    * - 'process' to use child processes

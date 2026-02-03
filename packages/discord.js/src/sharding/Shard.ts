@@ -3,7 +3,7 @@
 import path from 'node:path';
 import process from 'node:process';
 import { setTimeout, clearTimeout  } from 'node:timers';
-import { setTimeout: sleep  } from 'node:timers/promises';
+import { setTimeout as sleep  } from 'node:timers/promises';
 import { SHARE_ENV  } from 'node:worker_threads';
 import { AsyncEventEmitter  } from '@vladfrangu/async_event_emitter';
 import { DiscordjsError, ErrorCodes  } from '../errors/index.js';
@@ -20,7 +20,7 @@ let Worker = null;
  *
  * @extends {AsyncEventEmitter}
  */
-class Shard extends AsyncEventEmitter {
+export class Shard extends AsyncEventEmitter {
   constructor(manager, id) {
     super();
 
