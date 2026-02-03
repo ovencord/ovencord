@@ -7,6 +7,7 @@
 **Cooking the future of Discord development.**
 
 [![Bun](https://img.shields.io/badge/Bun-1.0%2B-black?logo=bun)](https://bun.sh)
+[![CI](https://github.com/ovencord/ovencord/actions/workflows/ci.yml/badge.svg)](https://github.com/ovencord/ovencord/actions/workflows/ci.yml)
 [![License](https://img.shields.io/badge/license-Apache--2.0-blue)](https://github.com/ovencord/ovencord/blob/main/LICENSE)
 [![GitHub Stars](https://img.shields.io/github/stars/ovencord/ovencord?style=social)](https://github.com/ovencord/ovencord)
 
@@ -141,22 +142,34 @@ await client.login();
 ### Setup
 
 ```bash
-# Clone the repo
+# Clone the repository
 git clone https://github.com/ovencord/ovencord.git
 cd ovencord
 
-# Install dependencies
+# Install dependencies (syncs workspace and lockfile)
 bun install
-
-# Run tests
-bun test
-
-# Type check
-bun run typecheck
-
-# Lint
-bun run lint
 ```
+
+### Verification Scripts
+
+| Command | Action |
+|---------|--------|
+| `bun run build` | Build all packages (where necessary) |
+| `bun run test` | Run tests across the monorepo |
+| `bun run lint` | Run ESLint (Gold Standard, zero-warning) |
+| `bun run typecheck` | Perform recursive TypeScript type checking |
+| `bun run format` | Auto-format codebase with Prettier |
+
+### CI/CD
+
+We use GitHub Actions to ensure code quality. Every push to `main` and every Pull Request triggers:
+- **Dependency sync** (Bun)
+- **Recursive Type Checking**
+- **Linting** (No-Legacy, Bun-Native rules)
+- **Testing** (Bun Test)
+
+> [!NOTE]
+> If you don't see the CI status check (green/red icon) on your commits, ensure that **GitHub Actions** are enabled for this repository in **Settings > Actions > General**.
 
 ### Project Structure
 

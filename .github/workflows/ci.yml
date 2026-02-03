@@ -2,8 +2,11 @@ name: Bun CI
 
 on:
   push:
-    branches: [main]
+    branches:
+      - main
   pull_request:
+    branches:
+      - main
 
 jobs:
   check:
@@ -25,3 +28,6 @@ jobs:
 
       - name: Lint
         run: bun run lint
+
+      - name: Test
+        run: bun run test
