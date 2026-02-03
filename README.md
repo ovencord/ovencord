@@ -31,8 +31,10 @@ We believe that **emulation is the enemy of performance**. Our mission is to eli
 |---------|-------------|--------|
 | [@ovencord/rest](./packages/rest) | Bun-native Discord REST client | ✅ **Stable** |
 | [@ovencord/ws](./packages/ws) | Bun-native WebSocket gateway client | ✅ **Stable** |
-| [@ovencord/collection](./packages/collection) | High-performance Collection class | ✅ **Stable** |
+| [@ovencord/builders](./packages/builders) | Payload builders standardized for Zod 3 | ✅ **Stable** |
 | [@ovencord/util](./packages/util) | Shared utilities for Ovencord packages | ✅ **Stable** |
+| [@ovencord/collection](./packages/collection) | High-performance Collection class | ✅ **Stable** |
+| [@ovencord/discord.js](./packages/discord.js) | Full Bun-native Discord.js fork | 🚧 **In Progress** |
 
 ---
 
