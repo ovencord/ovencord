@@ -50,7 +50,7 @@ export async function releasePackage(release: ReleaseEntry, dry: boolean, devTag
 	if (dry) {
 		info(`[DRY] Releasing ${release.name}@${release.version}`);
 	} else {
-		await $`npm publish --access public --provenance --no-git-checks ${devTag ? `--tag ${devTag}` : ''}`.cwd(release.path);
+		await $`npm publish --access public ${devTag ? `--tag ${devTag}` : ''}`.cwd(release.path);
 	}
 
 	// && !devTag just to be sure
