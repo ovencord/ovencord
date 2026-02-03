@@ -15,16 +15,16 @@ Ovencord is a **technical collective** dedicated to building high-performance, B
 
 </div>
 
----
+##
 
-## 🥟 What is Ovencord?
+## What is Ovencord?
 
 We believe that **emulation is the enemy of performance**. Our mission is to eliminate the legacy Node.js overhead from Discord tools, replacing it with pure, Zig-powered Bun native implementations.
 
 > **Ovencord = Oven + Discord**  
 > We're cooking something special. 🔥
 
----
+##
 
 ## 📦 Packages
 
@@ -37,9 +37,8 @@ We believe that **emulation is the enemy of performance**. Our mission is to eli
 | [@ovencord/collection](./packages/collection) | High-performance Collection class | ✅ **Stable** |
 | [@ovencord/discord.js](./packages/discord.js) | Full Bun-native Discord.js fork | 🚧 **In Progress** |
 
----
 
-## 🚀 Our Philosophy
+## Our Philosophy
 
 ### Native-First
 
@@ -75,9 +74,8 @@ We optimize for microseconds and megabytes.
 | Memory Baseline | ~85MB | ~68MB | **20% lower** |
 | Binary Handling | Copy | Zero-copy | **35% faster** |
 
----
 
-## 🔥 Quick Start
+## Quick Start
 
 ### Installation
 
@@ -106,34 +104,33 @@ await client.login();
 
 **That's it.** No build step. No transpilation. Bun reads TypeScript source directly.
 
----
 
-## 🎯 Why Ovencord?
+## Why Ovencord?
 
 ### For End Users
 
-- ⚡ **Faster bots** with 30-50% lower latency
-- 🪶 **Lighter deployments** with 85% smaller dependencies
-- 🔥 **Instant updates** with zero build time
-- 💎 **Better DX** with full TypeScript support out of the box
+- **Faster bots** with 30-50% lower latency
+- **Lighter deployments** with 85% smaller dependencies
+- **Instant updates** with zero build time
+- **Better DX** with full TypeScript support out of the box
 
 ### For Library Authors
 
-- 🎯 **Pure ESM** - no CommonJS legacy
-- 📦 **Source-only distribution** - users see real code
-- 🧪 **Bun test runner** - no vitest/jest bloat
-- 🚀 **Bun-native APIs** - maximum performance
+- **Pure ESM** - no CommonJS legacy
+- **Source-only distribution** - users see real code
+- **Bun test runner** - no vitest/jest bloat
+- **Bun-native APIs** - maximum performance
 
 ### For Contributors
 
-- 🔧 **Fewer tools** to learn and maintain
-- 📝 **Cleaner codebase** without polyfills
-- 🐛 **Easier debugging** (no transpilation)
-- 💪 **Modern TypeScript** without legacy constraints
+- **Fewer tools** to learn and maintain
+- **Cleaner codebase** without polyfills
+- **Easier debugging** (no transpilation)
+- **Modern TypeScript** without legacy constraints
 
----
 
-## 🛠️ Development
+
+## Development
 
 ### Prerequisites
 
@@ -160,16 +157,6 @@ bun install
 | `bun run typecheck` | Perform recursive TypeScript type checking |
 | `bun run format` | Auto-format codebase with Prettier |
 
-### CI/CD
-
-We use GitHub Actions to ensure code quality. Every push to `main` and every Pull Request triggers:
-- **Dependency sync** (Bun)
-- **Recursive Type Checking**
-- **Linting** (No-Legacy, Bun-Native rules)
-- **Testing** (Bun Test)
-
-> [!NOTE]
-> If you don't see the CI status check (green/red icon) on your commits, ensure that **GitHub Actions** are enabled for this repository in **Settings > Actions > General**.
 
 ### Project Structure
 
@@ -185,7 +172,7 @@ ovencord/
 └── package.json    # Workspace root
 ```
 
----
+
 
 ## 🤝 Contributing
 
@@ -204,17 +191,15 @@ We reject PRs that:
 
 See [CONTRIBUTING.md](./CONTRIBUTING.md) for details.
 
----
 
-## 📜 License
+## License
 
 Apache-2.0 © Ovencord Contributors
 
 Original discord.js code © Discord.js Contributors
 
----
 
-## 🙏 Credits
+## Credits
 
 Ovencord stands on the shoulders of giants:
 
@@ -224,7 +209,6 @@ Ovencord stands on the shoulders of giants:
 
 **This is NOT an official Discord library.**
 
----
 
 ## 🗺️ Roadmap
 
@@ -239,7 +223,6 @@ Ovencord stands on the shoulders of giants:
 - [ ] Launch official documentation site (ovencord.dev)
 - [ ] Release discord.js to Ovencord migration guide
 
----
 
 <div align="center">
 
