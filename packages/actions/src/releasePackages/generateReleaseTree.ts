@@ -154,6 +154,8 @@ async function getReleaseEntries(dry: boolean, devTag?: string) {
 
 export async function generateReleaseTree(dry: boolean, devTag?: string, packageName?: string, exclude?: string[]) {
 	let releaseEntries = await getReleaseEntries(dry, devTag);
+	const versionMap = new Map(releaseEntries.map(e => [e.name, e.version]));
+
 	// Try to early return if the package doesn't have deps
 	if (packageName && packageName !== 'all') {
 		const releaseEntry = releaseEntries.find((entry) => entry.name === packageName);
@@ -162,7 +164,7 @@ export async function generateReleaseTree(dry: boolean, devTag?: string, package
 		}
 
 		if (!releaseEntry.dependsOn) {
-			return [[releaseEntry]];
+			return { tree: [[releaseEntry]], versionMap };
 		}
 	}
 
@@ -224,11 +226,11 @@ export async function generateReleaseTree(dry: boolean, devTag?: string, package
 			if (newThisBranch.length) excludedReleaseTree.unshift(newThisBranch);
 		}
 
-		return excludedReleaseTree;
+		return { tree: excludedReleaseTree, versionMap };
 	}
 
 	if (!packageName || packageName === 'all') {
-		return releaseTree;
+		return { tree: releaseTree, versionMap };
 	}
 
 	// Prune the tree for the specified package
@@ -250,5 +252,5 @@ export async function generateReleaseTree(dry: boolean, devTag?: string, package
 		if (newThisBranch.length) packageReleaseTree.unshift(newThisBranch);
 	}
 
-	return packageReleaseTree;
+	return { tree: packageReleaseTree, versionMap };
 }

@@ -34,13 +34,13 @@
 		"@sapphire/snowflake": "^3.5.5",
 		"@vladfrangu/async_event_emitter": "^2.4.7",
 		"discord-api-types": "^0.38.36",
-		"@ovencord/rest": "workspace:^",
-		"@ovencord/util": "workspace:^",
-		"@ovencord/ws": "workspace:^"
+		"@ovencord/rest": "^2.5.0",
+		"@ovencord/util": "^1.1.1",
+		"@ovencord/ws": "^2.0.2"
 	},
 	"devDependencies": {
-		"@ovencord/api-extractor": "workspace:^",
-		"@ovencord/scripts": "workspace:^",
+		"@ovencord/api-extractor": "^7.52.7",
+		"@ovencord/scripts": "^0.1.0",
 		"@favware/cliff-jumper": "^6.0.0",
 		"@types/bun": "latest",
 		"@vitest/coverage-v8": "^4.0.15",

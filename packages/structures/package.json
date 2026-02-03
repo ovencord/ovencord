@@ -37,11 +37,11 @@
 	"dependencies": {
 		"@sapphire/snowflake": "^3.5.5",
 		"discord-api-types": "^0.38.36",
-		"@ovencord/formatters": "workspace:^"
+		"@ovencord/formatters": "^0.6.1"
 	},
 	"devDependencies": {
-		"@ovencord/api-extractor": "workspace:^",
-		"@ovencord/scripts": "workspace:^",
+		"@ovencord/api-extractor": "^7.52.7",
+		"@ovencord/scripts": "^0.1.0",
 		"@favware/cliff-jumper": "^6.0.0",
 		"@vitest/coverage-v8": "^4.0.15",
 		"cpy-cli": "^6.0.0",

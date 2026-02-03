@@ -32,7 +32,7 @@
 	"funding": "https://github.com/ovencord/ovencord?sponsor",
 	"dependencies": {
 		"@microsoft/tsdoc": "~0.15.1",
-		"@ovencord/api-extractor-model": "workspace:^"
+		"@ovencord/api-extractor-model": "^7.30.6"
 	},
 	"devDependencies": {
 		"cross-env": "^10.1.0",

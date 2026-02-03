@@ -48,7 +48,7 @@
 		"validate-npm-package-name": "^7.0.0"
 	},
 	"devDependencies": {
-		"@ovencord/api-extractor": "workspace:^",
+		"@ovencord/api-extractor": "^7.52.7",
 		"@favware/cliff-jumper": "^6.0.0",
 		"@types/node": "^22.19.2",
 		"@types/prompts": "^2.4.9",

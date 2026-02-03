@@ -32,17 +32,17 @@
 	"funding": "https://github.com/ovencord/ovencord?sponsor",
 	"dependencies": {
 		"discord-api-types": "^0.38.36",
-		"@ovencord/builders": "workspace:^",
-		"@ovencord/collection": "workspace:^",
-		"@ovencord/core": "workspace:^",
-		"@ovencord/formatters": "workspace:^",
-		"@ovencord/rest": "workspace:^",
-		"@ovencord/util": "workspace:^",
-		"@ovencord/ws": "workspace:^"
+		"@ovencord/builders": "^1.11.1",
+		"@ovencord/collection": "^2.1.1",
+		"@ovencord/core": "^2.1.0",
+		"@ovencord/formatters": "^0.6.1",
+		"@ovencord/rest": "^2.5.0",
+		"@ovencord/util": "^1.1.1",
+		"@ovencord/ws": "^2.0.2"
 	},
 	"devDependencies": {
-		"@ovencord/api-extractor": "workspace:^",
-		"@ovencord/scripts": "workspace:^",
+		"@ovencord/api-extractor": "^7.52.7",
+		"@ovencord/scripts": "^0.1.0",
 		"@favware/cliff-jumper": "^6.0.0",
 		"@vitest/coverage-v8": "^4.0.15",
 		"cross-env": "^10.1.0",

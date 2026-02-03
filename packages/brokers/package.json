@@ -44,8 +44,8 @@
 		"ioredis": "^5.8.2"
 	},
 	"devDependencies": {
-		"@ovencord/api-extractor": "workspace:^",
-		"@ovencord/scripts": "workspace:^",
+		"@ovencord/api-extractor": "^7.52.7",
+		"@ovencord/scripts": "^0.1.0",
 		"@favware/cliff-jumper": "^6.0.0",
 		"@vitest/coverage-v8": "^4.0.15",
 		"cross-env": "^10.1.0",

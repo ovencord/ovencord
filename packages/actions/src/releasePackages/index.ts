@@ -51,7 +51,7 @@ if (!dev && inputTag.length) {
 
 const tag = inputTag.length ? inputTag : dev ? 'dev' : undefined;
 const [packageName] = program.processedArgs as [string];
-const tree = await generateReleaseTree(dry, tag, packageName, exclude);
+const { tree, versionMap } = await generateReleaseTree(dry, tag, packageName, exclude);
 
 interface ReleaseResult {
 	identifier: string;
@@ -66,7 +66,7 @@ for (const branch of tree) {
 
 	await Promise.all(
 		branch.map(async (release) => {
-			const published = await releasePackage(release, dry, tag);
+			const published = await releasePackage(release, dry, versionMap, tag);
 			const identifier = `${release.name}@${release.version}`;
 
 			if (published) {

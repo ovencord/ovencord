@@ -1,7 +1,7 @@
-import process from 'node:process';
 import { info, warning } from '@actions/core';
 import { getOctokit, context } from '@actions/github';
-import { $ } from 'bun';
+import type { PackageJSON } from '@npm/types';
+import { $, file, write } from 'bun';
 import type { ReleaseEntry } from './generateReleaseTree.js';
 
 let octokit: ReturnType<typeof getOctokit> | undefined;
@@ -40,17 +40,56 @@ async function gitTagAndRelease(release: ReleaseEntry, dry: boolean) {
 	}
 }
 
-export async function releasePackage(release: ReleaseEntry, dry: boolean, devTag?: string, doGitRelease = !devTag) {
+export async function releasePackage(
+	release: ReleaseEntry,
+	dry: boolean,
+	versionMap: Map<string, string>,
+	devTag?: string,
+	doGitRelease = !devTag,
+) {
 	// Sanity check against the registry first
 	if (await checkRegistry(release)) {
 		info(`${release.name}@${release.version} already published, skipping.`);
 		return false;
 	}
 
+	const pkgJsonPath = `${release.path}/package.json`;
+	const pkgJsonContent = await file(pkgJsonPath).text();
+	const pkgJson = JSON.parse(pkgJsonContent) as PackageJSON;
+
+	// Transform dependencies
+	const transformDeps = (deps?: Record<string, string>) => {
+		if (!deps) return;
+		for (const [name, version] of Object.entries(deps)) {
+			if (version.startsWith('workspace:')) {
+				const realVersion = versionMap.get(name);
+				if (realVersion) {
+					deps[name] = version.replace('workspace:', '').replace(/[\^~*]/, '') + realVersion;
+					// Standardize to ^Version if it was workspace:^
+					if (version.includes('^')) deps[name] = `^${realVersion}`;
+					else if (version.includes('~')) deps[name] = `~${realVersion}`;
+					else deps[name] = realVersion;
+				}
+			}
+		}
+	};
+
+	transformDeps(pkgJson.dependencies);
+	transformDeps(pkgJson.devDependencies);
+	transformDeps(pkgJson.peerDependencies);
+
 	if (dry) {
 		info(`[DRY] Releasing ${release.name}@${release.version}`);
+		info(`[DRY] Dependencies transformed: ${JSON.stringify(pkgJson.dependencies)}`);
 	} else {
-		await $`npm publish --access public ${devTag ? `--tag ${devTag}` : ''}`.cwd(release.path);
+		// Temporary write transformed package.json
+		await write(pkgJsonPath, JSON.stringify(pkgJson, null, '\t') + '\n');
+		try {
+			await $`npm publish --access public ${devTag ? `--tag ${devTag}` : ''}`.cwd(release.path);
+		} finally {
+			// Restore original package.json
+			await write(pkgJsonPath, pkgJsonContent);
+		}
 	}
 
 	// && !devTag just to be sure
@@ -89,7 +128,7 @@ export async function releasePackage(release: ReleaseEntry, dry: boolean, devTag
 		await $`bun run rename-to-app`.cwd('packages/create-discord-bot');
 		// eslint-disable-next-line require-atomic-updates
 		release.name = 'create-discord-app';
-		await releasePackage(release, dry, devTag, false);
+		await releasePackage(release, dry, versionMap, devTag, false);
 	}
 
 	return true;
