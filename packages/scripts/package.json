@@ -8,6 +8,7 @@
 		"build": "tsc --noEmit --lib ESNext,DOM && tsup",
 		"lint": "prettier --check . && cross-env TIMING=1 eslint --format=pretty src turbo/generators/config.ts",
 		"format": "prettier --write . && cross-env TIMING=1 eslint --fix --format=pretty src turbo/generators/config.ts",
+		"typecheck": "tsc --noEmit --lib ESNext,DOM",
 		"fmt": "pnpm run format"
 	},
 	"bin": {

@@ -11,7 +11,7 @@
 		"format": "bun --filter '*' run format",
 		"update": "bun --recursive update --interactive",
 		"update:latest": "bun --recursive update --interactive --latest",
-		"typecheck": "bun --filter '*' run typecheck",
+		"typecheck": "bun run --recursive typecheck",
 		"release": "bun ./packages/actions/src/releasePackages/index.ts"
 	},
 	"type": "module",

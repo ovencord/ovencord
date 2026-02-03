@@ -10,6 +10,7 @@
 		"prepack": "pnpm run build && pnpm run lint",
 		"changelog": "git cliff --prepend ./CHANGELOG.md -u -c ./cliff.toml -r ../../ --include-path 'packages/create-discord-bot/*'",
 		"release": "cliff-jumper",
+		"typecheck": "tsc --noEmit",
 		"rename-to-app": "node scripts/rename-to-app.mjs"
 	},
 	"type": "module",
