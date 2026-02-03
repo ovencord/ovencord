@@ -22,10 +22,10 @@
 	],
 	"repository": {
 		"type": "git",
-		"url": "https://github.com/discordjs/discord.js.git",
+		"url": "https://github.com/ovencord/ovencord.git",
 		"directory": "packages/api-extractor"
 	},
-	"homepage": "https://discord.js.org",
+	"homepage": "https://ovencord.dev",
 	"funding": "https://github.com/discordjs/discord.js?sponsor",
 	"bin": {
 		"api-extractor": "./bin/api-extractor"
@@ -73,5 +73,8 @@
 	"types": "./src/index.ts",
 	"files": [
 		"src"
+	],
+	"contributors": [
+		"Ovencord Contributors"
 	]
 }

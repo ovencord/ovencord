@@ -20,11 +20,7 @@
 		"src"
 	],
 	"contributors": [
-		"Crawl <icrawltogo@gmail.com>",
-		"SpaceEEC <spaceeec@yahoo.com>",
-		"Vlad Frangu <me@vladfrangu.dev>",
-		"Aura Román <kyradiscord@gmail.com>",
-		"Chai Kohen <chaikohen@gmail.com>"
+		"Ovencord Contributors"
 	],
 	"license": "Apache-2.0",
 	"keywords": [
@@ -35,13 +31,13 @@
 	],
 	"repository": {
 		"type": "git",
-		"url": "https://github.com/discordjs/discord.js.git",
+		"url": "https://github.com/ovencord/ovencord.git",
 		"directory": "packages/structures"
 	},
 	"bugs": {
-		"url": "https://github.com/discordjs/discord.js/issues"
+		"url": "https://github.com/ovencord/ovencord/issues"
 	},
-	"homepage": "https://discord.js.org",
+	"homepage": "https://ovencord.dev",
 	"dependencies": {
 		"@sapphire/snowflake": "^3.5.5",
 		"discord-api-types": "^0.38.36",

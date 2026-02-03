@@ -1,8 +1,8 @@
 {
 	"$schema": "https://json.schemastore.org/package.json",
-	"name": "@discordjs/discord.js",
-	"version": "0.0.0",
-	"description": "A powerful library for interacting with the Discord API",
+	"name": "@ovencord/discord.js",
+	"version": "14.16.3",
+	"description": "Cooking the future of Discord development. A high-performance, Bun-native monorepo for the Discord ecosystem.",
 	"private": true,
 	"scripts": {
 		"build": "bun run --recursive build",
@@ -16,29 +16,25 @@
 	},
 	"type": "module",
 	"contributors": [
-		"Crawl <icrawltogo@gmail.com>",
-		"Amish Shah <amishshah.2k@gmail.com>",
-		"Vlad Frangu <me@vladfrangu.dev>",
-		"SpaceEEC <spaceeec@yahoo.com>",
-		"Aura Román <kyradiscord@gmail.com>"
+		"Ovencord Contributors"
 	],
 	"keywords": [
 		"discord",
 		"api",
 		"bot",
 		"client",
-		"node",
-		"discordapp"
+		"bun",
+		"ovencord"
 	],
 	"repository": {
 		"type": "git",
-		"url": "https://github.com/discordjs/discord.js.git"
+		"url": "https://github.com/ovencord/ovencord.git"
 	},
 	"bugs": {
-		"url": "https://github.com/discordjs/discord.js/issues"
+		"url": "https://github.com/ovencord/ovencord/issues"
 	},
-	"homepage": "https://discord.js.org",
-	"funding": "https://github.com/discordjs/discord.js?sponsor",
+	"homepage": "https://ovencord.dev",
+	"funding": "https://github.com/ovencord/ovencord?sponsor",
 	"devDependencies": {
 		"@commitlint/cli": "^20.2.0",
 		"@commitlint/config-angular": "^20.2.0",

@@ -16,12 +16,7 @@
 		"src"
 	],
 	"contributors": [
-		"Crawl <icrawltogo@gmail.com>",
-		"Amish Shah <amishshah.2k@gmail.com>",
-		"SpaceEEC <spaceeec@yahoo.com>",
-		"Vlad Frangu <me@vladfrangu.dev>",
-		"Aura Román <kyradiscord@gmail.com>",
-		"DD <didinele.dev@gmail.com>"
+		"Ovencord Contributors"
 	],
 	"license": "Apache-2.0",
 	"keywords": [
@@ -34,13 +29,13 @@
 	],
 	"repository": {
 		"type": "git",
-		"url": "https://github.com/discordjs/discord.js.git",
+		"url": "https://github.com/ovencord/ovencord.git",
 		"directory": "packages/proxy-container"
 	},
 	"bugs": {
-		"url": "https://github.com/discordjs/discord.js/issues"
+		"url": "https://github.com/ovencord/ovencord/issues"
 	},
-	"homepage": "https://discord.js.org",
+	"homepage": "https://ovencord.dev",
 	"funding": "https://github.com/discordjs/discord.js?sponsor",
 	"dependencies": {
 		"tslib": "^2.8.1",

@@ -20,18 +20,18 @@
 		"src"
 	],
 	"contributors": [
-		"Suneet Tipirneni <suneettipirneni@icloud.com>"
+		"Ovencord Contributors"
 	],
 	"license": "Apache-2.0",
 	"repository": {
 		"type": "git",
-		"url": "https://github.com/discordjs/discord.js.git",
+		"url": "https://github.com/ovencord/ovencord.git",
 		"directory": "packages/api-extractor-utils"
 	},
 	"bugs": {
-		"url": "https://github.com/discordjs/discord.js/issues"
+		"url": "https://github.com/ovencord/ovencord/issues"
 	},
-	"homepage": "https://discord.js.org",
+	"homepage": "https://ovencord.dev",
 	"funding": "https://github.com/discordjs/discord.js?sponsor",
 	"dependencies": {
 		"@microsoft/tsdoc": "~0.15.1",
