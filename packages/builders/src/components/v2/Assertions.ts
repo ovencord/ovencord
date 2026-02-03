@@ -4,7 +4,7 @@ import { idPredicate } from '../../Assertions.js';
 import { actionRowPredicate } from '../Assertions.js';
 
 const unfurledMediaItemPredicate = z.object({
-	url: z.url({ protocol: /^(?:https?|attachment)$/ }),
+	url: z.string().url().refine((url) => url.startsWith('http:') || url.startsWith('https:') || url.startsWith('attachment:'), { message: 'URL must use http, https, or attachment protocol' }),
 });
 
 export const thumbnailPredicate = z.object({
@@ -16,7 +16,7 @@ export const thumbnailPredicate = z.object({
 });
 
 const unfurledMediaItemAttachmentOnlyPredicate = z.object({
-	url: z.url({ protocol: /^attachment$/ }),
+	url: z.string().url().refine((url) => url.startsWith('attachment:'), { message: 'URL must use attachment protocol' }),
 });
 
 export const filePredicate = z.object({
@@ -30,7 +30,7 @@ export const separatorPredicate = z.object({
 	type: z.literal(ComponentType.Separator),
 	id: idPredicate,
 	divider: z.boolean().optional(),
-	spacing: z.enum(SeparatorSpacingSize).optional(),
+	spacing: z.nativeEnum(SeparatorSpacingSize).optional(),
 });
 
 export const textDisplayPredicate = z.object({
@@ -78,5 +78,5 @@ export const containerPredicate = z.object({
 		)
 		.min(1),
 	spoiler: z.boolean().optional(),
-	accent_color: z.int().min(0).max(0xffffff).nullish(),
+	accent_color: z.number().int().min(0).max(0xffffff).nullish(),
 });

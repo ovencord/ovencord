@@ -15,6 +15,7 @@
     "allowArbitraryExtensions": false,
     "allowImportingTsExtensions": false,
     "module": "ESNext",
+    "skipLibCheck": true,
     "moduleResolution": "Bundler",
     "baseUrl": ".",
     "resolveJsonModule": true,
@@ -38,7 +39,8 @@
     "useDefineForClassFields": true,
     "paths": {
       "@ovencord/*": ["packages/*/src"]
-    }
+    },
+    "types": ["bun"]
   },
   "exclude": ["node_modules"]
 }

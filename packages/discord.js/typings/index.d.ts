@@ -5,9 +5,8 @@ import { MessagePort, Worker } from 'node:worker_threads';
 import { ApplicationCommandOptionAllowedChannelType, MessageActionRowComponentBuilder } from '@ovencord/builders';
 import { Collection, ReadonlyCollection } from '@ovencord/collection';
 import { BaseImageURLOptions, ImageURLOptions, RawFile, REST, RESTOptions, EmojiURLOptions } from '@ovencord/rest';
-import { Awaitable, FileBodyEncodable, JSONEncodable } from '@ovencord/util';
+import { Awaitable, FileBodyEncodable, JSONEncodable, AsyncEventEmitter } from '@ovencord/util';
 import { WebSocketManager, WebSocketManagerOptions } from '@ovencord/ws';
-import { AsyncEventEmitter } from '@vladfrangu/async_event_emitter';
 import {
   ActivityFlags,
   ActivityType,

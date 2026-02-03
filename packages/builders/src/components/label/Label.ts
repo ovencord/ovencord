@@ -70,7 +70,7 @@ export class LabelBuilder extends ComponentBuilder<APILabelComponent> {
 
 		this.data = {
 			...structuredClone(rest),
-			component: component ? createComponentBuilder(component) : undefined,
+			component: component ? (createComponentBuilder(component as any) as any) : undefined,
 			type: ComponentType.Label,
 		};
 	}

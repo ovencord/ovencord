@@ -14,7 +14,7 @@
         "@ovencord/*": ["../*/src"]
     },
     "types": [
-      "bun-types"
+      "bun"
     ]
   }
 }

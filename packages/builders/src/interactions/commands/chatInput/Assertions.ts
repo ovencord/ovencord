@@ -24,22 +24,22 @@ const sharedNameAndDescriptionPredicate = z.object({
 });
 
 const numericMixinNumberOptionPredicate = z.object({
-	max_value: z.float32().optional(),
-	min_value: z.float32().optional(),
+	max_value: z.number().optional(),
+	min_value: z.number().optional(),
 });
 
 const numericMixinIntegerOptionPredicate = z.object({
-	max_value: z.int().optional(),
-	min_value: z.int().optional(),
+	max_value: z.number().int().optional(),
+	min_value: z.number().int().optional(),
 });
 
 const channelMixinOptionPredicate = z.object({
-	channel_types: z.literal(ApplicationCommandOptionAllowedChannelTypes).array().optional(),
+	channel_types: z.union(ApplicationCommandOptionAllowedChannelTypes.map(type => z.literal(type)) as any).array().optional(),
 });
 
 const autocompleteMixinOptionPredicate = z.object({
 	autocomplete: z.literal(true),
-	choices: z.union([z.never(), z.never().array(), z.undefined()]),
+	choices: z.union([z.never(), z.never().array(), z.undefined()]).optional(),
 });
 
 const choiceValueStringPredicate = z.string().min(1).max(100);
@@ -155,7 +155,7 @@ const basicOptionPredicates = [
 export const chatInputCommandSubcommandPredicate = z.object({
 	...sharedNameAndDescriptionPredicate.shape,
 	type: z.literal(ApplicationCommandOptionType.Subcommand),
-	options: z.array(z.union(basicOptionPredicates)).max(25).optional(),
+	options: z.array(z.union(basicOptionPredicates as any)).max(25).optional(),
 });
 
 export const chatInputCommandSubcommandGroupPredicate = z.object({
@@ -166,13 +166,13 @@ export const chatInputCommandSubcommandGroupPredicate = z.object({
 
 export const chatInputCommandPredicate = z.object({
 	...sharedNameAndDescriptionPredicate.shape,
-	contexts: z.array(z.enum(InteractionContextType)).optional(),
+	contexts: z.array(z.nativeEnum(InteractionContextType)).optional(),
 	default_member_permissions: memberPermissionsPredicate.optional(),
-	integration_types: z.array(z.enum(ApplicationIntegrationType)).optional(),
+	integration_types: z.array(z.nativeEnum(ApplicationIntegrationType)).optional(),
 	nsfw: z.boolean().optional(),
 	options: z
 		.union([
-			z.array(z.union(basicOptionPredicates)).max(25),
+			z.array(z.union(basicOptionPredicates as any)).max(25),
 			z.array(z.union([chatInputCommandSubcommandPredicate, chatInputCommandSubcommandGroupPredicate])).max(25),
 		])
 		.optional(),

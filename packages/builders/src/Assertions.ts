@@ -1,7 +1,7 @@
 import { Locale } from 'discord-api-types/v10';
 import { z } from 'zod';
 
-export const idPredicate = z.int().min(0).max(2_147_483_647).optional();
+export const idPredicate = z.number().int().min(0).max(2_147_483_647).optional();
 export const customIdPredicate = z.string().min(1).max(100);
 export const snowflakePredicate = z.string().regex(/^(?:0|[1-9]\d*)$/);
 

@@ -5,6 +5,6 @@
 	"exclude": ["node_modules"],
 	"compilerOptions": {
 		"lib": ["ESNext", "DOM", "DOM.Iterable"],
-		"types": ["bun-types"]
+		"types": ["bun"]
 	}
 }

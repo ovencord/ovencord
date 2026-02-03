@@ -14,6 +14,8 @@ import { EmojiOrLabelButtonMixin } from './mixins/EmojiOrLabelButtonMixin.js';
  * @mixes {@link BaseButtonBuilder}\<{@link discord-api-types/v10#(APIButtonComponentWithURL:interface)}\>
  * @mixes {@link EmojiOrLabelButtonMixin}
  */
+export interface LinkButtonBuilder extends BaseButtonBuilder<APIButtonComponentWithURL>, EmojiOrLabelButtonMixin {}
+
 export class LinkButtonBuilder extends Mixin(BaseButtonBuilder<APIButtonComponentWithURL>, EmojiOrLabelButtonMixin) {
 	protected override readonly data: Partial<APIButtonComponentWithURL>;
 

@@ -187,58 +187,59 @@ export function createComponentBuilder<ComponentType extends keyof MappedCompone
 /**
  * Factory for creating components from API data.
  *
- * @typeParam ComponentBuilder - The type of component to use
+ * @typeParam Builder - The type of component to use
  * @param data - The API data to transform to a component class
  */
-export function createComponentBuilder<ComponentBuilder extends MessageComponentBuilder | ModalComponentBuilder>(
-	data: ComponentBuilder,
-): ComponentBuilder;
+export function createComponentBuilder<Builder extends MessageComponentBuilder | ModalComponentBuilder>(
+	data: Builder,
+): Builder;
 
 export function createComponentBuilder(
 	data: APIMessageComponent | APIModalComponent | MessageComponentBuilder,
 ): ComponentBuilder<APIBaseComponent<ComponentType>> {
-	if (data instanceof ComponentBuilder) {
-		return data;
+	if (data instanceof ComponentBuilder || (typeof data === 'object' && data !== null && 'toJSON' in data)) {
+		return data as any;
 	}
 
-	switch (data.type) {
+	const rawData = data as APIMessageComponent | APIModalComponent;
+	switch (rawData.type) {
 		case ComponentType.ActionRow:
-			return new ActionRowBuilder(data);
+			return new ActionRowBuilder(rawData as any);
 		case ComponentType.Button:
-			return createButtonBuilder(data);
+			return createButtonBuilder(rawData as any) as any;
 		case ComponentType.StringSelect:
-			return new StringSelectMenuBuilder(data);
+			return new StringSelectMenuBuilder(rawData as any);
 		case ComponentType.TextInput:
-			return new TextInputBuilder(data);
+			return new TextInputBuilder(rawData as any);
 		case ComponentType.UserSelect:
-			return new UserSelectMenuBuilder(data);
+			return new UserSelectMenuBuilder(rawData as any);
 		case ComponentType.RoleSelect:
-			return new RoleSelectMenuBuilder(data);
+			return new RoleSelectMenuBuilder(rawData as any);
 		case ComponentType.MentionableSelect:
-			return new MentionableSelectMenuBuilder(data);
+			return new MentionableSelectMenuBuilder(rawData as any);
 		case ComponentType.ChannelSelect:
-			return new ChannelSelectMenuBuilder(data);
+			return new ChannelSelectMenuBuilder(rawData as any);
 		case ComponentType.Thumbnail:
-			return new ThumbnailBuilder(data);
+			return new ThumbnailBuilder(rawData as any);
 		case ComponentType.File:
-			return new FileBuilder(data);
+			return new FileBuilder(rawData as any);
 		case ComponentType.Separator:
-			return new SeparatorBuilder(data);
+			return new SeparatorBuilder(rawData as any);
 		case ComponentType.TextDisplay:
-			return new TextDisplayBuilder(data);
+			return new TextDisplayBuilder(rawData as any);
 		case ComponentType.MediaGallery:
-			return new MediaGalleryBuilder(data);
+			return new MediaGalleryBuilder(rawData as any);
 		case ComponentType.Section:
-			return new SectionBuilder(data);
+			return new SectionBuilder(rawData as any);
 		case ComponentType.Container:
-			return new ContainerBuilder(data);
+			return new ContainerBuilder(rawData as any);
 		case ComponentType.Label:
-			return new LabelBuilder(data);
+			return new LabelBuilder(rawData as any);
 		case ComponentType.FileUpload:
-			return new FileUploadBuilder(data);
+			return new FileUploadBuilder(rawData as any);
 		default:
-			// @ts-expect-error This case can still occur if we get a newer unsupported component type
-			throw new Error(`Cannot properly serialize component type: ${data.type}`);
+			// This case can still occur if we get a newer unsupported component type
+			throw new Error(`Cannot properly serialize component type: ${rawData.type}`);
 	}
 }
 

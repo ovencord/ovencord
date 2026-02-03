@@ -13,7 +13,7 @@ export class ValidationError extends Error {
 	 * @internal
 	 */
 	public constructor(error: z.ZodError) {
-		super(z.prettifyError(error));
+		super(error.message);
 
 		this.name = 'ValidationError';
 		this.cause = error;

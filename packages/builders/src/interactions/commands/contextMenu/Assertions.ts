@@ -7,11 +7,11 @@ const namePredicate = z
 	.min(1)
 	.max(32)
 	.refine((val) => val.trim().length > 0, {
-		error: 'Must not consist of only whitespace.',
+		message: 'Must not consist of only whitespace.',
 	});
 
-const contextsPredicate = z.array(z.enum(InteractionContextType));
-const integrationTypesPredicate = z.array(z.enum(ApplicationIntegrationType));
+const contextsPredicate = z.array(z.nativeEnum(InteractionContextType));
+const integrationTypesPredicate = z.array(z.nativeEnum(ApplicationIntegrationType));
 
 const baseContextMenuCommandPredicate = z.object({
 	contexts: contextsPredicate.optional(),

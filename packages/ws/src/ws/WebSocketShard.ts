@@ -869,7 +869,7 @@ export class WebSocketShard extends AsyncEventEmitter<WebSocketShardEventsMap> {
 
 	// Override emit to fix TypeScript visibility/type issues
 	// eslint-disable-next-line @typescript-eslint/no-explicit-any
-	public emit(event: any, ...args: any[]): boolean {
+	public override emit(event: any, ...args: any[]): boolean {
 		// eslint-disable-next-line @typescript-eslint/no-explicit-any
 		return (super.emit as any)(event, ...args);
 	}

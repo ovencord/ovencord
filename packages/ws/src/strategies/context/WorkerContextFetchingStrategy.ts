@@ -1,4 +1,3 @@
-import { isMainThread, parentPort } from 'node:worker_threads';
 import { Collection } from '@ovencord/collection';
 import type { SessionInfo } from '../../ws/WebSocketManager.js';
 import {
@@ -9,6 +8,9 @@ import {
 } from '../sharding/WorkerShardingStrategy.js';
 import type { FetchingStrategyOptions, IContextFetchingStrategy } from './IContextFetchingStrategy.js';
 
+// Define the global self explicitly for TypeScript as a Worker
+declare const self: Worker;
+
 export class WorkerContextFetchingStrategy implements IContextFetchingStrategy {
 	private readonly sessionPromises = new Collection<number, (session: SessionInfo | null) => void>();
 
@@ -18,26 +20,23 @@ export class WorkerContextFetchingStrategy implements IContextFetchingStrategy {
 	>();
 
 	public constructor(public readonly options: FetchingStrategyOptions) {
-		if (isMainThread) {
-			throw new Error('Cannot instantiate WorkerContextFetchingStrategy on the main thread');
-		}
-
-		parentPort!.on('message', (payload: WorkerSendPayload) => {
+		self.addEventListener('message', (event: MessageEvent) => {
+			const payload = event.data as WorkerSendPayload;
 			if (payload.op === WorkerSendPayloadOp.SessionInfoResponse) {
-				this.sessionPromises.get(payload.nonce)?.(payload.session);
-				this.sessionPromises.delete(payload.nonce);
+				this.sessionPromises.get(payload.d.nonce)?.(payload.d.session);
+				this.sessionPromises.delete(payload.d.nonce);
 			}
 
 			if (payload.op === WorkerSendPayloadOp.ShardIdentifyResponse) {
-				const promise = this.waitForIdentifyPromises.get(payload.nonce);
-				if (payload.ok) {
+				const promise = this.waitForIdentifyPromises.get(payload.d.nonce);
+				if (payload.d.ok) {
 					promise?.resolve();
 				} else {
 					// We need to make sure we reject with an abort error
 					promise?.reject(promise.signal.reason);
 				}
 
-				this.waitForIdentifyPromises.delete(payload.nonce);
+				this.waitForIdentifyPromises.delete(payload.d.nonce);
 			}
 		});
 	}
@@ -46,22 +45,20 @@ export class WorkerContextFetchingStrategy implements IContextFetchingStrategy {
 		const nonce = Math.random();
 		const payload: WorkerReceivePayload = {
 			op: WorkerReceivePayloadOp.RetrieveSessionInfo,
-			shardId,
-			nonce,
-		};
+			d: { shardId, nonce }
+		} as any;
 		 
 		const promise = new Promise<SessionInfo | null>((resolve) => this.sessionPromises.set(nonce, resolve));
-		parentPort!.postMessage(payload);
+		self.postMessage(payload);
 		return promise;
 	}
 
 	public updateSessionInfo(shardId: number, sessionInfo: SessionInfo | null) {
 		const payload: WorkerReceivePayload = {
 			op: WorkerReceivePayloadOp.UpdateSessionInfo,
-			shardId,
-			session: sessionInfo,
-		};
-		parentPort!.postMessage(payload);
+			d: { shardId, session: sessionInfo }
+		} as any;
+		self.postMessage(payload);
 	}
 
 	public async waitForIdentify(shardId: number, signal: AbortSignal): Promise<void> {
@@ -69,23 +66,22 @@ export class WorkerContextFetchingStrategy implements IContextFetchingStrategy {
 
 		const payload: WorkerReceivePayload = {
 			op: WorkerReceivePayloadOp.WaitForIdentify,
-			nonce,
-			shardId,
-		};
+			d: { nonce, shardId }
+		} as any;
 		const promise = new Promise<void>((resolve, reject) =>
 			 
 			this.waitForIdentifyPromises.set(nonce, { signal, resolve, reject }),
 		);
 
-		parentPort!.postMessage(payload);
+		self.postMessage(payload);
 
 		const listener = () => {
 			const payload: WorkerReceivePayload = {
 				op: WorkerReceivePayloadOp.CancelIdentify,
-				nonce,
-			};
+				d: { nonce }
+			} as any;
 
-			parentPort!.postMessage(payload);
+			self.postMessage(payload);
 		};
 
 		signal.addEventListener('abort', listener);

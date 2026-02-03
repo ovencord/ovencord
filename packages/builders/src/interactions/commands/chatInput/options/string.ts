@@ -8,13 +8,6 @@ import { ApplicationCommandOptionWithChoicesMixin } from '../mixins/ApplicationC
 import { ApplicationCommandOptionBase } from './ApplicationCommandOptionBase.js';
 import type { ApplicationCommandOptionBaseData } from './ApplicationCommandOptionBase.js';
 
-/**
- * A chat input command string option.
- *
- * @mixes {@link ApplicationCommandOptionBase}
- * @mixes {@link ApplicationCommandOptionWithAutocompleteMixin}
- * @mixes {@link ApplicationCommandOptionWithChoicesMixin}\<string\>
- */
 export class ChatInputCommandStringOption extends Mixin(
 	ApplicationCommandOptionBase,
 	ApplicationCommandOptionWithAutocompleteMixin,

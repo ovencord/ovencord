@@ -92,7 +92,7 @@ export class BunInflateHandler {
 		// Identify compression is always a complete message
 		if (isIdentify) {
 			try {
-				const decompressed = Bun.inflateSync(data);
+				const decompressed = Bun.inflateSync(data as any);
 				return this.textDecoder.decode(decompressed);
 			} catch (error) {
 				throw new Error(
@@ -114,7 +114,7 @@ export class BunInflateHandler {
 		this.buffer.clear();
 
 		try {
-			const decompressed = Bun.inflateSync(combined);
+			const decompressed = Bun.inflateSync(combined as any);
 			return this.textDecoder.decode(decompressed);
 		} catch (error) {
 			this.buffer.clear(); // Clear buffer on error to prevent corruption

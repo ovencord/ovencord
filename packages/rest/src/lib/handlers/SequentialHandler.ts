@@ -145,7 +145,7 @@ export class SequentialHandler implements IHandler {
 		}
 
 		// Wait for any previous requests to be completed before this one is run
-		await queue.wait({ signal: requestData.signal });
+		await queue.wait(requestData.signal ? { signal: requestData.signal } : undefined);
 		// This set handles retroactively sublimiting requests
 		if (queueType === QueueType.Standard) {
 			if (this.#sublimitedQueue && hasSublimit(routeId.bucketRoute, requestData.body, options.method)) {

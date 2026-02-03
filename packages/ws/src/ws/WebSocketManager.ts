@@ -1,6 +1,5 @@
 import type { Collection } from '@ovencord/collection';
-import { range, type Awaitable } from '@ovencord/util';
-import { AsyncEventEmitter } from '@vladfrangu/async_event_emitter';
+import { AsyncEventEmitter, range, type Awaitable } from '@ovencord/util';
 import type {
 	APIGatewayBotInfo,
 	GatewayIdentifyProperties,

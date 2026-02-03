@@ -31,17 +31,18 @@ export function getUserAgentAppendix(): string {
 		return 'UnknownEnvironment';
 	}
 
-	if ('versions' in globalThis.process) {
-		if ('deno' in globalThis.process.versions) {
-			return `Deno/${globalThis.process.versions.deno}`;
+	const versions = (globalThis.process as any).versions;
+	if (versions) {
+		if ('deno' in versions) {
+			return `Deno/${versions.deno}`;
 		}
 
-		if ('bun' in globalThis.process.versions) {
-			return `Bun/${globalThis.process.versions.bun}`;
+		if ('bun' in versions) {
+			return `Bun/${versions.bun}`;
 		}
 
-		if ('node' in globalThis.process.versions) {
-			return `Node.js/${globalThis.process.versions.node}`;
+		if ('node' in versions) {
+			return `Node.js/${versions.node}`;
 		}
 	}
 

@@ -106,11 +106,12 @@ export class WorkerShardingStrategy implements IShardingStrategy {
         // For simplicity in this migration, we assume a fire-and-forget or need to implement a one-off listener.
         // Since we are moving to Bun, we can use a temporary promise.
         
-        return new Promise((resolve, reject) => {
+        return new Promise((resolve) => {
             const listener = (event: MessageEvent) => {
                 const data = event.data as WorkerReceivePayload;
                 if (data.op === WorkerReceivePayloadOp.SessionInfoResponse && data.d.nonce === nonce) {
                     worker.removeEventListener('message', listener);
+                    clearTimeout(timeout);
                     resolve(data.d.session);
                 }
             };
@@ -187,7 +188,7 @@ export class WorkerShardingStrategy implements IShardingStrategy {
         return statuses;
 	}
 
-	private onMessage(shardId: number, payload: WorkerReceivePayload) {
+	private onMessage(_shardId: number, payload: WorkerReceivePayload) {
 		switch (payload.op) {
 			case WorkerReceivePayloadOp.Connect:
 				// handled by spawn
@@ -210,7 +211,7 @@ export class WorkerShardingStrategy implements IShardingStrategy {
 		}
 	}
 
-	private async waitForReady(shardId: number) {
+	private async waitForReady(_shardId: number) {
 		// Implementation depends on how we signal ready.
         // Assuming we receive a 'Ready' event forwarded from the worker.
 	}
@@ -223,17 +224,24 @@ export enum WorkerSendPayloadOp {
 	FetchSessionInfo,
 	FetchShardIdentity,
 	FetchStatus,
-    Event,
+	SessionInfoResponse,
+	ShardIdentifyResponse,
+	StatusResponse,
+	Event,
 }
 
 export enum WorkerReceivePayloadOp {
 	Connect,
 	Destroy,
 	Send,
+	RetrieveSessionInfo,
+	UpdateSessionInfo,
+	WaitForIdentify,
+	CancelIdentify,
 	SessionInfoResponse,
 	ShardIdentityResponse,
 	StatusResponse,
-    Event,
+	Event,
 }
 
 export interface WorkerSendPayload {

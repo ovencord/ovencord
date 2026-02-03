@@ -9,7 +9,7 @@ export const emojiPredicate = z
 		animated: z.boolean().optional(),
 	})
 	.refine((data) => data.id !== undefined || data.name !== undefined, {
-		error: "Either 'id' or 'name' must be provided",
+		message: "Either 'id' or 'name' must be provided",
 	});
 
 const buttonPredicateBase = z.strictObject({
@@ -24,20 +24,32 @@ const buttonCustomIdPredicateBase = buttonPredicateBase
 		custom_id: customIdPredicate,
 		emoji: emojiPredicate.optional(),
 		label: buttonLabelPredicate.optional(),
-	})
-	.refine((data) => data.emoji !== undefined || data.label !== undefined, {
-		message: 'Buttons with a custom id must have either an emoji or a label.',
 	});
 
-const buttonPrimaryPredicate = buttonCustomIdPredicateBase.safeExtend({ style: z.literal(ButtonStyle.Primary) });
-const buttonSecondaryPredicate = buttonCustomIdPredicateBase.safeExtend({ style: z.literal(ButtonStyle.Secondary) });
-const buttonSuccessPredicate = buttonCustomIdPredicateBase.safeExtend({ style: z.literal(ButtonStyle.Success) });
-const buttonDangerPredicate = buttonCustomIdPredicateBase.safeExtend({ style: z.literal(ButtonStyle.Danger) });
+
+
+const buttonPrimaryPredicate = buttonCustomIdPredicateBase.extend({ style: z.literal(ButtonStyle.Primary) });
+const buttonSecondaryPredicate = buttonCustomIdPredicateBase.extend({ style: z.literal(ButtonStyle.Secondary) });
+const buttonSuccessPredicate = buttonCustomIdPredicateBase.extend({ style: z.literal(ButtonStyle.Success) });
+const buttonDangerPredicate = buttonCustomIdPredicateBase.extend({ style: z.literal(ButtonStyle.Danger) });
+
+const buttonPrimaryRefinedPredicate = buttonPrimaryPredicate.refine((data) => data.emoji !== undefined || data.label !== undefined, {
+	message: 'Buttons with a custom id must have either an emoji or a label.',
+});
+const buttonSecondaryRefinedPredicate = buttonSecondaryPredicate.refine((data) => data.emoji !== undefined || data.label !== undefined, {
+	message: 'Buttons with a custom id must have either an emoji or a label.',
+});
+const buttonSuccessRefinedPredicate = buttonSuccessPredicate.refine((data) => data.emoji !== undefined || data.label !== undefined, {
+	message: 'Buttons with a custom id must have either an emoji or a label.',
+});
+const buttonDangerRefinedPredicate = buttonDangerPredicate.refine((data) => data.emoji !== undefined || data.label !== undefined, {
+	message: 'Buttons with a custom id must have either an emoji or a label.',
+});
 
 const buttonLinkPredicate = buttonPredicateBase
 	.extend({
 		style: z.literal(ButtonStyle.Link),
-		url: z.url({ protocol: /^(?:https?|discord)$/ }).max(512),
+		url: z.string().url().max(512).refine((url) => url.startsWith('http:') || url.startsWith('https:') || url.startsWith('discord:'), { message: 'URL must use http, https, or discord protocol' }),
 		emoji: emojiPredicate.optional(),
 		label: buttonLabelPredicate.optional(),
 	})
@@ -50,12 +62,12 @@ const buttonPremiumPredicate = buttonPredicateBase.extend({
 	sku_id: snowflakePredicate,
 });
 
-export const buttonPredicate = z.discriminatedUnion('style', [
+export const buttonPredicate = z.union([
 	buttonLinkPredicate,
-	buttonPrimaryPredicate,
-	buttonSecondaryPredicate,
-	buttonSuccessPredicate,
-	buttonDangerPredicate,
+	buttonPrimaryRefinedPredicate,
+	buttonSecondaryRefinedPredicate,
+	buttonSuccessRefinedPredicate,
+	buttonDangerRefinedPredicate,
 	buttonPremiumPredicate,
 ]);
 
@@ -70,7 +82,7 @@ const selectMenuBasePredicate = z.object({
 
 export const selectMenuChannelPredicate = selectMenuBasePredicate.extend({
 	type: z.literal(ComponentType.ChannelSelect),
-	channel_types: z.enum(ChannelType).array().optional(),
+	channel_types: z.nativeEnum(ChannelType).array().optional(),
 	default_values: z
 		.object({ id: snowflakePredicate, type: z.literal(SelectMenuDefaultValueType.Channel) })
 		.array()
@@ -83,7 +95,7 @@ export const selectMenuMentionablePredicate = selectMenuBasePredicate.extend({
 	default_values: z
 		.object({
 			id: snowflakePredicate,
-			type: z.literal([SelectMenuDefaultValueType.Role, SelectMenuDefaultValueType.User]),
+			type: z.union([z.literal(SelectMenuDefaultValueType.Role), z.literal(SelectMenuDefaultValueType.User)]),
 		})
 		.array()
 		.max(25)
@@ -112,37 +124,33 @@ export const selectMenuStringPredicate = selectMenuBasePredicate
 		type: z.literal(ComponentType.StringSelect),
 		options: selectMenuStringOptionPredicate.array().min(1).max(25),
 	})
-	.check((ctx) => {
+	.superRefine((value, ctx) => {
 		const addIssue = (name: string, minimum: number) =>
-			ctx.issues.push({
-				code: 'too_small',
+			ctx.addIssue({
+				code: z.ZodIssueCode.too_small,
 				message: `The number of options must be greater than or equal to ${name}`,
 				inclusive: true,
 				minimum,
-				type: 'number',
+				type: 'array',
 				path: ['options'],
-				origin: 'number',
-				input: minimum,
 			});
 
-		if (ctx.value.min_values !== undefined && ctx.value.options.length < ctx.value.min_values) {
-			addIssue('min_values', ctx.value.min_values);
+		if (value.min_values !== undefined && value.options.length < value.min_values) {
+			addIssue('min_values', value.min_values);
 		}
 
 		if (
-			ctx.value.min_values !== undefined &&
-			ctx.value.max_values !== undefined &&
-			ctx.value.min_values > ctx.value.max_values
+			value.min_values !== undefined &&
+			value.max_values !== undefined &&
+			value.min_values > value.max_values
 		) {
-			ctx.issues.push({
-				code: 'too_big',
+			ctx.addIssue({
+				code: z.ZodIssueCode.too_big,
 				message: `The maximum amount of options must be greater than or equal to the minimum amount of options`,
 				inclusive: true,
-				maximum: ctx.value.max_values,
+				maximum: value.max_values,
 				type: 'number',
 				path: ['min_values'],
-				origin: 'number',
-				input: ctx.value.min_values,
 			});
 		}
 	});
@@ -167,13 +175,13 @@ export const actionRowPredicate = z.object({
 			.max(5),
 		z
 			.object({
-				type: z.literal([
-					ComponentType.ChannelSelect,
-					ComponentType.MentionableSelect,
-					ComponentType.StringSelect,
-					ComponentType.RoleSelect,
-					ComponentType.TextInput,
-					ComponentType.UserSelect,
+				type: z.union([
+					z.literal(ComponentType.ChannelSelect),
+					z.literal(ComponentType.MentionableSelect),
+					z.literal(ComponentType.StringSelect),
+					z.literal(ComponentType.RoleSelect),
+					z.literal(ComponentType.TextInput),
+					z.literal(ComponentType.UserSelect),
 				]),
 			})
 			.array()

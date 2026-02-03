@@ -11,6 +11,8 @@ export type CustomIdButtonStyle = APIButtonComponentWithCustomId['style'];
  * @mixes {@link BaseButtonBuilder}\<{@link discord-api-types/v10#(APIButtonComponentWithCustomId:interface)}\>
  * @mixes {@link EmojiOrLabelButtonMixin}
  */
+export interface CustomIdButtonBuilder extends BaseButtonBuilder<APIButtonComponentWithCustomId>, EmojiOrLabelButtonMixin {}
+
 export abstract class CustomIdButtonBuilder extends Mixin(
 	BaseButtonBuilder<APIButtonComponentWithCustomId>,
 	EmojiOrLabelButtonMixin,

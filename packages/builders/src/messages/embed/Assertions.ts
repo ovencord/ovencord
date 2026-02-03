@@ -3,9 +3,9 @@ import { z } from 'zod';
 
 const namePredicate = z.string().max(256);
 
-const URLPredicate = z.url({ protocol: /^https?$/ });
+const URLPredicate = z.string().url().refine((url) => url.startsWith('http:') || url.startsWith('https:'), { message: 'URL must use http or https protocol' });
 
-const URLWithAttachmentProtocolPredicate = z.url({ protocol: /^(?:https?|attachment)$/ });
+const URLWithAttachmentProtocolPredicate = z.string().url().refine((url) => url.startsWith('http:') || url.startsWith('https:') || url.startsWith('attachment:'), { message: 'URL must use http, https, or attachment protocol' });
 
 export const embedFieldPredicate = z.object({
 	name: namePredicate,
@@ -30,7 +30,7 @@ export const embedPredicate = z
 		description: z.string().min(1).max(4_096).optional(),
 		url: URLPredicate.optional(),
 		timestamp: z.string().optional(),
-		color: z.int().min(0).max(0xffffff).optional(),
+		color: z.number().int().min(0).max(0xffffff).optional(),
 		footer: embedFooterPredicate.optional(),
 		image: z.object({ url: URLWithAttachmentProtocolPredicate }).optional(),
 		thumbnail: z.object({ url: URLWithAttachmentProtocolPredicate }).optional(),
@@ -47,7 +47,7 @@ export const embedPredicate = z
 			embed.image !== undefined ||
 			embed.thumbnail !== undefined,
 		{
-			error: 'Embed must have at least a title, description, a field, a footer, an author, an image, OR a thumbnail.',
+			message: 'Embed must have at least a title, description, a field, a footer, an author, an image, OR a thumbnail.',
 		},
 	)
-	.refine((embed) => embedLength(embed) <= 6_000, { error: 'Embeds must not exceed 6000 characters in total.' });
+	.refine((embed) => embedLength(embed as any) <= 6_000, { message: 'Embeds must not exceed 6000 characters in total.' });

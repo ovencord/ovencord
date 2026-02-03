@@ -7,7 +7,7 @@
         "paths": {
             "@ovencord/*": ["../*/src"]
         },
-		"types": ["bun-types"]
+		"types": ["bun"]
     },
 	"include": ["src/**/*.ts", "src/**/*.js", "src/**/*.cjs", "src/**/*.mjs", "bin"],
 	"exclude": ["node_modules"]
