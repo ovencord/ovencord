@@ -67,7 +67,6 @@
 		"bun": ">=1.0.0"
 	},
 	"publishConfig": {
-		"provenance": true,
 		"access": "public"
 	},
 	"module": "./src/index.ts"
