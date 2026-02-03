@@ -1,4 +1,3 @@
-
 import { Routes  } from 'discord-api-types/v10';
 import { Base  } from './Base.js';
 import { IntegrationApplication  } from './IntegrationApplication.js';
@@ -26,7 +25,25 @@ import { IntegrationApplication  } from './IntegrationApplication.js';
  *
  * @extends {Base}
  */
-class Integration extends Base {
+export class Integration extends Base {
+  public client: any;
+  public guild: any;
+  public id: any;
+  public name: any;
+  public type: any;
+  public enabled: any;
+  public syncing: any;
+  public role: any;
+  public enableEmoticons: any;
+  public user: any;
+  public account: any;
+  public syncedTimestamp: any;
+  public subscriberCount: any;
+  public revoked: any;
+  public expireBehavior: any;
+  public expireGracePeriod: any;
+  public application: any;
+  public scopes: any;
   constructor(client, data, guild) {
     super(client);
 
@@ -238,5 +255,3 @@ class Integration extends Base {
     });
   }
 }
-
-exports.Integration = Integration;

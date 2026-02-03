@@ -1,4 +1,3 @@
-
 import { lazy  } from '@ovencord/util';
 import { findComponentByCustomId  } from '../util/Components.js';
 import { BaseInteraction  } from './BaseInteraction.js';
@@ -13,7 +12,15 @@ const getMessage = lazy(() => require('./Message.js').Message);
  * @extends {BaseInteraction}
  * @implements {InteractionResponses}
  */
-class MessageComponentInteraction extends BaseInteraction {
+export class MessageComponentInteraction extends BaseInteraction {
+  public client: any;
+  public message: any;
+  public customId: any;
+  public componentType: any;
+  public deferred: any;
+  public ephemeral: any;
+  public replied: any;
+  public webhook: any;
   constructor(client, data) {
     super(client, data);
 
@@ -123,5 +130,3 @@ class MessageComponentInteraction extends BaseInteraction {
 }
 
 InteractionResponses.applyToClass(MessageComponentInteraction);
-
-exports.MessageComponentInteraction = MessageComponentInteraction;

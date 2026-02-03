@@ -1,4 +1,3 @@
-
 import { BaseGuildEmoji  } from './BaseGuildEmoji.js';
 
 /**
@@ -6,7 +5,9 @@ import { BaseGuildEmoji  } from './BaseGuildEmoji.js';
  *
  * @extends {BaseGuildEmoji}
  */
-class GuildPreviewEmoji extends BaseGuildEmoji {
+export class GuildPreviewEmoji extends BaseGuildEmoji {
+  public client: any;
+  public roles: any;
   /**
    * The public guild this emoji is part of
    *
@@ -25,5 +26,3 @@ class GuildPreviewEmoji extends BaseGuildEmoji {
     this.roles = data.roles;
   }
 }
-
-exports.GuildPreviewEmoji = GuildPreviewEmoji;

@@ -1,4 +1,3 @@
-
 import { InviteType  } from 'discord-api-types/v10';
 import { BaseInvite  } from '../structures/BaseInvite.js';
 import { GroupDMInvite  } from '../structures/GroupDMInvite.js';
@@ -23,8 +22,6 @@ const InviteTypeToClass = {
  * @returns {BaseInvite}
  * @ignore
  */
-function createInvite(client, data) {
+export function createInvite(client, data) {
   return new (InviteTypeToClass[data.type] ?? BaseInvite)(client, data);
 }
-
-exports.createInvite = createInvite;

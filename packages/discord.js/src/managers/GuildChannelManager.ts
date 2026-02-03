@@ -1,4 +1,3 @@
-
 import process from 'node:process';
 import { Collection  } from '@ovencord/collection';
 import { ChannelType, Routes  } from 'discord-api-types/v10';
@@ -22,7 +21,7 @@ let cacheWarningEmitted = false;
  *
  * @extends {CachedManager}
  */
-class GuildChannelManager extends CachedManager {
+export class GuildChannelManager extends CachedManager {
   constructor(guild, iterable) {
     super(guild.client, GuildChannel, iterable);
     const defaultCaching =
@@ -551,5 +550,3 @@ class GuildChannelManager extends CachedManager {
     this.client.actions.ChannelDelete.handle({ id });
   }
 }
-
-exports.GuildChannelManager = GuildChannelManager;

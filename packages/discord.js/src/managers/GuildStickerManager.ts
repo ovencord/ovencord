@@ -1,4 +1,3 @@
-
 import { Collection  } from '@ovencord/collection';
 import { Routes  } from 'discord-api-types/v10';
 import { DiscordjsTypeError, ErrorCodes  } from '../errors/index.js';
@@ -11,7 +10,8 @@ import { CachedManager  } from './CachedManager.js';
  *
  * @extends {CachedManager}
  */
-class GuildStickerManager extends CachedManager {
+export class GuildStickerManager extends CachedManager {
+  public guild: any;
   constructor(guild, iterable) {
     super(guild.client, Sticker, iterable);
 
@@ -190,5 +190,3 @@ class GuildStickerManager extends CachedManager {
     return resolvedSticker.user;
   }
 }
-
-exports.GuildStickerManager = GuildStickerManager;

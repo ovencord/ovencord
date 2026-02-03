@@ -1,4 +1,3 @@
-
 import { Routes  } from 'discord-api-types/v10';
 import { ReactionUserManager  } from '../managers/ReactionUserManager.js';
 import { flatten, resolveGuildEmoji  } from '../util/Util.js';
@@ -9,7 +8,16 @@ import { ReactionEmoji  } from './ReactionEmoji.js';
 /**
  * Represents a reaction to a message.
  */
-class MessageReaction {
+export class MessageReaction {
+  public client: any;
+  public message: any;
+  public me: any;
+  public meBurst: any;
+  public users: any;
+  public _emoji: any;
+  public burstColors: any;
+  public countDetails: any;
+  public count: any;
   constructor(client, data, message) {
     /**
      * The client that instantiated this message reaction
@@ -209,5 +217,3 @@ class MessageReaction {
     }
   }
 }
-
-exports.MessageReaction = MessageReaction;

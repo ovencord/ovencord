@@ -1,4 +1,3 @@
-
 import { BaseGuildTextChannel  } from './BaseGuildTextChannel.js';
 
 /**
@@ -6,7 +5,8 @@ import { BaseGuildTextChannel  } from './BaseGuildTextChannel.js';
  *
  * @extends {BaseGuildTextChannel}
  */
-class TextChannel extends BaseGuildTextChannel {
+export class TextChannel extends BaseGuildTextChannel {
+  public rateLimitPerUser: any;
   _patch(data) {
     super._patch(data);
 
@@ -31,5 +31,3 @@ class TextChannel extends BaseGuildTextChannel {
     return this.edit({ rateLimitPerUser, reason });
   }
 }
-
-exports.TextChannel = TextChannel;

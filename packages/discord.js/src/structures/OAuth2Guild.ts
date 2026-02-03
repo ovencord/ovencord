@@ -1,4 +1,3 @@
-
 import { PermissionsBitField  } from '../util/PermissionsBitField.js';
 import { BaseGuild  } from './BaseGuild.js';
 
@@ -7,7 +6,10 @@ import { BaseGuild  } from './BaseGuild.js';
  *
  * @extends {BaseGuild}
  */
-class OAuth2Guild extends BaseGuild {
+export class OAuth2Guild extends BaseGuild {
+  public client: any;
+  public owner: any;
+  public permissions: any;
   constructor(client, data) {
     super(client, data);
 
@@ -26,5 +28,3 @@ class OAuth2Guild extends BaseGuild {
     this.permissions = new PermissionsBitField(BigInt(data.permissions)).freeze();
   }
 }
-
-exports.OAuth2Guild = OAuth2Guild;

@@ -1,4 +1,3 @@
-
 import process from 'node:process';
 import { Collection  } from '@ovencord/collection';
 import { OverwriteType, Routes  } from 'discord-api-types/v10';
@@ -14,7 +13,8 @@ let cacheWarningEmitted = false;
  *
  * @extends {CachedManager}
  */
-class PermissionOverwriteManager extends CachedManager {
+export class PermissionOverwriteManager extends CachedManager {
+  public channel: any;
   constructor(channel, iterable) {
     super(channel.client, PermissionOverwrites);
     if (!cacheWarningEmitted && this._cache.constructor.name !== 'Collection') {
@@ -172,5 +172,3 @@ class PermissionOverwriteManager extends CachedManager {
     return this.channel;
   }
 }
-
-exports.PermissionOverwriteManager = PermissionOverwriteManager;

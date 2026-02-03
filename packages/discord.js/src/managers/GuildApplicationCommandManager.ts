@@ -1,4 +1,3 @@
-
 import { ApplicationCommandManager  } from './ApplicationCommandManager.js';
 import { ApplicationCommandPermissionsManager  } from './ApplicationCommandPermissionsManager.js';
 
@@ -7,7 +6,9 @@ import { ApplicationCommandPermissionsManager  } from './ApplicationCommandPermi
  *
  * @extends {ApplicationCommandManager}
  */
-class GuildApplicationCommandManager extends ApplicationCommandManager {
+export class GuildApplicationCommandManager extends ApplicationCommandManager {
+  public guild: any;
+  public permissions: any;
   constructor(guild, iterable) {
     super(guild.client, iterable);
 
@@ -26,5 +27,3 @@ class GuildApplicationCommandManager extends ApplicationCommandManager {
     this.permissions = new ApplicationCommandPermissionsManager(this);
   }
 }
-
-exports.GuildApplicationCommandManager = GuildApplicationCommandManager;

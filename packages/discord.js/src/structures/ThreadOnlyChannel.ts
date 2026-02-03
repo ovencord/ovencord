@@ -1,4 +1,3 @@
-
 import { GuildForumThreadManager  } from '../managers/GuildForumThreadManager.js';
 import { transformAPIGuildForumTag, transformAPIGuildDefaultReaction  } from '../util/Channels.js';
 import { GuildChannel  } from './GuildChannel.js';
@@ -41,7 +40,17 @@ import { TextBasedChannel  } from './interfaces/TextBasedChannel.js';
  * @implements {TextBasedChannel}
  * @abstract
  */
-class ThreadOnlyChannel extends GuildChannel {
+export class ThreadOnlyChannel extends GuildChannel {
+  public client: any;
+  public threads: any;
+  public availableTags: any;
+  public defaultReactionEmoji: any;
+  public defaultThreadRateLimitPerUser: any;
+  public rateLimitPerUser: any;
+  public defaultAutoArchiveDuration: any;
+  public nsfw: any;
+  public topic: any;
+  public defaultSortOrder: any;
   constructor(guild, data, client) {
     super(guild, data, client, false);
 
@@ -265,5 +274,3 @@ TextBasedChannel.applyToClass(ThreadOnlyChannel, [
   'createMessageComponentCollector',
   'awaitMessageComponent',
 ]);
-
-exports.ThreadOnlyChannel = ThreadOnlyChannel;

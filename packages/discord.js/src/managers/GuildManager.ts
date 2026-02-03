@@ -1,4 +1,3 @@
-
 import process from 'node:process';
 import { setTimeout, clearTimeout  } from 'node:timers';
 import { Collection  } from '@ovencord/collection';
@@ -24,7 +23,8 @@ let cacheWarningEmitted = false;
  *
  * @extends {CachedManager}
  */
-class GuildManager extends CachedManager {
+export class GuildManager extends CachedManager {
+  public client: any;
   constructor(client, iterable) {
     super(client, Guild, iterable);
     if (!cacheWarningEmitted && this._cache.constructor.name !== 'Collection') {
@@ -263,5 +263,3 @@ class GuildManager extends CachedManager {
     }`;
   }
 }
-
-exports.GuildManager = GuildManager;

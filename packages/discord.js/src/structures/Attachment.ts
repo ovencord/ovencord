@@ -1,4 +1,3 @@
-
 import { AttachmentFlagsBitField  } from '../util/AttachmentFlagsBitField.js';
 import { basename, flatten  } from '../util/Util.js';
 
@@ -15,7 +14,19 @@ import { basename, flatten  } from '../util/Util.js';
 /**
  * Represents an attachment
  */
-class Attachment {
+export class Attachment {
+  public id: any;
+  public size: any;
+  public url: any;
+  public proxyURL: any;
+  public height: any;
+  public width: any;
+  public contentType: any;
+  public ephemeral: any;
+  public duration: any;
+  public waveform: any;
+  public flags: any;
+  public title: any;
   constructor(data) {
     this.attachment = data.url;
     /**
@@ -176,5 +187,3 @@ class Attachment {
     return flatten(this);
   }
 }
-
-exports.Attachment = Attachment;

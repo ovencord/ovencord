@@ -1,4 +1,3 @@
-
 import { Collection  } from '@ovencord/collection';
 import { Routes  } from 'discord-api-types/v10';
 import { DiscordjsError, ErrorCodes  } from '../errors/index.js';
@@ -11,7 +10,8 @@ import { CachedManager  } from './CachedManager.js';
  *
  * @extends {CachedManager}
  */
-class GuildInviteManager extends CachedManager {
+export class GuildInviteManager extends CachedManager {
+  public guild: any;
   constructor(guild, iterable) {
     super(guild.client, GuildInvite, iterable);
 
@@ -234,5 +234,3 @@ class GuildInviteManager extends CachedManager {
     await this.client.rest.delete(Routes.invite(code), { reason });
   }
 }
-
-exports.GuildInviteManager = GuildInviteManager;

@@ -1,4 +1,3 @@
-
 import { ThreadOnlyChannel  } from './ThreadOnlyChannel.js';
 
 /**
@@ -6,6 +5,4 @@ import { ThreadOnlyChannel  } from './ThreadOnlyChannel.js';
  *
  * @extends {ThreadOnlyChannel}
  */
-class MediaChannel extends ThreadOnlyChannel {}
-
-exports.MediaChannel = MediaChannel;
+export class MediaChannel extends ThreadOnlyChannel {}

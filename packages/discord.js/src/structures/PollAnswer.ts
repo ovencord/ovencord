@@ -1,4 +1,3 @@
-
 import { PollAnswerVoterManager  } from '../managers/PollAnswerVoterManager.js';
 import { resolveGuildEmoji  } from '../util/Util.js';
 import { Base  } from './Base.js';
@@ -9,7 +8,13 @@ import { Emoji  } from './Emoji.js';
  *
  * @extends {Base}
  */
-class PollAnswer extends Base {
+export class PollAnswer extends Base {
+  public client: any;
+  public id: any;
+  public voters: any;
+  public voteCount: any;
+  public _emoji: any;
+  public text: any;
   constructor(client, data, poll) {
     super(client);
 
@@ -93,5 +98,3 @@ class PollAnswer extends Base {
     return this.poll.partial || (this.text === null && this.emoji === null);
   }
 }
-
-exports.PollAnswer = PollAnswer;

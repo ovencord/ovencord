@@ -1,4 +1,3 @@
-
 import process from 'node:process';
 import { Collection  } from '@ovencord/collection';
 import { Routes  } from 'discord-api-types/v10';
@@ -16,7 +15,8 @@ let cacheWarningEmitted = false;
  *
  * @extends {CachedManager}
  */
-class RoleManager extends CachedManager {
+export class RoleManager extends CachedManager {
+  public guild: any;
   constructor(guild, iterable) {
     super(guild.client, Role, iterable);
     if (!cacheWarningEmitted && this._cache.constructor.name !== 'Collection') {
@@ -430,5 +430,3 @@ class RoleManager extends CachedManager {
     return this.cache.reduce((prev, role) => (role.comparePositionTo(prev) > 0 ? role : prev), this.cache.first());
   }
 }
-
-exports.RoleManager = RoleManager;

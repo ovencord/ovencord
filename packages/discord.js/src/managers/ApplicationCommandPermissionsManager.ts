@@ -1,4 +1,3 @@
-
 import { Collection  } from '@ovencord/collection';
 import { ApplicationCommandPermissionType, RESTJSONErrorCodes, Routes  } from 'discord-api-types/v10';
 import { DiscordjsError, DiscordjsTypeError, ErrorCodes  } from '../errors/index.js';
@@ -9,7 +8,10 @@ import { BaseManager  } from './BaseManager.js';
  *
  * @extends {BaseManager}
  */
-class ApplicationCommandPermissionsManager extends BaseManager {
+export class ApplicationCommandPermissionsManager extends BaseManager {
+  public manager: any;
+  public guildId: any;
+  public commandId: any;
   constructor(manager) {
     super(manager.client);
 
@@ -442,7 +444,7 @@ class ApplicationCommandPermissionsManager extends BaseManager {
   }
 }
 
-exports.ApplicationCommandPermissionsManager = ApplicationCommandPermissionsManager;
+
 
 /**
  * Data that resolves to an id used for an application command permission

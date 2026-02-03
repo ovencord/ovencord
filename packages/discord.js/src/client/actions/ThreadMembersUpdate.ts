@@ -1,9 +1,8 @@
-
 import { Collection  } from '@ovencord/collection';
 import { Events  } from '../../util/Events.js';
 import { Action  } from './Action.js';
 
-class ThreadMembersUpdateAction extends Action {
+export class ThreadMembersUpdateAction extends Action {
   handle(data) {
     const client = this.client;
     const thread = client.channels.cache.get(data.id);
@@ -44,5 +43,3 @@ class ThreadMembersUpdateAction extends Action {
     return {};
   }
 }
-
-exports.ThreadMembersUpdateAction = ThreadMembersUpdateAction;

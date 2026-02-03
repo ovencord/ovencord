@@ -1,4 +1,3 @@
-
 import { DiscordSnowflake  } from '@sapphire/snowflake';
 import { ApplicationCommandOptionType  } from 'discord-api-types/v10';
 import isEqual from 'fast-deep-equal';
@@ -11,7 +10,27 @@ import { Base  } from './Base.js';
  *
  * @extends {Base}
  */
-class ApplicationCommand extends Base {
+export class ApplicationCommand extends Base {
+  public client: any;
+  public id: any;
+  public applicationId: any;
+  public guild: any;
+  public guildId: any;
+  public permissions: any;
+  public type: any;
+  public nsfw: any;
+  public name: any;
+  public nameLocalizations: any;
+  public nameLocalized: any;
+  public description: any;
+  public descriptionLocalizations: any;
+  public descriptionLocalized: any;
+  public options: any;
+  public defaultMemberPermissions: any;
+  public integrationTypes: any;
+  public contexts: any;
+  public handler: any;
+  public version: any;
   constructor(client, data, guild, guildId) {
     super(client);
 
@@ -648,7 +667,7 @@ class ApplicationCommand extends Base {
   }
 }
 
-exports.ApplicationCommand = ApplicationCommand;
+
 
 /**
  * @external ApplicationCommandOptionAllowedChannelType

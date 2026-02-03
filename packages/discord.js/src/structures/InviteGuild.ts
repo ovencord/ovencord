@@ -1,4 +1,3 @@
-
 import { AnonymousGuild  } from './AnonymousGuild.js';
 import { WelcomeScreen  } from './WelcomeScreen.js';
 
@@ -7,7 +6,9 @@ import { WelcomeScreen  } from './WelcomeScreen.js';
  *
  * @extends {AnonymousGuild}
  */
-class InviteGuild extends AnonymousGuild {
+export class InviteGuild extends AnonymousGuild {
+  public client: any;
+  public welcomeScreen: any;
   constructor(client, data) {
     super(client, data);
 
@@ -19,5 +20,3 @@ class InviteGuild extends AnonymousGuild {
     this.welcomeScreen = data.welcome_screen === undefined ? null : new WelcomeScreen(this, data.welcome_screen);
   }
 }
-
-exports.InviteGuild = InviteGuild;

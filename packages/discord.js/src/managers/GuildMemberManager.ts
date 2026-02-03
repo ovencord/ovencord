@@ -1,4 +1,3 @@
-
 import { setTimeout, clearTimeout  } from 'node:timers';
 import { Collection  } from '@ovencord/collection';
 import { makeURLSearchParams  } from '@ovencord/rest';
@@ -21,7 +20,8 @@ import { CachedManager  } from './CachedManager.js';
  *
  * @extends {CachedManager}
  */
-class GuildMemberManager extends CachedManager {
+export class GuildMemberManager extends CachedManager {
+  public guild: any;
   constructor(guild, iterable) {
     super(guild.client, GuildMember, iterable);
 
@@ -617,5 +617,3 @@ class GuildMemberManager extends CachedManager {
     await this.client.rest.delete(Routes.guildMemberRole(this.guild.id, userId, roleId), { reason });
   }
 }
-
-exports.GuildMemberManager = GuildMemberManager;

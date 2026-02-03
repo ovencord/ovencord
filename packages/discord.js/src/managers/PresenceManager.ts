@@ -1,4 +1,3 @@
-
 import { Presence  } from '../structures/Presence.js';
 import { CachedManager  } from './CachedManager.js';
 
@@ -7,7 +6,8 @@ import { CachedManager  } from './CachedManager.js';
  *
  * @extends {CachedManager}
  */
-class PresenceManager extends CachedManager {
+export class PresenceManager extends CachedManager {
+  public client: any;
   constructor(client, iterable) {
     super(client, Presence, iterable);
   }
@@ -58,5 +58,3 @@ class PresenceManager extends CachedManager {
     return this.cache.has(userId) ? userId : null;
   }
 }
-
-exports.PresenceManager = PresenceManager;

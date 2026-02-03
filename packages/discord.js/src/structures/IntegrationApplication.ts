@@ -1,4 +1,3 @@
-
 import { Application  } from './interfaces/Application.js';
 
 /**
@@ -6,7 +5,13 @@ import { Application  } from './interfaces/Application.js';
  *
  * @extends {Application}
  */
-class IntegrationApplication extends Application {
+export class IntegrationApplication extends Application {
+  public bot: any;
+  public termsOfServiceURL: any;
+  public privacyPolicyURL: any;
+  public rpcOrigins: any;
+  public cover: any;
+  public verifyKey: any;
   _patch(data) {
     super._patch(data);
 
@@ -77,5 +82,3 @@ class IntegrationApplication extends Application {
     }
   }
 }
-
-exports.IntegrationApplication = IntegrationApplication;

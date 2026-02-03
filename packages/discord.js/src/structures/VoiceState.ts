@@ -1,4 +1,3 @@
-
 import { ChannelType, Routes  } from 'discord-api-types/v10';
 import { DiscordjsError, DiscordjsTypeError, ErrorCodes  } from '../errors/index.js';
 import { Base  } from './Base.js';
@@ -8,7 +7,19 @@ import { Base  } from './Base.js';
  *
  * @extends {Base}
  */
-class VoiceState extends Base {
+export class VoiceState extends Base {
+  public guild: any;
+  public id: any;
+  public serverDeaf: any;
+  public serverMute: any;
+  public selfDeaf: any;
+  public selfMute: any;
+  public selfVideo: any;
+  public sessionId: any;
+  public streaming: any;
+  public channelId: any;
+  public suppress: any;
+  public requestToSpeakTimestamp: any;
   constructor(guild, data) {
     super(guild.client);
     /**
@@ -333,5 +344,3 @@ class VoiceState extends Base {
     });
   }
 }
-
-exports.VoiceState = VoiceState;

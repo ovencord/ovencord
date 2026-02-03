@@ -8,7 +8,7 @@ import { BitField  } from './BitField.js';
  *
  * @extends {BitField}
  */
-class SKUFlagsBitField extends BitField {
+export class SKUFlagsBitField extends BitField {
   /**
    * Numeric SKU flags.
    *
@@ -24,5 +24,3 @@ class SKUFlagsBitField extends BitField {
  * @memberof SKUFlagsBitField
  * @param {BitFieldResolvable} [bits=0] Bit(s) to read from
  */
-
-exports.SKUFlagsBitField = SKUFlagsBitField;

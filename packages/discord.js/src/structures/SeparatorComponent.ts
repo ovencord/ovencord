@@ -1,4 +1,3 @@
-
 import { SeparatorSpacingSize  } from 'discord-api-types/v10';
 import { Component  } from './Component.js';
 
@@ -7,7 +6,7 @@ import { Component  } from './Component.js';
  *
  * @extends {Component}
  */
-class SeparatorComponent extends Component {
+export class SeparatorComponent extends Component {
   /**
    * The spacing of this separator
    *
@@ -28,5 +27,3 @@ class SeparatorComponent extends Component {
     return this.data.divider ?? true;
   }
 }
-
-exports.SeparatorComponent = SeparatorComponent;

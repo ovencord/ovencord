@@ -1,4 +1,3 @@
-
 import { roleMention  } from '@ovencord/formatters';
 import { DiscordSnowflake  } from '@sapphire/snowflake';
 import { PermissionFlagsBits  } from 'discord-api-types/v10';
@@ -12,7 +11,20 @@ import { Base  } from './Base.js';
  *
  * @extends {Base}
  */
-class Role extends Base {
+export class Role extends Base {
+  public client: any;
+  public guild: any;
+  public icon: any;
+  public unicodeEmoji: any;
+  public name: any;
+  public colors: any;
+  public hoist: any;
+  public rawPosition: any;
+  public permissions: any;
+  public managed: any;
+  public mentionable: any;
+  public flags: any;
+  public tags: any;
   constructor(client, data, guild) {
     super(client);
 
@@ -529,5 +541,3 @@ class Role extends Base {
     };
   }
 }
-
-exports.Role = Role;

@@ -1,4 +1,3 @@
-
 import { PermissionFlagsBits  } from 'discord-api-types/v10';
 import { DiscordjsError, ErrorCodes  } from '../errors/index.js';
 import { GuildEmojiRoleManager  } from '../managers/GuildEmojiRoleManager.js';
@@ -9,7 +8,10 @@ import { BaseGuildEmoji  } from './BaseGuildEmoji.js';
  *
  * @extends {BaseGuildEmoji}
  */
-class GuildEmoji extends BaseGuildEmoji {
+export class GuildEmoji extends BaseGuildEmoji {
+  public client: any;
+  public author: any;
+  public _roles: any;
   constructor(client, data, guild) {
     super(client, data, guild);
 
@@ -155,5 +157,3 @@ class GuildEmoji extends BaseGuildEmoji {
     }
   }
 }
-
-exports.GuildEmoji = GuildEmoji;

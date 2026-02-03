@@ -1,4 +1,3 @@
-
 import { ContextMenuCommandInteraction  } from './ContextMenuCommandInteraction.js';
 
 /**
@@ -6,7 +5,7 @@ import { ContextMenuCommandInteraction  } from './ContextMenuCommandInteraction.
  *
  * @extends {ContextMenuCommandInteraction}
  */
-class UserContextMenuCommandInteraction extends ContextMenuCommandInteraction {
+export class UserContextMenuCommandInteraction extends ContextMenuCommandInteraction {
   /**
    * The target user from this interaction
    *
@@ -27,5 +26,3 @@ class UserContextMenuCommandInteraction extends ContextMenuCommandInteraction {
     return this.options.getMember('user');
   }
 }
-
-exports.UserContextMenuCommandInteraction = UserContextMenuCommandInteraction;

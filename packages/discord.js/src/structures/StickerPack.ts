@@ -1,4 +1,3 @@
-
 import { Collection  } from '@ovencord/collection';
 import { DiscordSnowflake  } from '@sapphire/snowflake';
 import { Base  } from './Base.js';
@@ -9,7 +8,15 @@ import { Sticker  } from './Sticker.js';
  *
  * @extends {Base}
  */
-class StickerPack extends Base {
+export class StickerPack extends Base {
+  public client: any;
+  public id: any;
+  public stickers: any;
+  public name: any;
+  public skuId: any;
+  public coverStickerId: any;
+  public description: any;
+  public bannerId: any;
   constructor(client, pack) {
     super(client);
     /**
@@ -102,5 +109,3 @@ class StickerPack extends Base {
     return this.bannerId && this.client.rest.cdn.stickerPackBanner(this.bannerId, options);
   }
 }
-
-exports.StickerPack = StickerPack;

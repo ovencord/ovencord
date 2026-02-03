@@ -1,4 +1,3 @@
-
 import { PermissionFlagsBits, Routes  } from 'discord-api-types/v10';
 import { BaseGuildVoiceChannel  } from './BaseGuildVoiceChannel.js';
 
@@ -7,7 +6,7 @@ import { BaseGuildVoiceChannel  } from './BaseGuildVoiceChannel.js';
  *
  * @extends {BaseGuildVoiceChannel}
  */
-class VoiceChannel extends BaseGuildVoiceChannel {
+export class VoiceChannel extends BaseGuildVoiceChannel {
   /**
    * Whether the channel is joinable by the client user
    *
@@ -118,5 +117,3 @@ class VoiceChannel extends BaseGuildVoiceChannel {
  * @param {string} [reason] Reason for changing the camera video quality mode.
  * @returns {Promise<VoiceChannel>}
  */
-
-exports.VoiceChannel = VoiceChannel;

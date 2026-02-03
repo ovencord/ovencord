@@ -1,4 +1,3 @@
-
 import { Collection  } from '@ovencord/collection';
 import { Events  } from '../util/Events.js';
 import { MessageComponentInteraction  } from './MessageComponentInteraction.js';
@@ -8,7 +7,10 @@ import { MessageComponentInteraction  } from './MessageComponentInteraction.js';
  *
  * @extends {MessageComponentInteraction}
  */
-class UserSelectMenuInteraction extends MessageComponentInteraction {
+export class UserSelectMenuInteraction extends MessageComponentInteraction {
+  public client: any;
+  public users: any;
+  public members: any;
   constructor(client, data) {
     super(client, data);
     const { resolved, values } = data.data;
@@ -50,5 +52,3 @@ class UserSelectMenuInteraction extends MessageComponentInteraction {
     }
   }
 }
-
-exports.UserSelectMenuInteraction = UserSelectMenuInteraction;

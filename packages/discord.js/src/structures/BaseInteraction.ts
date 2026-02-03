@@ -1,4 +1,3 @@
-
 import { Collection  } from '@ovencord/collection';
 import { DiscordSnowflake  } from '@sapphire/snowflake';
 import { InteractionType, ApplicationCommandType, ComponentType  } from 'discord-api-types/v10';
@@ -13,7 +12,26 @@ import { Base  } from './Base.js';
  * @extends {Base}
  * @abstract
  */
-class BaseInteraction extends Base {
+export class BaseInteraction extends Base {
+  public client: any;
+  public type: any;
+  public id: any;
+  public applicationId: any;
+  public channelId: any;
+  public guildId: any;
+  public user: any;
+  public member: any;
+  public version: any;
+  public appPermissions: any;
+  public memberPermissions: any;
+  public locale: any;
+  public guildLocale: any;
+  public entitlements: any;
+  public authorizingIntegrationOwners: any;
+  public context: any;
+  public attachmentSizeLimit: any;
+  public commandType: any;
+  public componentType: any;
   constructor(client, data) {
     super(client);
 
@@ -373,5 +391,3 @@ class BaseInteraction extends Base {
     return ![InteractionType.Ping, InteractionType.ApplicationCommandAutocomplete].includes(this.type);
   }
 }
-
-exports.BaseInteraction = BaseInteraction;

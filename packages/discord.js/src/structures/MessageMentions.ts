@@ -1,4 +1,3 @@
-
 import { Collection  } from '@ovencord/collection';
 import { FormattingPatterns  } from 'discord-api-types/v10';
 import { flatten  } from '../util/Util.js';
@@ -6,7 +5,15 @@ import { flatten  } from '../util/Util.js';
 /**
  * Keeps track of mentions in a {@link Message}.
  */
-class MessageMentions {
+export class MessageMentions {
+  public everyone: any;
+  public users: any;
+  public roles: any;
+  public _members: any;
+  public _channels: any;
+  public _parsedUsers: any;
+  public crosspostedChannels: any;
+  public repliedUser: any;
   /**
    * A regular expression that matches `@everyone` and `@here`.
    * The `mention` group property is present on the `exec` result of this expression.
@@ -318,5 +325,3 @@ class MessageMentions {
     });
   }
 }
-
-exports.MessageMentions = MessageMentions;

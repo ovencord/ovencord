@@ -1,4 +1,3 @@
-
 import { DiscordSnowflake  } from '@sapphire/snowflake';
 import { GuildScheduledEventStatus, GuildScheduledEventEntityType, RouteBases  } from 'discord-api-types/v10';
 import { DiscordjsError, ErrorCodes  } from '../errors/index.js';
@@ -9,7 +8,25 @@ import { Base  } from './Base.js';
  *
  * @extends {Base}
  */
-class GuildScheduledEvent extends Base {
+export class GuildScheduledEvent extends Base {
+  public client: any;
+  public id: any;
+  public guildId: any;
+  public channelId: any;
+  public creatorId: any;
+  public name: any;
+  public description: any;
+  public scheduledStartTimestamp: any;
+  public scheduledEndTimestamp: any;
+  public privacyLevel: any;
+  public status: any;
+  public entityType: any;
+  public entityId: any;
+  public userCount: any;
+  public creator: any;
+  public entityMetadata: any;
+  public image: any;
+  public recurrenceRule: any;
   constructor(client, data) {
     super(client);
 
@@ -574,5 +591,3 @@ class GuildScheduledEvent extends Base {
     return this.status === GuildScheduledEventStatus.Scheduled;
   }
 }
-
-exports.GuildScheduledEvent = GuildScheduledEvent;

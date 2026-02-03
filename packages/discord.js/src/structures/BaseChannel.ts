@@ -1,4 +1,3 @@
-
 import { channelLink, channelMention  } from '@ovencord/formatters';
 import { DiscordSnowflake  } from '@sapphire/snowflake';
 import { ChannelType, Routes  } from 'discord-api-types/v10';
@@ -12,7 +11,11 @@ import { Base  } from './Base.js';
  * @extends {Base}
  * @abstract
  */
-class BaseChannel extends Base {
+export class BaseChannel extends Base {
+  public client: any;
+  public type: any;
+  public flags: any;
+  public id: any;
   constructor(client, data, immediatePatch = true) {
     super(client);
 
@@ -183,5 +186,3 @@ class BaseChannel extends Base {
     return super.toJSON({ createdTimestamp: true }, ...props);
   }
 }
-
-exports.BaseChannel = BaseChannel;

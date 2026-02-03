@@ -1,7 +1,6 @@
-
 import { Action  } from './Action.js';
 
-class GuildChannelsPositionUpdateAction extends Action {
+export class GuildChannelsPositionUpdateAction extends Action {
   handle(data) {
     const client = this.client;
 
@@ -16,5 +15,3 @@ class GuildChannelsPositionUpdateAction extends Action {
     return { guild };
   }
 }
-
-exports.GuildChannelsPositionUpdateAction = GuildChannelsPositionUpdateAction;

@@ -1,4 +1,3 @@
-
 import { Collection  } from '@ovencord/collection';
 import { makeURLSearchParams  } from '@ovencord/rest';
 import { isJSONEncodable  } from '@ovencord/util';
@@ -14,7 +13,9 @@ import { CachedManager  } from './CachedManager.js';
  *
  * @extends {CachedManager}
  */
-class ApplicationCommandManager extends CachedManager {
+export class ApplicationCommandManager extends CachedManager {
+  public client: any;
+  public permissions: any;
   constructor(client, iterable) {
     super(client, ApplicationCommand, iterable);
 
@@ -300,5 +301,3 @@ class ApplicationCommandManager extends CachedManager {
     };
   }
 }
-
-exports.ApplicationCommandManager = ApplicationCommandManager;

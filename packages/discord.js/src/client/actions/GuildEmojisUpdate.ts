@@ -1,7 +1,6 @@
-
 import { Action  } from './Action.js';
 
-class GuildEmojisUpdateAction extends Action {
+export class GuildEmojisUpdateAction extends Action {
   handle(data) {
     const guild = this.client.guilds.cache.get(data.guild_id);
     if (!guild?.emojis) return;
@@ -29,5 +28,3 @@ class GuildEmojisUpdateAction extends Action {
     }
   }
 }
-
-exports.GuildEmojisUpdateAction = GuildEmojisUpdateAction;

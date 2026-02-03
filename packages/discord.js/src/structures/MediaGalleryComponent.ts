@@ -1,4 +1,3 @@
-
 import { Component  } from './Component.js';
 import { MediaGalleryItem  } from './MediaGalleryItem.js';
 
@@ -7,7 +6,8 @@ import { MediaGalleryItem  } from './MediaGalleryItem.js';
  *
  * @extends {Component}
  */
-class MediaGalleryComponent extends Component {
+export class MediaGalleryComponent extends Component {
+  public items: any;
   constructor({ items, ...data }) {
     super(data);
 
@@ -29,5 +29,3 @@ class MediaGalleryComponent extends Component {
     return { ...this.data, items: this.items.map(item => item.toJSON()) };
   }
 }
-
-exports.MediaGalleryComponent = MediaGalleryComponent;

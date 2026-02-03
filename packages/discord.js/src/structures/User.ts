@@ -1,4 +1,3 @@
-
 import { userMention  } from '@ovencord/formatters';
 import { calculateUserDefaultAvatarIndex  } from '@ovencord/rest';
 import { DiscordSnowflake  } from '@sapphire/snowflake';
@@ -11,7 +10,19 @@ import { Base  } from './Base.js';
  *
  * @extends {Base}
  */
-class User extends Base {
+export class User extends Base {
+  public client: any;
+  public id: any;
+  public bot: any;
+  public system: any;
+  public flags: any;
+  public username: any;
+  public globalName: any;
+  public discriminator: any;
+  public accentColor: any;
+  public avatarDecorationData: any;
+  public collectibles: any;
+  public primaryGuild: any;
   constructor(client, data) {
     super(client);
 
@@ -498,5 +509,3 @@ class User extends Base {
     return json;
   }
 }
-
-exports.User = User;

@@ -1,4 +1,3 @@
-
 import { Base  } from './Base.js';
 
 /**
@@ -6,7 +5,18 @@ import { Base  } from './Base.js';
  *
  * @extends {Base}
  */
-class Subscription extends Base {
+export class Subscription extends Base {
+  public client: any;
+  public id: any;
+  public userId: any;
+  public skuIds: any;
+  public entitlementIds: any;
+  public currentPeriodStartTimestamp: any;
+  public currentPeriodEndTimestamp: any;
+  public status: any;
+  public renewalSkuIds: any;
+  public canceledTimestamp: any;
+  public country: any;
   constructor(client, data) {
     super(client);
 
@@ -126,5 +136,3 @@ class Subscription extends Base {
     return new Date(this.currentPeriodEndTimestamp);
   }
 }
-
-exports.Subscription = Subscription;

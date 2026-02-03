@@ -21,6 +21,16 @@ let Worker = null;
  * @extends {AsyncEventEmitter}
  */
 export class Shard extends AsyncEventEmitter {
+  public manager: any;
+  public id: any;
+  public silent: any;
+  public args: any;
+  public execArgv: any;
+  public env: any;
+  public worker: any;
+  public _evals: any;
+  public _fetches: any;
+  public _exitListener: any;
   constructor(manager, id) {
     super();
 
@@ -501,5 +511,3 @@ export class Shard extends AsyncEventEmitter {
     }
   }
 }
-
-exports.Shard = Shard;

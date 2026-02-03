@@ -8,7 +8,7 @@ import { BitField  } from './BitField.js';
  *
  * @extends {BitField}
  */
-class InviteFlagsBitField extends BitField {
+export class InviteFlagsBitField extends BitField {
   /**
    * Numeric invite flags.
    *
@@ -24,5 +24,3 @@ class InviteFlagsBitField extends BitField {
  * @memberof InviteFlagsBitField
  * @param {BitFieldResolvable} [bits=0] Bit(s) to read from
  */
-
-exports.InviteFlagsBitField = InviteFlagsBitField;

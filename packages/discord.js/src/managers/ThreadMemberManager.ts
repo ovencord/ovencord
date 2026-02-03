@@ -1,4 +1,3 @@
-
 import { Collection  } from '@ovencord/collection';
 import { makeURLSearchParams  } from '@ovencord/rest';
 import { Routes  } from 'discord-api-types/v10';
@@ -11,7 +10,8 @@ import { CachedManager  } from './CachedManager.js';
  *
  * @extends {CachedManager}
  */
-class ThreadMemberManager extends CachedManager {
+export class ThreadMemberManager extends CachedManager {
+  public thread: any;
   constructor(thread, iterable) {
     super(thread.client, ThreadMember, iterable);
 
@@ -192,5 +192,3 @@ class ThreadMemberManager extends CachedManager {
     return data.reduce((col, member) => col.set(member.user_id, this._add(member, cache)), new Collection());
   }
 }
-
-exports.ThreadMemberManager = ThreadMemberManager;

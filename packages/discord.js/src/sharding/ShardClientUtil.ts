@@ -11,7 +11,11 @@ import { makeError, makePlainError  } from '../util/Util.js';
  * Helper class for sharded clients spawned as a child process/worker, such as from a {@link ShardingManager}.
  * Utilizes IPC to send and receive data to/from the master process and other shards.
  */
-class ShardClientUtil {
+export class ShardClientUtil {
+  public client: any;
+  public mode: any;
+  public parentPort: any;
+  public _singleton: any;
   constructor(client, mode) {
     /**
      * Client for the shard
@@ -287,5 +291,3 @@ class ShardClientUtil {
     }
   }
 }
-
-exports.ShardClientUtil = ShardClientUtil;

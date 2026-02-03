@@ -1,4 +1,3 @@
-
 import { makeURLSearchParams  } from '@ovencord/rest';
 import { lazy  } from '@ovencord/util';
 import { DiscordSnowflake  } from '@sapphire/snowflake';
@@ -12,7 +11,17 @@ const getMessage = lazy(() => require('./Message.js').Message);
 /**
  * Represents a webhook.
  */
-class Webhook {
+export class Webhook {
+  public client: any;
+  public name: any;
+  public id: any;
+  public type: any;
+  public guildId: any;
+  public channelId: any;
+  public owner: any;
+  public applicationId: any;
+  public sourceGuild: any;
+  public sourceChannel: any;
   constructor(client, data) {
     /**
      * The client that instantiated the webhook
@@ -515,5 +524,3 @@ class Webhook {
     }
   }
 }
-
-exports.Webhook = Webhook;

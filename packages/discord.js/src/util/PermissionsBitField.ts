@@ -1,4 +1,3 @@
-
 import { PermissionFlagsBits  } from 'discord-api-types/v10';
 import { BitField  } from './BitField.js';
 
@@ -9,7 +8,7 @@ import { BitField  } from './BitField.js';
  *
  * @extends {BitField}
  */
-class PermissionsBitField extends BitField {
+export class PermissionsBitField extends BitField {
   /**
    * Numeric permission flags.
    *
@@ -112,5 +111,3 @@ class PermissionsBitField extends BitField {
     return super.toArray(false);
   }
 }
-
-exports.PermissionsBitField = PermissionsBitField;

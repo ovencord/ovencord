@@ -1,4 +1,3 @@
-
 import { Collection  } from '@ovencord/collection';
 import { makeURLSearchParams  } from '@ovencord/rest';
 import { Routes  } from 'discord-api-types/v10';
@@ -10,7 +9,8 @@ import { CachedManager  } from './CachedManager.js';
  *
  * @extends {CachedManager}
  */
-class PollAnswerVoterManager extends CachedManager {
+export class PollAnswerVoterManager extends CachedManager {
+  public answer: any;
   constructor(answer) {
     super(answer.client, User);
 
@@ -57,5 +57,3 @@ class PollAnswerVoterManager extends CachedManager {
     }, new Collection());
   }
 }
-
-exports.PollAnswerVoterManager = PollAnswerVoterManager;

@@ -1,4 +1,3 @@
-
 import { DiscordSnowflake  } from '@sapphire/snowflake';
 import { Routes  } from 'discord-api-types/v10';
 import { DiscordjsError, ErrorCodes  } from '../errors/index.js';
@@ -10,7 +9,19 @@ import { Base  } from './Base.js';
  *
  * @extends {Base}
  */
-class Sticker extends Base {
+export class Sticker extends Base {
+  public client: any;
+  public id: any;
+  public description: any;
+  public type: any;
+  public format: any;
+  public name: any;
+  public packId: any;
+  public tags: any;
+  public available: any;
+  public guildId: any;
+  public user: any;
+  public sortValue: any;
   constructor(client, sticker) {
     super(client);
 
@@ -287,5 +298,3 @@ class Sticker extends Base {
     }
   }
 }
-
-exports.Sticker = Sticker;

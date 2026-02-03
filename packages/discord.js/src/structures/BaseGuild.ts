@@ -1,4 +1,3 @@
-
 import { makeURLSearchParams  } from '@ovencord/rest';
 import { DiscordSnowflake  } from '@sapphire/snowflake';
 import { Routes, GuildFeature  } from 'discord-api-types/v10';
@@ -10,7 +9,11 @@ import { Base  } from './Base.js';
  * @extends {Base}
  * @abstract
  */
-class BaseGuild extends Base {
+export class BaseGuild extends Base {
+  public client: any;
+  public id: any;
+  public name: any;
+  public features: any;
   constructor(client, data) {
     super(client);
 
@@ -129,5 +132,3 @@ class BaseGuild extends Base {
     return this.name;
   }
 }
-
-exports.BaseGuild = BaseGuild;

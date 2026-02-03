@@ -1,10 +1,10 @@
-
 import isEqual from 'fast-deep-equal';
 
 /**
  * Represents a component
  */
-class Component {
+export class Component {
+  public data: any;
   constructor(data) {
     /**
      * The API data associated with this component
@@ -57,5 +57,3 @@ class Component {
     return { ...this.data };
   }
 }
-
-exports.Component = Component;

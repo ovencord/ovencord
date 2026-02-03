@@ -1,8 +1,13 @@
-
 /**
  * Role connection metadata object for an application.
  */
-class ApplicationRoleConnectionMetadata {
+export class ApplicationRoleConnectionMetadata {
+  public name: any;
+  public nameLocalizations: any;
+  public description: any;
+  public descriptionLocalizations: any;
+  public key: any;
+  public type: any;
   constructor(data) {
     /**
      * The name of this metadata field
@@ -47,5 +52,3 @@ class ApplicationRoleConnectionMetadata {
     this.type = data.type;
   }
 }
-
-exports.ApplicationRoleConnectionMetadata = ApplicationRoleConnectionMetadata;

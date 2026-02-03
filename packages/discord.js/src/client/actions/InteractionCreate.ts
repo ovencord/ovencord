@@ -1,4 +1,3 @@
-
 import { InteractionType, ComponentType, ApplicationCommandType  } from 'discord-api-types/v10';
 import { AutocompleteInteraction  } from '../../structures/AutocompleteInteraction.js';
 import { ButtonInteraction  } from '../../structures/ButtonInteraction.js';
@@ -15,7 +14,7 @@ import { UserSelectMenuInteraction  } from '../../structures/UserSelectMenuInter
 import { Events  } from '../../util/Events.js';
 import { Action  } from './Action.js';
 
-class InteractionCreateAction extends Action {
+export class InteractionCreateAction extends Action {
   handle(data) {
     const client = this.client;
 
@@ -103,5 +102,3 @@ class InteractionCreateAction extends Action {
     client.emit(Events.InteractionCreate, interaction);
   }
 }
-
-exports.InteractionCreateAction = InteractionCreateAction;

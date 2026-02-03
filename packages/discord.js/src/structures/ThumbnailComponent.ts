@@ -1,4 +1,3 @@
-
 import { Component  } from './Component.js';
 import { UnfurledMediaItem  } from './UnfurledMediaItem.js';
 
@@ -7,7 +6,8 @@ import { UnfurledMediaItem  } from './UnfurledMediaItem.js';
  *
  * @extends {Component}
  */
-class ThumbnailComponent extends Component {
+export class ThumbnailComponent extends Component {
+  public media: any;
   constructor({ media, ...data }) {
     super(data);
 
@@ -49,5 +49,3 @@ class ThumbnailComponent extends Component {
     return { ...this.data, media: this.media.toJSON() };
   }
 }
-
-exports.ThumbnailComponent = ThumbnailComponent;

@@ -1,4 +1,3 @@
-
 import { Collection  } from '@ovencord/collection';
 import { GuildFeature  } from 'discord-api-types/v10';
 import { Base  } from './Base.js';
@@ -9,7 +8,10 @@ import { WelcomeChannel  } from './WelcomeChannel.js';
  *
  * @extends {Base}
  */
-class WelcomeScreen extends Base {
+export class WelcomeScreen extends Base {
+  public guild: any;
+  public description: any;
+  public welcomeChannels: any;
   constructor(guild, data) {
     super(guild.client);
 
@@ -49,5 +51,3 @@ class WelcomeScreen extends Base {
     return this.guild.features.includes(GuildFeature.WelcomeScreenEnabled);
   }
 }
-
-exports.WelcomeScreen = WelcomeScreen;

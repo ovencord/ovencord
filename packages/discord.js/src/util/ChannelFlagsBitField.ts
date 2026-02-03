@@ -8,7 +8,7 @@ import { BitField  } from './BitField.js';
  *
  * @extends {BitField}
  */
-class ChannelFlagsBitField extends BitField {
+export class ChannelFlagsBitField extends BitField {
   /**
    * Numeric guild channel flags.
    *
@@ -41,5 +41,3 @@ class ChannelFlagsBitField extends BitField {
  *
  * @typedef {string|number|ChannelFlagsBitField|ChannelFlagsResolvable[]} ChannelFlagsResolvable
  */
-
-exports.ChannelFlagsBitField = ChannelFlagsBitField;

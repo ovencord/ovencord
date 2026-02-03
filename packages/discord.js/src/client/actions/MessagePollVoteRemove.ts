@@ -1,8 +1,7 @@
-
 import { Events  } from '../../util/Events.js';
 import { Action  } from './Action.js';
 
-class MessagePollVoteRemoveAction extends Action {
+export class MessagePollVoteRemoveAction extends Action {
   handle(data) {
     const channel = this.getChannel({ id: data.channel_id, ...('guild_id' in data && { guild_id: data.guild_id }) });
     if (!channel?.isTextBased()) return false;
@@ -34,5 +33,3 @@ class MessagePollVoteRemoveAction extends Action {
     return { poll };
   }
 }
-
-exports.MessagePollVoteRemoveAction = MessagePollVoteRemoveAction;

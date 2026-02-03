@@ -1,4 +1,3 @@
-
 const PacketHandlers = Object.fromEntries([
   ['APPLICATION_COMMAND_PERMISSIONS_UPDATE', require('./APPLICATION_COMMAND_PERMISSIONS_UPDATE.js')],
   ['AUTO_MODERATION_ACTION_EXECUTION', require('./AUTO_MODERATION_ACTION_EXECUTION.js')],
@@ -73,5 +72,3 @@ const PacketHandlers = Object.fromEntries([
   ['VOICE_STATE_UPDATE', require('./VOICE_STATE_UPDATE.js')],
   ['WEBHOOKS_UPDATE', require('./WEBHOOKS_UPDATE.js')],
 ]);
-
-exports.PacketHandlers = PacketHandlers;

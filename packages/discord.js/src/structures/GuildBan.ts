@@ -1,4 +1,3 @@
-
 import { Base  } from './Base.js';
 
 /**
@@ -6,7 +5,11 @@ import { Base  } from './Base.js';
  *
  * @extends {Base}
  */
-class GuildBan extends Base {
+export class GuildBan extends Base {
+  public client: any;
+  public guild: any;
+  public user: any;
+  public reason: any;
   constructor(client, data, guild) {
     super(client);
 
@@ -60,5 +63,3 @@ class GuildBan extends Base {
     return this.guild.bans.fetch({ user: this.user, cache: true, force });
   }
 }
-
-exports.GuildBan = GuildBan;

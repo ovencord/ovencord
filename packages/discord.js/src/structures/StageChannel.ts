@@ -1,4 +1,3 @@
-
 import { BaseGuildVoiceChannel  } from './BaseGuildVoiceChannel.js';
 
 /**
@@ -6,7 +5,8 @@ import { BaseGuildVoiceChannel  } from './BaseGuildVoiceChannel.js';
  *
  * @extends {BaseGuildVoiceChannel}
  */
-class StageChannel extends BaseGuildVoiceChannel {
+export class StageChannel extends BaseGuildVoiceChannel {
+  public topic: any;
   _patch(data) {
     super._patch(data);
 
@@ -116,5 +116,3 @@ class StageChannel extends BaseGuildVoiceChannel {
  * @param {string} [reason] Reason for changing the camera video quality mode.
  * @returns {Promise<StageChannel>}
  */
-
-exports.StageChannel = StageChannel;

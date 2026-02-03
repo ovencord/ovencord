@@ -1,4 +1,3 @@
-
 import { CategoryChannelChildManager  } from '../managers/CategoryChannelChildManager.js';
 import { GuildChannel  } from './GuildChannel.js';
 
@@ -7,7 +6,7 @@ import { GuildChannel  } from './GuildChannel.js';
  *
  * @extends {GuildChannel}
  */
-class CategoryChannel extends GuildChannel {
+export class CategoryChannel extends GuildChannel {
   /**
    * The id of the parent of this channel.
    *
@@ -45,5 +44,3 @@ class CategoryChannel extends GuildChannel {
     return new CategoryChannelChildManager(this);
   }
 }
-
-exports.CategoryChannel = CategoryChannel;

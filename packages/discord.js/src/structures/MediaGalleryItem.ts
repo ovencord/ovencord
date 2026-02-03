@@ -1,10 +1,11 @@
-
 import { UnfurledMediaItem  } from './UnfurledMediaItem.js';
 
 /**
  * Represents an item in a media gallery
  */
-class MediaGalleryItem {
+export class MediaGalleryItem {
+  public data: any;
+  public media: any;
   constructor({ media, ...data }) {
     /**
      * The API data associated with this component
@@ -51,5 +52,3 @@ class MediaGalleryItem {
     return { ...this.data, media: this.media.toJSON() };
   }
 }
-
-exports.MediaGalleryItem = MediaGalleryItem;

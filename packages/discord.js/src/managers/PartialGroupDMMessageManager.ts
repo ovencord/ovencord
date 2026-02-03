@@ -1,4 +1,3 @@
-
 import { MessageManager  } from './MessageManager.js';
 
 /**
@@ -6,7 +5,7 @@ import { MessageManager  } from './MessageManager.js';
  *
  * @extends {MessageManager}
  */
-class PartialGroupDMMessageManager extends MessageManager {
+export class PartialGroupDMMessageManager extends MessageManager {
   /**
    * The channel that the messages belong to
    *
@@ -14,5 +13,3 @@ class PartialGroupDMMessageManager extends MessageManager {
    * @type {PartialGroupDMChannel}
    */
 }
-
-exports.PartialGroupDMMessageManager = PartialGroupDMMessageManager;

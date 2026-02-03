@@ -1,4 +1,3 @@
-
 import { Collection  } from '@ovencord/collection';
 import { makeURLSearchParams  } from '@ovencord/rest';
 import { ReactionType, Routes  } from 'discord-api-types/v10';
@@ -11,7 +10,8 @@ import { CachedManager  } from './CachedManager.js';
  *
  * @extends {CachedManager}
  */
-class ReactionUserManager extends CachedManager {
+export class ReactionUserManager extends CachedManager {
+  public reaction: any;
   constructor(reaction, iterable) {
     super(reaction.client, User, iterable);
 
@@ -80,5 +80,3 @@ class ReactionUserManager extends CachedManager {
     return this.reaction;
   }
 }
-
-exports.ReactionUserManager = ReactionUserManager;

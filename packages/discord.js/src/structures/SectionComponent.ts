@@ -1,4 +1,3 @@
-
 import { createComponent  } from '../util/Components.js';
 import { Component  } from './Component.js';
 
@@ -7,7 +6,9 @@ import { Component  } from './Component.js';
  *
  * @extends {Component}
  */
-class SectionComponent extends Component {
+export class SectionComponent extends Component {
+  public components: any;
+  public accessory: any;
   constructor({ accessory, components, ...data }) {
     super(data);
 
@@ -41,5 +42,3 @@ class SectionComponent extends Component {
     };
   }
 }
-
-exports.SectionComponent = SectionComponent;

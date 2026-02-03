@@ -13,7 +13,8 @@ import { CachedManager  } from './CachedManager.js';
  *
  * @extends {CachedManager}
  */
-class GuildEmojiManager extends CachedManager {
+export class GuildEmojiManager extends CachedManager {
+  public guild: any;
   constructor(guild, iterable) {
     super(guild.client, GuildEmoji, iterable);
 
@@ -259,5 +260,3 @@ class GuildEmojiManager extends CachedManager {
     return resolvedEmoji.author;
   }
 }
-
-exports.GuildEmojiManager = GuildEmojiManager;

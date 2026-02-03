@@ -1,4 +1,3 @@
-
 import { Events  } from '../../util/Events.js';
 import { Partials  } from '../../util/Partials.js';
 import { Action  } from './Action.js';
@@ -14,7 +13,7 @@ import { Action  } from './Action.js';
      member: { ..., user: { ... } } }
 */
 
-class MessageReactionAddAction extends Action {
+export class MessageReactionAddAction extends Action {
   handle(data, fromStructure = false) {
     if (!data.emoji) return false;
 
@@ -67,5 +66,3 @@ class MessageReactionAddAction extends Action {
     return { message, reaction, user };
   }
 }
-
-exports.MessageReactionAddAction = MessageReactionAddAction;

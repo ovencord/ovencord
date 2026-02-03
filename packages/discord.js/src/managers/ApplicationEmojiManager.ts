@@ -1,4 +1,3 @@
-
 import { Collection  } from '@ovencord/collection';
 import { Routes  } from 'discord-api-types/v10';
 import { DiscordjsTypeError, ErrorCodes  } from '../errors/index.js';
@@ -11,7 +10,8 @@ import { CachedManager  } from './CachedManager.js';
  *
  * @extends {CachedManager}
  */
-class ApplicationEmojiManager extends CachedManager {
+export class ApplicationEmojiManager extends CachedManager {
+  public application: any;
   constructor(application, iterable) {
     super(application.client, ApplicationEmoji, iterable);
 
@@ -147,5 +147,3 @@ class ApplicationEmojiManager extends CachedManager {
     return this._add(data).author;
   }
 }
-
-exports.ApplicationEmojiManager = ApplicationEmojiManager;

@@ -1,4 +1,3 @@
-
 import { Events  } from '../util/Events.js';
 import { Collector  } from './interfaces/Collector.js';
 
@@ -16,7 +15,9 @@ import { Collector  } from './interfaces/Collector.js';
  *
  * @extends {Collector}
  */
-class MessageCollector extends Collector {
+export class MessageCollector extends Collector {
+  public channel: any;
+  public received: any;
   /**
    * @param {TextBasedChannels} channel The channel
    * @param {MessageCollectorOptions} options The options to be applied to this collector
@@ -152,5 +153,3 @@ class MessageCollector extends Collector {
     }
   }
 }
-
-exports.MessageCollector = MessageCollector;

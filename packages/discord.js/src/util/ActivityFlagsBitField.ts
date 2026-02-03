@@ -8,7 +8,7 @@ import { BitField  } from './BitField.js';
  *
  * @extends {BitField}
  */
-class ActivityFlagsBitField extends BitField {
+export class ActivityFlagsBitField extends BitField {
   /**
    * Numeric activity flags.
    *
@@ -24,5 +24,3 @@ class ActivityFlagsBitField extends BitField {
  * @memberof ActivityFlagsBitField
  * @param {BitFieldResolvable} [bits=0] Bit(s) to read from
  */
-
-exports.ActivityFlagsBitField = ActivityFlagsBitField;

@@ -1,4 +1,3 @@
-
 import { Collection  } from '@ovencord/collection';
 import { makeURLSearchParams  } from '@ovencord/rest';
 import { GuildScheduledEventEntityType, Routes  } from 'discord-api-types/v10';
@@ -13,7 +12,8 @@ import { CachedManager  } from './CachedManager.js';
  *
  * @extends {CachedManager}
  */
-class GuildScheduledEventManager extends CachedManager {
+export class GuildScheduledEventManager extends CachedManager {
+  public guild: any;
   constructor(guild, iterable) {
     super(guild.client, GuildScheduledEvent, iterable);
 
@@ -328,5 +328,3 @@ class GuildScheduledEventManager extends CachedManager {
     );
   }
 }
-
-exports.GuildScheduledEventManager = GuildScheduledEventManager;

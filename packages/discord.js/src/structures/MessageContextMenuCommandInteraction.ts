@@ -1,4 +1,3 @@
-
 import { ContextMenuCommandInteraction  } from './ContextMenuCommandInteraction.js';
 
 /**
@@ -6,7 +5,7 @@ import { ContextMenuCommandInteraction  } from './ContextMenuCommandInteraction.
  *
  * @extends {ContextMenuCommandInteraction}
  */
-class MessageContextMenuCommandInteraction extends ContextMenuCommandInteraction {
+export class MessageContextMenuCommandInteraction extends ContextMenuCommandInteraction {
   /**
    * The message this interaction was sent from
    *
@@ -17,5 +16,3 @@ class MessageContextMenuCommandInteraction extends ContextMenuCommandInteraction
     return this.options.getMessage('message');
   }
 }
-
-exports.MessageContextMenuCommandInteraction = MessageContextMenuCommandInteraction;

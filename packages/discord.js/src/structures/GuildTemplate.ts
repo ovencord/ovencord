@@ -1,4 +1,3 @@
-
 import { RouteBases, Routes  } from 'discord-api-types/v10';
 import { Base  } from './Base.js';
 
@@ -7,7 +6,19 @@ import { Base  } from './Base.js';
  *
  * @extends {Base}
  */
-class GuildTemplate extends Base {
+export class GuildTemplate extends Base {
+  public client: any;
+  public code: any;
+  public name: any;
+  public description: any;
+  public usageCount: any;
+  public creatorId: any;
+  public creator: any;
+  public createdTimestamp: any;
+  public updatedTimestamp: any;
+  public guildId: any;
+  public serializedGuild: any;
+  public unSynced: any;
   /**
    * A regular expression that matches guild template links.
    * The `code` group property is present on the `exec()` result of this expression.
@@ -216,5 +227,3 @@ class GuildTemplate extends Base {
     return this.code;
   }
 }
-
-exports.GuildTemplate = GuildTemplate;

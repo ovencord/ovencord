@@ -1,8 +1,7 @@
-
 import { Events  } from '../../util/Events.js';
 import { Action  } from './Action.js';
 
-class GuildEmojiDeleteAction extends Action {
+export class GuildEmojiDeleteAction extends Action {
   handle(emoji) {
     emoji.guild.emojis.cache.delete(emoji.id);
     /**
@@ -15,5 +14,3 @@ class GuildEmojiDeleteAction extends Action {
     return { emoji };
   }
 }
-
-exports.GuildEmojiDeleteAction = GuildEmojiDeleteAction;

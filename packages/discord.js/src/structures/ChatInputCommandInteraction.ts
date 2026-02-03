@@ -1,4 +1,3 @@
-
 import { transformResolved  } from '../util/Util.js';
 import { CommandInteraction  } from './CommandInteraction.js';
 import { CommandInteractionOptionResolver  } from './CommandInteractionOptionResolver.js';
@@ -8,7 +7,9 @@ import { CommandInteractionOptionResolver  } from './CommandInteractionOptionRes
  *
  * @extends {CommandInteraction}
  */
-class ChatInputCommandInteraction extends CommandInteraction {
+export class ChatInputCommandInteraction extends CommandInteraction {
+  public client: any;
+  public options: any;
   constructor(client, data) {
     super(client, data);
 
@@ -40,5 +41,3 @@ class ChatInputCommandInteraction extends CommandInteraction {
     return `/${properties.filter(Boolean).join(' ')}`;
   }
 }
-
-exports.ChatInputCommandInteraction = ChatInputCommandInteraction;

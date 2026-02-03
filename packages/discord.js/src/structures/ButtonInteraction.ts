@@ -1,4 +1,3 @@
-
 import { MessageComponentInteraction  } from './MessageComponentInteraction.js';
 
 /**
@@ -6,6 +5,4 @@ import { MessageComponentInteraction  } from './MessageComponentInteraction.js';
  *
  * @extends {MessageComponentInteraction}
  */
-class ButtonInteraction extends MessageComponentInteraction {}
-
-exports.ButtonInteraction = ButtonInteraction;
+export class ButtonInteraction extends MessageComponentInteraction {}

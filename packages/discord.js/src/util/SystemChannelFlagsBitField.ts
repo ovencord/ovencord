@@ -10,7 +10,7 @@ import { BitField  } from './BitField.js';
  *
  * @extends {BitField}
  */
-class SystemChannelFlagsBitField extends BitField {
+export class SystemChannelFlagsBitField extends BitField {
   /**
    * Numeric system channel flags.
    *
@@ -43,5 +43,3 @@ class SystemChannelFlagsBitField extends BitField {
  *
  * @typedef {string|number|SystemChannelFlagsBitField|SystemChannelFlagsResolvable[]} SystemChannelFlagsResolvable
  */
-
-exports.SystemChannelFlagsBitField = SystemChannelFlagsBitField;

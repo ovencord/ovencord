@@ -1,4 +1,3 @@
-
 import { PermissionFlagsBits  } from 'discord-api-types/v10';
 import { DiscordjsError, ErrorCodes  } from '../errors/index.js';
 import { GuildMemberRoleManager  } from '../managers/GuildMemberRoleManager.js';
@@ -12,7 +11,20 @@ import { VoiceState  } from './VoiceState.js';
  *
  * @extends {Base}
  */
-class GuildMember extends Base {
+export class GuildMember extends Base {
+  public client: any;
+  public guild: any;
+  public premiumSinceTimestamp: any;
+  public nickname: any;
+  public pending: any;
+  public communicationDisabledUntilTimestamp: any;
+  public user: any;
+  public avatar: any;
+  public banner: any;
+  public joinedTimestamp: any;
+  public _roles: any;
+  public flags: any;
+  public avatarDecorationData: any;
   constructor(client, data, guild) {
     super(client);
 
@@ -629,5 +641,3 @@ class GuildMember extends Base {
     return json;
   }
 }
-
-exports.GuildMember = GuildMember;

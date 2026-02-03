@@ -1,4 +1,3 @@
-
 import { lazy  } from '@ovencord/util';
 import { ComponentType  } from 'discord-api-types/v10';
 
@@ -245,7 +244,7 @@ const ComponentTypeToClass = {
  * @returns {Component}
  * @ignore
  */
-function createComponent(data) {
+export function createComponent(data) {
   return data instanceof getComponent() ? data : new (ComponentTypeToClass[data.type]?.() ?? getComponent())(data);
 }
 
@@ -256,7 +255,7 @@ function createComponent(data) {
  * @returns {Array<Component|APIMessageComponent>}
  * @ignore
  */
-function extractInteractiveComponents(component) {
+export function extractInteractiveComponents(component) {
   switch (component.type) {
     case ComponentType.ActionRow:
       return component.components;
@@ -277,13 +276,10 @@ function extractInteractiveComponents(component) {
  * @returns {Component|APIMessageComponent}
  * @ignore
  */
-function findComponentByCustomId(components, customId) {
+export function findComponentByCustomId(components, customId) {
   return (
     components
       .flatMap(extractInteractiveComponents)
       .find(component => (component.customId ?? component.custom_id) === customId) ?? null
   );
 }
-
-exports.createComponent = createComponent;
-exports.findComponentByCustomId = findComponentByCustomId;

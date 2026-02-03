@@ -1,4 +1,3 @@
-
 import { Collection  } from '@ovencord/collection';
 import { Routes  } from 'discord-api-types/v10';
 import { AutoModerationRule  } from '../structures/AutoModerationRule.js';
@@ -9,7 +8,8 @@ import { CachedManager  } from './CachedManager.js';
  *
  * @extends {CachedManager}
  */
-class AutoModerationRuleManager extends CachedManager {
+export class AutoModerationRuleManager extends CachedManager {
+  public guild: any;
   constructor(guild, iterable) {
     super(guild.client, AutoModerationRule, iterable);
 
@@ -305,5 +305,3 @@ class AutoModerationRuleManager extends CachedManager {
     await this.client.rest.delete(Routes.guildAutoModerationRule(this.guild.id, autoModerationRuleId), { reason });
   }
 }
-
-exports.AutoModerationRuleManager = AutoModerationRuleManager;

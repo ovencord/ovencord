@@ -1,4 +1,3 @@
-
 import { DiscordSnowflake  } from '@sapphire/snowflake';
 import { AuditLogOptionsType, AuditLogEvent  } from 'discord-api-types/v10';
 import { Partials  } from '../util/Partials.js';
@@ -100,7 +99,7 @@ const Targets = {
  * @returns {Object}
  * @ignore
  */
-function changesReduce(changes, initialData = {}) {
+export function changesReduce(changes, initialData = {}) {
   return changes.reduce((accumulator, change) => {
     accumulator[change.key] = change.new ?? change.old;
     return accumulator;
@@ -110,7 +109,16 @@ function changesReduce(changes, initialData = {}) {
 /**
  * Audit logs entry.
  */
-class GuildAuditLogsEntry {
+export class GuildAuditLogsEntry {
+  public action: any;
+  public reason: any;
+  public executorId: any;
+  public executor: any;
+  public changes: any;
+  public id: any;
+  public extra: any;
+  public targetId: any;
+  public target: any;
   /**
    * Key mirror of all available audit log targets.
    *
@@ -547,5 +555,3 @@ class GuildAuditLogsEntry {
     return flatten(this, { createdTimestamp: true });
   }
 }
-
-exports.GuildAuditLogsEntry = GuildAuditLogsEntry;

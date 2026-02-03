@@ -1,8 +1,7 @@
-
 import { Events  } from '../../util/Events.js';
 import { Action  } from './Action.js';
 
-class MessageDeleteAction extends Action {
+export class MessageDeleteAction extends Action {
   handle(data) {
     const client = this.client;
     const channel = this.getChannel({ id: data.channel_id, ...('guild_id' in data && { guild_id: data.guild_id }) });
@@ -28,5 +27,3 @@ class MessageDeleteAction extends Action {
     return { message };
   }
 }
-
-exports.MessageDeleteAction = MessageDeleteAction;

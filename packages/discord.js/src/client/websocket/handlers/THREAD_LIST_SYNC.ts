@@ -1,4 +1,3 @@
-
 import { Collection  } from '@ovencord/collection';
 import { Events  } from '../../../util/Events.js';
 
@@ -40,7 +39,7 @@ module.exports = (client, { d: data }) => {
   client.emit(Events.ThreadListSync, syncedThreads, guild);
 };
 
-function removeStaleThreads(client, channel) {
+export function removeStaleThreads(client, channel) {
   if (!channel.threads) return;
 
   for (const thread of channel.threads.cache.values()) {

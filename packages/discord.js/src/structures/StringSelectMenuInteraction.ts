@@ -1,4 +1,3 @@
-
 import { MessageComponentInteraction  } from './MessageComponentInteraction.js';
 
 /**
@@ -6,7 +5,9 @@ import { MessageComponentInteraction  } from './MessageComponentInteraction.js';
  *
  * @extends {MessageComponentInteraction}
  */
-class StringSelectMenuInteraction extends MessageComponentInteraction {
+export class StringSelectMenuInteraction extends MessageComponentInteraction {
+  public client: any;
+  public values: any;
   constructor(client, data) {
     super(client, data);
 
@@ -18,5 +19,3 @@ class StringSelectMenuInteraction extends MessageComponentInteraction {
     this.values = data.data.values ?? [];
   }
 }
-
-exports.StringSelectMenuInteraction = StringSelectMenuInteraction;

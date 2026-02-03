@@ -1,4 +1,3 @@
-
 import { BaseGuild  } from './BaseGuild.js';
 
 /**
@@ -7,7 +6,14 @@ import { BaseGuild  } from './BaseGuild.js';
  * @extends {BaseGuild}
  * @abstract
  */
-class AnonymousGuild extends BaseGuild {
+export class AnonymousGuild extends BaseGuild {
+  public client: any;
+  public features: any;
+  public description: any;
+  public verificationLevel: any;
+  public vanityURLCode: any;
+  public nsfwLevel: any;
+  public premiumSubscriptionCount: any;
   constructor(client, data, immediatePatch = true) {
     super(client, data);
     if (immediatePatch) this._patch(data);
@@ -102,5 +108,3 @@ class AnonymousGuild extends BaseGuild {
     return this.splash && this.client.rest.cdn.splash(this.id, this.splash, options);
   }
 }
-
-exports.AnonymousGuild = AnonymousGuild;

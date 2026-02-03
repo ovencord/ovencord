@@ -1,7 +1,6 @@
-
 import { DefaultRestOptions, DefaultUserAgentAppendix  } from '@ovencord/rest';
 import { DefaultWebSocketManagerOptions  } from '@ovencord/ws';
-import { version  } from '../../package.json';
+import { version  } from '../../package.json.js';
 import { toSnakeCase  } from './Transformers.js';
 
 /**
@@ -65,7 +64,7 @@ import { toSnakeCase  } from './Transformers.js';
 /**
  * Contains various utilities for client options.
  */
-class Options extends null {
+export class Options extends null {
   /**
    * The default user agent appendix.
    *
@@ -193,7 +192,7 @@ class Options extends null {
   }
 }
 
-exports.Options = Options;
+
 
 /**
  * @external RESTOptions

@@ -1,4 +1,3 @@
-
 import { flatten  } from '../util/Util.js';
 import { Emoji  } from './Emoji.js';
 
@@ -9,7 +8,8 @@ import { Emoji  } from './Emoji.js';
  *
  * @extends {Emoji}
  */
-class ReactionEmoji extends Emoji {
+export class ReactionEmoji extends Emoji {
+  public reaction: any;
   constructor(reaction, emoji) {
     super(reaction.message.client, emoji);
     /**
@@ -28,5 +28,3 @@ class ReactionEmoji extends Emoji {
     return this.id;
   }
 }
-
-exports.ReactionEmoji = ReactionEmoji;

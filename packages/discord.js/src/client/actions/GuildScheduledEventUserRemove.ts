@@ -1,8 +1,7 @@
-
 import { Events  } from '../../util/Events.js';
 import { Action  } from './Action.js';
 
-class GuildScheduledEventUserRemoveAction extends Action {
+export class GuildScheduledEventUserRemoveAction extends Action {
   handle(data) {
     const client = this.client;
     const guild = client.guilds.cache.get(data.guild_id);
@@ -28,5 +27,3 @@ class GuildScheduledEventUserRemoveAction extends Action {
     return {};
   }
 }
-
-exports.GuildScheduledEventUserRemoveAction = GuildScheduledEventUserRemoveAction;

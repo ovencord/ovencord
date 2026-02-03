@@ -1,4 +1,3 @@
-
 import { Collection  } from '@ovencord/collection';
 import { DiscordjsTypeError, ErrorCodes  } from '../errors/index.js';
 import { Role  } from '../structures/Role.js';
@@ -9,7 +8,9 @@ import { DataManager  } from './DataManager.js';
  *
  * @extends {DataManager}
  */
-class GuildEmojiRoleManager extends DataManager {
+export class GuildEmojiRoleManager extends DataManager {
+  public emoji: any;
+  public guild: any;
   constructor(emoji) {
     super(emoji.client, Role);
 
@@ -131,5 +132,3 @@ class GuildEmojiRoleManager extends DataManager {
     return this.cache;
   }
 }
-
-exports.GuildEmojiRoleManager = GuildEmojiRoleManager;

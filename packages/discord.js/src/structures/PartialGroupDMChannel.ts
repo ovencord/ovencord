@@ -1,4 +1,3 @@
-
 import { DiscordjsError, ErrorCodes  } from '../errors/index.js';
 import { PartialGroupDMMessageManager  } from '../managers/PartialGroupDMMessageManager.js';
 import { BaseChannel  } from './BaseChannel.js';
@@ -10,7 +9,16 @@ import { TextBasedChannel  } from './interfaces/TextBasedChannel.js';
  * @extends {BaseChannel}
  * @implements {TextBasedChannel}
  */
-class PartialGroupDMChannel extends BaseChannel {
+export class PartialGroupDMChannel extends BaseChannel {
+  public client: any;
+  public flags: any;
+  public name: any;
+  public icon: any;
+  public recipients: any;
+  public messages: any;
+  public ownerId: any;
+  public lastMessageId: any;
+  public lastPinTimestamp: any;
   constructor(client, data) {
     super(client, data);
 
@@ -141,5 +149,3 @@ TextBasedChannel.applyToClass(PartialGroupDMChannel, [
   'setRateLimitPerUser',
   'setNSFW',
 ]);
-
-exports.PartialGroupDMChannel = PartialGroupDMChannel;

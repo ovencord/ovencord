@@ -1,4 +1,3 @@
-
 import { setInterval, clearInterval  } from 'node:timers';
 import { DiscordjsTypeError, ErrorCodes  } from '../errors/index.js';
 import { ThreadChannelTypes, SweeperKeys  } from './Constants.js';
@@ -14,7 +13,10 @@ import { Events  } from './Events.js';
 /**
  * A container for all cache sweeping intervals and their associated sweep methods.
  */
-class Sweepers {
+export class Sweepers {
+  public client: any;
+  public options: any;
+  public intervals: any;
   constructor(client, options) {
     /**
      * The client that instantiated this
@@ -528,5 +530,3 @@ class Sweepers {
     }, opts.interval * 1_000).unref();
   }
 }
-
-exports.Sweepers = Sweepers;

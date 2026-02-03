@@ -1,4 +1,3 @@
-
 import { Collection  } from '@ovencord/collection';
 import { DiscordjsTypeError, ErrorCodes  } from '../errors/index.js';
 
@@ -18,7 +17,9 @@ import { DiscordjsTypeError, ErrorCodes  } from '../errors/index.js';
  * @param {LimitedCollectionOptions} [options={}] Options for constructing the Collection.
  * @param {Iterable} [iterable=null] Optional entries passed to the Map constructor.
  */
-class LimitedCollection extends Collection {
+export class LimitedCollection extends Collection {
+  public maxSize: any;
+  public keepOverLimit: any;
   constructor(options = {}, iterable = undefined) {
     if (typeof options !== 'object' || options === null) {
       throw new DiscordjsTypeError(ErrorCodes.InvalidType, 'options', 'object', true);
@@ -70,5 +71,3 @@ class LimitedCollection extends Collection {
     return Collection;
   }
 }
-
-exports.LimitedCollection = LimitedCollection;

@@ -1,4 +1,3 @@
-
 import { Routes  } from 'discord-api-types/v10';
 import { resolveImage  } from '../util/DataResolver.js';
 import { User  } from './User.js';
@@ -8,7 +7,9 @@ import { User  } from './User.js';
  *
  * @extends {User}
  */
-class ClientUser extends User {
+export class ClientUser extends User {
+  public verified: any;
+  public mfaEnabled: any;
   _patch(data) {
     super._patch(data);
 
@@ -216,5 +217,3 @@ class ClientUser extends User {
     return this.setPresence({ afk, shardId });
   }
 }
-
-exports.ClientUser = ClientUser;

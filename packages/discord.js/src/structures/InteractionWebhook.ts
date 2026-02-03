@@ -1,4 +1,3 @@
-
 import { Webhook  } from './Webhook.js';
 
 /**
@@ -6,7 +5,9 @@ import { Webhook  } from './Webhook.js';
  *
  * @implements {Webhook}
  */
-class InteractionWebhook {
+export class InteractionWebhook {
+  public client: any;
+  public id: any;
   /**
    * @param {Client} client The instantiating client
    * @param {Snowflake} id The application's id
@@ -62,5 +63,3 @@ class InteractionWebhook {
 }
 
 Webhook.applyToClass(InteractionWebhook, ['sendSlackMessage', 'edit', 'delete', 'createdTimestamp', 'createdAt']);
-
-exports.InteractionWebhook = InteractionWebhook;

@@ -8,7 +8,7 @@ import { BitField  } from './BitField.js';
  *
  * @extends {BitField}
  */
-class ThreadMemberFlagsBitField extends BitField {
+export class ThreadMemberFlagsBitField extends BitField {
   /**
    * Numeric thread member flags. There are currently no bitflags relevant to bots for this.
    *
@@ -31,5 +31,3 @@ class ThreadMemberFlagsBitField extends BitField {
  * @type {number}
  * @name ThreadMemberFlagsBitField#bitfield
  */
-
-exports.ThreadMemberFlagsBitField = ThreadMemberFlagsBitField;

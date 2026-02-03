@@ -1,4 +1,3 @@
-
 import { lazy  } from '@ovencord/util';
 
 const getMessage = lazy(() => require('./Message.js').Message);
@@ -6,7 +5,11 @@ const getMessage = lazy(() => require('./Message.js').Message);
 /**
  * Represents the resource that was created by the interaction response.
  */
-class InteractionCallbackResource {
+export class InteractionCallbackResource {
+  public client: any;
+  public type: any;
+  public activityInstance: any;
+  public message: any;
   constructor(client, data) {
     /**
      * The client that instantiated this
@@ -52,5 +55,3 @@ class InteractionCallbackResource {
     }
   }
 }
-
-exports.InteractionCallbackResource = InteractionCallbackResource;

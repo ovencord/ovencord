@@ -37,7 +37,13 @@ import { Emoji  } from './Emoji.js';
  *
  * @extends {Base}
  */
-class Presence extends Base {
+export class Presence extends Base {
+  public client: any;
+  public userId: any;
+  public guild: any;
+  public status: any;
+  public activities: any;
+  public clientStatus: any;
   constructor(client, data = {}) {
     super(client);
 
@@ -155,7 +161,21 @@ class Presence extends Base {
 /**
  * Represents an activity that is part of a user's presence.
  */
-class Activity {
+export class Activity {
+  public name: any;
+  public type: any;
+  public url: any;
+  public details: any;
+  public state: any;
+  public applicationId: any;
+  public timestamps: any;
+  public party: any;
+  public syncId: any;
+  public assets: any;
+  public flags: any;
+  public emoji: any;
+  public buttons: any;
+  public createdTimestamp: any;
   constructor(presence, data) {
     /**
      * The presence of the Activity
@@ -334,7 +354,11 @@ class Activity {
 /**
  * Assets for a rich presence
  */
-class RichPresenceAssets {
+export class RichPresenceAssets {
+  public largeText: any;
+  public smallText: any;
+  public largeImage: any;
+  public smallImage: any;
   constructor(activity, assets) {
     /**
      * The activity of the RichPresenceAssets
@@ -422,7 +446,3 @@ class RichPresenceAssets {
     return this.activity.presence.client.rest.cdn.appAsset(this.activity.applicationId, this.largeImage, options);
   }
 }
-
-exports.Presence = Presence;
-exports.Activity = Activity;
-exports.RichPresenceAssets = RichPresenceAssets;

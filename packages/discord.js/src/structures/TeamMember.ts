@@ -1,4 +1,3 @@
-
 import { Base  } from './Base.js';
 
 /**
@@ -6,7 +5,11 @@ import { Base  } from './Base.js';
  *
  * @extends {Base}
  */
-class TeamMember extends Base {
+export class TeamMember extends Base {
+  public team: any;
+  public membershipState: any;
+  public user: any;
+  public role: any;
   constructor(team, data) {
     super(team.client);
 
@@ -72,5 +75,3 @@ class TeamMember extends Base {
     return this.user.toString();
   }
 }
-
-exports.TeamMember = TeamMember;

@@ -1,10 +1,16 @@
-
 import { DiscordSnowflake  } from '@sapphire/snowflake';
 
 /**
  * Represents an interaction callback response from Discord
  */
-class InteractionCallback {
+export class InteractionCallback {
+  public client: any;
+  public id: any;
+  public type: any;
+  public activityInstanceId: any;
+  public responseMessageId: any;
+  public responseMessageLoading: any;
+  public responseMessageEphemeral: any;
   constructor(client, data) {
     /**
      * The client that instantiated this.
@@ -78,5 +84,3 @@ class InteractionCallback {
     return new Date(this.createdTimestamp);
   }
 }
-
-exports.InteractionCallback = InteractionCallback;

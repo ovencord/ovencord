@@ -1,4 +1,3 @@
-
 import { Emoji  } from './Emoji.js';
 
 /**
@@ -6,7 +5,14 @@ import { Emoji  } from './Emoji.js';
  *
  * @extends {Emoji}
  */
-class ApplicationEmoji extends Emoji {
+export class ApplicationEmoji extends Emoji {
+  public client: any;
+  public application: any;
+  public name: any;
+  public author: any;
+  public managed: any;
+  public requiresColons: any;
+  public available: any;
   constructor(client, data, application) {
     super(client, data);
 
@@ -181,5 +187,3 @@ class ApplicationEmoji extends Emoji {
  * @type {number}
  * @readonly
  */
-
-exports.ApplicationEmoji = ApplicationEmoji;

@@ -1,4 +1,3 @@
-
 import { Collection  } from '@ovencord/collection';
 import { makeURLSearchParams  } from '@ovencord/rest';
 import { Routes  } from 'discord-api-types/v10';
@@ -12,7 +11,8 @@ import { CachedManager  } from './CachedManager.js';
  *
  * @extends {CachedManager}
  */
-class SubscriptionManager extends CachedManager {
+export class SubscriptionManager extends CachedManager {
+  public client: any;
   constructor(client, iterable) {
     super(client, Subscription, iterable);
   }
@@ -81,5 +81,3 @@ class SubscriptionManager extends CachedManager {
     );
   }
 }
-
-exports.SubscriptionManager = SubscriptionManager;

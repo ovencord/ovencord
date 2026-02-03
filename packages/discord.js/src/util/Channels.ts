@@ -1,4 +1,3 @@
-
 import { lazy  } from '@ovencord/util';
 import { ChannelType  } from 'discord-api-types/v10';
 
@@ -32,7 +31,7 @@ const getMediaChannel = lazy(() => require('../structures/MediaChannel.js').Medi
  * @returns {BaseChannel} Any kind of channel.
  * @ignore
  */
-function createChannel(client, data, guild, { allowUnknownGuild } = {}) {
+export function createChannel(client, data, guild, { allowUnknownGuild } = {}) {
   let channel;
   const resolvedGuild = guild ?? client.guilds.cache.get(data.guild_id);
 
@@ -103,7 +102,7 @@ function createChannel(client, data, guild, { allowUnknownGuild } = {}) {
  * @returns {GuildForumTag}
  * @ignore
  */
-function transformAPIGuildForumTag(tag) {
+export function transformAPIGuildForumTag(tag) {
   return {
     id: tag.id,
     name: tag.name,
@@ -125,7 +124,7 @@ function transformAPIGuildForumTag(tag) {
  * @returns {APIGuildForumTag}
  * @ignore
  */
-function transformGuildForumTag(tag) {
+export function transformGuildForumTag(tag) {
   return {
     id: tag.id,
     name: tag.name,
@@ -143,7 +142,7 @@ function transformGuildForumTag(tag) {
  * @returns {DefaultReactionEmoji}
  * @ignore
  */
-function transformAPIGuildDefaultReaction(defaultReaction) {
+export function transformAPIGuildDefaultReaction(defaultReaction) {
   return {
     id: defaultReaction.emoji_id,
     name: defaultReaction.emoji_name,
@@ -158,15 +157,9 @@ function transformAPIGuildDefaultReaction(defaultReaction) {
  * @returns {APIGuildForumDefaultReactionEmoji}
  * @ignore
  */
-function transformGuildDefaultReaction(defaultReaction) {
+export function transformGuildDefaultReaction(defaultReaction) {
   return {
     emoji_id: defaultReaction.id,
     emoji_name: defaultReaction.name,
   };
 }
-
-exports.createChannel = createChannel;
-exports.transformAPIGuildForumTag = transformAPIGuildForumTag;
-exports.transformGuildForumTag = transformGuildForumTag;
-exports.transformAPIGuildDefaultReaction = transformAPIGuildDefaultReaction;
-exports.transformGuildDefaultReaction = transformGuildDefaultReaction;

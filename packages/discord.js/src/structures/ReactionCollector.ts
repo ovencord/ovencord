@@ -1,4 +1,3 @@
-
 import { Collection  } from '@ovencord/collection';
 import { Events  } from '../util/Events.js';
 import { Collector  } from './interfaces/Collector.js';
@@ -20,7 +19,10 @@ import { Collector  } from './interfaces/Collector.js';
  *
  * @extends {Collector}
  */
-class ReactionCollector extends Collector {
+export class ReactionCollector extends Collector {
+  public message: any;
+  public users: any;
+  public total: any;
   /**
    * @param {Message} message The message upon which to collect reactions
    * @param {ReactionCollectorOptions} [options={}] The options to apply to this collector
@@ -241,5 +243,3 @@ class ReactionCollector extends Collector {
     return reaction.emoji.id ?? reaction.emoji.name;
   }
 }
-
-exports.ReactionCollector = ReactionCollector;

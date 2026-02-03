@@ -1,4 +1,3 @@
-
 import { userMention  } from '@ovencord/formatters';
 import { ChannelType  } from 'discord-api-types/v10';
 import { DMMessageManager  } from '../managers/DMMessageManager.js';
@@ -12,7 +11,13 @@ import { TextBasedChannel  } from './interfaces/TextBasedChannel.js';
  * @extends {BaseChannel}
  * @implements {TextBasedChannel}
  */
-class DMChannel extends BaseChannel {
+export class DMChannel extends BaseChannel {
+  public client: any;
+  public type: any;
+  public messages: any;
+  public recipientId: any;
+  public lastMessageId: any;
+  public lastPinTimestamp: any;
   constructor(client, data) {
     super(client, data);
 
@@ -141,5 +146,3 @@ TextBasedChannel.applyToClass(DMChannel, [
   'setRateLimitPerUser',
   'setNSFW',
 ]);
-
-exports.DMChannel = DMChannel;

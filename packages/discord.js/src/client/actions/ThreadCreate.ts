@@ -1,8 +1,7 @@
-
 import { Events  } from '../../util/Events.js';
 import { Action  } from './Action.js';
 
-class ThreadCreateAction extends Action {
+export class ThreadCreateAction extends Action {
   handle(data) {
     const client = this.client;
     const existing = client.channels.cache.has(data.id);
@@ -21,5 +20,3 @@ class ThreadCreateAction extends Action {
     return { thread };
   }
 }
-
-exports.ThreadCreateAction = ThreadCreateAction;

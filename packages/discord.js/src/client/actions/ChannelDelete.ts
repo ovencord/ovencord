@@ -1,8 +1,7 @@
-
 import { Events  } from '../../util/Events.js';
 import { Action  } from './Action.js';
 
-class ChannelDeleteAction extends Action {
+export class ChannelDeleteAction extends Action {
   handle(data) {
     const client = this.client;
     const channel = client.channels.cache.get(data.id);
@@ -19,5 +18,3 @@ class ChannelDeleteAction extends Action {
     }
   }
 }
-
-exports.ChannelDeleteAction = ChannelDeleteAction;

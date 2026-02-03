@@ -1,4 +1,3 @@
-
 import { DiscordSnowflake  } from '@sapphire/snowflake';
 import { Base  } from '../Base.js';
 
@@ -8,7 +7,17 @@ import { Base  } from '../Base.js';
  * @extends {Base}
  * @abstract
  */
-class Application extends Base {
+export class Application extends Base {
+  public client: any;
+  public id: any;
+  public name: any;
+  public description: any;
+  public icon: any;
+  public termsOfServiceURL: any;
+  public privacyPolicyURL: any;
+  public rpcOrigins: any;
+  public cover: any;
+  public verifyKey: any;
   constructor(client, data) {
     super(client);
     this._patch(data);
@@ -168,5 +177,3 @@ class Application extends Base {
     return super.toJSON({ createdTimestamp: true });
   }
 }
-
-exports.Application = Application;

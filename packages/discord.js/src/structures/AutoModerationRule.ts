@@ -1,4 +1,3 @@
-
 import { Collection  } from '@ovencord/collection';
 import { _transformAPIAutoModerationAction  } from '../util/Transformers.js';
 import { Base  } from './Base.js';
@@ -8,7 +7,19 @@ import { Base  } from './Base.js';
  *
  * @extends {Base}
  */
-class AutoModerationRule extends Base {
+export class AutoModerationRule extends Base {
+  public client: any;
+  public id: any;
+  public guild: any;
+  public creatorId: any;
+  public triggerType: any;
+  public name: any;
+  public eventType: any;
+  public triggerMetadata: any;
+  public actions: any;
+  public enabled: any;
+  public exemptRoles: any;
+  public exemptChannels: any;
   constructor(client, data, guild) {
     super(client);
 
@@ -312,5 +323,3 @@ class AutoModerationRule extends Base {
     return this.edit({ exemptChannels, reason });
   }
 }
-
-exports.AutoModerationRule = AutoModerationRule;

@@ -1,10 +1,17 @@
-
 import { Emoji  } from './Emoji.js';
 
 /**
  * Represents an effect used in a {@link VoiceChannel}.
  */
-class VoiceChannelEffect {
+export class VoiceChannelEffect {
+  public guild: any;
+  public channelId: any;
+  public userId: any;
+  public emoji: any;
+  public animationType: any;
+  public animationId: any;
+  public soundId: any;
+  public soundVolume: any;
   constructor(data, guild) {
     /**
      * The guild where the effect was sent from.
@@ -83,5 +90,3 @@ class VoiceChannelEffect {
     return this.guild.soundboardSounds.cache.get(this.soundId) ?? null;
   }
 }
-
-exports.VoiceChannelEffect = VoiceChannelEffect;

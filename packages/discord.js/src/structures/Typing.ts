@@ -1,4 +1,3 @@
-
 import { Base  } from './Base.js';
 
 /**
@@ -6,7 +5,10 @@ import { Base  } from './Base.js';
  *
  * @extends {Base}
  */
-class Typing extends Base {
+export class Typing extends Base {
+  public channel: any;
+  public user: any;
+  public startedTimestamp: any;
   constructor(channel, user, data) {
     super(channel.client);
 
@@ -77,5 +79,3 @@ class Typing extends Base {
     return this.guild?.members.resolve(this.user) ?? null;
   }
 }
-
-exports.Typing = Typing;

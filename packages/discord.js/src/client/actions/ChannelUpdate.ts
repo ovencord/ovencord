@@ -1,8 +1,7 @@
-
 import { createChannel  } from '../../util/Channels.js';
 import { Action  } from './Action.js';
 
-class ChannelUpdateAction extends Action {
+export class ChannelUpdateAction extends Action {
   handle(data) {
     const client = this.client;
     let channel = client.channels.cache.get(data.id);
@@ -37,5 +36,3 @@ class ChannelUpdateAction extends Action {
     return {};
   }
 }
-
-exports.ChannelUpdateAction = ChannelUpdateAction;

@@ -1,8 +1,7 @@
-
 import { Events  } from '../../util/Events.js';
 import { Action  } from './Action.js';
 
-class GuildStickerDeleteAction extends Action {
+export class GuildStickerDeleteAction extends Action {
   handle(sticker) {
     sticker.guild.stickers.cache.delete(sticker.id);
     /**
@@ -15,5 +14,3 @@ class GuildStickerDeleteAction extends Action {
     return { sticker };
   }
 }
-
-exports.GuildStickerDeleteAction = GuildStickerDeleteAction;

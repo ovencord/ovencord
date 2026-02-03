@@ -1,4 +1,3 @@
-
 import { ChannelType, MessageType, ComponentType, ImageFormat, StickerFormatType  } from 'discord-api-types/v10';
 
 /**
@@ -6,7 +5,7 @@ import { ChannelType, MessageType, ComponentType, ImageFormat, StickerFormatType
  *
  * @typedef {number} MaxBulkDeletableMessageAge
  */
-exports.MaxBulkDeletableMessageAge = 1_209_600_000;
+
 
 /**
  * The name of an item to be swept in Sweepers

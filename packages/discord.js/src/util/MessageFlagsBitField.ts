@@ -8,7 +8,7 @@ import { BitField  } from './BitField.js';
  *
  * @extends {BitField}
  */
-class MessageFlagsBitField extends BitField {
+export class MessageFlagsBitField extends BitField {
   /**
    * Numeric message flags.
    *
@@ -41,5 +41,3 @@ class MessageFlagsBitField extends BitField {
  * @type {number}
  * @name MessageFlagsBitField#bitfield
  */
-
-exports.MessageFlagsBitField = MessageFlagsBitField;

@@ -1,4 +1,3 @@
-
 import { GuildMessageManager  } from '../managers/GuildMessageManager.js';
 import { GuildTextThreadManager  } from '../managers/GuildTextThreadManager.js';
 import { GuildChannel  } from './GuildChannel.js';
@@ -10,7 +9,16 @@ import { TextBasedChannel  } from './interfaces/TextBasedChannel.js';
  * @extends {GuildChannel}
  * @implements {TextBasedChannel}
  */
-class BaseGuildTextChannel extends GuildChannel {
+export class BaseGuildTextChannel extends GuildChannel {
+  public client: any;
+  public messages: any;
+  public threads: any;
+  public nsfw: any;
+  public topic: any;
+  public lastMessageId: any;
+  public lastPinTimestamp: any;
+  public defaultAutoArchiveDuration: any;
+  public defaultThreadRateLimitPerUser: any;
   constructor(guild, data, client) {
     super(guild, data, client, false);
 
@@ -220,5 +228,3 @@ class BaseGuildTextChannel extends GuildChannel {
 }
 
 TextBasedChannel.applyToClass(BaseGuildTextChannel);
-
-exports.BaseGuildTextChannel = BaseGuildTextChannel;

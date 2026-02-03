@@ -1,4 +1,3 @@
-
 import { Collection  } from '@ovencord/collection';
 import { DiscordSnowflake  } from '@sapphire/snowflake';
 import { Routes  } from 'discord-api-types/v10';
@@ -11,7 +10,16 @@ import { Sticker  } from './Sticker.js';
  *
  * @extends {Base}
  */
-class GuildPreview extends Base {
+export class GuildPreview extends Base {
+  public client: any;
+  public id: any;
+  public name: any;
+  public features: any;
+  public approximateMemberCount: any;
+  public approximatePresenceCount: any;
+  public description: any;
+  public emojis: any;
+  public stickers: any;
   constructor(client, data) {
     super(client);
 
@@ -208,5 +216,3 @@ class GuildPreview extends Base {
     return json;
   }
 }
-
-exports.GuildPreview = GuildPreview;

@@ -1,4 +1,3 @@
-
 import { Buffer  } from 'node:buffer';
 import { isJSONEncodable, lazy  } from '@ovencord/util';
 import { DiscordSnowflake  } from '@sapphire/snowflake';
@@ -17,7 +16,11 @@ const getMessageManager = lazy(() => require('../managers/MessageManager.js').Me
 /**
  * Represents a message to be sent to the API.
  */
-class MessagePayload {
+export class MessagePayload {
+  public target: any;
+  public options: any;
+  public body: any;
+  public files: any;
   /**
    * @param {MessageTarget} target The target for this message to be sent to
    * @param {MessagePayloadOption} options The payload of this message
@@ -300,7 +303,7 @@ class MessagePayload {
   }
 }
 
-exports.MessagePayload = MessagePayload;
+
 
 /**
  * A target for a message.

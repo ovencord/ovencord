@@ -1,4 +1,3 @@
-
 import { createComponent  } from '../util/Components.js';
 import { Component  } from './Component.js';
 
@@ -7,7 +6,8 @@ import { Component  } from './Component.js';
  *
  * @extends {Component}
  */
-class LabelComponent extends Component {
+export class LabelComponent extends Component {
+  public component: any;
   constructor({ component, ...data }) {
     super(data);
 
@@ -49,5 +49,3 @@ class LabelComponent extends Component {
     return { ...this.data, component: this.component.toJSON() };
   }
 }
-
-exports.LabelComponent = LabelComponent;

@@ -1,4 +1,3 @@
-
 import { Component  } from './Component.js';
 
 /**
@@ -6,7 +5,7 @@ import { Component  } from './Component.js';
  *
  * @extends {Component}
  */
-class TextInputComponent extends Component {
+export class TextInputComponent extends Component {
   /**
    * The custom id of this text input
    *
@@ -27,5 +26,3 @@ class TextInputComponent extends Component {
     return this.data.value;
   }
 }
-
-exports.TextInputComponent = TextInputComponent;

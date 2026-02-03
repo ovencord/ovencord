@@ -1,4 +1,3 @@
-
 import { lazy  } from '@ovencord/util';
 import { ApplicationCommandOptionType  } from 'discord-api-types/v10';
 import { transformResolved  } from '../util/Util.js';
@@ -12,7 +11,10 @@ const getMessage = lazy(() => require('./Message.js').Message);
  *
  * @extends {CommandInteraction}
  */
-class ContextMenuCommandInteraction extends CommandInteraction {
+export class ContextMenuCommandInteraction extends CommandInteraction {
+  public client: any;
+  public options: any;
+  public targetId: any;
   constructor(client, data) {
     super(client, data);
     /**
@@ -64,5 +66,3 @@ class ContextMenuCommandInteraction extends CommandInteraction {
     return result;
   }
 }
-
-exports.ContextMenuCommandInteraction = ContextMenuCommandInteraction;

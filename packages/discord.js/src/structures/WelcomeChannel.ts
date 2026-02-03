@@ -1,4 +1,3 @@
-
 import { Base  } from './Base.js';
 import { Emoji  } from './Emoji.js';
 
@@ -7,7 +6,11 @@ import { Emoji  } from './Emoji.js';
  *
  * @extends {Base}
  */
-class WelcomeChannel extends Base {
+export class WelcomeChannel extends Base {
+  public guild: any;
+  public description: any;
+  public _emoji: any;
+  public channelId: any;
   constructor(guild, data) {
     super(guild.client);
 
@@ -62,5 +65,3 @@ class WelcomeChannel extends Base {
     return this.guild.emojis.cache.get(this._emoji.id) ?? new Emoji(this.client, this._emoji);
   }
 }
-
-exports.WelcomeChannel = WelcomeChannel;

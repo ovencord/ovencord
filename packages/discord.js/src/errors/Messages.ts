@@ -1,4 +1,3 @@
-
 import { ErrorCodes  } from './ErrorCodes.js';
 
 const Messages = {
@@ -154,5 +153,3 @@ const Messages = {
     `"overwrite.id" is a ${expected.toLowerCase()} object, ` +
     `but "overwrite.type" is defined and not equal to OverwriteType.${expected}`,
 };
-
-exports.Messages = Messages;

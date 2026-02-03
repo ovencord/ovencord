@@ -1,4 +1,3 @@
-
 import fs from 'node:fs';
 import path from 'node:path';
 import process from 'node:process';
@@ -21,6 +20,14 @@ import { Shard  } from './Shard.js';
  * @extends {AsyncEventEmitter}
  */
 export class ShardingManager extends AsyncEventEmitter {
+  public file: any;
+  public shardList: any;
+  public totalShards: any;
+  public mode: any;
+  public silent: any;
+  public shardArgs: any;
+  public execArgv: any;
+  public token: any;
   /**
    * The mode to spawn shards with for a {@link ShardingManager}. Can be either one of:
    * - 'process' to use child processes
@@ -365,5 +372,3 @@ export class ShardingManager extends AsyncEventEmitter {
     return this.shards;
   }
 }
-
-exports.ShardingManager = ShardingManager;

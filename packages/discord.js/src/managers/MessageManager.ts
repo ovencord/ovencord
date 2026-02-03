@@ -1,4 +1,3 @@
-
 import { Collection  } from '@ovencord/collection';
 import { makeURLSearchParams  } from '@ovencord/rest';
 import { isFileBodyEncodable, isJSONEncodable  } from '@ovencord/util';
@@ -16,7 +15,8 @@ import { CachedManager  } from './CachedManager.js';
  * @extends {CachedManager}
  * @abstract
  */
-class MessageManager extends CachedManager {
+export class MessageManager extends CachedManager {
+  public channel: any;
   static [MakeCacheOverrideSymbol] = MessageManager;
 
   constructor(channel, iterable) {
@@ -350,5 +350,3 @@ class MessageManager extends CachedManager {
     return voters.users.reduce((acc, user) => acc.set(user.id, this.client.users._add(user, false)), new Collection());
   }
 }
-
-exports.MessageManager = MessageManager;

@@ -1,8 +1,7 @@
-
 import { Events  } from '../../util/Events.js';
 import { Action  } from './Action.js';
 
-class GuildStickerUpdateAction extends Action {
+export class GuildStickerUpdateAction extends Action {
   handle(current, data) {
     const old = current._update(data);
     /**
@@ -16,5 +15,3 @@ class GuildStickerUpdateAction extends Action {
     return { sticker: current };
   }
 }
-
-exports.GuildStickerUpdateAction = GuildStickerUpdateAction;

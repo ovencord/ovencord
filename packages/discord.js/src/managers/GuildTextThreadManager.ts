@@ -1,4 +1,3 @@
-
 import { ChannelType, Routes  } from 'discord-api-types/v10';
 import { DiscordjsTypeError, ErrorCodes  } from '../errors/index.js';
 import { ThreadManager  } from './ThreadManager.js';
@@ -8,7 +7,7 @@ import { ThreadManager  } from './ThreadManager.js';
  *
  * @extends {ThreadManager}
  */
-class GuildTextThreadManager extends ThreadManager {
+export class GuildTextThreadManager extends ThreadManager {
   /**
    * The channel this Manager belongs to
    *
@@ -90,5 +89,3 @@ class GuildTextThreadManager extends ThreadManager {
     return this.client.actions.ThreadCreate.handle(data).thread;
   }
 }
-
-exports.GuildTextThreadManager = GuildTextThreadManager;

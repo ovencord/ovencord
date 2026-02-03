@@ -1,4 +1,3 @@
-
 import { Collection  } from '@ovencord/collection';
 import { Routes  } from 'discord-api-types/v10';
 import { DiscordjsTypeError, ErrorCodes  } from '../errors/index.js';
@@ -10,7 +9,9 @@ import { DataManager  } from './DataManager.js';
  *
  * @extends {DataManager}
  */
-class GuildMemberRoleManager extends DataManager {
+export class GuildMemberRoleManager extends DataManager {
+  public member: any;
+  public guild: any;
   constructor(member) {
     super(member.client, Role);
 
@@ -227,5 +228,3 @@ class GuildMemberRoleManager extends DataManager {
     return clone;
   }
 }
-
-exports.GuildMemberRoleManager = GuildMemberRoleManager;

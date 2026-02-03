@@ -1,4 +1,3 @@
-
 import { Component  } from './Component.js';
 
 /**
@@ -6,7 +5,7 @@ import { Component  } from './Component.js';
  *
  * @extends {Component}
  */
-class TextDisplayComponent extends Component {
+export class TextDisplayComponent extends Component {
   /**
    * The content of this text display
    *
@@ -17,5 +16,3 @@ class TextDisplayComponent extends Component {
     return this.data.content;
   }
 }
-
-exports.TextDisplayComponent = TextDisplayComponent;

@@ -1,4 +1,3 @@
-
 import process from 'node:process';
 import { workerData } from 'node:worker_threads';
 import { clearTimeout, setImmediate, setTimeout  } from 'node:timers';
@@ -50,11 +49,31 @@ const BeforeReadyWhitelist = [
  *
  * @extends {AsyncEventEmitter}
  */
-class Client extends AsyncEventEmitter {
+export class Client extends AsyncEventEmitter {
+  public status: any;
+  public readyTimeout: any;
+  public options: any;
+  public rest: REST;
+  public presence: ClientPresence;
+  public actions: ActionsManager;
+  public users: UserManager;
+  public guilds: GuildManager;
+  public channels: ChannelManager;
+  public sweepers: Sweepers;
+  public ws: WebSocketManager;
+  public shard: ShardClientUtil | null;
+  public voice: ClientVoiceManager;
+  public user: ClientUser | null;
+  public application: ClientApplication | null;
+  public pings: Collection<number, number>;
+  public lastPingTimestamps: Collection<number, number>;
+  public readyTimestamp: number | null;
+  public token: string | null;
+
   /**
-   * @param {ClientOptions} options Options for the client
+   * @param {any} options Options for the client
    */
-  constructor(options) {
+  constructor(options: any) {
     super();
 
     if (typeof options !== 'object' || options === null) {
@@ -310,7 +329,7 @@ class Client extends AsyncEventEmitter {
    * @example
    * client.login('my token');
    */
-  async login(token = this.token) {
+  public async login(token: string | null = this.token): Promise<string> {
     if (!token || typeof token !== 'string') throw new DiscordjsError(ErrorCodes.TokenInvalid);
     this.token = token.replace(/^bot\s*/i, '');
 
@@ -880,7 +899,7 @@ class Client extends AsyncEventEmitter {
   }
 }
 
-exports.Client = Client;
+
 
 /**
  * @class SnowflakeUtil

@@ -1,4 +1,3 @@
-
 import { Poll  } from '../../structures/Poll.js';
 import { PollAnswer  } from '../../structures/PollAnswer.js';
 import { Partials  } from '../../util/Partials.js';
@@ -15,7 +14,8 @@ that WebSocket events don't clash with REST methods.
 
 */
 
-class Action {
+export class Action {
+  public client: any;
   constructor(client) {
     this.client = client;
   }
@@ -139,5 +139,3 @@ class Action {
     return Object.fromEntries(Object.getOwnPropertySymbols(data).map(symbol => [symbol, data[symbol]]));
   }
 }
-
-exports.Action = Action;

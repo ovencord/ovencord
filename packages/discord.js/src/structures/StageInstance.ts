@@ -1,4 +1,3 @@
-
 import { DiscordSnowflake  } from '@sapphire/snowflake';
 import { Base  } from './Base.js';
 
@@ -7,7 +6,14 @@ import { Base  } from './Base.js';
  *
  * @extends {Base}
  */
-class StageInstance extends Base {
+export class StageInstance extends Base {
+  public client: any;
+  public id: any;
+  public guildId: any;
+  public channelId: any;
+  public topic: any;
+  public privacyLevel: any;
+  public guildScheduledEventId: any;
   constructor(client, data) {
     super(client);
 
@@ -165,5 +171,3 @@ class StageInstance extends Base {
     return new Date(this.createdTimestamp);
   }
 }
-
-exports.StageInstance = StageInstance;

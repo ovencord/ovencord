@@ -1,4 +1,3 @@
-
 import { BaseInvite  } from './BaseInvite.js';
 
 /**
@@ -6,7 +5,8 @@ import { BaseInvite  } from './BaseInvite.js';
  *
  * @extends {BaseInvite}
  */
-class GroupDMInvite extends BaseInvite {
+export class GroupDMInvite extends BaseInvite {
+  public channel: any;
   /**
    * The approximate total number of members of in the group direct message channel.
    * <info>This is only available when the invite was fetched through {@link Client#fetchInvite}.</info>
@@ -32,5 +32,3 @@ class GroupDMInvite extends BaseInvite {
     }
   }
 }
-
-exports.GroupDMInvite = GroupDMInvite;

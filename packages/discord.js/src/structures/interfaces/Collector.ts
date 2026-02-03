@@ -1,4 +1,3 @@
-
 import { setTimeout, clearTimeout  } from 'node:timers';
 import { Collection  } from '@ovencord/collection';
 import { AsyncEventEmitter  } from '@vladfrangu/async_event_emitter';
@@ -30,7 +29,15 @@ import { flatten  } from '../../util/Util.js';
  * @extends {AsyncEventEmitter}
  * @abstract
  */
-class Collector extends AsyncEventEmitter {
+export class Collector extends AsyncEventEmitter {
+  public client: any;
+  public options: any;
+  public collected: any;
+  public ended: any;
+  public _timeout: any;
+  public _idletimeout: any;
+  public _endReason: any;
+  public lastCollectedTimestamp: any;
   constructor(client, options = {}) {
     super();
 
@@ -363,5 +370,3 @@ class Collector extends AsyncEventEmitter {
   // eslint-disable-next-line no-unused-vars
   dispose(...args) {}
 }
-
-exports.Collector = Collector;

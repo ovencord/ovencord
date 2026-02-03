@@ -1,4 +1,3 @@
-
 import { __exportStar  } from 'tslib';
 
 // "Root" classes (starting points)
@@ -57,7 +56,7 @@ export { resolveColor } from './util/Util.js';
 export { resolveSKUId } from './util/Util.js';
 export { verifyString } from './util/Util.js';
 
-export { version } from '../package.json';
+export { version } from '../package.json.js';
 
 // Managers
 export { ApplicationCommandManager } from './managers/ApplicationCommandManager.js';

@@ -1,4 +1,3 @@
-
 // Heavily inspired by node's `internal/errors` module
 import { ErrorCodes  } from './ErrorCodes.js';
 import { Messages  } from './Messages.js';
@@ -10,7 +9,7 @@ import { Messages  } from './Messages.js';
  * @returns {DiscordjsError}
  * @ignore
  */
-function makeDiscordjsError(Base) {
+export function makeDiscordjsError(Base) {
   return class extends Base {
     static {
       Object.defineProperty(this, 'name', { value: `Discordjs${Base.name}` });
@@ -36,7 +35,7 @@ function makeDiscordjsError(Base) {
  * @returns {string} Formatted string
  * @ignore
  */
-function message(code, args) {
+export function message(code, args) {
   if (!(code in ErrorCodes)) throw new Error('Error code must be a valid DiscordjsErrorCodes');
   const msg = Messages[code];
   if (!msg) throw new Error(`No message associated with error code: ${code}.`);

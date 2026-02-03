@@ -1,4 +1,3 @@
-
 import { InteractionResponseType, Routes  } from 'discord-api-types/v10';
 import { DiscordjsError, ErrorCodes  } from '../errors/index.js';
 import { BaseInteraction  } from './BaseInteraction.js';
@@ -9,7 +8,14 @@ import { CommandInteractionOptionResolver  } from './CommandInteractionOptionRes
  *
  * @extends {BaseInteraction}
  */
-class AutocompleteInteraction extends BaseInteraction {
+export class AutocompleteInteraction extends BaseInteraction {
+  public client: any;
+  public commandId: any;
+  public commandName: any;
+  public commandType: any;
+  public commandGuildId: any;
+  public responded: any;
+  public options: any;
   constructor(client, data) {
     super(client, data);
 
@@ -107,5 +113,3 @@ class AutocompleteInteraction extends BaseInteraction {
     this.responded = true;
   }
 }
-
-exports.AutocompleteInteraction = AutocompleteInteraction;

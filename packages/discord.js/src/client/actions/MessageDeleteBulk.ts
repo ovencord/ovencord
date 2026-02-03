@@ -1,9 +1,8 @@
-
 import { Collection  } from '@ovencord/collection';
 import { Events  } from '../../util/Events.js';
 import { Action  } from './Action.js';
 
-class MessageDeleteBulkAction extends Action {
+export class MessageDeleteBulkAction extends Action {
   handle(data) {
     const client = this.client;
     const channel = client.channels.cache.get(data.channel_id);
@@ -44,5 +43,3 @@ class MessageDeleteBulkAction extends Action {
     return {};
   }
 }
-
-exports.MessageDeleteBulkAction = MessageDeleteBulkAction;

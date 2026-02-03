@@ -1,4 +1,3 @@
-
 import { lazy  } from '@ovencord/util';
 import { ChannelFlags, ChannelType, PermissionFlagsBits, Routes  } from 'discord-api-types/v10';
 import { DiscordjsRangeError, ErrorCodes  } from '../errors/index.js';
@@ -16,7 +15,29 @@ const getThreadOnlyChannel = lazy(() => require('./ThreadOnlyChannel.js'));
  * @extends {BaseChannel}
  * @implements {TextBasedChannel}
  */
-class ThreadChannel extends BaseChannel {
+export class ThreadChannel extends BaseChannel {
+  public client: any;
+  public guild: any;
+  public guildId: any;
+  public ownerId: any;
+  public messages: any;
+  public members: any;
+  public name: any;
+  public parentId: any;
+  public locked: any;
+  public invitable: any;
+  public type: any;
+  public archived: any;
+  public autoArchiveDuration: any;
+  public archiveTimestamp: any;
+  public _createdTimestamp: any;
+  public lastMessageId: any;
+  public lastPinTimestamp: any;
+  public rateLimitPerUser: any;
+  public messageCount: any;
+  public memberCount: any;
+  public totalMessageSent: any;
+  public appliedTags: any;
   constructor(guild, data, client) {
     super(guild?.client ?? client, data, false);
 
@@ -657,5 +678,3 @@ class ThreadChannel extends BaseChannel {
 }
 
 TextBasedChannel.applyToClass(ThreadChannel, ['fetchWebhooks', 'setRateLimitPerUser', 'setNSFW']);
-
-exports.ThreadChannel = ThreadChannel;

@@ -1,8 +1,7 @@
-
 import { Events  } from '../../util/Events.js';
 import { Action  } from './Action.js';
 
-class UserUpdateAction extends Action {
+export class UserUpdateAction extends Action {
   handle(data) {
     const client = this.client;
 
@@ -32,5 +31,3 @@ class UserUpdateAction extends Action {
     };
   }
 }
-
-exports.UserUpdateAction = UserUpdateAction;

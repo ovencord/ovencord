@@ -1,4 +1,3 @@
-
 import { ApplicationIntegrationType  } from 'discord-api-types/v10';
 import { Base  } from './Base.js';
 
@@ -7,7 +6,10 @@ import { Base  } from './Base.js';
  *
  * @extends {Base}
  */
-class AuthorizingIntegrationOwners extends Base {
+export class AuthorizingIntegrationOwners extends Base {
+  public client: any;
+  public guildId: any;
+  public userId: any;
   constructor(client, data) {
     super(client);
 
@@ -59,5 +61,3 @@ class AuthorizingIntegrationOwners extends Base {
     return this.data;
   }
 }
-
-exports.AuthorizingIntegrationOwners = AuthorizingIntegrationOwners;

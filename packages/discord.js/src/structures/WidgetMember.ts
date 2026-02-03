@@ -1,4 +1,3 @@
-
 import { Base  } from './Base.js';
 
 /**
@@ -6,7 +5,21 @@ import { Base  } from './Base.js';
  *
  * @extends {Base}
  */
-class WidgetMember extends Base {
+export class WidgetMember extends Base {
+  public client: any;
+  public id: any;
+  public username: any;
+  public discriminator: any;
+  public avatar: any;
+  public status: any;
+  public deaf: any;
+  public mute: any;
+  public selfDeaf: any;
+  public selfMute: any;
+  public suppress: any;
+  public channelId: any;
+  public avatarURL: any;
+  public activity: any;
   /**
    * Activity sent in a {@link WidgetMember}.
    *
@@ -109,5 +122,3 @@ class WidgetMember extends Base {
     this.activity = data.activity ?? null;
   }
 }
-
-exports.WidgetMember = WidgetMember;

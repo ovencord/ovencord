@@ -1,7 +1,6 @@
-
 import { Action  } from './Action.js';
 
-class GuildRolesPositionUpdateAction extends Action {
+export class GuildRolesPositionUpdateAction extends Action {
   handle(data) {
     const client = this.client;
 
@@ -16,5 +15,3 @@ class GuildRolesPositionUpdateAction extends Action {
     return { guild };
   }
 }
-
-exports.GuildRolesPositionUpdateAction = GuildRolesPositionUpdateAction;

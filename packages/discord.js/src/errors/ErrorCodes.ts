@@ -275,5 +275,3 @@ const keys = [
  * @ignore
  */
 const ErrorCodes = Object.fromEntries(keys.map(key => [key, key]));
-
-exports.ErrorCodes = ErrorCodes;

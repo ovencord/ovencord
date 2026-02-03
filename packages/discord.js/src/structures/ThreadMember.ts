@@ -1,4 +1,3 @@
-
 import { ThreadMemberFlagsBitField  } from '../util/ThreadMemberFlagsBitField.js';
 import { Base  } from './Base.js';
 
@@ -7,7 +6,12 @@ import { Base  } from './Base.js';
  *
  * @extends {Base}
  */
-class ThreadMember extends Base {
+export class ThreadMember extends Base {
+  public thread: any;
+  public joinedTimestamp: any;
+  public flags: any;
+  public id: any;
+  public member: any;
   constructor(thread, data, extra = {}) {
     super(thread.client);
 
@@ -119,5 +123,3 @@ class ThreadMember extends Base {
     return this;
   }
 }
-
-exports.ThreadMember = ThreadMember;

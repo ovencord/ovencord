@@ -1,4 +1,3 @@
-
 import { Routes  } from 'discord-api-types/v10';
 import { VoiceState  } from '../structures/VoiceState.js';
 import { CachedManager  } from './CachedManager.js';
@@ -8,7 +7,8 @@ import { CachedManager  } from './CachedManager.js';
  *
  * @extends {CachedManager}
  */
-class VoiceStateManager extends CachedManager {
+export class VoiceStateManager extends CachedManager {
+  public guild: any;
   constructor(guild, iterable) {
     super(guild.client, VoiceState, iterable);
 
@@ -59,5 +59,3 @@ class VoiceStateManager extends CachedManager {
     return this._add(data, cache);
   }
 }
-
-exports.VoiceStateManager = VoiceStateManager;

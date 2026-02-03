@@ -8,7 +8,7 @@ import { BitField  } from './BitField.js';
  *
  * @extends {BitField}
  */
-class RoleFlagsBitField extends BitField {
+export class RoleFlagsBitField extends BitField {
   /**
    * Numeric role flags.
    *
@@ -24,5 +24,3 @@ class RoleFlagsBitField extends BitField {
  * @memberof RoleFlagsBitField
  * @param {BitFieldResolvable} [bits=0] Bit(s) to read from
  */
-
-exports.RoleFlagsBitField = RoleFlagsBitField;

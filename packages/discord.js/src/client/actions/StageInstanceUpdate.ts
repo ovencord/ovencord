@@ -1,8 +1,7 @@
-
 import { Events  } from '../../util/Events.js';
 import { Action  } from './Action.js';
 
-class StageInstanceUpdateAction extends Action {
+export class StageInstanceUpdateAction extends Action {
   handle(data) {
     const client = this.client;
     const channel = this.getChannel({ id: data.channel_id, guild_id: data.guild_id });
@@ -26,5 +25,3 @@ class StageInstanceUpdateAction extends Action {
     return {};
   }
 }
-
-exports.StageInstanceUpdateAction = StageInstanceUpdateAction;

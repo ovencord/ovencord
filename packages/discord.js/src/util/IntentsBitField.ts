@@ -7,7 +7,7 @@ import { BitField  } from './BitField.js';
  *
  * @extends {BitField}
  */
-class IntentsBitField extends BitField {
+export class IntentsBitField extends BitField {
   /**
    * Numeric WebSocket intents
    *
@@ -33,5 +33,3 @@ class IntentsBitField extends BitField {
  *
  * @typedef {string|number|IntentsBitField|IntentsResolvable[]} IntentsResolvable
  */
-
-exports.IntentsBitField = IntentsBitField;

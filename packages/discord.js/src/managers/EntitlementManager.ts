@@ -1,4 +1,3 @@
-
 import { Collection  } from '@ovencord/collection';
 import { makeURLSearchParams  } from '@ovencord/rest';
 import { Routes, EntitlementOwnerType  } from 'discord-api-types/v10';
@@ -12,7 +11,8 @@ import { CachedManager  } from './CachedManager.js';
  *
  * @extends {CachedManager}
  */
-class EntitlementManager extends CachedManager {
+export class EntitlementManager extends CachedManager {
+  public client: any;
   constructor(client, iterable) {
     super(client, Entitlement, iterable);
   }
@@ -180,5 +180,3 @@ class EntitlementManager extends CachedManager {
     await this.client.rest.post(Routes.consumeEntitlement(this.client.application.id, entitlementId));
   }
 }
-
-exports.EntitlementManager = EntitlementManager;

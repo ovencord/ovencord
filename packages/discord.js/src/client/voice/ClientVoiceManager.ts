@@ -1,10 +1,11 @@
-
 import { WebSocketShardEvents, CloseCodes  } from '@ovencord/ws';
 
 /**
  * Manages voice connections for the client
  */
-class ClientVoiceManager {
+export class ClientVoiceManager {
+  public client: any;
+  public adapters: any;
   constructor(client) {
     /**
      * The client that instantiated this voice manager
@@ -43,5 +44,3 @@ class ClientVoiceManager {
     }
   }
 }
-
-exports.ClientVoiceManager = ClientVoiceManager;

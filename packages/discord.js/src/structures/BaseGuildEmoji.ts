@@ -1,4 +1,3 @@
-
 import { Emoji  } from './Emoji.js';
 
 /**
@@ -7,7 +6,13 @@ import { Emoji  } from './Emoji.js';
  * @extends {Emoji}
  * @abstract
  */
-class BaseGuildEmoji extends Emoji {
+export class BaseGuildEmoji extends Emoji {
+  public client: any;
+  public guild: any;
+  public requiresColons: any;
+  public managed: any;
+  public available: any;
+  public name: any;
   constructor(client, data, guild) {
     super(client, data);
 
@@ -106,5 +111,3 @@ class BaseGuildEmoji extends Emoji {
  * @type {number}
  * @readonly
  */
-
-exports.BaseGuildEmoji = BaseGuildEmoji;

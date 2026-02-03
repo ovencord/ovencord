@@ -1,4 +1,3 @@
-
 import { Base  } from './Base.js';
 
 /**
@@ -6,7 +5,18 @@ import { Base  } from './Base.js';
  *
  * @extends {Base}
  */
-class Entitlement extends Base {
+export class Entitlement extends Base {
+  public client: any;
+  public id: any;
+  public skuId: any;
+  public userId: any;
+  public guildId: any;
+  public applicationId: any;
+  public type: any;
+  public deleted: any;
+  public startsTimestamp: any;
+  public endsTimestamp: any;
+  public consumed: any;
   constructor(client, data) {
     super(client);
 
@@ -194,5 +204,3 @@ class Entitlement extends Base {
     await this.client.application.entitlements.consume(this.id);
   }
 }
-
-exports.Entitlement = Entitlement;

@@ -1,4 +1,3 @@
-
 import { GuildChannel  } from '../structures/GuildChannel.js';
 import { DataManager  } from './DataManager.js';
 
@@ -7,7 +6,7 @@ import { DataManager  } from './DataManager.js';
  *
  * @extends {DataManager}
  */
-class CategoryChannelChildManager extends DataManager {
+export class CategoryChannelChildManager extends DataManager {
   constructor(channel) {
     super(channel.client, GuildChannel);
     /**
@@ -80,5 +79,3 @@ class CategoryChannelChildManager extends DataManager {
     });
   }
 }
-
-exports.CategoryChannelChildManager = CategoryChannelChildManager;

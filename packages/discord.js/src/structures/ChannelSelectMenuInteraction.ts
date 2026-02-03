@@ -1,4 +1,3 @@
-
 import { Collection  } from '@ovencord/collection';
 import { MessageComponentInteraction  } from './MessageComponentInteraction.js';
 
@@ -7,7 +6,9 @@ import { MessageComponentInteraction  } from './MessageComponentInteraction.js';
  *
  * @extends {MessageComponentInteraction}
  */
-class ChannelSelectMenuInteraction extends MessageComponentInteraction {
+export class ChannelSelectMenuInteraction extends MessageComponentInteraction {
+  public client: any;
+  public channels: any;
   constructor(client, data) {
     super(client, data);
     const { resolved, values } = data.data;
@@ -31,5 +32,3 @@ class ChannelSelectMenuInteraction extends MessageComponentInteraction {
     }
   }
 }
-
-exports.ChannelSelectMenuInteraction = ChannelSelectMenuInteraction;

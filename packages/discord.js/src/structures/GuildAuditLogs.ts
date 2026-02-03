@@ -1,4 +1,3 @@
-
 import { Collection  } from '@ovencord/collection';
 import { flatten  } from '../util/Util.js';
 import { ApplicationCommand  } from './ApplicationCommand.js';
@@ -9,7 +8,13 @@ import { Webhook  } from './Webhook.js';
 /**
  * Audit logs entries are held in this class.
  */
-class GuildAuditLogs {
+export class GuildAuditLogs {
+  public webhooks: any;
+  public integrations: any;
+  public guildScheduledEvents: any;
+  public applicationCommands: any;
+  public autoModerationRules: any;
+  public entries: any;
   constructor(guild, data) {
     if (data.users) for (const user of data.users) guild.client.users._add(user);
     if (data.threads) for (const thread of data.threads) guild.client.channels._add(thread, guild);
@@ -92,5 +97,3 @@ class GuildAuditLogs {
     return flatten(this);
   }
 }
-
-exports.GuildAuditLogs = GuildAuditLogs;

@@ -1,8 +1,8 @@
-
 /**
  * Represents a media item in a component
  */
-class UnfurledMediaItem {
+export class UnfurledMediaItem {
+  public data: any;
   constructor(data) {
     /**
      * The API data associated with this media item
@@ -31,5 +31,3 @@ class UnfurledMediaItem {
     return { ...this.data };
   }
 }
-
-exports.UnfurledMediaItem = UnfurledMediaItem;

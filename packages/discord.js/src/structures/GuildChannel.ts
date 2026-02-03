@@ -1,4 +1,3 @@
-
 import { Snowflake  } from '@sapphire/snowflake';
 import { PermissionFlagsBits, ChannelType  } from 'discord-api-types/v10';
 import { DiscordjsError, ErrorCodes  } from '../errors/index.js';
@@ -21,7 +20,17 @@ import { BaseChannel  } from './BaseChannel.js';
  * @extends {BaseChannel}
  * @abstract
  */
-class GuildChannel extends BaseChannel {
+export class GuildChannel extends BaseChannel {
+  public client: any;
+  public guild: any;
+  public guildId: any;
+  public permissionOverwrites: any;
+  public name: any;
+  public rawPosition: any;
+  public parentId: any;
+  public type: any;
+  public id: any;
+  public topic: any;
   constructor(guild, data, client, immediatePatch = true) {
     super(client, data, false);
 
@@ -504,5 +513,3 @@ class GuildChannel extends BaseChannel {
     return this;
   }
 }
-
-exports.GuildChannel = GuildChannel;

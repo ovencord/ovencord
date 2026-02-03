@@ -1,4 +1,3 @@
-
 import { Collection  } from '@ovencord/collection';
 import { Events  } from '../util/Events.js';
 import { Collector  } from './interfaces/Collector.js';
@@ -26,7 +25,15 @@ import { Collector  } from './interfaces/Collector.js';
  *
  * @extends {Collector}
  */
-class InteractionCollector extends Collector {
+export class InteractionCollector extends Collector {
+  public client: any;
+  public messageId: any;
+  public channelId: any;
+  public guildId: any;
+  public interactionType: any;
+  public componentType: any;
+  public users: any;
+  public total: any;
   /**
    * @param {Client} client The client on which to collect interactions
    * @param {InteractionCollectorOptions} [options={}] The options to apply to this collector
@@ -251,5 +258,3 @@ class InteractionCollector extends Collector {
     }
   }
 }
-
-exports.InteractionCollector = InteractionCollector;

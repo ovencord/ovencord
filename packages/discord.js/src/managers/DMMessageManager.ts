@@ -1,4 +1,3 @@
-
 import { MessageManager  } from './MessageManager.js';
 
 /**
@@ -6,7 +5,7 @@ import { MessageManager  } from './MessageManager.js';
  *
  * @extends {MessageManager}
  */
-class DMMessageManager extends MessageManager {
+export class DMMessageManager extends MessageManager {
   /**
    * The channel that the messages belong to
    *
@@ -14,5 +13,3 @@ class DMMessageManager extends MessageManager {
    * @type {DMChannel}
    */
 }
-
-exports.DMMessageManager = DMMessageManager;

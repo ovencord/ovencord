@@ -1,4 +1,3 @@
-
 import process from 'node:process';
 import { lazy, isFileBodyEncodable, isJSONEncodable  } from '@ovencord/util';
 import { Routes  } from 'discord-api-types/v10';
@@ -18,7 +17,8 @@ let cacheWarningEmitted = false;
  *
  * @extends {CachedManager}
  */
-class ChannelManager extends CachedManager {
+export class ChannelManager extends CachedManager {
+  public client: any;
   constructor(client, iterable) {
     super(client, BaseChannel, iterable);
     const defaultCaching =
@@ -192,5 +192,3 @@ class ChannelManager extends CachedManager {
     return resolvedChannel?.messages._add(data) ?? new (getMessage())(this.client, data);
   }
 }
-
-exports.ChannelManager = ChannelManager;

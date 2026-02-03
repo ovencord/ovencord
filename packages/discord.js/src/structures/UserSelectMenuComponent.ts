@@ -1,4 +1,3 @@
-
 import { BaseSelectMenuComponent  } from './BaseSelectMenuComponent.js';
 
 /**
@@ -6,6 +5,4 @@ import { BaseSelectMenuComponent  } from './BaseSelectMenuComponent.js';
  *
  * @extends {BaseSelectMenuComponent}
  */
-class UserSelectMenuComponent extends BaseSelectMenuComponent {}
-
-exports.UserSelectMenuComponent = UserSelectMenuComponent;
+export class UserSelectMenuComponent extends BaseSelectMenuComponent {}

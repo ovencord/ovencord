@@ -1,4 +1,3 @@
-
 import { Collection  } from '@ovencord/collection';
 import { Base  } from './Base.js';
 import { GuildOnboardingPromptOption  } from './GuildOnboardingPromptOption.js';
@@ -8,7 +7,16 @@ import { GuildOnboardingPromptOption  } from './GuildOnboardingPromptOption.js';
  *
  * @extends {Base}
  */
-class GuildOnboardingPrompt extends Base {
+export class GuildOnboardingPrompt extends Base {
+  public client: any;
+  public guildId: any;
+  public id: any;
+  public options: any;
+  public title: any;
+  public singleSelect: any;
+  public required: any;
+  public inOnboarding: any;
+  public type: any;
   constructor(client, data, guildId) {
     super(client);
 
@@ -83,5 +91,3 @@ class GuildOnboardingPrompt extends Base {
     return this.client.guilds.cache.get(this.guildId);
   }
 }
-
-exports.GuildOnboardingPrompt = GuildOnboardingPrompt;

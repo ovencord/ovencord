@@ -1,10 +1,14 @@
-
 import { flatten  } from '../util/Util.js';
 
 /**
  * Represents a Discord voice region for guilds.
  */
-class VoiceRegion {
+export class VoiceRegion {
+  public id: any;
+  public name: any;
+  public deprecated: any;
+  public optimal: any;
+  public custom: any;
   constructor(data) {
     /**
      * The region's id
@@ -46,5 +50,3 @@ class VoiceRegion {
     return flatten(this);
   }
 }
-
-exports.VoiceRegion = VoiceRegion;

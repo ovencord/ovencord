@@ -1,4 +1,3 @@
-
 import { Collection  } from '@ovencord/collection';
 import { makeURLSearchParams  } from '@ovencord/rest';
 import { DiscordSnowflake  } from '@sapphire/snowflake';
@@ -38,7 +37,59 @@ import { WelcomeScreen  } from './WelcomeScreen.js';
  *
  * @extends {AnonymousGuild}
  */
-class Guild extends AnonymousGuild {
+export class Guild extends AnonymousGuild {
+  public client: any;
+  public commands: any;
+  public members: any;
+  public channels: any;
+  public bans: any;
+  public roles: any;
+  public presences: any;
+  public voiceStates: any;
+  public stageInstances: any;
+  public invites: any;
+  public scheduledEvents: any;
+  public autoModerationRules: any;
+  public soundboardSounds: any;
+  public available: any;
+  public shardId: any;
+  public id: any;
+  public name: any;
+  public icon: any;
+  public memberCount: any;
+  public large: any;
+  public premiumProgressBarEnabled: any;
+  public applicationId: any;
+  public afkTimeout: any;
+  public afkChannelId: any;
+  public systemChannelId: any;
+  public premiumTier: any;
+  public widgetEnabled: any;
+  public widgetChannelId: any;
+  public explicitContentFilter: any;
+  public mfaLevel: any;
+  public joinedTimestamp: any;
+  public defaultMessageNotifications: any;
+  public systemChannelFlags: any;
+  public maximumMembers: any;
+  public maximumPresences: any;
+  public maxVideoChannelUsers: any;
+  public maxStageVideoChannelUsers: any;
+  public approximateMemberCount: any;
+  public approximatePresenceCount: any;
+  public rulesChannelId: any;
+  public publicUpdatesChannelId: any;
+  public preferredLocale: any;
+  public safetyAlertsChannelId: any;
+  public ownerId: any;
+  public emojis: any;
+  public stickers: any;
+  public incidentsData: any;
+  public vanityURLCode: any;
+  public vanityURLUses: any;
+  public splash: any;
+  public verificationLevel: any;
+  public features: any;
   constructor(client, data) {
     super(client, data, false);
 
@@ -1552,5 +1603,3 @@ class Guild extends AnonymousGuild {
     );
   }
 }
-
-exports.Guild = Guild;

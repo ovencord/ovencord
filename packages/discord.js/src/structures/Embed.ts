@@ -1,11 +1,11 @@
-
 import { embedLength  } from '@ovencord/util';
 import isEqual from 'fast-deep-equal';
 
 /**
  * Represents an embed.
  */
-class Embed {
+export class Embed {
+  public data: any;
   constructor(data) {
     /**
      * The API embed data.
@@ -249,5 +249,3 @@ class Embed {
     );
   }
 }
-
-exports.Embed = Embed;

@@ -1,11 +1,13 @@
-
 import { InteractionCallback  } from './InteractionCallback.js';
 import { InteractionCallbackResource  } from './InteractionCallbackResource.js';
 
 /**
  * Represents an interaction's response
  */
-class InteractionCallbackResponse {
+export class InteractionCallbackResponse {
+  public client: any;
+  public interaction: any;
+  public resource: any;
   constructor(client, data) {
     /**
      * The client that instantiated this
@@ -31,5 +33,3 @@ class InteractionCallbackResponse {
     this.resource = data.resource ? new InteractionCallbackResource(client, data.resource) : null;
   }
 }
-
-exports.InteractionCallbackResponse = InteractionCallbackResponse;

@@ -1,4 +1,3 @@
-
 import { BaseChannel  } from './BaseChannel.js';
 
 /**
@@ -6,7 +5,11 @@ import { BaseChannel  } from './BaseChannel.js';
  *
  * @extends {BaseChannel}
  */
-class DirectoryChannel extends BaseChannel {
+export class DirectoryChannel extends BaseChannel {
+  public client: any;
+  public guild: any;
+  public guildId: any;
+  public name: any;
   constructor(guild, data, client) {
     super(client, data);
 
@@ -35,5 +38,3 @@ class DirectoryChannel extends BaseChannel {
     this.name = data.name;
   }
 }
-
-exports.DirectoryChannel = DirectoryChannel;

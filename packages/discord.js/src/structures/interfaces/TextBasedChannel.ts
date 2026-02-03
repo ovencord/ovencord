@@ -1,4 +1,3 @@
-
 import { Collection  } from '@ovencord/collection';
 import { lazy  } from '@ovencord/util';
 import { DiscordSnowflake  } from '@sapphire/snowflake';
@@ -16,7 +15,10 @@ const getGuildMessageManager = lazy(() => require('../../managers/GuildMessageMa
  *
  * @interface
  */
-class TextBasedChannel {
+export class TextBasedChannel {
+  public messages: any;
+  public lastMessageId: any;
+  public lastPinTimestamp: any;
   constructor() {
     /**
      * A manager of the messages sent to this channel
@@ -426,5 +428,3 @@ class TextBasedChannel {
     }
   }
 }
-
-exports.TextBasedChannel = TextBasedChannel;

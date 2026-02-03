@@ -1,4 +1,3 @@
-
 import { ThreadOnlyChannel  } from './ThreadOnlyChannel.js';
 
 /**
@@ -6,7 +5,8 @@ import { ThreadOnlyChannel  } from './ThreadOnlyChannel.js';
  *
  * @extends {ThreadOnlyChannel}
  */
-class ForumChannel extends ThreadOnlyChannel {
+export class ForumChannel extends ThreadOnlyChannel {
+  public defaultForumLayout: any;
   _patch(data) {
     super._patch(data);
 
@@ -29,5 +29,3 @@ class ForumChannel extends ThreadOnlyChannel {
     return this.edit({ defaultForumLayout, reason });
   }
 }
-
-exports.ForumChannel = ForumChannel;

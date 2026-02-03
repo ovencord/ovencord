@@ -1,11 +1,14 @@
-
 import { ApplicationCommandOptionType  } from 'discord-api-types/v10';
 import { DiscordjsTypeError, ErrorCodes  } from '../errors/index.js';
 
 /**
  * A resolver for command interaction options.
  */
-class CommandInteractionOptionResolver {
+export class CommandInteractionOptionResolver {
+  public client: any;
+  public _group: any;
+  public _subcommand: any;
+  public _hoistedOptions: any;
   constructor(client, options, resolved) {
     /**
      * The client that instantiated this.
@@ -331,5 +334,3 @@ class CommandInteractionOptionResolver {
     return focusedOption;
   }
 }
-
-exports.CommandInteractionOptionResolver = CommandInteractionOptionResolver;

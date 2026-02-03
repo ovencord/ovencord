@@ -1,4 +1,3 @@
-
 import { Collection  } from '@ovencord/collection';
 import { ComponentType  } from 'discord-api-types/v10';
 import { DiscordjsTypeError, ErrorCodes  } from '../errors/index.js';
@@ -13,7 +12,10 @@ import { DiscordjsTypeError, ErrorCodes  } from '../errors/index.js';
 /**
  * A resolver for modal submit components
  */
-class ModalComponentResolver {
+export class ModalComponentResolver {
+  public client: any;
+  public data: any;
+  public hoistedComponents: any;
   constructor(client, components, resolved) {
     /**
      * The client that instantiated this.
@@ -233,5 +235,3 @@ class ModalComponentResolver {
     return this._getTypedComponent(customId, [ComponentType.FileUpload], ['attachments'], required).attachments ?? null;
   }
 }
-
-exports.ModalComponentResolver = ModalComponentResolver;

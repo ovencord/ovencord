@@ -1,4 +1,3 @@
-
 import { Collection  } from '@ovencord/collection';
 import { PermissionFlagsBits  } from 'discord-api-types/v10';
 import { GuildMessageManager  } from '../managers/GuildMessageManager.js';
@@ -11,7 +10,16 @@ import { TextBasedChannel  } from './interfaces/TextBasedChannel.js';
  * @extends {GuildChannel}
  * @implements {TextBasedChannel}
  */
-class BaseGuildVoiceChannel extends GuildChannel {
+export class BaseGuildVoiceChannel extends GuildChannel {
+  public client: any;
+  public messages: any;
+  public nsfw: any;
+  public rtcRegion: any;
+  public bitrate: any;
+  public userLimit: any;
+  public videoQualityMode: any;
+  public lastMessageId: any;
+  public rateLimitPerUser: any;
   constructor(guild, data, client) {
     super(guild, data, client, false);
     /**
@@ -260,5 +268,3 @@ class BaseGuildVoiceChannel extends GuildChannel {
 }
 
 TextBasedChannel.applyToClass(BaseGuildVoiceChannel, ['lastPinAt']);
-
-exports.BaseGuildVoiceChannel = BaseGuildVoiceChannel;

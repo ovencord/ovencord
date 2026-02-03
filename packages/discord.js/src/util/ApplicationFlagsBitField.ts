@@ -8,7 +8,7 @@ import { BitField  } from './BitField.js';
  *
  * @extends {BitField}
  */
-class ApplicationFlagsBitField extends BitField {
+export class ApplicationFlagsBitField extends BitField {
   /**
    * Numeric application flags. All available properties:
    *
@@ -41,5 +41,3 @@ class ApplicationFlagsBitField extends BitField {
  *
  * @typedef {string|number|ApplicationFlagsBitField|ApplicationFlagsResolvable[]} ApplicationFlagsResolvable
  */
-
-exports.ApplicationFlagsBitField = ApplicationFlagsBitField;

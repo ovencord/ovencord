@@ -1,4 +1,3 @@
-
 import { Collection  } from '@ovencord/collection';
 import { Base  } from './Base.js';
 import { Emoji  } from './Emoji.js';
@@ -8,7 +7,15 @@ import { Emoji  } from './Emoji.js';
  *
  * @extends {Base}
  */
-class GuildOnboardingPromptOption extends Base {
+export class GuildOnboardingPromptOption extends Base {
+  public client: any;
+  public guildId: any;
+  public id: any;
+  public channels: any;
+  public roles: any;
+  public _emoji: any;
+  public title: any;
+  public description: any;
   constructor(client, data, guildId) {
     super(client);
 
@@ -91,5 +98,3 @@ class GuildOnboardingPromptOption extends Base {
     return this.guild.emojis.cache.get(this._emoji.id) ?? new Emoji(this.client, this._emoji);
   }
 }
-
-exports.GuildOnboardingPromptOption = GuildOnboardingPromptOption;

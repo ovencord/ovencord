@@ -1,4 +1,3 @@
-
 import { Collection  } from '@ovencord/collection';
 import { Routes  } from 'discord-api-types/v10';
 import { Base  } from './Base.js';
@@ -9,7 +8,14 @@ import { WidgetMember  } from './WidgetMember.js';
  *
  * @extends {Base}
  */
-class Widget extends Base {
+export class Widget extends Base {
+  public client: any;
+  public id: any;
+  public name: any;
+  public instantInvite: any;
+  public channels: any;
+  public members: any;
+  public presenceCount: any;
   constructor(client, data) {
     super(client);
     this._patch(data);
@@ -102,5 +108,3 @@ class Widget extends Base {
     return this.client.guilds.widgetImageURL(this.id, style);
   }
 }
-
-exports.Widget = Widget;

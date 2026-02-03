@@ -1,4 +1,3 @@
-
 import { Collection  } from '@ovencord/collection';
 import { lazy  } from '@ovencord/util';
 import { transformResolved  } from '../util/Util.js';
@@ -63,7 +62,15 @@ const getAttachment = lazy(() => require('./Attachment.js').Attachment);
  * @extends {BaseInteraction}
  * @implements {InteractionResponses}
  */
-class ModalSubmitInteraction extends BaseInteraction {
+export class ModalSubmitInteraction extends BaseInteraction {
+  public client: any;
+  public customId: any;
+  public message: any;
+  public components: any;
+  public deferred: any;
+  public replied: any;
+  public ephemeral: any;
+  public webhook: any;
   constructor(client, data) {
     super(client, data);
     /**
@@ -251,5 +258,3 @@ class ModalSubmitInteraction extends BaseInteraction {
 }
 
 InteractionResponses.applyToClass(ModalSubmitInteraction, 'showModal');
-
-exports.ModalSubmitInteraction = ModalSubmitInteraction;

@@ -1,4 +1,3 @@
-
 import { Collection  } from '@ovencord/collection';
 import { makeURLSearchParams  } from '@ovencord/rest';
 import { Routes  } from 'discord-api-types/v10';
@@ -11,7 +10,8 @@ import { CachedManager  } from './CachedManager.js';
  *
  * @extends {CachedManager}
  */
-class GuildBanManager extends CachedManager {
+export class GuildBanManager extends CachedManager {
+  public guild: any;
   constructor(guild, iterable) {
     super(guild.client, GuildBan, iterable);
 
@@ -219,5 +219,3 @@ class GuildBanManager extends CachedManager {
     return { bannedUsers: result.banned_users, failedUsers: result.failed_users };
   }
 }
-
-exports.GuildBanManager = GuildBanManager;

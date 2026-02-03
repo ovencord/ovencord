@@ -1,4 +1,3 @@
-
 import { Routes, PermissionFlagsBits, InviteType  } from 'discord-api-types/v10';
 import { DiscordjsError, ErrorCodes  } from '../errors/index.js';
 import { InviteFlagsBitField  } from '../util/InviteFlagsBitField.js';
@@ -12,7 +11,21 @@ import { InviteGuild  } from './InviteGuild.js';
  *
  * @extends {BaseInvite}
  */
-class GuildInvite extends BaseInvite {
+export class GuildInvite extends BaseInvite {
+  public client: any;
+  public type: any;
+  public guildId: any;
+  public flags: any;
+  public guild: any;
+  public channel: any;
+  public targetType: any;
+  public targetUser: any;
+  public targetApplication: any;
+  public guildScheduledEvent: any;
+  public uses: any;
+  public maxUses: any;
+  public temporary: any;
+  public approximatePresenceCount: any;
   constructor(client, data) {
     super(client, data);
 
@@ -218,5 +231,3 @@ class GuildInvite extends BaseInvite {
     });
   }
 }
-
-exports.GuildInvite = GuildInvite;

@@ -1,4 +1,3 @@
-
 import { Collection  } from '@ovencord/collection';
 import { messageLink  } from '@ovencord/formatters';
 import { DiscordSnowflake  } from '@sapphire/snowflake';
@@ -33,7 +32,39 @@ import { Sticker  } from './Sticker.js';
  *
  * @extends {Base}
  */
-class Message extends Base {
+export class Message extends Base {
+  public client: any;
+  public channelId: any;
+  public guildId: any;
+  public id: any;
+  public createdTimestamp: any;
+  public type: any;
+  public system: any;
+  public content: any;
+  public author: any;
+  public pinned: any;
+  public tts: any;
+  public nonce: any;
+  public embeds: any;
+  public components: any;
+  public attachments: any;
+  public stickers: any;
+  public position: any;
+  public roleSubscriptionData: any;
+  public resolved: any;
+  public editedTimestamp: any;
+  public reactions: any;
+  public mentions: any;
+  public webhookId: any;
+  public groupActivityApplication: any;
+  public applicationId: any;
+  public activity: any;
+  public flags: any;
+  public reference: any;
+  public interactionMetadata: any;
+  public poll: any;
+  public messageSnapshots: any;
+  public call: any;
   constructor(client, data) {
     super(client);
 
@@ -1169,5 +1200,3 @@ class Message extends Base {
     });
   }
 }
-
-exports.Message = Message;

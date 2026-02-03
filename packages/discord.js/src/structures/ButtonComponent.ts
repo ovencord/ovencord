@@ -1,4 +1,3 @@
-
 import { Component  } from './Component.js';
 
 /**
@@ -6,7 +5,7 @@ import { Component  } from './Component.js';
  *
  * @extends {Component}
  */
-class ButtonComponent extends Component {
+export class ButtonComponent extends Component {
   /**
    * The style of this button
    *
@@ -67,5 +66,3 @@ class ButtonComponent extends Component {
     return this.data.url ?? null;
   }
 }
-
-exports.ButtonComponent = ButtonComponent;

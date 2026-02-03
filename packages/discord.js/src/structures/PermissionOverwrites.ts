@@ -1,4 +1,3 @@
-
 import { OverwriteType  } from 'discord-api-types/v10';
 import { DiscordjsTypeError, ErrorCodes  } from '../errors/index.js';
 import { PermissionsBitField  } from '../util/PermissionsBitField.js';
@@ -10,7 +9,12 @@ import { Role  } from './Role.js';
  *
  * @extends {Base}
  */
-class PermissionOverwrites extends Base {
+export class PermissionOverwrites extends Base {
+  public client: any;
+  public id: any;
+  public type: any;
+  public deny: any;
+  public allow: any;
   constructor(client, data, channel) {
     super(client);
 
@@ -216,5 +220,3 @@ class PermissionOverwrites extends Base {
     };
   }
 }
-
-exports.PermissionOverwrites = PermissionOverwrites;

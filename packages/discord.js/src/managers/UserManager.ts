@@ -1,4 +1,3 @@
-
 import { ChannelType, Routes  } from 'discord-api-types/v10';
 import { DiscordjsError, ErrorCodes  } from '../errors/index.js';
 import { GuildMember  } from '../structures/GuildMember.js';
@@ -12,7 +11,8 @@ import { CachedManager  } from './CachedManager.js';
  *
  * @extends {CachedManager}
  */
-class UserManager extends CachedManager {
+export class UserManager extends CachedManager {
+  public client: any;
   constructor(client, iterable) {
     super(client, User, iterable);
   }
@@ -137,5 +137,3 @@ class UserManager extends CachedManager {
     return super.resolveId(user);
   }
 }
-
-exports.UserManager = UserManager;

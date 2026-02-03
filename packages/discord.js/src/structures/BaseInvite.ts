@@ -1,4 +1,3 @@
-
 import { RouteBases  } from 'discord-api-types/v10';
 import { Base  } from './Base.js';
 
@@ -7,7 +6,16 @@ import { Base  } from './Base.js';
  *
  * @extends {Base}
  */
-class BaseInvite extends Base {
+export class BaseInvite extends Base {
+  public client: any;
+  public type: any;
+  public code: any;
+  public inviterId: any;
+  public maxAge: any;
+  public createdTimestamp: any;
+  public _expiresTimestamp: any;
+  public channelId: any;
+  public approximateMemberCount: any;
   constructor(client, data) {
     super(client);
 
@@ -182,5 +190,3 @@ class BaseInvite extends Base {
     return this.code;
   }
 }
-
-exports.BaseInvite = BaseInvite;

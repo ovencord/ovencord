@@ -1,4 +1,3 @@
-
 import { Routes  } from 'discord-api-types/v10';
 import { DiscordjsTypeError, DiscordjsError, ErrorCodes  } from '../errors/index.js';
 import { StageInstance  } from '../structures/StageInstance.js';
@@ -9,7 +8,8 @@ import { CachedManager  } from './CachedManager.js';
  *
  * @extends {CachedManager}
  */
-class StageInstanceManager extends CachedManager {
+export class StageInstanceManager extends CachedManager {
+  public guild: any;
   constructor(guild, iterable) {
     super(guild.client, StageInstance, iterable);
 
@@ -164,5 +164,3 @@ class StageInstanceManager extends CachedManager {
     await this.client.rest.delete(Routes.stageInstance(channelId));
   }
 }
-
-exports.StageInstanceManager = StageInstanceManager;

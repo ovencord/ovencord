@@ -1,4 +1,3 @@
-
 import { makeURLSearchParams  } from '@ovencord/rest';
 import { isJSONEncodable  } from '@ovencord/util';
 import { InteractionResponseType, MessageFlags, Routes, InteractionType  } from 'discord-api-types/v10';
@@ -13,7 +12,10 @@ import { MessagePayload  } from '../MessagePayload.js';
  *
  * @interface
  */
-class InteractionResponses {
+export class InteractionResponses {
+  public deferred: any;
+  public ephemeral: any;
+  public replied: any;
   /**
    * Options for deferring the reply to an {@link BaseInteraction}.
    *
@@ -380,5 +382,3 @@ class InteractionResponses {
     }
   }
 }
-
-exports.InteractionResponses = InteractionResponses;

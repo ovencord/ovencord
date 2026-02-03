@@ -1,4 +1,3 @@
-
 import { Collection  } from '@ovencord/collection';
 import { Routes  } from 'discord-api-types/v10';
 import { ApplicationCommandManager  } from '../managers/ApplicationCommandManager.js';
@@ -24,7 +23,30 @@ import { Application  } from './interfaces/Application.js';
  *
  * @extends {Application}
  */
-class ClientApplication extends Application {
+export class ClientApplication extends Application {
+  public client: any;
+  public commands: any;
+  public emojis: any;
+  public entitlements: any;
+  public subscriptions: any;
+  public tags: any;
+  public installParams: any;
+  public integrationTypesConfig: any;
+  public customInstallURL: any;
+  public flags: any;
+  public approximateGuildCount: any;
+  public approximateUserInstallCount: any;
+  public approximateUserAuthorizationCount: any;
+  public guildId: any;
+  public botRequireCodeGrant: any;
+  public bot: any;
+  public botPublic: any;
+  public interactionsEndpointURL: any;
+  public roleConnectionsVerificationURL: any;
+  public eventWebhooksURL: any;
+  public eventWebhooksStatus: any;
+  public eventWebhooksTypes: any;
+  public owner: any;
   constructor(client, data) {
     super(client, data);
 
@@ -446,5 +468,3 @@ class ClientApplication extends Application {
     return skus.reduce((coll, sku) => coll.set(sku.id, new SKU(this.client, sku)), new Collection());
   }
 }
-
-exports.ClientApplication = ClientApplication;

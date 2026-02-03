@@ -10,7 +10,7 @@ import { CachedManager } from './CachedManager.js';
  * @param {Buffer} data The data to check
  * @returns {string[]}
  */
-function detectAudioMime(data: Buffer): string[] {
+export function detectAudioMime(data: Buffer): string[] {
   if (data[0] === 0x49 && data[1] === 0x44 && data[2] === 0x33) return ['audio/mpeg']; // ID3
   if (data[0] === 0xff && (data[1] & 0xe0) === 0xe0) return ['audio/mpeg']; // MP3 Frame
   if (data[0] === 0x52 && data[1] === 0x49 && data[2] === 0x46 && data[3] === 0x46) return ['audio/wav']; // RIFF/WAV

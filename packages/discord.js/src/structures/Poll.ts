@@ -1,4 +1,3 @@
-
 import { Collection  } from '@ovencord/collection';
 import { DiscordjsError, ErrorCodes  } from '../errors/index.js';
 import { Base  } from './Base.js';
@@ -9,7 +8,16 @@ import { PollAnswer  } from './PollAnswer.js';
  *
  * @extends {Base}
  */
-class Poll extends Base {
+export class Poll extends Base {
+  public client: any;
+  public channelId: any;
+  public messageId: any;
+  public answers: any;
+  public resultsFinalized: any;
+  public allowMultiselect: any;
+  public layoutType: any;
+  public expiresTimestamp: any;
+  public question: any;
   constructor(client, data, message, channel) {
     super(client);
 
@@ -185,5 +193,3 @@ class Poll extends Base {
     return this.channel.messages.endPoll(this.messageId);
   }
 }
-
-exports.Poll = Poll;

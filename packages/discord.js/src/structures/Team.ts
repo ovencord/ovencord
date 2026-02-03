@@ -1,4 +1,3 @@
-
 import { Collection  } from '@ovencord/collection';
 import { DiscordSnowflake  } from '@sapphire/snowflake';
 import { Base  } from './Base.js';
@@ -9,7 +8,13 @@ import { TeamMember  } from './TeamMember.js';
  *
  * @extends {Base}
  */
-class Team extends Base {
+export class Team extends Base {
+  public client: any;
+  public id: any;
+  public name: any;
+  public icon: any;
+  public ownerId: any;
+  public members: any;
   constructor(client, data) {
     super(client);
     this._patch(data);
@@ -124,5 +129,3 @@ class Team extends Base {
     return super.toJSON({ createdTimestamp: true });
   }
 }
-
-exports.Team = Team;

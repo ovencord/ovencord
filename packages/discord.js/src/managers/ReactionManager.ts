@@ -1,4 +1,3 @@
-
 import { Routes  } from 'discord-api-types/v10';
 import { MessageReaction  } from '../structures/MessageReaction.js';
 import { CachedManager  } from './CachedManager.js';
@@ -8,7 +7,8 @@ import { CachedManager  } from './CachedManager.js';
  *
  * @extends {CachedManager}
  */
-class ReactionManager extends CachedManager {
+export class ReactionManager extends CachedManager {
+  public message: any;
   constructor(message, iterable) {
     super(message.client, MessageReaction, iterable);
 
@@ -70,5 +70,3 @@ class ReactionManager extends CachedManager {
     return this.message;
   }
 }
-
-exports.ReactionManager = ReactionManager;
