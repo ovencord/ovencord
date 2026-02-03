@@ -1,0 +1,12 @@
+{
+	"editor.defaultFormatter": "denoland.vscode-deno",
+	"editor.formatOnSave": true,
+	"editor.codeActionsOnSave": {
+		"source.fixAll": "always",
+		"source.organizeImports": "always"
+	},
+	"editor.trimAutoWhitespace": false,
+	"files.insertFinalNewline": true,
+	"files.eol": "\n",
+	"deno.enable": true
+}

@@ -1,0 +1,63 @@
+{
+	"$schema": "https://json.schemastore.org/package.json",
+	"name": "@ovencord/ws",
+	"version": "2.0.2",
+	"description": "Wrapper around Discord's gateway",
+	"scripts": {
+		"test": "bun test",
+		"typecheck": "tsc --noEmit",
+		"lint": "eslint src",
+		"format": "bun format"
+	},
+	"type": "module",
+	"exports": "./src/index.ts",
+	"main": "./src/index.ts",
+	"types": "./src/index.ts",
+
+	"contributors": [
+		"Crawl <icrawltogo@gmail.com>",
+		"Amish Shah <amishshah.2k@gmail.com>",
+		"SpaceEEC <spaceeec@yahoo.com>",
+		"Vlad Frangu <me@vladfrangu.dev>",
+		"Aura Román <kyradiscord@gmail.com>",
+		"DD <didinele.dev@gmail.com>"
+	],
+	"license": "Apache-2.0",
+	"keywords": [
+		"discord",
+		"api",
+		"gateway",
+		"discordapp",
+		"discordjs"
+	],
+	"repository": {
+		"type": "git",
+		"url": "https://github.com/ovencord/ovencord.git",
+		"directory": "packages/ws"
+	},
+	"bugs": {
+		"url": "https://github.com/ovencord/ovencord/issues"
+	},
+	"homepage": "https://ovencord.dev",
+	"funding": "https://github.com/ovencord/ovencord?sponsor",
+	"dependencies": {
+		"@ovencord/collection": "workspace:^",
+		"@ovencord/util": "workspace:^",
+		"@sapphire/async-queue": "^1.5.5",
+		"@vladfrangu/async_event_emitter": "^2.4.7",
+		"discord-api-types": "^0.38.36"
+	},
+	"devDependencies": {
+		"@types/bun": "latest",
+		"eslint": "^9.39.2",
+		"typescript": "^5.9.3",
+		"typescript-eslint": "^8.54.0"
+	},
+	"engines": {
+		"bun": ">=1.0.0"
+	},
+	"publishConfig": {
+		"access": "public",
+		"provenance": true
+	}
+}

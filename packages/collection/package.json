@@ -1,0 +1,51 @@
+{
+	"$schema": "https://json.schemastore.org/package.json",
+	"name": "@ovencord/collection",
+	"version": "2.1.1",
+	"description": "Utility data structure used in discord.js",
+	"scripts": {
+		"test": "bun test",
+		"typecheck": "tsc --noEmit",
+		"lint": "eslint src"
+	},
+	"type": "module",
+	"exports": "./src/index.ts",
+	"main": "./src/index.ts",
+	"types": "./src/index.ts",
+	"contributors": [
+		"Crawl <icrawltogo@gmail.com>",
+		"Amish Shah <amishshah.2k@gmail.com>",
+		"SpaceEEC <spaceeec@yahoo.com>",
+		"Vlad Frangu <me@vladfrangu.dev>",
+		"Aura Román <kyradiscord@gmail.com>"
+	],
+	"license": "Apache-2.0",
+	"keywords": [
+		"map",
+		"collection",
+		"utility"
+	],
+	"repository": {
+		"type": "git",
+		"url": "https://github.com/discordjs/discord.js.git",
+		"directory": "packages/collection"
+	},
+	"bugs": {
+		"url": "https://github.com/discordjs/discord.js/issues"
+	},
+	"homepage": "https://discord.js.org",
+	"funding": "https://github.com/discordjs/discord.js?sponsor",
+	"devDependencies": {
+		"@types/bun": "latest",
+		"eslint": "^9.39.2",
+		"typescript": "^5.9.3",
+		"typescript-eslint": "^8.54.0"
+	},
+	"engines": {
+		"bun": ">=1.0.0"
+	},
+	"publishConfig": {
+		"access": "public",
+		"provenance": true
+	}
+}

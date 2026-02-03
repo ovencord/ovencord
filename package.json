@@ -1,0 +1,82 @@
+{
+	"$schema": "https://json.schemastore.org/package.json",
+	"name": "@discordjs/discord.js",
+	"version": "0.0.0",
+	"description": "A powerful library for interacting with the Discord API",
+	"private": true,
+	"scripts": {
+		"build": "turbo run build --concurrency=4",
+		"build:affected": "turbo run build --filter=...[origin/main] --concurrency=4",
+		"build:apps": "turbo run build:local --filter=...{apps/*} --concurrency=4",
+		"build:apps:affected": "turbo run build:local --filter=...{apps/*}[origin/main] --concurrency=4",
+		"test": "turbo run test --concurrency=4",
+		"test:affected": "turbo run test --filter=...[origin/main] --concurrency=4",
+		"lint": "turbo run lint --concurrency=4",
+		"lint:affected": "turbo run lint --filter=...[origin/main] --concurrency=4",
+		"format": "turbo run format --concurrency=4",
+		"format:affected": "turbo run format --filter=...[origin/main] --concurrency=4",
+		"fmt": "turbo run format --concurrency=4",
+		"fmt:affected": "turbo run format --filter=...[origin/main] --concurrency=4",
+		"docs": "turbo run docs --concurrency=4",
+		"docs:affected": "turbo run docs --filter=...[origin/main] --concurrency=4",
+		"prepare": "is-ci || husky",
+		"update": "bun --recursive update --interactive",
+		"update:latest": "bun --recursive update --interactive --latest",
+		"create-package": "turbo gen create-package --args",
+		"release": "bun ./packages/actions/src/releasePackages/index.ts"
+	},
+	"type": "module",
+	"contributors": [
+		"Crawl <icrawltogo@gmail.com>",
+		"Amish Shah <amishshah.2k@gmail.com>",
+		"Vlad Frangu <me@vladfrangu.dev>",
+		"SpaceEEC <spaceeec@yahoo.com>",
+		"Aura Román <kyradiscord@gmail.com>"
+	],
+	"keywords": [
+		"discord",
+		"api",
+		"bot",
+		"client",
+		"node",
+		"discordapp"
+	],
+	"repository": {
+		"type": "git",
+		"url": "https://github.com/discordjs/discord.js.git"
+	},
+	"bugs": {
+		"url": "https://github.com/discordjs/discord.js/issues"
+	},
+	"homepage": "https://discord.js.org",
+	"funding": "https://github.com/discordjs/discord.js?sponsor",
+	"overrides": {
+		"@types/node": "npm:@types/bun@latest"
+	},
+	"devDependencies": {
+		"@commitlint/cli": "^20.2.0",
+		"@commitlint/config-angular": "^20.2.0",
+		"@favware/cliff-jumper": "^6.0.0",
+		"@favware/npm-deprecate": "^2.0.0",
+		"@types/bun": "latest",
+		"@types/lodash.merge": "^4.6.9",
+		"@unocss/eslint-plugin": "^66.5.10",
+		"conventional-changelog-cli": "^5.0.0",
+		"eslint": "^9.39.2",
+		"eslint-import-resolver-typescript": "^4.4.4",
+		"eslint-plugin-react-compiler": "19.1.0-rc.2",
+		"husky": "^9.1.7",
+		"is-ci": "^4.1.0",
+		"lint-staged": "^16.2.7",
+		"lodash.merge": "^4.6.2",
+		"turbo": "^2.6.3",
+		"typescript": "^5.9.3",
+		"typescript-eslint": "^8.54.0",
+		"unocss": "^66.5.10",
+		"vercel": "^49.1.2"
+	},
+	"engines": {
+		"bun": ">=1.0.0"
+	},
+	"packageManager": "bun@1.0.0"
+}

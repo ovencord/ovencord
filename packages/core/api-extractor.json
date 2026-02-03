@@ -1,0 +1,7 @@
+{
+	"extends": "../../api-extractor.json",
+	"bundledPackages": ["discord-api-types"],
+	"docModel": {
+		"projectFolderUrl": "https://github.com/discordjs/discord.js/tree/main/packages/core"
+	}
+}

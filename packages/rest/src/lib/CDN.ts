@@ -1,0 +1,408 @@
+/* eslint-disable jsdoc/check-param-names */
+import { CDNRoutes } from 'discord-api-types/v10';
+import {
+	ALLOWED_EXTENSIONS,
+	ALLOWED_SIZES,
+	ALLOWED_STICKER_EXTENSIONS,
+	DefaultRestOptions,
+	type ImageExtension,
+	type ImageSize,
+	type StickerExtension,
+} from './utils/constants.js';
+
+/**
+ * The options used for image URLs.
+ */
+export interface BaseImageURLOptions {
+	/**
+	 * The extension to use for the image URL.
+	 *
+	 * @defaultValue `'webp'`
+	 */
+	extension?: ImageExtension;
+	/**
+	 * The size specified in the image URL.
+	 */
+	size?: ImageSize;
+}
+
+export interface EmojiURLOptionsWebp extends BaseImageURLOptions {
+	/**
+	 * Whether to use the `animated` query parameter.
+	 */
+	animated?: boolean;
+	extension?: 'webp';
+}
+
+export interface EmojiURLOptionsNotWebp extends BaseImageURLOptions {
+	extension: Exclude<ImageExtension, 'webp'>;
+}
+
+/**
+ * The options used for emoji URLs.
+ */
+export type EmojiURLOptions = EmojiURLOptionsNotWebp | EmojiURLOptionsWebp;
+
+/**
+ * The options used for image URLs that may be animated.
+ */
+export interface ImageURLOptions extends BaseImageURLOptions {
+	/**
+	 * Whether to prefer the static asset.
+	 */
+	forceStatic?: boolean;
+}
+
+/**
+ * The options to use when making a CDN URL
+ */
+interface MakeURLOptions {
+	/**
+	 * The allowed extensions that can be used
+	 */
+	allowedExtensions?: readonly string[];
+	/**
+	 * Whether to use the `animated` query parameter
+	 */
+	animated?: boolean;
+	/**
+	 * The base URL.
+	 *
+	 * @defaultValue `DefaultRestOptions.cdn`
+	 */
+	base?: string;
+	/**
+	 * The extension to use for the image URL
+	 *
+	 * @defaultValue `'webp'`
+	 */
+	extension?: string | undefined;
+	/**
+	 * The size specified in the image URL
+	 */
+	size?: ImageSize;
+}
+
+/**
+ * Options for initializing the {@link CDN} class.
+ */
+export interface CDNOptions {
+	/**
+	 * The base URL for the CDN.
+	 *
+	 * @defaultValue `DefaultRestOptions.cdn`
+	 */
+	cdn?: string | undefined;
+	/**
+	 * The base URL for the media proxy.
+	 *
+	 * @defaultValue `DefaultRestOptions.mediaProxy`
+	 */
+	mediaProxy?: string | undefined;
+}
+
+/**
+ * The CDN link builder
+ */
+export class CDN {
+	private readonly cdn: string;
+
+	private readonly mediaProxy: string;
+
+	public constructor({ cdn, mediaProxy }: CDNOptions = {}) {
+		this.cdn = cdn ?? DefaultRestOptions.cdn;
+		this.mediaProxy = mediaProxy ?? DefaultRestOptions.mediaProxy;
+	}
+
+	/**
+	 * Generates an app asset URL for a client's asset.
+	 *
+	 * @param clientId - The client id that has the asset
+	 * @param assetHash - The hash provided by Discord for this asset
+	 * @param options - Optional options for the asset
+	 */
+	public appAsset(clientId: string, assetHash: string, options?: Readonly<BaseImageURLOptions>): string {
+		return this.makeURL(`/app-assets/${clientId}/${assetHash}`, options);
+	}
+
+	/**
+	 * Generates an app icon URL for a client's icon.
+	 *
+	 * @param clientId - The client id that has the icon
+	 * @param iconHash - The hash provided by Discord for this icon
+	 * @param options - Optional options for the icon
+	 */
+	public appIcon(clientId: string, iconHash: string, options?: Readonly<BaseImageURLOptions>): string {
+		return this.makeURL(`/app-icons/${clientId}/${iconHash}`, options);
+	}
+
+	/**
+	 * Generates an avatar URL, e.g. for a user or a webhook.
+	 *
+	 * @param id - The id that has the icon
+	 * @param avatarHash - The hash provided by Discord for this avatar
+	 * @param options - Optional options for the avatar
+	 */
+	public avatar(id: string, avatarHash: string, options?: Readonly<ImageURLOptions>): string {
+		return this.dynamicMakeURL(`/avatars/${id}/${avatarHash}`, avatarHash, options);
+	}
+
+	/**
+	 * Generates a user avatar decoration preset URL.
+	 *
+	 * @param asset - The avatar decoration hash
+	 */
+	public avatarDecoration(asset: string): string {
+		return this.makeURL(`/avatar-decoration-presets/${asset}`, { extension: 'png' });
+	}
+
+	/**
+	 * Generates a banner URL, e.g. for a user or a guild.
+	 *
+	 * @param id - The id that has the banner splash
+	 * @param bannerHash - The hash provided by Discord for this banner
+	 * @param options - Optional options for the banner
+	 */
+	public banner(id: string, bannerHash: string, options?: Readonly<ImageURLOptions>): string {
+		return this.dynamicMakeURL(`/banners/${id}/${bannerHash}`, bannerHash, options);
+	}
+
+	/**
+	 * Generates an icon URL for a channel, e.g. a group DM.
+	 *
+	 * @param channelId - The channel id that has the icon
+	 * @param iconHash - The hash provided by Discord for this channel
+	 * @param options - Optional options for the icon
+	 */
+	public channelIcon(channelId: string, iconHash: string, options?: Readonly<BaseImageURLOptions>): string {
+		return this.makeURL(`/channel-icons/${channelId}/${iconHash}`, options);
+	}
+
+	/**
+	 * Generates a default avatar URL
+	 *
+	 * @param index - The default avatar index
+	 * @remarks
+	 * To calculate the index for a user do `(userId >> 22) % 6`,
+	 * or `discriminator % 5` if they're using the legacy username system.
+	 */
+	public defaultAvatar(index: number): string {
+		return this.makeURL(`/embed/avatars/${index}`, { extension: 'png' });
+	}
+
+	/**
+	 * Generates a discovery splash URL for a guild's discovery splash.
+	 *
+	 * @param guildId - The guild id that has the discovery splash
+	 * @param splashHash - The hash provided by Discord for this splash
+	 * @param options - Optional options for the splash
+	 */
+	public discoverySplash(guildId: string, splashHash: string, options?: Readonly<BaseImageURLOptions>): string {
+		return this.makeURL(`/discovery-splashes/${guildId}/${splashHash}`, options);
+	}
+
+	/**
+	 * Generates an emoji's URL.
+	 *
+	 * @param emojiId - The emoji id
+	 * @param options - Optional options for the emoji
+	 */
+	public emoji(emojiId: string, options?: Readonly<EmojiURLOptions>): string {
+		return this.makeURL(`/emojis/${emojiId}`, options);
+	}
+
+	/**
+	 * Generates a guild member avatar URL.
+	 *
+	 * @param guildId - The id of the guild
+	 * @param userId - The id of the user
+	 * @param avatarHash - The hash provided by Discord for this avatar
+	 * @param options - Optional options for the avatar
+	 */
+	public guildMemberAvatar(
+		guildId: string,
+		userId: string,
+		avatarHash: string,
+		options?: Readonly<ImageURLOptions>,
+	): string {
+		return this.dynamicMakeURL(`/guilds/${guildId}/users/${userId}/avatars/${avatarHash}`, avatarHash, options);
+	}
+
+	/**
+	 * Generates a guild member banner URL.
+	 *
+	 * @param guildId - The id of the guild
+	 * @param userId - The id of the user
+	 * @param bannerHash - The hash provided by Discord for this banner
+	 * @param options - Optional options for the banner
+	 */
+	public guildMemberBanner(
+		guildId: string,
+		userId: string,
+		bannerHash: string,
+		options?: Readonly<ImageURLOptions>,
+	): string {
+		return this.dynamicMakeURL(`/guilds/${guildId}/users/${userId}/banners/${bannerHash}`, bannerHash, options);
+	}
+
+	/**
+	 * Generates an icon URL, e.g. for a guild.
+	 *
+	 * @param id - The id that has the icon splash
+	 * @param iconHash - The hash provided by Discord for this icon
+	 * @param options - Optional options for the icon
+	 */
+	public icon(id: string, iconHash: string, options?: Readonly<ImageURLOptions>): string {
+		return this.dynamicMakeURL(`/icons/${id}/${iconHash}`, iconHash, options);
+	}
+
+	/**
+	 * Generates a URL for the icon of a role
+	 *
+	 * @param roleId - The id of the role that has the icon
+	 * @param roleIconHash - The hash provided by Discord for this role icon
+	 * @param options - Optional options for the role icon
+	 */
+	public roleIcon(roleId: string, roleIconHash: string, options?: Readonly<BaseImageURLOptions>): string {
+		return this.makeURL(`/role-icons/${roleId}/${roleIconHash}`, options);
+	}
+
+	/**
+	 * Generates a guild invite splash URL for a guild's invite splash.
+	 *
+	 * @param guildId - The guild id that has the invite splash
+	 * @param splashHash - The hash provided by Discord for this splash
+	 * @param options - Optional options for the splash
+	 */
+	public splash(guildId: string, splashHash: string, options?: Readonly<BaseImageURLOptions>): string {
+		return this.makeURL(`/splashes/${guildId}/${splashHash}`, options);
+	}
+
+	/**
+	 * Generates a sticker URL.
+	 *
+	 * @param stickerId - The sticker id
+	 * @param extension - The extension of the sticker
+	 * @privateRemarks
+	 * Stickers cannot have a `.webp` extension, so we default to a `.png`.
+	 * Sticker GIFs do not use the CDN base URL.
+	 */
+	public sticker(stickerId: string, extension: StickerExtension = 'png'): string {
+		return this.makeURL(`/stickers/${stickerId}`, {
+			allowedExtensions: ALLOWED_STICKER_EXTENSIONS,
+			base: extension === 'gif' ? this.mediaProxy : this.cdn,
+			extension,
+		});
+	}
+
+	/**
+	 * Generates a sticker pack banner URL.
+	 *
+	 * @param bannerId - The banner id
+	 * @param options - Optional options for the banner
+	 */
+	public stickerPackBanner(bannerId: string, options?: Readonly<BaseImageURLOptions>): string {
+		return this.makeURL(`/app-assets/710982414301790216/store/${bannerId}`, options);
+	}
+
+	/**
+	 * Generates a team icon URL for a team's icon.
+	 *
+	 * @param teamId - The team id that has the icon
+	 * @param iconHash - The hash provided by Discord for this icon
+	 * @param options - Optional options for the icon
+	 */
+	public teamIcon(teamId: string, iconHash: string, options?: Readonly<BaseImageURLOptions>): string {
+		return this.makeURL(`/team-icons/${teamId}/${iconHash}`, options);
+	}
+
+	/**
+	 * Generates a cover image for a guild scheduled event.
+	 *
+	 * @param scheduledEventId - The scheduled event id
+	 * @param coverHash - The hash provided by discord for this cover image
+	 * @param options - Optional options for the cover image
+	 */
+	public guildScheduledEventCover(
+		scheduledEventId: string,
+		coverHash: string,
+		options?: Readonly<BaseImageURLOptions>,
+	): string {
+		return this.makeURL(`/guild-events/${scheduledEventId}/${coverHash}`, options);
+	}
+
+	/**
+	 * Generates a URL for a soundboard sound.
+	 *
+	 * @param soundId - The soundboard sound id
+	 */
+	public soundboardSound(soundId: string): string {
+		return `${this.cdn}${CDNRoutes.soundboardSound(soundId)}`;
+	}
+
+	/**
+	 * Generates a URL for a guild tag badge.
+	 *
+	 * @param guildId - The guild id
+	 * @param badgeHash - The hash of the badge
+	 * @param options - Optional options for the badge
+	 */
+	public guildTagBadge(guildId: string, badgeHash: string, options?: Readonly<BaseImageURLOptions>): string {
+		return this.makeURL(`/guild-tag-badges/${guildId}/${badgeHash}`, options);
+	}
+
+	/**
+	 * Constructs the URL for the resource, checking whether or not `hash` starts with `a_` if `dynamic` is set to `true`.
+	 *
+	 * @param route - The base cdn route
+	 * @param hash - The hash provided by Discord for this icon
+	 * @param options - Optional options for the link
+	 */
+	private dynamicMakeURL(
+		route: string,
+		hash: string,
+		{ forceStatic = false, ...options }: Readonly<ImageURLOptions> = {},
+	): string {
+		return this.makeURL(route, !forceStatic && hash.startsWith('a_') ? { ...options, animated: true } : options);
+	}
+
+	/**
+	 * Constructs the URL for the resource
+	 *
+	 * @param route - The base cdn route
+	 * @param options - The extension/size options for the link
+	 */
+	private makeURL(
+		route: string,
+		{
+			allowedExtensions = ALLOWED_EXTENSIONS,
+			base = this.cdn,
+			extension = 'webp',
+			size,
+			animated,
+		}: Readonly<MakeURLOptions> = {},
+	): string {
+		// eslint-disable-next-line no-param-reassign
+		extension = String(extension).toLowerCase();
+
+		if (!allowedExtensions.includes(extension)) {
+			throw new RangeError(`Invalid extension provided: ${extension}\nMust be one of: ${allowedExtensions.join(', ')}`);
+		}
+
+		if (size && !ALLOWED_SIZES.includes(size)) {
+			throw new RangeError(`Invalid size provided: ${size}\nMust be one of: ${ALLOWED_SIZES.join(', ')}`);
+		}
+
+		const url = new URL(`${base}${route}.${extension}`);
+
+		if (animated !== undefined) {
+			url.searchParams.set('animated', String(animated));
+		}
+
+		if (size) {
+			url.searchParams.set('size', String(size));
+		}
+
+		return url.toString();
+	}
+}
