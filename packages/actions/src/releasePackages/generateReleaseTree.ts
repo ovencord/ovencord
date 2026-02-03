@@ -1,3 +1,4 @@
+import { dirname } from 'node:path';
 import { info, warning } from '@actions/core';
 import type { PackageJSON, PackumentVersion } from '@npm/types';
 import { $, file, write } from 'bun';
@@ -24,6 +25,7 @@ export interface ReleaseEntry {
 	dependsOn?: string[];
 	name: string;
 	version: string;
+	path: string;
 }
 
 async function fetchDevVersion(pkg: string, tag: string) {
@@ -39,8 +41,21 @@ async function fetchDevVersion(pkg: string, tag: string) {
 
 async function getReleaseEntries(dry: boolean, devTag?: string) {
 	const releaseEntries: ReleaseEntry[] = [];
-	const packageList: pnpmTree[] =
-		await $`pnpm list --recursive --only-projects --filter {packages/\*} --prod --json`.json();
+	const glob = new Bun.Glob('packages/*/package.json');
+	const packageList: pnpmTree[] = [];
+	const monorepoPackageNames = new Set<string>();
+	for await (const path of glob.scan('.')) {
+		const content = await file(path).text();
+		const pkgJson = JSON.parse(content);
+		monorepoPackageNames.add(pkgJson.name);
+		packageList.push({
+			name: pkgJson.name,
+			version: pkgJson.version,
+			private: pkgJson.private,
+			path: dirname(path),
+			dependencies: pkgJson.dependencies,
+		});
+	}
 
 	const commitHash = (await $`git rev-parse --short HEAD`.text()).trim();
 	const timestamp = Math.round(Date.now() / 1_000);
@@ -55,6 +70,7 @@ async function getReleaseEntries(dry: boolean, devTag?: string) {
 		const release: ReleaseEntry = {
 			name: pkg.name,
 			version: pkg.version,
+			path: pkg.path,
 		};
 
 		if (devTag) {
@@ -80,7 +96,7 @@ async function getReleaseEntries(dry: boolean, devTag?: string) {
 				info(`[DRY] Bumping ${pkg.name} via git-cliff.`);
 				release.version = `${pkg.version}.DRY-${devTag}.${timestamp}-${commitHash}`;
 			} else {
-				await $`pnpm --filter=${pkg.name} run release --preid "${devTag}.${timestamp}-${commitHash}" --skip-changelog`;
+				await $`bun run release --preid "${devTag}.${timestamp}-${commitHash}" --skip-changelog`.cwd(pkg.path);
 				// Read again instead of parsing the output to be sure we're matching when checking against npm
 				const pkgJson = (await file(`${pkg.path}/package.json`).json()) as PackageJSON;
 				release.version = pkgJson.version;
@@ -126,7 +142,8 @@ async function getReleaseEntries(dry: boolean, devTag?: string) {
 		}
 
 		if (pkg.dependencies) {
-			release.dependsOn = Object.keys(pkg.dependencies);
+			release.dependsOn = Object.keys(pkg.dependencies).filter(dep => monorepoPackageNames.has(dep));
+			if (release.dependsOn.length === 0) delete release.dependsOn;
 		}
 
 		releaseEntries.push(release);

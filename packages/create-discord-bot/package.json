@@ -15,10 +15,6 @@
 	},
 	"type": "module",
 	"bin": "./dist/index.js",
-	"directories": {
-		"bin": "bin",
-		"lib": "src"
-	},
 	"files": [
 		"dist",
 		"template"

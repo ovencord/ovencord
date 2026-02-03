@@ -9,9 +9,6 @@
 		"lint": "eslint src"
 	},
 	"type": "module",
-	"directories": {
-		"lib": "src"
-	},
 	"files": [
 		"src"
 	],

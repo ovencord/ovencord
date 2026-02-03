@@ -114,4 +114,8 @@ if (skippedPackages.length === 0) {
 	result.addRaw(`\n`);
 }
 
-await result.write();
+try {
+	await result.write();
+} catch {
+	// We're not running in actions
+}

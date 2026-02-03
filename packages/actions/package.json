@@ -10,10 +10,6 @@
 		"lint": "eslint src"
 	},
 	"type": "module",
-	"directories": {
-		"lib": "src",
-		"test": "__tests__"
-	},
 	"files": [
 		"src"
 	],
@@ -71,5 +67,8 @@
 	"main": "./src/index.ts",
 	"module": "./src/index.ts",
 	"types": "./src/index.ts",
-	"exports": "./src/index.ts"
+	"exports": "./src/index.ts",
+	"publishConfig": {
+		"access": "public"
+	}
 }

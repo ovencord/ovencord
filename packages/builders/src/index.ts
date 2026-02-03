@@ -56,6 +56,7 @@ export * from './interactions/commands/chatInput/options/user.js';
 
 export * from './interactions/commands/chatInput/Assertions.js';
 export * from './interactions/commands/chatInput/ChatInputCommand.js';
+export { ChatInputCommandBuilder as SlashCommandBuilder } from './interactions/commands/chatInput/ChatInputCommand.js';
 export * from './interactions/commands/chatInput/ChatInputCommandSubcommands.js';
 
 export * from './interactions/commands/contextMenu/Assertions.js';

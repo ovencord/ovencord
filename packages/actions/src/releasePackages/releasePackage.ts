@@ -50,7 +50,7 @@ export async function releasePackage(release: ReleaseEntry, dry: boolean, devTag
 	if (dry) {
 		info(`[DRY] Releasing ${release.name}@${release.version}`);
 	} else {
-		await $`pnpm --filter=${release.name} publish --provenance --no-git-checks ${devTag ? `--tag=${devTag}` : ''}`;
+		await $`npm publish --access public --provenance --no-git-checks ${devTag ? `--tag ${devTag}` : ''}`.cwd(release.path);
 	}
 
 	// && !devTag just to be sure
@@ -78,7 +78,7 @@ export async function releasePackage(release: ReleaseEntry, dry: boolean, devTag
 
 	if (devTag) {
 		// Send and forget, deprecations are less important than releasing other dev versions and can be done manually
-		void $`pnpm exec npm-deprecate --name "*${devTag}*" --message "This version is deprecated. Please use a newer version." --package ${release.name}`
+		void $`bunx npm-deprecate --name "*${devTag}*" --message "This version is deprecated. Please use a newer version." --package ${release.name}`
 			.nothrow()
 			// eslint-disable-next-line
 			.then(() => {});
@@ -86,7 +86,7 @@ export async function releasePackage(release: ReleaseEntry, dry: boolean, devTag
 
 	// Evil, but I can't think of a cleaner mechanism
 	if (release.name === 'create-discord-bot') {
-		await $`pnpm --filter=create-discord-bot run rename-to-app`;
+		await $`bun run rename-to-app`.cwd('packages/create-discord-bot');
 		// eslint-disable-next-line require-atomic-updates
 		release.name = 'create-discord-app';
 		await releasePackage(release, dry, devTag, false);

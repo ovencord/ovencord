@@ -13,10 +13,6 @@
 	"main": "./src/index.ts",
 	"module": "./src/index.ts",
 	"types": "./src/index.ts",
-	"directories": {
-		"bin": "bin",
-		"lib": "src"
-	},
 	"files": [
 		"src"
 	],

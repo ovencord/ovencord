@@ -12,10 +12,6 @@
 	"main": "./src/index.ts",
 	"module": "./src/index.ts",
 	"types": "./src/index.ts",
-	"directories": {
-		"lib": "src",
-		"test": "__tests__"
-	},
 	"files": [
 		"src"
 	],

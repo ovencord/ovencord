@@ -14,9 +14,6 @@
 	"module": "./src/index.ts",
 	"types": "./src/index.ts",
 	"sideEffects": false,
-	"directories": {
-		"lib": "src"
-	},
 	"files": [
 		"src"
 	],

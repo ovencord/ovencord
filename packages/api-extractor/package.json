@@ -75,5 +75,11 @@
 	],
 	"contributors": [
 		"Ovencord Contributors"
-	]
+	],
+	"publishConfig": {
+		"access": "public"
+	},
+	"bugs": {
+		"url": "https://github.com/ovencord/ovencord/issues"
+	}
 }
