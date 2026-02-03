@@ -14,14 +14,7 @@
         "@ovencord/*": ["../*/src"]
     },
     "types": [
-      "@ovencord/builders",
-      "@ovencord/util",
-      "@ovencord/collection",
-      "@ovencord/rest",
-      "@ovencord/ws",
-      "discord-api-types/v10",
-      "bun-types",
-      "@sapphire/snowflake"
+      "bun-types"
     ]
   }
 }

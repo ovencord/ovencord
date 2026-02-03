@@ -1,7 +1,5 @@
 import { Collection } from '@ovencord/collection';
-import { shouldUseGlobalFetchAndWebSocket } from '@ovencord/util';
-import { AsyncQueue } from '@sapphire/async-queue';
-import { AsyncEventEmitter } from '@vladfrangu/async_event_emitter';
+import { AsyncEventEmitter, AsyncQueue, shouldUseGlobalFetchAndWebSocket } from '@ovencord/util';
 import {
 	GatewayCloseCodes,
 	GatewayDispatchEvents,
@@ -86,7 +84,7 @@ export class WebSocketShard extends AsyncEventEmitter<WebSocketShardEventsMap> {
 	 */
 	private bunInflate: BunInflateHandler = new BunInflateHandler();
 
-	private readonly textDecoder = new TextDecoder();
+
 
 	private replayedEvents = 0;
 
@@ -172,7 +170,6 @@ export class WebSocketShard extends AsyncEventEmitter<WebSocketShardEventsMap> {
 		const { version, encoding, compression, useIdentifyCompression } = this.strategy.options;
 		this.identifyCompressionEnabled = useIdentifyCompression;
 
-		 
 		const params = new URLSearchParams({ v: version, encoding });
 		if (compression !== null) {
 			if (useIdentifyCompression) {
@@ -181,7 +178,7 @@ export class WebSocketShard extends AsyncEventEmitter<WebSocketShardEventsMap> {
 			}
 
 			// Bun native compression - no initialization needed, BunInflateHandler handles everything
-		params.append('compress', CompressionParameterMap[compression]);
+			params.append('compress', CompressionParameterMap[compression]);
 		}
 
 		// Identify compression is always available with Bun.gzipSync - no need to check availability
@@ -192,9 +189,7 @@ export class WebSocketShard extends AsyncEventEmitter<WebSocketShardEventsMap> {
 
 		this.debug([`Connecting to ${url}`]);
 
-		const connection = new WebSocketConstructor(url, [], {
-			handshakeTimeout: this.strategy.options.handshakeTimeout ?? undefined,
-		});
+		const connection = new WebSocketConstructor(url);
 
 		connection.binaryType = 'arraybuffer';
 
@@ -202,8 +197,8 @@ export class WebSocketShard extends AsyncEventEmitter<WebSocketShardEventsMap> {
 			void this.onMessage(event.data, event.data instanceof ArrayBuffer);
 		};
 
-		connection.onerror = (event) => {
-			this.onError(event.error);
+		connection.onerror = (event: Event) => {
+			this.onError((event as any).error ?? new Error('Unknown WebSocket Error'));
 		};
 
 		connection.onclose = (event) => {
@@ -525,12 +520,7 @@ export class WebSocketShard extends AsyncEventEmitter<WebSocketShardEventsMap> {
 		this.isAck = false;
 	}
 
-	private parseInflateResult(result: any): GatewayReceivePayload | null {
-		if (!result) {
-			return null;
-		}
-		return JSON.parse(typeof result === 'string' ? result : new TextDecoder().decode(result)) as GatewayReceivePayload;
-	}
+
 
 	private async unpackMessage(data: ArrayBuffer | string, isBinary: boolean): Promise<GatewayReceivePayload | null> {
 		// Deal with no compression

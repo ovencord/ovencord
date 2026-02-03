@@ -4,6 +4,8 @@ export * from './encodables.js';
 export type * from './RawFile.js';
 export * from './Equatable.js';
 export * from './gatewayRateLimitError.js';
+export * from './AsyncEventEmitter.js';
+export * from './AsyncQueue.js';
 
 /**
  * The {@link https://github.com/discordjs/discord.js/blob/main/packages/util#readme | @ovencord/util} version
