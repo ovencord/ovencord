@@ -1,7 +1,9 @@
 import { DefaultRestOptions, DefaultUserAgentAppendix  } from '@ovencord/rest';
 import { DefaultWebSocketManagerOptions  } from '@ovencord/ws';
-import { version  } from '../../package.json.js';
-import { toSnakeCase  } from './Transformers.js';
+import { Collection } from '@ovencord/collection';
+import { version } from '../../package.json' with { type: 'json' };
+import { LimitedCollection } from './LimitedCollection.js';
+import { toSnakeCase } from './Transformers.js';
 
 /**
  * @typedef {Object} CacheFactoryParams
@@ -120,9 +122,6 @@ export class Options extends null {
    *  });
    */
   static cacheWithLimits(settings = {}) {
-    import { Collection  } from '@ovencord/collection';
-    import { LimitedCollection  } from './LimitedCollection.js';
-
     return ({ managerType, manager }) => {
       const setting = settings[manager.name] ?? settings[managerType.name];
       /* eslint-disable-next-line eqeqeq */
@@ -154,7 +153,6 @@ export class Options extends null {
    * @returns {CacheFactory}
    */
   static cacheEverything() {
-    import { Collection  } from '@ovencord/collection';
     return () => new Collection();
   }
 
