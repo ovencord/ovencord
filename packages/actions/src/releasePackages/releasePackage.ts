@@ -80,7 +80,7 @@ export async function releasePackage(release: ReleaseEntry, dry: boolean, devTag
 		// Send and forget, deprecations are less important than releasing other dev versions and can be done manually
 		void $`pnpm exec npm-deprecate --name "*${devTag}*" --message "This version is deprecated. Please use a newer version." --package ${release.name}`
 			.nothrow()
-			// eslint-disable-next-line promise/prefer-await-to-then
+			// eslint-disable-next-line
 			.then(() => {});
 	}
 

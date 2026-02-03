@@ -484,7 +484,7 @@ export class Networking extends EventEmitter {
 			udp.once('close', this.onUdpClose);
 			udp
 				.performIPDiscovery(ssrc)
-				// eslint-disable-next-line promise/prefer-await-to-then
+				// eslint-disable-next-line
 				.then((localConfig) => {
 					if (this.state.code !== NetworkingStatusCode.UdpHandshaking) return;
 					this.state.ws.sendPacket({
@@ -503,7 +503,7 @@ export class Networking extends EventEmitter {
 						code: NetworkingStatusCode.SelectingProtocol,
 					};
 				})
-				// eslint-disable-next-line promise/prefer-await-to-then, promise/prefer-await-to-callbacks
+				// eslint-disable-next-line
 				.catch((error: Error) => this.emit('error', error));
 
 			this.state = {

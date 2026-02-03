@@ -8,7 +8,7 @@ export * from './AsyncEventEmitter.js';
 export * from './AsyncQueue.js';
 
 /**
- * The {@link https://github.com/discordjs/discord.js/blob/main/packages/util#readme | @ovencord/util} version
+ * The {@link https://github.com/ovencord/ovencord/blob/main/packages/util#readme | @ovencord/util} version
  * that you are currently using.
  *
  * @privateRemarks This needs to explicitly be `string` so it is not typed as a "const string" that gets injected by esbuild.

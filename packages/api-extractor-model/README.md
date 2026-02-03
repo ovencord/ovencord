@@ -1,4 +1,4 @@
-# @discordjs/api-extractor-model
+# @ovencord/api-extractor-model
 
 Use this library to read and write \*.api.json files as defined by the [API Extractor](https://api-extractor.com/) tool.
 These files are used to generate a documentation website for your TypeScript package. The files store the
@@ -12,7 +12,7 @@ The following code sample shows how to load `example.api.json`, which would be g
 when it analyzes a hypothetical NPM package called `example`:
 
 ```ts
-import { ApiModel, ApiPackage } from '@discordjs/api-extractor-model';
+import { ApiModel, ApiPackage } from '@ovencord/api-extractor-model';
 
 const apiModel: ApiModel = new ApiModel();
 const apiPackage: ApiPackage = apiModel.loadPackage('example.api.json');
@@ -60,7 +60,7 @@ a namespace containing static members of the class.
 
 ## Links
 
-- [CHANGELOG.md](https://github.com/discordjs/discord.js/blob/main/packages/api-extractor-model/CHANGELOG.md) - Find
+- [CHANGELOG.md](https://github.com/ovencord/ovencord/blob/main/packages/api-extractor-model/CHANGELOG.md) - Find
   out what's new in the latest version
 - [API Reference](https://rushstack.io/pages/api/api-extractor-model/)
 

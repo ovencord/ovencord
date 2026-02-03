@@ -41,21 +41,20 @@
 		"url": "https://github.com/ovencord/ovencord/issues"
 	},
 	"homepage": "https://ovencord.dev",
-	"funding": "https://github.com/discordjs/discord.js?sponsor",
+	"funding": "https://github.com/ovencord/ovencord?sponsor",
 	"dependencies": {
 		"@msgpack/msgpack": "^3.1.2",
 		"@vladfrangu/async_event_emitter": "^2.4.7",
 		"ioredis": "^5.8.2"
 	},
 	"devDependencies": {
-		"@discordjs/api-extractor": "workspace:^",
-		"@discordjs/scripts": "workspace:^",
+		"@ovencord/api-extractor": "workspace:^",
+		"@ovencord/scripts": "workspace:^",
 		"@favware/cliff-jumper": "^6.0.0",
 		"@vitest/coverage-v8": "^4.0.15",
 		"cross-env": "^10.1.0",
 		"esbuild-plugin-version-injector": "^1.2.1",
 		"eslint": "^9.39.2",
-		"eslint-config-neon": "^0.2.9",
 		"eslint-formatter-compact": "^9.0.1",
 		"eslint-formatter-pretty": "^7.0.0",
 		"prettier": "^3.7.4",

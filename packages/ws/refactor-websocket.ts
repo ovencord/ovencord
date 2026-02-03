@@ -31,7 +31,7 @@ let refactored = content
 	.replace(/import type \* as ZlibSync from 'zlib-sync';\n/g, '')
 	
 	// Remove lazy loaders
-	.replace(/\/\* eslint-disable promise\/prefer-await-to-then \*\/\n/g, '')
+	.replace(/\/\* eslint-disable promise\/prefer-await-to-then \*\/\ '')
 	.replace(/const getZlibSync = lazy\(async \(\) => import\('zlib-sync'\)\.then\(\(mod\) => mod\.default\)\.catch\(\(\) => null\)\);\n/g, '')
 	.replace(/const getNativeZlib = lazy\(async \(\) => import\('node:zlib'\)\.then\(\(mod\) => mod\)\.catch\(\(\) => null\)\);\n/g, '')
 	.replace(/\/\* eslint-enable promise\/prefer-await-to-then \*\/\n/g, '')

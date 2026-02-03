@@ -15,11 +15,11 @@
 
 **High-performance, Bun-native Discord REST client.**
 
-`@ovencord/rest` is a modernized fork of `@discordjs/rest`, rebuilt from the ground up to leverage the full power of the Bun runtime. It maintains 100% API compatibility with the original package while offering superior performance and zero legacy bloat.
+`@ovencord/rest` is a modernized fork of `@ovencord/rest`, rebuilt from the ground up to leverage the full power of the Bun runtime. It maintains 100% API compatibility with the original package while offering superior performance and zero legacy bloat.
 
 ## 🥟 Why Ovencord-REST?
 
-| Feature | @discordjs/rest | @ovencord/rest |
+| Feature | @ovencord/rest | @ovencord/rest |
 |---------|-----------------|----------------|
 | **Runtime** | Node.js | **Bun Native** |
 | **HTTP Client** | undici (Legacy) | **Bun.fetch** (Native Zig) |

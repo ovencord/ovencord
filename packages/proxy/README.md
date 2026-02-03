@@ -6,32 +6,32 @@
 	<br />
 	<p>
 		<a href="https://discord.gg/djs"><img src="https://img.shields.io/badge/join_us-on_discord-5865F2?logo=discord&logoColor=white" alt="Discord server" /></a>
-		<a href="https://www.npmjs.com/package/@discordjs/proxy"><img src="https://img.shields.io/npm/v/@discordjs/proxy.svg?maxAge=3600" alt="npm version" /></a>
-		<a href="https://www.npmjs.com/package/@discordjs/proxy"><img src="https://img.shields.io/npm/dt/@discordjs/proxy.svg?maxAge=3600" alt="npm downloads" /></a>
-		<a href="https://github.com/discordjs/discord.js/actions"><img src="https://github.com/discordjs/discord.js/actions/workflows/tests.yml/badge.svg" alt="Build status" /></a>
-		<a href="https://github.com/discordjs/discord.js/commits/main/packages/proxy"><img alt="Last commit." src="https://img.shields.io/github/last-commit/discordjs/discord.js?logo=github&logoColor=ffffff&path=packages%2Fproxy" /></a>
+		<a href="https://www.npmjs.com/package/@ovencord/proxy"><img src="https://img.shields.io/npm/v/@ovencord/proxy.svg?maxAge=3600" alt="npm version" /></a>
+		<a href="https://www.npmjs.com/package/@ovencord/proxy"><img src="https://img.shields.io/npm/dt/@ovencord/proxy.svg?maxAge=3600" alt="npm downloads" /></a>
+		<a href="https://github.com/ovencord/ovencord/actions"><img src="https://github.com/ovencord/ovencord/actions/workflows/tests.yml/badge.svg" alt="Build status" /></a>
+		<a href="https://github.com/ovencord/ovencord/commits/main/packages/proxy"><img alt="Last commit." src="https://img.shields.io/github/last-commit/ovencord/ovencord?logo=github&logoColor=ffffff&path=packages%2Fproxy" /></a>
 		<a href="https://opencollective.com/discordjs"><img src="https://img.shields.io/opencollective/backers/discordjs?maxAge=3600&logo=opencollective" alt="backers" /></a>
-		<a href="https://codecov.io/gh/discordjs/discord.js"><img src="https://codecov.io/gh/discordjs/discord.js/branch/main/graph/badge.svg?precision=2&flag=proxy" alt="Code coverage" /></a>
+		<a href="https://codecov.io/gh/ovencord/ovencord"><img src="https://codecov.io/gh/ovencord/ovencord/branch/main/graph/badge.svg?precision=2&flag=proxy" alt="Code coverage" /></a>
 	</p>
 	<p>
-		<a href="https://vercel.com/?utm_source=discordjs&utm_campaign=oss"><img src="https://raw.githubusercontent.com/discordjs/discord.js/main/.github/powered-by-vercel.svg" alt="Vercel" /></a>
-		<a href="https://www.cloudflare.com"><img src="https://raw.githubusercontent.com/discordjs/discord.js/main/.github/powered-by-workers.png" alt="Cloudflare Workers" height="44" /></a>
+		<a href="https://vercel.com/?utm_source=discordjs&utm_campaign=oss"><img src="https://raw.githubusercontent.com/ovencord/ovencord/main/.github/powered-by-vercel.svg" alt="Vercel" /></a>
+		<a href="https://www.cloudflare.com"><img src="https://raw.githubusercontent.com/ovencord/ovencord/main/.github/powered-by-workers.png" alt="Cloudflare Workers" height="44" /></a>
 	</p>
 </div>
 
 ## About
 
-`@discordjs/proxy` is a powerful wrapper around `@discordjs/rest` for running an HTTP proxy in front of Discord's API.
+`@ovencord/proxy` is a powerful wrapper around `@ovencord/rest` for running an HTTP proxy in front of Discord's API.
 
 ## Installation
 
 **Node.js 22.12.0 or newer is required.**
 
 ```sh
-npm install @discordjs/proxy
-yarn add @discordjs/proxy
-pnpm add @discordjs/proxy
-bun add @discordjs/proxy
+npm install @ovencord/proxy
+yarn add @ovencord/proxy
+pnpm add @ovencord/proxy
+bun add @ovencord/proxy
 ```
 
 ## Links
@@ -57,14 +57,14 @@ See [the contribution guide][contributing] if you'd like to submit a PR.
 If you don't understand something in the documentation, you are experiencing problems, or you just need a gentle nudge in the right direction, please don't hesitate to join our official [discord.js Server][discord].
 
 [website]: https://discord.js.org
-[website-source]: https://github.com/discordjs/discord.js/tree/main/apps/website
+[website-source]: https://github.com/ovencord/ovencord/tree/main/apps/website
 [documentation]: https://discord.js.org/docs/packages/proxy/stable
 [guide]: https://discordjs.guide
-[guide-source]: https://github.com/discordjs/discord.js/tree/main/apps/guide
+[guide-source]: https://github.com/ovencord/ovencord/tree/main/apps/guide
 [guide-update]: https://discordjs.guide/legacy/additional-info/changes-in-v14
 [discord]: https://discord.gg/djs
 [discord-developers]: https://discord.gg/discord-developers
-[source]: https://github.com/discordjs/discord.js/tree/main/packages/proxy
-[npm]: https://www.npmjs.com/package/@discordjs/proxy
+[source]: https://github.com/ovencord/ovencord/tree/main/packages/proxy
+[npm]: https://www.npmjs.com/package/@ovencord/proxy
 [related-libs]: https://discord.com/developers/docs/topics/community-resources#libraries
-[contributing]: https://github.com/discordjs/discord.js/blob/main/.github/CONTRIBUTING.md
+[contributing]: https://github.com/ovencord/ovencord/blob/main/.github/CONTRIBUTING.md

@@ -70,7 +70,7 @@ class BaseGuild extends Base {
    * @readonly
    */
   get nameAcronym() {
-    /* eslint-disable unicorn/prefer-string-replace-all */
+    /* eslint-disable unicor */
     return this.name
       .replace(/'s /g, ' ')
       .replace(/\w+/g, word => word[0])

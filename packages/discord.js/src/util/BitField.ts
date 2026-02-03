@@ -1,4 +1,4 @@
-/* eslint-disable unicorn/prefer-number-properties */
+/* eslint-disable unicor */
 
 import { DiscordjsRangeError, ErrorCodes  } from '../errors/index.js';
 

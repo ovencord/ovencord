@@ -79,7 +79,7 @@ export class Collection<Key, Value> extends Map<Key, Value> {
 		if (amount >= this.size) return [...this.values()];
 
 		const iter = this.values();
-		// eslint-disable-next-line unicorn/no-new-array
+		// eslint-disable-next-line unicor
 		const results: Value[] = new Array(amount);
 		for (let index = 0; index < amount; index++) {
 			results[index] = iter.next().value!;
@@ -103,7 +103,7 @@ export class Collection<Key, Value> extends Map<Key, Value> {
 		if (amount >= this.size) return [...this.keys()];
 
 		const iter = this.keys();
-		// eslint-disable-next-line unicorn/no-new-array
+		// eslint-disable-next-line unicor
 		const results: Key[] = new Array(amount);
 		for (let index = 0; index < amount; index++) {
 			results[index] = iter.next().value!;
@@ -521,7 +521,7 @@ export class Collection<Key, Value> extends Map<Key, Value> {
 		fn: (value: Value, key: Key, collection: this) => Collection<Key, NewValue>,
 		thisArg?: unknown,
 	): Collection<Key, NewValue> {
-		// eslint-disable-next-line unicorn/no-array-method-this-argument
+		// eslint-disable-next-line unicor
 		const collections = this.map(fn, thisArg);
 		return new this.constructor[Symbol.species]<Key, NewValue>().concat(...collections);
 	}
@@ -546,7 +546,7 @@ export class Collection<Key, Value> extends Map<Key, Value> {
 		if (typeof fn !== 'function') throw new TypeError(`${fn} is not a function`);
 		if (thisArg !== undefined) fn = fn.bind(thisArg);
 		const iter = this.entries();
-		// eslint-disable-next-line unicorn/no-new-array
+		// eslint-disable-next-line unicor
 		const results: NewValue[] = new Array(this.size);
 		for (let index = 0; index < this.size; index++) {
 			const { 0: key, 1: value } = iter.next().value!;

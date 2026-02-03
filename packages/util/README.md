@@ -6,29 +6,29 @@
 	<br />
 	<p>
 		<a href="https://discord.gg/djs"><img src="https://img.shields.io/badge/join_us-on_discord-5865F2?logo=discord&logoColor=white" alt="Discord server" /></a>
-		<a href="https://github.com/discordjs/discord.js/actions"><img src="https://github.com/discordjs/discord.js/actions/workflows/tests.yml/badge.svg" alt="Build status" /></a>
-		<a href="https://github.com/discordjs/discord.js/commits/main/packages/util"><img alt="Last commit." src="https://img.shields.io/github/last-commit/discordjs/discord.js?logo=github&logoColor=ffffff&path=packages%2Futil" /></a>
+		<a href="https://github.com/ovencord/ovencord/actions"><img src="https://github.com/ovencord/ovencord/actions/workflows/tests.yml/badge.svg" alt="Build status" /></a>
+		<a href="https://github.com/ovencord/ovencord/commits/main/packages/util"><img alt="Last commit." src="https://img.shields.io/github/last-commit/ovencord/ovencord?logo=github&logoColor=ffffff&path=packages%2Futil" /></a>
 		<a href="https://opencollective.com/discordjs"><img src="https://img.shields.io/opencollective/backers/discordjs?maxAge=3600&logo=opencollective" alt="backers" /></a>
 	</p>
 	<p>
-		<a href="https://vercel.com/?utm_source=discordjs&utm_campaign=oss"><img src="https://raw.githubusercontent.com/discordjs/discord.js/main/.github/powered-by-vercel.svg" alt="Vercel" /></a>
-		<a href="https://www.cloudflare.com"><img src="https://raw.githubusercontent.com/discordjs/discord.js/main/.github/powered-by-workers.png" alt="Cloudflare Workers" height="44" /></a>
+		<a href="https://vercel.com/?utm_source=discordjs&utm_campaign=oss"><img src="https://raw.githubusercontent.com/ovencord/ovencord/main/.github/powered-by-vercel.svg" alt="Vercel" /></a>
+		<a href="https://www.cloudflare.com"><img src="https://raw.githubusercontent.com/ovencord/ovencord/main/.github/powered-by-workers.png" alt="Cloudflare Workers" height="44" /></a>
 	</p>
 </div>
 
 ## About
 
-`@discordjs/util` is a collection of utility functions for use with discord.js.
+`@ovencord/util` is a collection of utility functions for use with discord.js.
 
 ## Installation
 
 **Node.js 22.12.0 or newer is required.**
 
 ```sh
-npm install @discordjs/util
-yarn add @discordjs/util
-pnpm add @discordjs/util
-bun add @discordjs/util
+npm install @ovencord/util
+yarn add @ovencord/util
+pnpm add @ovencord/util
+bun add @ovencord/util
 ```
 
 ## Links
@@ -54,14 +54,14 @@ See [the contribution guide][contributing] if you'd like to submit a PR.
 If you don't understand something in the documentation, you are experiencing problems, or you just need a gentle nudge in the right direction, please don't hesitate to join our official [discord.js Server][discord].
 
 [website]: https://discord.js.org
-[website-source]: https://github.com/discordjs/discord.js/tree/main/apps/website
+[website-source]: https://github.com/ovencord/ovencord/tree/main/apps/website
 [documentation]: https://discord.js.org/docs/packages/util/stable
 [guide]: https://discordjs.guide
-[guide-source]: https://github.com/discordjs/discord.js/tree/main/apps/guide
+[guide-source]: https://github.com/ovencord/ovencord/tree/main/apps/guide
 [guide-update]: https://discordjs.guide/legacy/additional-info/changes-in-v14
 [discord]: https://discord.gg/djs
 [discord-developers]: https://discord.gg/discord-developers
-[source]: https://github.com/discordjs/discord.js/tree/main/packages/util
-[npm]: https://www.npmjs.com/package/@discordjs/util
+[source]: https://github.com/ovencord/ovencord/tree/main/packages/util
+[npm]: https://www.npmjs.com/package/@ovencord/util
 [related-libs]: https://discord.com/developers/docs/topics/community-resources#libraries
-[contributing]: https://github.com/discordjs/discord.js/blob/main/.github/CONTRIBUTING.md
+[contributing]: https://github.com/ovencord/ovencord/blob/main/.github/CONTRIBUTING.md

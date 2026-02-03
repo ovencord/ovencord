@@ -9,7 +9,7 @@
 		"directory": "packages/api-extractor-model"
 	},
 	"homepage": "https://ovencord.dev",
-	"funding": "https://github.com/discordjs/discord.js?sponsor",
+	"funding": "https://github.com/ovencord/ovencord?sponsor",
 	"license": "MIT",
 	"main": "./src/index.ts",
 	"types": "./src/index.ts",
@@ -27,7 +27,6 @@
 	"devDependencies": {
 		"cross-env": "^10.1.0",
 		"eslint": "^9.39.2",
-		"eslint-config-neon": "^0.2.9",
 		"eslint-formatter-compact": "^9.0.1",
 		"eslint-formatter-pretty": "^7.0.0",
 		"prettier": "^3.7.4",

@@ -1,4 +1,4 @@
-# @discordjs/api-extractor
+# @ovencord/api-extractor
 
 ![API Extractor](https://github.com/microsoft/rushstack/raw/main/common/wiki-images/api-extractor-title.png?raw=true)
 <br />
@@ -42,7 +42,7 @@ For more details and support resources, please visit: https://api-extractor.com/
 
 ## Links
 
-- [CHANGELOG.md](https://github.com/discordjs/discord.js/blob/main/packages/api-extractor/CHANGELOG.md) - Find
+- [CHANGELOG.md](https://github.com/ovencord/ovencord/blob/main/packages/api-extractor/CHANGELOG.md) - Find
   out what's new in the latest version
 - [API Reference](https://rushstack.io/pages/api/api-extractor/)
 

@@ -215,10 +215,10 @@ Ovencord stands on the shoulders of giants:
 
 ## 🗺️ Roadmap
 
-- [x] Migrate `@discordjs/rest` to `@ovencord/rest`
-- [x] Migrate `@discordjs/ws` to `@ovencord/ws`  
-- [x] Migrate `@discordjs/collection` to `@ovencord/collection`
-- [x] Migrate `@discordjs/util` to `@ovencord/util`
+- [x] Migrate `@ovencord/rest` to `@ovencord/rest`
+- [x] Migrate `@ovencord/ws` to `@ovencord/ws`  
+- [x] Migrate `@ovencord/collection` to `@ovencord/collection`
+- [x] Migrate `@ovencord/util` to `@ovencord/util`
 - [ ] Create `@ovencord/core` (high-level client)
 - [ ] Create `@ovencord/voice` (Bun-native voice support)
 - [ ] Performance benchmarks vs discord.js

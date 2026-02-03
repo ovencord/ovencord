@@ -1,7 +1,7 @@
 {
 	"extends": "../../api-extractor.json",
 	"docModel": {
-		"projectFolderUrl": "https://github.com/discordjs/discord.js/tree/main/packages/structures"
+		"projectFolderUrl": "https://github.com/ovencord/ovencord/tree/main/packages/structures"
 	},
 	"compiler": {
 		"overrideTsconfig": {

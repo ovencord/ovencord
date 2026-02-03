@@ -100,7 +100,7 @@ export * from './Assertions.js';
 export type { RawFile } from '@ovencord/util';
 
 /**
- * The {@link https://github.com/discordjs/discord.js/blob/main/packages/builders#readme | @ovencord/builders} version
+ * The {@link https://github.com/ovencord/ovencord/blob/main/packages/builders#readme | @ovencord/builders} version
  * that you are currently using.
  *
  * @privateRemarks This needs to explicitly be `string` so it is not typed as a "const string" that gets injected by esbuild.

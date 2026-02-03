@@ -1,4 +1,4 @@
-/* eslint-disable n/prefer-global/process */
+
 
 import type { REST } from '../REST.js';
 import type { DiscordErrorData, OAuthErrorData } from '../errors/DiscordAPIError.js';

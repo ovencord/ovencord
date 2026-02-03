@@ -9,7 +9,7 @@ export * from './lib/utils/types.js';
 export { calculateUserDefaultAvatarIndex, makeURLSearchParams, parseResponse } from './lib/utils/utils.js';
 
 /**
- * The {@link https://github.com/discordjs/discord.js/blob/main/packages/rest#readme | @ovencord/rest} version
+ * The {@link https://github.com/ovencord/ovencord/blob/main/packages/rest#readme | @ovencord/rest} version
  * that you are currently using.
  */
 // This needs to explicitly be `string` so it is not typed as a "const string" that gets injected by esbuild

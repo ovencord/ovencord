@@ -1,6 +1,6 @@
 {
 	"$schema": "https://json.schemastore.org/package.json",
-	"name": "@discordjs/scripts",
+	"name": "@ovencord/scripts",
 	"version": "0.1.0",
 	"description": "A set of scripts that we use for our workflows",
 	"private": true,
@@ -59,11 +59,11 @@
 		"url": "https://github.com/ovencord/ovencord/issues"
 	},
 	"homepage": "https://ovencord.dev",
-	"funding": "https://github.com/discordjs/discord.js?sponsor",
+	"funding": "https://github.com/ovencord/ovencord?sponsor",
 	"dependencies": {
 		"@actions/glob": "^0.5.0",
-		"@discordjs/api-extractor-model": "workspace:^",
-		"@discordjs/api-extractor-utils": "workspace:^",
+		"@ovencord/api-extractor-model": "workspace:^",
+		"@ovencord/api-extractor-utils": "workspace:^",
 		"@microsoft/tsdoc": "~0.15.1",
 		"@microsoft/tsdoc-config": "~0.17.1",
 		"@vercel/blob": "^2.0.0",
@@ -78,7 +78,6 @@
 		"@types/node": "^24.10.2",
 		"cross-env": "^10.1.0",
 		"eslint": "^9.39.1",
-		"eslint-config-neon": "^0.2.9",
 		"eslint-formatter-compact": "^9.0.1",
 		"eslint-formatter-pretty": "^7.0.0",
 		"prettier": "^3.7.4",

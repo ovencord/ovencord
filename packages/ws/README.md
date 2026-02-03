@@ -56,7 +56,7 @@ This is NOT a simple port. Every line of code has been scrutinized and rewritten
 ### Dependency Annihilation
 
 **Before (discord.js ecosystem)**:
-- Runtime: `ws`, `zlib-sync`, `tslib`, `@discordjs/*`
+- Runtime: `ws`, `zlib-sync`, `tslib`, `@ovencord/*`
 - Dev: `vitest`, `tsup`, `prettier`, `eslint-config-neon`, 15+ more
 - **Total**: ~56MB of `node_modules`
 
@@ -171,7 +171,7 @@ Bun loads TypeScript directly. **No `dist/` folder. No build time. Instant updat
 
 ## API Compatibility
 
-`@ovencord/ws` maintains **100% API compatibility** with `@discordjs/ws` for all public interfaces:
+`@ovencord/ws` maintains **100% API compatibility** with `@ovencord/ws` for all public interfaces:
 
 - `WebSocketManager`
 - `WebSocketShard`
@@ -180,7 +180,7 @@ Bun loads TypeScript directly. **No `dist/` folder. No build time. Instant updat
 
 **Migration**:
 ```diff
-- import { WebSocketManager } from '@discordjs/ws';
+- import { WebSocketManager } from '@ovencord/ws';
 + import { WebSocketManager } from '@ovencord/ws';
 ```
 
@@ -246,7 +246,7 @@ Apache-2.0
 
 ## Credits
 
-Original `@discordjs/ws` by the Discord.js team.  
+Original `@ovencord/ws` by the Discord.js team.  
 Bun-native refactor by the ovencord team.
 
 **This is NOT an official Discord library.**

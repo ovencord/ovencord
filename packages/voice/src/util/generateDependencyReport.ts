@@ -60,7 +60,7 @@ export function generateDependencyReport() {
 
 	// opus
 	report.push('Opus Libraries');
-	addVersion('@discordjs/opus');
+	addVersion('@ovencord/opus');
 	addVersion('opusscript');
 	report.push('');
 

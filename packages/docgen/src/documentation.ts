@@ -431,7 +431,7 @@ export class Documentation {
 					reportUnsupportedHtmlElements: false,
 				},
 			},
-			projectFolderUrl: 'https://github.com/discordjs/discord.js/tree/main/packages/discord.js',
+			projectFolderUrl: 'https://github.com/ovencord/ovencord/tree/main/packages/discord.js',
 			kind: 'Package',
 			canonicalReference: 'discord.js!',
 			docComment: '',

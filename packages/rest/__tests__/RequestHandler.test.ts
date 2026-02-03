@@ -1,5 +1,5 @@
 /* eslint-disable id-length */
-/* eslint-disable promise/prefer-await-to-then */
+/* eslint-disable  */
 import { MockAgent, setGlobalDispatcher } from 'undici';
 import type { Interceptable, MockInterceptor } from 'undici/types/mock-interceptor.js';
 import { beforeEach, afterEach, test, expect, vitest } from 'vitest';

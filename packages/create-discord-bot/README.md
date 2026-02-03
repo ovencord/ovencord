@@ -6,13 +6,13 @@
 	<br />
 	<p>
 		<a href="https://discord.gg/djs"><img src="https://img.shields.io/badge/join_us-on_discord-5865F2?logo=discord&logoColor=white" alt="Discord server" /></a>
-		<a href="https://github.com/discordjs/discord.js/actions"><img src="https://github.com/discordjs/discord.js/actions/workflows/tests.yml/badge.svg" alt="Build status" /></a>
-		<a href="https://github.com/discordjs/discord.js/commits/main/packages/create-discord-bot"><img alt="Last commit." src="https://img.shields.io/github/last-commit/discordjs/discord.js?logo=github&logoColor=ffffff&path=packages%2Fcreate-discord-bot" /></a>
+		<a href="https://github.com/ovencord/ovencord/actions"><img src="https://github.com/ovencord/ovencord/actions/workflows/tests.yml/badge.svg" alt="Build status" /></a>
+		<a href="https://github.com/ovencord/ovencord/commits/main/packages/create-discord-bot"><img alt="Last commit." src="https://img.shields.io/github/last-commit/ovencord/ovencord?logo=github&logoColor=ffffff&path=packages%2Fcreate-discord-bot" /></a>
 		<a href="https://opencollective.com/discordjs"><img src="https://img.shields.io/opencollective/backers/discordjs?maxAge=3600&logo=opencollective" alt="backers" /></a>
 	</p>
 	<p>
-		<a href="https://vercel.com/?utm_source=discordjs&utm_campaign=oss"><img src="https://raw.githubusercontent.com/discordjs/discord.js/main/.github/powered-by-vercel.svg" alt="Vercel" /></a>
-		<a href="https://www.cloudflare.com"><img src="https://raw.githubusercontent.com/discordjs/discord.js/main/.github/powered-by-workers.png" alt="Cloudflare Workers" height="44" /></a>
+		<a href="https://vercel.com/?utm_source=discordjs&utm_campaign=oss"><img src="https://raw.githubusercontent.com/ovencord/ovencord/main/.github/powered-by-vercel.svg" alt="Vercel" /></a>
+		<a href="https://www.cloudflare.com"><img src="https://raw.githubusercontent.com/ovencord/ovencord/main/.github/powered-by-workers.png" alt="Cloudflare Workers" height="44" /></a>
 	</p>
 </div>
 
@@ -45,9 +45,9 @@ See [the contribution guide][contributing] if you'd like to submit a pull reques
 If you don't understand something in the documentation, you are experiencing problems, or you just need a gentle nudge in the right direction, please don't hesitate to join our official [discord.js server][discord].
 
 [guide]: https://discordjs.guide
-[guide-source]: https://github.com/discordjs/discord.js/tree/main/apps/guide
+[guide-source]: https://github.com/ovencord/ovencord/tree/main/apps/guide
 [guide-update]: https://discordjs.guide/legacy/additional-info/changes-in-v14
 [discord]: https://discord.gg/djs
 [discord-developers]: https://discord.gg/discord-developers
-[source]: https://github.com/discordjs/discord.js/tree/main/packages/create-discord-bot
-[contributing]: https://github.com/discordjs/discord.js/blob/main/.github/CONTRIBUTING.md
+[source]: https://github.com/ovencord/ovencord/tree/main/packages/create-discord-bot
+[contributing]: https://github.com/ovencord/ovencord/blob/main/.github/CONTRIBUTING.md

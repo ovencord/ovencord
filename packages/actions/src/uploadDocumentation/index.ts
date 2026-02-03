@@ -51,7 +51,7 @@ for await (const file of globber.globGenerator()) {
 				const json = JSON.parse(data);
 				const name = json.name ?? json.n;
 
-				const key = `${name.replace('@discordjs/', '')}/${version}.json`;
+				const key = `${name.replace('@ovencord/', '')}/${version}.json`;
 
 				await S3.send(
 					new PutObjectCommand({
@@ -63,7 +63,7 @@ for await (const file of globber.globGenerator()) {
 				await client.d1.database.raw(process.env.CF_D1_DOCS_ID!, {
 					account_id: process.env.CF_ACCOUNT_ID!,
 					sql: `insert into documentation (name, version, url) values (?, ?, ?) on conflict (name, version) do update set url = excluded.url;`,
-					params: [name.replace('@discordjs/', ''), version, process.env.CF_R2_DOCS_BUCKET_URL + '/' + key],
+					params: [name.replace('@ovencord/', ''), version, process.env.CF_R2_DOCS_BUCKET_URL + '/' + key],
 				});
 			}),
 		);

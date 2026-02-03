@@ -16,7 +16,7 @@ export * from './ws/WebSocketManager.js';
 export * from './ws/WebSocketShard.js';
 
 /**
- * The {@link https://github.com/discordjs/discord.js/blob/main/packages/ws#readme | @ovencord/ws} version
+ * The {@link https://github.com/ovencord/ovencord/blob/main/packages/ws#readme | @ovencord/ws} version
  * that you are currently using.
  */
 // This needs to explicitly be `string` so it is not typed as a "const string" that gets injected by esbuild

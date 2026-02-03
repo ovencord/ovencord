@@ -42,7 +42,7 @@
 		"url": "https://github.com/ovencord/ovencord/issues"
 	},
 	"homepage": "https://ovencord.dev",
-	"funding": "https://github.com/discordjs/discord.js?sponsor",
+	"funding": "https://github.com/ovencord/ovencord?sponsor",
 	"dependencies": {
 		"commander": "^14.0.2",
 		"jsdoc-to-markdown": "^8.0.3",
@@ -53,7 +53,6 @@
 		"@types/jsdoc-to-markdown": "^7.0.6",
 		"cross-env": "^10.1.0",
 		"eslint": "^9.39.2",
-		"eslint-config-neon": "^0.2.9",
 		"eslint-formatter-compact": "^9.0.1",
 		"eslint-formatter-pretty": "^7.0.0",
 		"prettier": "^3.7.4",

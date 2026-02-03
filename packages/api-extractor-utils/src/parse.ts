@@ -20,7 +20,7 @@ import type { DocBlockJSON } from './tsdoc/CommentBlock.js';
 import { createCommentNode } from './tsdoc/index.js';
 
 export function findPackage(model: ApiModel, name: string): ApiPackage | undefined {
-	return (model.findMembersByName(name)[0] ?? model.findMembersByName(`@discordjs/${name}`)[0]) as
+	return (model.findMembersByName(name)[0] ?? model.findMembersByName(`@ovencord/${name}`)[0]) as
 		| ApiPackage
 		| undefined;
 }
@@ -62,7 +62,7 @@ export function generatePath(items: readonly ApiItem[], version: string) {
 		}
 	}
 
-	return path.includes('@discordjs/')
+	return path.includes('@ovencord/')
 		? path.replace(/@discordjs\/(?<package>.*)\/(?<member>.*)?/, `$<package>/${version}/$<member>`)
 		: path.replace(/(?<package>.*)\/(?<member>.*)?/, `$<package>/${version}/$<member>`);
 }

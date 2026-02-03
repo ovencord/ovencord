@@ -1,4 +1,4 @@
-/* eslint-disable unicorn/no-array-method-this-argument */
+/* eslint-disable unicor */
 /* eslint-disable id-length */
 import { describe, test, expect } from 'vitest';
 import { Collection } from '../src/index.js';
@@ -19,7 +19,7 @@ function createTestCollection(): TestCollection<number> {
 
 function expectInvalidFunctionError(cb: () => unknown, val?: unknown): void {
 	expect(() => {
-		// eslint-disable-next-line promise/prefer-await-to-callbacks
+		// eslint-disable-next-line
 		cb();
 	}).toThrowError(new TypeError(`${val} is not a function`));
 }
@@ -1180,7 +1180,7 @@ describe('subclassing tests', () => {
 			expect(coll.symmetricDifference(new Collection())).toBeInstanceOf(DerivedCollection);
 		});
 		test('merge()', () => {
-			const fn = () => ({ keep: false }) as const; // eslint-disable-line unicorn/consistent-function-scoping
+			const fn = () => ({ keep: false }) as const; // eslint-disable-line unicor
 			expect(coll.merge(new Collection(), fn, fn, fn)).toBeInstanceOf(DerivedCollection);
 		});
 		test('toReversed()', () => {

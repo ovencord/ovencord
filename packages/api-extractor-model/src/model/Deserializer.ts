@@ -557,7 +557,7 @@ export class Deserializer {
 			IApiItemContainerJson &
 			IApiNameMixinJson &
 			IApiPackageJson & { members: (IApiItemContainerJson & IApiNameMixinJson)[] } = {
-			projectFolderUrl: `https://github.com/discordjs/discord.js/tree/main/packages/${_package}`,
+			projectFolderUrl: `https://github.com/ovencord/ovencord/tree/main/packages/${_package}`,
 			metadata: { ...context, tsdocConfig: context.tsdocConfiguration, schemaVersion: context.versionToDeserialize },
 			canonicalReference: `!${_package}`,
 			kind: ApiItemKind.Package,

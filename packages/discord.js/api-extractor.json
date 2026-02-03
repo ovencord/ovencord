@@ -3,14 +3,14 @@
   "mainEntryPointFilePath": "<projectFolder>/typings/index.d.ts",
   "bundledPackages": [
     "discord-api-types",
-    "@discordjs/builders",
-    "@discordjs/collection",
-    "@discordjs/formatters",
-    "@discordjs/rest",
-    "@discordjs/util",
-    "@discordjs/ws"
+    "@ovencord/builders",
+    "@ovencord/collection",
+    "@ovencord/formatters",
+    "@ovencord/rest",
+    "@ovencord/util",
+    "@ovencord/ws"
   ],
   "docModel": {
-    "projectFolderUrl": "https://github.com/discordjs/discord.js/tree/main/packages/discord.js"
+    "projectFolderUrl": "https://github.com/ovencord/ovencord/tree/main/packages/discord.js"
   }
 }

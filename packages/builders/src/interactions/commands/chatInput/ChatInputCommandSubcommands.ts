@@ -52,7 +52,7 @@ export class ChatInputCommandSubcommandGroupBuilder
 		>
 	) {
 		const normalized = normalizeArray(input);
-		// eslint-disable-next-line @typescript-eslint/no-use-before-define
+		 
 		const result = normalized.map((builder) => resolveBuilder(builder, ChatInputCommandSubcommandBuilder));
 
 		this.data.options ??= [];

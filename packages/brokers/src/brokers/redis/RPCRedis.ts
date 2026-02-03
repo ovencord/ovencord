@@ -109,7 +109,7 @@ export class RPCRedisBroker<TEvents extends Record<string, any[]>, TResponses ex
 			const timeout = setTimeout(() => reject(timedOut), timeoutDuration).unref();
 
 			this.promises.set(id!, { resolve, reject, timeout });
-			// eslint-disable-next-line promise/prefer-await-to-then
+			// eslint-disable-next-line
 		}).finally(() => {
 			void this.streamReadClient.unsubscribe(rpcChannel);
 			this.promises.delete(id!);

@@ -30,7 +30,7 @@
 		"url": "https://github.com/ovencord/ovencord/issues"
 	},
 	"homepage": "https://ovencord.dev",
-	"funding": "https://github.com/discordjs/discord.js?sponsor",
+	"funding": "https://github.com/ovencord/ovencord?sponsor",
 	"devDependencies": {
 		"@types/bun": "latest",
 		"eslint": "^9.39.2",

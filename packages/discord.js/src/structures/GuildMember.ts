@@ -116,7 +116,7 @@ class GuildMember extends Base {
     if ('pending' in data) {
       this.pending = data.pending;
     } else if (!this.partial) {
-      // See https://github.com/discordjs/discord.js/issues/6546 for more info.
+      // See https://github.com/ovencord/ovencord/issues/6546 for more info.
       this.pending ??= false;
     }
 

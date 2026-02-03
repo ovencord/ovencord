@@ -1,4 +1,4 @@
-/* eslint-disable promise/prefer-await-to-callbacks */
+/* eslint-disable  */
 // Copyright (c) Microsoft Corporation. All rights reserved. Licensed under the MIT license.
 // See LICENSE in the project root for license information.
 
@@ -369,10 +369,10 @@ export class Span {
 	 * can make changes to Span.modification for each node.
 	 */
 	public forEach(callback: (span: Span) => void): void {
-		// eslint-disable-next-line n/callback-return
+		// eslint-disable-next-line
 		callback(this);
 		for (const child of this.children) {
-			// eslint-disable-next-line unicorn/no-array-for-each
+			// eslint-disable-next-line unicor
 			child.forEach(callback);
 		}
 	}

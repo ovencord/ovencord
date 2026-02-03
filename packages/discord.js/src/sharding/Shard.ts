@@ -1,4 +1,4 @@
-/* eslint-disable promise/prefer-await-to-callbacks, promise/prefer-await-to-then, no-use-before-define */
+/* eslint-disable   no-use-before-define */
 
 import path from 'node:path';
 import process from 'node:process';

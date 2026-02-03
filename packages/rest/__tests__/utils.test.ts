@@ -1,4 +1,4 @@
-/* eslint-disable unicorn/consistent-function-scoping */
+/* eslint-disable unicor */
 import { describe, test, expect } from 'vitest';
 import type { GetRateLimitOffsetFunction, GetRetryBackoffFunction, GetTimeoutFunction } from '../src/index.js';
 import { makeURLSearchParams } from '../src/index.js';

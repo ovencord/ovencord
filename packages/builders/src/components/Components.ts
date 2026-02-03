@@ -8,7 +8,6 @@ import type {
 import { ButtonStyle, ComponentType } from 'discord-api-types/v10';
 import { ActionRowBuilder } from './ActionRow.js';
 import { ComponentBuilder } from './Component.js';
-import type { BaseButtonBuilder } from './button/Button.js';
 import {
 	DangerButtonBuilder,
 	PrimaryButtonBuilder,
@@ -180,7 +179,7 @@ export interface MappedComponentTypes {
  * @param data - The API data to transform to a component class
  */
 export function createComponentBuilder<ComponentType extends keyof MappedComponentTypes>(
-	// eslint-disable-next-line @typescript-eslint/sort-type-constituents
+	 
 	data: (APIModalComponent | APIMessageComponent) & { type: ComponentType },
 ): MappedComponentTypes[ComponentType];
 

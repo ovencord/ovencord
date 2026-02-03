@@ -1,7 +1,7 @@
 {
 	"extends": "../../api-extractor.json",
 	"docModel": {
-		"projectFolderUrl": "https://github.com/discordjs/discord.js/tree/main/packages/next"
+		"projectFolderUrl": "https://github.com/ovencord/ovencord/tree/main/packages/next"
 	}
 	// We probably don't want to generate docs here for these and instead link to the other modules
 	// "additionalEntryPoints": [
@@ -16,12 +16,12 @@
 	// ],
 	// "bundledPackages": [
 	// 	"discord-api-types",
-	// 	"@discordjs/builders",
-	// 	"@discordjs/collection",
-	// 	"@discordjs/core",
-	// 	"@discordjs/formatters",
-	// 	"@discordjs/rest",
-	// 	"@discordjs/util",
-	// 	"@discordjs/ws"
+	// 	"@ovencord/builders",
+	// 	"@ovencord/collection",
+	// 	"@ovencord/core",
+	// 	"@ovencord/formatters",
+	// 	"@ovencord/rest",
+	// 	"@ovencord/util",
+	// 	"@ovencord/ws"
 	// ]
 }

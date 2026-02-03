@@ -1,4 +1,4 @@
-/* eslint-disable promise/prefer-await-to-callbacks, promise/prefer-await-to-then */
+/* eslint-disable   */
 
 import process from 'node:process';
 import { calculateShardId  } from '@ovencord/util';

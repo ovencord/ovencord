@@ -37,7 +37,7 @@ for await (const apiExtractorFile of globber.globGenerator()) {
 	info(`Uploading ${readmePath}...`);
 
 	promises.push(
-		// eslint-disable-next-line promise/prefer-await-to-then
+		// eslint-disable-next-line
 		readFile(readmePath, 'utf8').then(async (readmeData) =>
 			S3READMEFiles.send(
 				new PutObjectCommand({

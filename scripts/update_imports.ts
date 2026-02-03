@@ -32,16 +32,16 @@ async function processFile(path: string) {
         let content = await readFile(path, 'utf8');
         let modified = false;
 
-        // Replace @discordjs/ with @ovencord/ for internal packages
-        // Regex look for strings containing @discordjs/pkgName
+        // Replace @ovencord/ with @ovencord/ for internal packages
+        // Regex look for strings containing @ovencord/pkgName
         
-        // We iterate internal packages to be safe? Or just replace @discordjs/ with @ovencord/
-        // provided it is NOT @discordjs/opus (which is external) or others.
+        // We iterate internal packages to be safe? Or just replace @ovencord/ with @ovencord/
+        // provided it is NOT @ovencord/opus (which is external) or others.
         // Safer to check specific list.
 
         for (const pkg of INTERNAL_PACKAGES) {
-            // Check for @discordjs/pkg
-            const regex = new RegExp(`@discordjs/${pkg}`, 'g');
+            // Check for @ovencord/pkg
+            const regex = new RegExp(`@ovencord/${pkg}`, 'g');
             if (regex.test(content)) {
                 content = content.replace(regex, `@ovencord/${pkg}`);
                 modified = true;

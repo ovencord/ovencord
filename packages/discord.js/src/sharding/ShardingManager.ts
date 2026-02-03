@@ -69,7 +69,7 @@ export class ShardingManager extends AsyncEventEmitter {
     this.file = file;
     if (!file) throw new DiscordjsError(ErrorCodes.ClientInvalidOption, 'File', 'specified.');
     if (!path.isAbsolute(file)) this.file = path.resolve(process.cwd(), file);
-    // eslint-disable-next-line n/no-sync
+    // eslint-disable-next-line
     const stats = fs.statSync(this.file);
     if (!stats.isFile()) throw new DiscordjsError(ErrorCodes.ClientInvalidOption, 'File', 'a file');
 

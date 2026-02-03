@@ -1,4 +1,4 @@
-/* eslint-disable unicorn/no-empty-file */
+/* eslint-disable unicor */
 
 /**
  * @external ActivityFlags

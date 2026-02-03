@@ -1,6 +1,6 @@
 {
 	"$schema": "https://json.schemastore.org/package.json",
-	"name": "@discordjs/template-typescript",
+	"name": "@ovencord/template-typescript",
 	"version": "0.1.0",
 	"private": true,
 	"type": "module",
@@ -12,7 +12,7 @@
 		"start": "node --env-file=.env src/index.ts"
 	},
 	"dependencies": {
-		"@discordjs/core": "^2.4.0",
+		"@ovencord/core": "^2.4.0",
 		"discord.js": "^14.25.1"
 	},
 	"devDependencies": {

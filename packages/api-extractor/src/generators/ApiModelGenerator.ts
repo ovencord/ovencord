@@ -375,7 +375,7 @@ export class ApiModelGenerator {
 			parentApiItem.addMember(apiNamespace);
 		}
 
-		// eslint-disable-next-line unicorn/no-array-for-each
+		// eslint-disable-next-line unicor
 		astModule.astModuleExportInfo!.exportedLocalEntities.forEach((exportedEntity: AstEntity, exportedName: string) => {
 			this._processAstEntity(exportedEntity, {
 				entryPoint,

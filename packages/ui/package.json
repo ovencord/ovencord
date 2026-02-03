@@ -34,7 +34,7 @@
 		"url": "https://github.com/ovencord/ovencord/issues"
 	},
 	"homepage": "https://ovencord.dev",
-	"funding": "https://github.com/discordjs/discord.js?sponsor",
+	"funding": "https://github.com/ovencord/ovencord?sponsor",
 	"dependencies": {
 		"@ariakit/react": "^0.4.20",
 		"@react-icons/all-files": "^4.1.0",
@@ -52,13 +52,11 @@
 		"@storybook/react-vite": "^10.1.6",
 		"@types/react": "^19.2.7",
 		"@types/react-dom": "^19.2.3",
-		"@unocss/eslint-plugin": "^66.5.10",
 		"@unocss/reset": "^66.5.10",
 		"@vitejs/plugin-react": "^5.1.2",
 		"chromatic": "^13.3.4",
 		"cross-env": "^10.1.0",
 		"eslint": "^9.39.2",
-		"eslint-config-neon": "^0.2.9",
 		"eslint-formatter-compact": "^9.0.1",
 		"eslint-formatter-pretty": "^7.0.0",
 		"prettier": "^3.7.4",

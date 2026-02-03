@@ -19,7 +19,7 @@
 
 ## 🥟 Why Ovencord-Builders?
 
-| Feature | @discordjs/builders | @ovencord/builders |
+| Feature | @ovencord/builders | @ovencord/builders |
 |---------|---------------------|--------------------|
 | **Validation** | Zod v2 (Legacy) | **Zod v3+ Standard** |
 | **Inheritance** | Fragmented Mixins | **Fixed Interface Merging** |
