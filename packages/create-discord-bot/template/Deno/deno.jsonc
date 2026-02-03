@@ -5,22 +5,22 @@
 		"deploy": "deno run --env-file --allow-read --allow-env --allow-net src/util/deploy.ts",
 		"format": "deno fmt",
 		"fmt": "deno fmt",
-		"start": "deno run --env-file --allow-read --allow-env --allow-net src/index.ts",
+		"start": "deno run --env-file --allow-read --allow-env --allow-net src/index.ts"
 	},
 	"fmt": {
 		"useTabs": true,
 		"lineWidth": 120,
-		"singleQuote": true,
+		"singleQuote": true
 	},
 	"lint": {
 		"rules": {
 			"tags": ["recommended"],
-			"exclude": ["require-await", "no-await-in-sync-fn"],
-		},
+			"exclude": ["require-await", "no-await-in-sync-fn"]
+		}
 	},
 	"imports": {
 		"@ovencord/core": "npm:@ovencord/core@workspace:*",
 		"@ovencord/discord.js": "npm:@ovencord/discord.js@workspace:*",
-		"zod": "npm:zod@^4.1.12",
-	},
+		"zod": "npm:zod@^4.1.12"
+	}
 }
