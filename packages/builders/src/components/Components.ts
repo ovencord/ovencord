@@ -15,6 +15,7 @@ import {
 	SuccessButtonBuilder,
 } from './button/CustomIdButton.js';
 import { ButtonBuilder } from './button/ButtonBuilder.js';
+export { ButtonBuilder };
 import { LinkButtonBuilder } from './button/LinkButton.js';
 import { PremiumButtonBuilder } from './button/PremiumButton.js';
 import { FileUploadBuilder } from './fileUpload/FileUpload.js';

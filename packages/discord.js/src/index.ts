@@ -234,6 +234,7 @@ export { WidgetMember } from './structures/WidgetMember.js';
 // External
 export * from 'discord-api-types/v10';
 export * from '@ovencord/builders';
+export { ButtonBuilder } from '@ovencord/builders';
 export * from '@ovencord/formatters';
 export * from '@ovencord/rest';
 export * from '@ovencord/util';
