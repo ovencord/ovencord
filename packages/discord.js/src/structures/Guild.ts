@@ -38,7 +38,6 @@ import { WelcomeScreen  } from './WelcomeScreen.js';
  * @extends {AnonymousGuild}
  */
 export class Guild extends AnonymousGuild {
-  public client: any;
   public commands: any;
   public members: any;
   public channels: any;

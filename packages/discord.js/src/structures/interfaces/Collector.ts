@@ -1,6 +1,6 @@
 import { setTimeout, clearTimeout  } from 'node:timers';
 import { Collection  } from '@ovencord/collection';
-import { AsyncEventEmitter  } from '@vladfrangu/async_event_emitter';
+import { AsyncEventEmitter  } from '../../util/AsyncEventEmitter.js';
 import { DiscordjsTypeError, ErrorCodes  } from '../../errors/index.js';
 import { flatten  } from '../../util/Util.js';
 

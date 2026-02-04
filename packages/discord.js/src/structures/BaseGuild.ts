@@ -10,7 +10,6 @@ import { Base  } from './Base.js';
  * @abstract
  */
 export class BaseGuild extends Base {
-  public client: any;
   public id: any;
   public name: any;
   public features: any;

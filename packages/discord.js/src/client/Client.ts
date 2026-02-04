@@ -4,7 +4,7 @@ import { clearTimeout, setImmediate, setTimeout  } from 'node:timers';
 import { Collection  } from '@ovencord/collection';
 import { REST, RESTEvents, makeURLSearchParams  } from '@ovencord/rest';
 import { WebSocketManager, WebSocketShardEvents, WebSocketShardStatus  } from '@ovencord/ws';
-import { AsyncEventEmitter  } from '@vladfrangu/async_event_emitter';
+import { AsyncEventEmitter  } from '../util/AsyncEventEmitter.js';
 import { GatewayDispatchEvents, GatewayIntentBits, OAuth2Scopes, Routes  } from 'discord-api-types/v10';
 import { DiscordjsError, DiscordjsTypeError, ErrorCodes  } from '../errors/index.js';
 import { ChannelManager  } from '../managers/ChannelManager.js';

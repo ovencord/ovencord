@@ -4,7 +4,7 @@ import process from 'node:process';
 import { setTimeout as sleep  } from 'node:timers/promises';
 import { Collection  } from '@ovencord/collection';
 import { range  } from '@ovencord/util';
-import { AsyncEventEmitter  } from '@vladfrangu/async_event_emitter';
+import { AsyncEventEmitter  } from '../util/AsyncEventEmitter.js';
 import { DiscordjsError, DiscordjsTypeError, DiscordjsRangeError, ErrorCodes  } from '../errors/index.js';
 import { fetchRecommendedShardCount  } from '../util/Util.js';
 import { Shard  } from './Shard.js';

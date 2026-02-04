@@ -5,7 +5,7 @@ import process from 'node:process';
 import { setTimeout, clearTimeout  } from 'node:timers';
 import { setTimeout as sleep  } from 'node:timers/promises';
 import { SHARE_ENV  } from 'node:worker_threads';
-import { AsyncEventEmitter  } from '@vladfrangu/async_event_emitter';
+import { AsyncEventEmitter  } from '../util/AsyncEventEmitter.js';
 import { DiscordjsError, ErrorCodes  } from '../errors/index.js';
 import { ShardEvents  } from '../util/ShardEvents.js';
 import { makeError, makePlainError  } from '../util/Util.js';
