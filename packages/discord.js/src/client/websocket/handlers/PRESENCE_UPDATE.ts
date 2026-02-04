@@ -2,7 +2,7 @@
 import { Events  } from '../../../util/Events.js';
 import { Partials  } from '../../../util/Partials.js';
 
-module.exports = (client, { d: data }) => {
+export default (client, { d: data }) => {
   let user = client.users.cache.get(data.user.id);
   if (!user && ('username' in data.user || client.options.partials.includes(Partials.User))) {
     user = client.users._add(data.user);

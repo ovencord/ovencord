@@ -1,14 +1,15 @@
+import { ClientUser } from '../../../structures/ClientUser.js';
 
 import { ClientApplication  } from '../../../structures/ClientApplication.js';
 import { Status  } from '../../../util/Status.js';
 
-let ClientUser;
 
-module.exports = (client, { d: data }, shardId) => {
+
+export default (client, { d: data }, shardId) => {
   if (client.user) {
     client.user._patch(data.user);
   } else {
-    ClientUser ??= require('../../../structures/ClientUser.js').ClientUser;
+    
     client.user = new ClientUser(client, data.user);
     client.users.cache.set(client.user.id, client.user);
   }

@@ -1,7 +1,7 @@
 
 import { Events  } from '../../../util/Events.js';
 
-module.exports = (client, { d: data }) => {
+export default (client, { d: data }) => {
   const subscription = client.application.subscriptions._add(data, false);
 
   client.application.subscriptions.cache.delete(subscription.id);

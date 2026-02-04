@@ -1,4 +1,4 @@
 
-module.exports = (client, { d: data }) => {
+export default (client, { d: data }) => {
   client.actions.GuildSoundboardSoundDelete.handle(data);
 };

@@ -1,7 +1,7 @@
 
 import { Events  } from '../../../util/Events.js';
 
-module.exports = (client, { d: data }) => {
+export default (client, { d: data }) => {
   const oldEntitlement = client.application.entitlements.cache.get(data.id)?._clone() ?? null;
   const newEntitlement = client.application.entitlements._add(data);
 

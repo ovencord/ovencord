@@ -1,7 +1,7 @@
 
 import { Events  } from '../../../util/Events.js';
 
-module.exports = (client, { d: data }) => {
+export default (client, { d: data }) => {
   const oldSubscription = client.application.subscriptions.cache.get(data.id)?._clone() ?? null;
   const newSubscription = client.application.subscriptions._add(data);
 

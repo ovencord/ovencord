@@ -1,7 +1,7 @@
 
 import { Events  } from '../../../util/Events.js';
 
-module.exports = (client, { d: data }) => {
+export default (client, { d: data }) => {
   /**
    * Emitted whenever permissions for an application command in a guild were updated.
    * <warn>This includes permission updates for other applications in addition to the logged in client,

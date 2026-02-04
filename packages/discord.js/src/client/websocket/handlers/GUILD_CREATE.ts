@@ -2,7 +2,7 @@
 import { Events  } from '../../../util/Events.js';
 import { Status  } from '../../../util/Status.js';
 
-module.exports = (client, { d: data }, shardId) => {
+export default (client, { d: data }, shardId) => {
   let guild = client.guilds.cache.get(data.id);
   if (guild) {
     if (!guild.available && !data.unavailable) {
