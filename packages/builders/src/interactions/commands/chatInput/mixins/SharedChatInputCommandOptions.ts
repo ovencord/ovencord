@@ -45,6 +45,15 @@ export class SharedChatInputCommandOptions {
 	}
 
 	/**
+	 * Adds a boolean option.
+	 *
+	 * @param option - Option to add
+	 */
+	public addBooleanOption(option: ChatInputCommandBooleanOption | ((builder: ChatInputCommandBooleanOption) => ChatInputCommandBooleanOption)) {
+		return this.addBooleanOptions(option);
+	}
+
+	/**
 	 * Adds user options.
 	 *
 	 * @param options - Options to add
@@ -55,6 +64,15 @@ export class SharedChatInputCommandOptions {
 		>
 	) {
 		return this.sharedAddOptions(ChatInputCommandUserOption, ...options);
+	}
+
+	/**
+	 * Adds a user option.
+	 *
+	 * @param option - Option to add
+	 */
+	public addUserOption(option: ChatInputCommandUserOption | ((builder: ChatInputCommandUserOption) => ChatInputCommandUserOption)) {
+		return this.addUserOptions(option);
 	}
 
 	/**
@@ -71,6 +89,15 @@ export class SharedChatInputCommandOptions {
 	}
 
 	/**
+	 * Adds a channel option.
+	 *
+	 * @param option - Option to add
+	 */
+	public addChannelOption(option: ChatInputCommandChannelOption | ((builder: ChatInputCommandChannelOption) => ChatInputCommandChannelOption)) {
+		return this.addChannelOptions(option);
+	}
+
+	/**
 	 * Adds role options.
 	 *
 	 * @param options - Options to add
@@ -81,6 +108,15 @@ export class SharedChatInputCommandOptions {
 		>
 	) {
 		return this.sharedAddOptions(ChatInputCommandRoleOption, ...options);
+	}
+
+	/**
+	 * Adds a role option.
+	 *
+	 * @param option - Option to add
+	 */
+	public addRoleOption(option: ChatInputCommandRoleOption | ((builder: ChatInputCommandRoleOption) => ChatInputCommandRoleOption)) {
+		return this.addRoleOptions(option);
 	}
 
 	/**
@@ -98,6 +134,15 @@ export class SharedChatInputCommandOptions {
 	}
 
 	/**
+	 * Adds an attachment option.
+	 *
+	 * @param option - Option to add
+	 */
+	public addAttachmentOption(option: ChatInputCommandAttachmentOption | ((builder: ChatInputCommandAttachmentOption) => ChatInputCommandAttachmentOption)) {
+		return this.addAttachmentOptions(option);
+	}
+
+	/**
 	 * Adds mentionable options.
 	 *
 	 * @param options - Options to add
@@ -109,6 +154,15 @@ export class SharedChatInputCommandOptions {
 		>
 	) {
 		return this.sharedAddOptions(ChatInputCommandMentionableOption, ...options);
+	}
+
+	/**
+	 * Adds a mentionable option.
+	 *
+	 * @param option - Option to add
+	 */
+	public addMentionableOption(option: ChatInputCommandMentionableOption | ((builder: ChatInputCommandMentionableOption) => ChatInputCommandMentionableOption)) {
+		return this.addMentionableOptions(option);
 	}
 
 	/**
@@ -125,6 +179,15 @@ export class SharedChatInputCommandOptions {
 	}
 
 	/**
+	 * Adds a string option.
+	 *
+	 * @param option - Option to add
+	 */
+	public addStringOption(option: ChatInputCommandStringOption | ((builder: ChatInputCommandStringOption) => ChatInputCommandStringOption)) {
+		return this.addStringOptions(option);
+	}
+
+	/**
 	 * Adds integer options.
 	 *
 	 * @param options - Options to add
@@ -138,6 +201,15 @@ export class SharedChatInputCommandOptions {
 	}
 
 	/**
+	 * Adds an integer option.
+	 *
+	 * @param option - Option to add
+	 */
+	public addIntegerOption(option: ChatInputCommandIntegerOption | ((builder: ChatInputCommandIntegerOption) => ChatInputCommandIntegerOption)) {
+		return this.addIntegerOptions(option);
+	}
+
+	/**
 	 * Adds number options.
 	 *
 	 * @param options - Options to add
@@ -148,6 +220,15 @@ export class SharedChatInputCommandOptions {
 		>
 	) {
 		return this.sharedAddOptions(ChatInputCommandNumberOption, ...options);
+	}
+
+	/**
+	 * Adds a number option.
+	 *
+	 * @param option - Option to add
+	 */
+	public addNumberOption(option: ChatInputCommandNumberOption | ((builder: ChatInputCommandNumberOption) => ChatInputCommandNumberOption)) {
+		return this.addNumberOptions(option);
 	}
 
 	/**

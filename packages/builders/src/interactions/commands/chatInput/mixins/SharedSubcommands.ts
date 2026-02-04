@@ -40,6 +40,19 @@ export class SharedChatInputCommandSubcommands {
 	}
 
 	/**
+	 * Adds a subcommand group to this command.
+	 *
+	 * @param input - Subcommand group to add
+	 */
+	public addSubcommandGroup(
+		input:
+			| ChatInputCommandSubcommandGroupBuilder
+			| ((subcommandGroup: ChatInputCommandSubcommandGroupBuilder) => ChatInputCommandSubcommandGroupBuilder),
+	): this {
+		return this.addSubcommandGroups(input);
+	}
+
+	/**
 	 * Adds subcommands to this command.
 	 *
 	 * @param input - Subcommands to add
@@ -57,5 +70,18 @@ export class SharedChatInputCommandSubcommands {
 		this.data.options.push(...resolved);
 
 		return this;
+	}
+
+	/**
+	 * Adds a subcommand to this command.
+	 *
+	 * @param input - Subcommand to add
+	 */
+	public addSubcommand(
+		input:
+			| ChatInputCommandSubcommandBuilder
+			| ((subcommandGroup: ChatInputCommandSubcommandBuilder) => ChatInputCommandSubcommandBuilder),
+	): this {
+		return this.addSubcommands(input);
 	}
 }
