@@ -24,6 +24,13 @@ export class SharedName {
 	}
 
 	/**
+	 * Returns the name of this command.
+	 */
+	public get name(): string | undefined {
+		return this.data.name;
+	}
+
+	/**
 	 * Sets a name localization for this command.
 	 *
 	 * @param locale - The locale to set

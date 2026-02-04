@@ -25,6 +25,13 @@ export class SharedNameAndDescription extends SharedName {
 	}
 
 	/**
+	 * Returns the description of this command.
+	 */
+	public get description(): string | undefined {
+		return this.data.description;
+	}
+
+	/**
 	 * Sets a description localization for this command.
 	 *
 	 * @param locale - The locale to set
