@@ -14,6 +14,7 @@ import {
 	SecondaryButtonBuilder,
 	SuccessButtonBuilder,
 } from './button/CustomIdButton.js';
+import { ButtonBuilder } from './button/ButtonBuilder.js';
 import { LinkButtonBuilder } from './button/LinkButton.js';
 import { PremiumButtonBuilder } from './button/PremiumButton.js';
 import { FileUploadBuilder } from './fileUpload/FileUpload.js';
@@ -61,16 +62,7 @@ export type ModalComponentBuilder =
 	| LabelBuilder
 	| ModalActionRowComponentBuilder;
 
-/**
- * Any button builder
- */
-export type ButtonBuilder =
-	| DangerButtonBuilder
-	| LinkButtonBuilder
-	| PremiumButtonBuilder
-	| PrimaryButtonBuilder
-	| SecondaryButtonBuilder
-	| SuccessButtonBuilder;
+// Any button builder is already covered by the ButtonBuilder class
 
 /**
  * The builders that may be used within an action row for messages.
