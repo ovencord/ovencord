@@ -1,6 +1,4 @@
-import process from 'node:process';
 import { workerData } from 'node:worker_threads';
-import { clearTimeout, setImmediate, setTimeout  } from 'node:timers';
 import { Collection  } from '@ovencord/collection';
 import { REST, RESTEvents, makeURLSearchParams  } from '@ovencord/rest';
 import { WebSocketManager, WebSocketShardEvents, WebSocketShardStatus  } from '@ovencord/ws';

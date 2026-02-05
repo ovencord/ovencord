@@ -1,5 +1,5 @@
 
-import process from 'node:process';
+
 import { GatewayOpcodes  } from 'discord-api-types/v10';
 
 const emittedFor = new Set();

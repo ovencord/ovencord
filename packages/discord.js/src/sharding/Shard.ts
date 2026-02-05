@@ -1,9 +1,6 @@
 /* eslint-disable   no-use-before-define */
 
 import path from 'node:path';
-import process from 'node:process';
-import { setTimeout, clearTimeout  } from 'node:timers';
-import { setTimeout as sleep  } from 'node:timers/promises';
 import { SHARE_ENV  } from 'node:worker_threads';
 import { AsyncEventEmitter  } from '../util/AsyncEventEmitter.js';
 import { DiscordjsError, ErrorCodes  } from '../errors/index.js';
@@ -265,7 +262,7 @@ export class Shard extends AsyncEventEmitter {
    */
   async respawn({ delay = 500, timeout = 30_000 } = {}) {
     this.kill();
-    if (delay > 0) await sleep(delay);
+    if (delay > 0) await Bun.sleep(delay);
     return this.spawn(timeout);
   }
 

@@ -1,7 +1,5 @@
 import fs from 'node:fs';
 import path from 'node:path';
-import process from 'node:process';
-import { setTimeout as sleep  } from 'node:timers/promises';
 import { Collection  } from '@ovencord/collection';
 import { range  } from '@ovencord/util';
 import { AsyncEventEmitter  } from '../util/AsyncEventEmitter.js';
@@ -261,7 +259,7 @@ export class ShardingManager extends AsyncEventEmitter {
       const promises = [];
       const shard = this.createShard(shardId);
       promises.push(shard.spawn(timeout));
-      if (delay > 0 && this.shards.size !== this.shardList.length) promises.push(sleep(delay));
+      if (delay > 0 && this.shards.size !== this.shardList.length) promises.push(Bun.sleep(delay));
       await Promise.all(promises);
     }
 
@@ -365,7 +363,7 @@ export class ShardingManager extends AsyncEventEmitter {
     let shardCounter = 0;
     for (const shard of this.shards.values()) {
       const promises = [shard.respawn({ delay: respawnDelay, timeout })];
-      if (++shardCounter < this.shards.size && shardDelay > 0) promises.push(sleep(shardDelay));
+      if (++shardCounter < this.shards.size && shardDelay > 0) promises.push(Bun.sleep(shardDelay));
       await Promise.all(promises);
     }
 
