@@ -42,17 +42,17 @@
 
 		"discord-api-types": "^0.38.36",
 		"fast-deep-equal": "3.1.3",
-		"@ovencord/builders": "^1.11.5",
-		"@ovencord/collection": "^2.1.1",
-		"@ovencord/formatters": "^0.6.1",
-		"@ovencord/rest": "^2.5.0",
-		"@ovencord/util": "^1.1.1",
-		"@ovencord/ws": "^2.0.2"
+		"@ovencord/builders": "workspace:*",
+		"@ovencord/collection": "workspace:*",
+		"@ovencord/formatters": "workspace:*",
+		"@ovencord/rest": "workspace:*",
+		"@ovencord/util": "workspace:*",
+		"@ovencord/ws": "workspace:*"
 	},
 	"devDependencies": {
-		"@ovencord/api-extractor": "^7.52.7",
-		"@ovencord/docgen": "^0.12.1",
-		"@ovencord/scripts": "^0.1.0",
+		"@ovencord/api-extractor": "workspace:*",
+		"@ovencord/docgen": "workspace:*",
+		"@ovencord/scripts": "workspace:*",
 		"@favware/cliff-jumper": "^6.0.0",
 		"@types/bun": "latest",
 		"cross-env": "^10.1.0",

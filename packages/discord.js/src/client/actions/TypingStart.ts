@@ -3,7 +3,7 @@ import { Events  } from '../../util/Events.js';
 import { Action  } from './Action.js';
 
 export class TypingStartAction extends Action {
-  handle(data) {
+  override handle(data: any) {
     const channel = this.getChannel({ id: data.channel_id, ...('guild_id' in data && { guild_id: data.guild_id }) });
     if (!channel) return;
 

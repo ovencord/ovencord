@@ -2,7 +2,7 @@ import { Events  } from '../../util/Events.js';
 import { Action  } from './Action.js';
 
 export class GuildEmojiDeleteAction extends Action {
-  handle(emoji) {
+  override handle(emoji: any) {
     emoji.guild.emojis.cache.delete(emoji.id);
     /**
      * Emitted whenever a custom emoji is deleted in a guild.

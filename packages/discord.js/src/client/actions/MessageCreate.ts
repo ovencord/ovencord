@@ -2,7 +2,7 @@ import { Events  } from '../../util/Events.js';
 import { Action  } from './Action.js';
 
 export class MessageCreateAction extends Action {
-  handle(data) {
+  override handle(data: any) {
     const client = this.client;
     const channel = this.getChannel({
       id: data.channel_id,
@@ -18,7 +18,7 @@ export class MessageCreateAction extends Action {
       }
 
       const existing = channel.messages.cache.get(data.id);
-      if (existing && existing.author?.id !== this.client.user.id) return { message: existing };
+      if (existing && existing.author?.id !== this.client.user?.id) return { message: existing };
       const message = existing ?? channel.messages._add(data);
       channel.lastMessageId = data.id;
 

@@ -2,10 +2,10 @@ import { Events  } from '../../util/Events.js';
 import { Action  } from './Action.js';
 
 export class ChannelCreateAction extends Action {
-  handle(data) {
+  override handle(data: any) {
     const client = this.client;
     const existing = client.channels.cache.has(data.id);
-    const channel = client.channels._add(data);
+    const channel = client.channels._add(data, client.guilds.cache.get(data.guild_id) ?? null);
     if (!existing && channel) {
       /**
        * Emitted whenever a guild channel is created.

@@ -1,7 +1,7 @@
 import { Action  } from './Action.js';
 
 export class MessageUpdateAction extends Action {
-  handle(data) {
+  override handle(data: any) {
     const channel = this.getChannel({ id: data.channel_id, ...('guild_id' in data && { guild_id: data.guild_id }) });
     if (channel) {
       if (!channel.isTextBased()) return {};

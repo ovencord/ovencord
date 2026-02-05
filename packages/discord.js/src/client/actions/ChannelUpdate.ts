@@ -2,7 +2,7 @@ import { createChannel  } from '../../util/Channels.js';
 import { Action  } from './Action.js';
 
 export class ChannelUpdateAction extends Action {
-  handle(data) {
+  override handle(data: any) {
     const client = this.client;
     let channel = client.channels.cache.get(data.id);
 
@@ -30,7 +30,7 @@ export class ChannelUpdateAction extends Action {
         updated: channel,
       };
     } else {
-      client.channels._add(data);
+      client.channels._add(data, client.guilds.cache.get(data.guild_id) ?? null);
     }
 
     return {};

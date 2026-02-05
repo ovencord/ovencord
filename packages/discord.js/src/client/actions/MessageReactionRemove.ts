@@ -10,7 +10,7 @@ import { Action  } from './Action.js';
 */
 
 export class MessageReactionRemoveAction extends Action {
-  handle(data) {
+  override handle(data: any) {
     if (!data.emoji) return false;
 
     const user = this.getUser(data);
@@ -25,7 +25,7 @@ export class MessageReactionRemoveAction extends Action {
     if (!channel?.isTextBased()) return false;
 
     // Verify message
-    const message = this.getMessage(data, channel);
+    const message = this.getMessage(data, channel, undefined);
     if (!message) return false;
 
     // Verify reaction

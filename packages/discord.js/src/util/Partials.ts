@@ -47,4 +47,4 @@ export const Partials = createEnum([
   'Poll',
   'PollAnswer',
   'SoundboardSound',
-]);
+]) as any;

@@ -3,7 +3,7 @@ import { Events  } from '../../util/Events.js';
 import { Action  } from './Action.js';
 
 export class ThreadMembersUpdateAction extends Action {
-  handle(data) {
+  override handle(data: any) {
     const client = this.client;
     const thread = client.channels.cache.get(data.id);
     if (thread) {

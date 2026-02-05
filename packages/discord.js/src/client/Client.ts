@@ -5,10 +5,10 @@ import { Collection  } from '@ovencord/collection';
 import { REST, RESTEvents, makeURLSearchParams  } from '@ovencord/rest';
 import { WebSocketManager, WebSocketShardEvents, WebSocketShardStatus  } from '@ovencord/ws';
 import { AsyncEventEmitter  } from '../util/AsyncEventEmitter.js';
-import { GatewayDispatchEvents, GatewayIntentBits, OAuth2Scopes, Routes  } from 'discord-api-types/v10';
+import { GatewayDispatchEvents, GatewayIntentBits, OAuth2Scopes, Routes, type Snowflake  } from 'discord-api-types/v10';
 import { DiscordjsError, DiscordjsTypeError, ErrorCodes  } from '../errors/index.js';
 import { ChannelManager  } from '../managers/ChannelManager.js';
-import { GuildManager  } from '../managers/GuildManager.js';
+import { GuildManager } from '../managers/GuildManager.js';
 import { UserManager  } from '../managers/UserManager.js';
 import { ShardClientUtil  } from '../sharding/ShardClientUtil.js';
 import { ClientPresence  } from '../structures/ClientPresence.js';
@@ -25,13 +25,16 @@ import { Events  } from '../util/Events.js';
 import { IntentsBitField  } from '../util/IntentsBitField.js';
 import { createInvite  } from '../util/Invites.js';
 import { Options  } from '../util/Options.js';
-import { PermissionsBitField  } from '../util/PermissionsBitField.js';
+import { PermissionsBitField } from '../util/PermissionsBitField.js';
 import { Status  } from '../util/Status.js';
 import { Sweepers  } from '../util/Sweepers.js';
 import { flatten  } from '../util/Util.js';
-import { ActionsManager  } from './actions/ActionsManager.js';
-import { ClientVoiceManager  } from './voice/ClientVoiceManager.js';
-import { PacketHandlers  } from './websocket/handlers/index.js';
+
+import { ActionsManager } from './actions/ActionsManager.js';
+import { ClientVoiceManager } from './voice/ClientVoiceManager.js';
+import { PacketHandlers } from './websocket/handlers/index.js';
+import { ClientUser } from '../structures/ClientUser.js';
+import { ClientApplication } from '../structures/ClientApplication.js';
 
 const WaitingForGuildEvents = [GatewayDispatchEvents.GuildCreate, GatewayDispatchEvents.GuildDelete];
 const BeforeReadyWhitelist = [
@@ -44,11 +47,44 @@ const BeforeReadyWhitelist = [
   GatewayDispatchEvents.GuildMemberRemove,
 ];
 
+export type GuildResolvable = any;
+export type PermissionResolvable = any;
+
 /**
  * The main hub for interacting with the Discord API, and the starting point for any bot.
  *
  * @extends {AsyncEventEmitter}
  */
+export interface WebhookDeleteOptions {
+  /** Token of the webhook */
+  token?: string;
+  /** The reason for deleting the webhook */
+  reason?: string;
+}
+
+export interface ClientFetchInviteOptions {
+  /** Whether to include approximate member counts */
+  withCounts?: boolean;
+  /** The id of the guild scheduled event to include with the invite */
+  guildScheduledEventId?: string;
+}
+
+export interface StickerPackFetchOptions {
+  /** The id of the sticker pack to fetch */
+  packId?: string;
+}
+
+export interface InviteGenerationOptions {
+  /** Scopes that should be requested */
+  scopes: OAuth2Scopes[];
+  /** Permissions to request */
+  permissions?: PermissionResolvable;
+  /** Guild to preselect */
+  guild?: GuildResolvable;
+  /** Whether to disable the guild selection */
+  disableGuildSelect?: boolean;
+}
+
 export class Client extends AsyncEventEmitter {
   public status: any;
   public readyTimeout: any;
@@ -69,12 +105,15 @@ export class Client extends AsyncEventEmitter {
   public lastPingTimestamps: Collection<number, number>;
   public readyTimestamp: number | null;
   public token: string | null;
+  public expectedGuilds: Set<string>;
+  public incomingPacketQueue: any[];
 
   /**
    * @param {any} options Options for the client
    */
   constructor(options: any) {
     super();
+    this.token = null;
 
     if (typeof options !== 'object' || options === null) {
       throw new DiscordjsTypeError(ErrorCodes.InvalidType, 'options', 'object', true);
@@ -138,6 +177,18 @@ export class Client extends AsyncEventEmitter {
      */
     this.presence = new ClientPresence(this, this.options.ws.initialPresence ?? this.options.presence);
 
+    this.ws = new WebSocketManager(this as any);
+    this.actions = new ActionsManager(this);
+    this.voice = new ClientVoiceManager(this);
+    this.shard =
+      !process.env.SHARDING_MANAGER && !process.env.DISCORD_HYBRID_SHARDING
+        ? null
+        : ShardClientUtil.singleton(this, process.env.SHARDING_MANAGER_MODE as any);
+    this.users = new UserManager(this, undefined as any);
+    this.guilds = new GuildManager(this, undefined as any);
+    this.channels = new ChannelManager(this, undefined as any);
+    this.sweepers = new Sweepers(this, this.options.sweepers);
+
     this._validateOptions();
 
     /**
@@ -148,14 +199,7 @@ export class Client extends AsyncEventEmitter {
      */
     this.status = Status.Idle;
 
-    /**
-     * A set of guild ids this Client expects to receive
-     *
-     * @name Client#expectedGuilds
-     * @type {Set<string>}
-     * @private
-     */
-    Object.defineProperty(this, 'expectedGuilds', { value: new Set(), writable: true });
+    this.expectedGuilds = new Set();
 
     /**
      * The ready timeout
@@ -164,47 +208,9 @@ export class Client extends AsyncEventEmitter {
      * @type {?NodeJS.Timeout}
      * @private
      */
-    Object.defineProperty(this, 'readyTimeout', { value: null, writable: true });
+    this.readyTimeout = null;
 
-    /**
-     * The action manager of the client
-     *
-     * @type {ActionsManager}
-     * @private
-     */
-    this.actions = new ActionsManager(this);
 
-    /**
-     * The user manager of this client
-     *
-     * @type {UserManager}
-     */
-    this.users = new UserManager(this);
-
-    /**
-     * A manager of all the guilds the client is currently handling -
-     * as long as sharding isn't being used, this will be *every* guild the bot is a member of
-     *
-     * @type {GuildManager}
-     */
-    this.guilds = new GuildManager(this);
-
-    /**
-     * All of the {@link BaseChannel}s that the client is currently handling -
-     * as long as sharding isn't being used, this will be *every* channel in *every* guild the bot
-     * is a member of. Note that DM channels will not be initially cached, and thus not be present
-     * in the Manager without their explicit fetching or use.
-     *
-     * @type {ChannelManager}
-     */
-    this.channels = new ChannelManager(this);
-
-    /**
-     * The sweeping functions and their intervals used to periodically sweep caches
-     *
-     * @type {Sweepers}
-     */
-    this.sweepers = new Sweepers(this, this.options.sweepers);
 
     Object.defineProperty(this, 'token', { writable: true });
     if (!this.token && 'DISCORD_TOKEN' in process.env) {
@@ -215,7 +221,7 @@ export class Client extends AsyncEventEmitter {
        *
        * @type {?string}
        */
-      this.token = process.env.DISCORD_TOKEN;
+      this.token = process.env.DISCORD_TOKEN ?? null;
     } else if (this.options.ws.token) {
       this.token = this.options.ws.token;
     } else {
@@ -295,7 +301,8 @@ export class Client extends AsyncEventEmitter {
      * @private
      * @name Client#incomingPacketQueue
      */
-    Object.defineProperty(this, 'incomingPacketQueue', { value: [] });
+    this.readyTimestamp = null;
+    this.incomingPacketQueue = [];
 
     this._attachEvents();
   }
@@ -403,12 +410,12 @@ export class Client extends AsyncEventEmitter {
    * @private
    */
   _attachEvents() {
-    this.ws.on(WebSocketShardEvents.Debug, (message, shardId) =>
+    this.ws.on(WebSocketShardEvents.Debug, (message: string, shardId: number) =>
       this.emit(Events.Debug, `[WS => ${typeof shardId === 'number' ? `Shard ${shardId}` : 'Manager'}] ${message}`),
     );
     this.ws.on(WebSocketShardEvents.Dispatch, this._handlePacket.bind(this));
 
-    this.ws.on(WebSocketShardEvents.HeartbeatComplete, ({ heartbeatAt, latency }, shardId) => {
+    this.ws.on(WebSocketShardEvents.HeartbeatComplete, ({ heartbeatAt, latency }: { heartbeatAt: number; latency: number }, shardId: number) => {
       this.emit(Events.Debug, `[WS => Shard ${shardId}] Heartbeat acknowledged, latency of ${latency}ms.`);
       this.lastPingTimestamps.set(shardId, heartbeatAt);
       this.pings.set(shardId, latency);
@@ -422,7 +429,7 @@ export class Client extends AsyncEventEmitter {
    * @param {number} shardId The shardId that received this packet
    * @private
    */
-  async _handlePacket(packet, shardId) {
+  async _handlePacket(packet: any, shardId: number) {
     if (this.status !== Status.Ready && !BeforeReadyWhitelist.includes(packet.t)) {
       this.incomingPacketQueue.push({ packet, shardId });
     } else {
@@ -433,8 +440,9 @@ export class Client extends AsyncEventEmitter {
         }).unref();
       }
 
-      if (PacketHandlers[packet.t]) {
-        PacketHandlers[packet.t](this, packet, shardId);
+      const handler = PacketHandlers[packet.t];
+      if (handler) {
+        handler(this, packet, shardId);
       }
 
       if (packet.t === GatewayDispatchEvents.Ready) {
@@ -446,13 +454,21 @@ export class Client extends AsyncEventEmitter {
     }
   }
 
+  get intents() {
+    return new IntentsBitField(this.options.intents);
+  }
+
+  async fetchGatewayInformation() {
+    return this.rest.get(Routes.gatewayBot());
+  }
+
   /**
    * Broadcasts a packet to every shard of this client handles.
    *
    * @param {Object} packet The packet to send
    * @private
    */
-  async _broadcast(packet) {
+  async _broadcast(packet: any) {
     const shardIds = await this.ws.getShardIds();
     return Promise.all(shardIds.map(shardId => this.ws.send(shardId, packet)));
   }
@@ -496,13 +512,7 @@ export class Client extends AsyncEventEmitter {
     return this.pings.size ? this.pings.reduce((a, b) => a + b, 0) / this.pings.size : null;
   }
 
-  /**
-   * Options used for deleting a webhook.
-   *
-   * @typedef {Object} WebhookDeleteOptions
-   * @property {string} [token] Token of the webhook
-   * @property {string} [reason] The reason for deleting the webhook
-   */
+
 
   /**
    * Deletes a webhook.
@@ -511,7 +521,7 @@ export class Client extends AsyncEventEmitter {
    * @param {WebhookDeleteOptions} [options] Options for deleting the webhook
    * @returns {Promise<void>}
    */
-  async deleteWebhook(id, { token, reason } = {}) {
+  async deleteWebhook(id: string, { token, reason }: WebhookDeleteOptions = {}) {
     await this.rest.delete(Routes.webhook(id, token), { auth: !token, reason });
   }
 
@@ -551,17 +561,10 @@ export class Client extends AsyncEventEmitter {
     this.sweepers.destroy();
     await this.ws.destroy();
     this.token = null;
-    this.rest.setToken(null);
+    this.rest.setToken(null as any);
   }
 
-  /**
-   * Options used when fetching an invite from Discord.
-   *
-   * @typedef {Object} ClientFetchInviteOptions
-   * @property {boolean} [withCounts] Whether to include approximate member counts
-   * @property {Snowflake} [guildScheduledEventId] The id of the guild scheduled event to include with
-   * the invite
-   */
+
 
   /**
    * Obtains an invite from Discord.
@@ -574,7 +577,7 @@ export class Client extends AsyncEventEmitter {
    *   .then(invite => console.log(`Obtained invite with code: ${invite.code}`))
    *   .catch(console.error);
    */
-  async fetchInvite(invite, { withCounts, guildScheduledEventId } = {}) {
+  async fetchInvite(invite: any, { withCounts, guildScheduledEventId }: ClientFetchInviteOptions = {}) {
     const code = resolveInviteCode(invite);
 
     const query = makeURLSearchParams({
@@ -596,7 +599,7 @@ export class Client extends AsyncEventEmitter {
    *   .then(template => console.log(`Obtained template with code: ${template.code}`))
    *   .catch(console.error);
    */
-  async fetchGuildTemplate(template) {
+  async fetchGuildTemplate(template: string) {
     const code = resolveGuildTemplateCode(template);
     const data = await this.rest.get(Routes.template(code));
     return new GuildTemplate(this, data);
@@ -613,8 +616,8 @@ export class Client extends AsyncEventEmitter {
    *   .then(webhook => console.log(`Obtained webhook with name: ${webhook.name}`))
    *   .catch(console.error);
    */
-  async fetchWebhook(id, token) {
-    const data = await this.rest.get(Routes.webhook(id, token), { auth: token === undefined });
+  async fetchWebhook(id: string, token?: string) {
+    const data = await this.rest.get(Routes.webhook(id, token), { auth: token === undefined }) as any;
     return new Webhook(this, { token, ...data });
   }
 
@@ -628,7 +631,7 @@ export class Client extends AsyncEventEmitter {
    *   .catch(console.error);
    */
   async fetchVoiceRegions() {
-    const apiRegions = await this.rest.get(Routes.voiceRegions());
+    const apiRegions = await this.rest.get(Routes.voiceRegions()) as any[];
     const regions = new Collection();
     for (const region of apiRegions) regions.set(region.id, new VoiceRegion(region));
     return regions;
@@ -644,17 +647,12 @@ export class Client extends AsyncEventEmitter {
    *   .then(sticker => console.log(`Obtained sticker with name: ${sticker.name}`))
    *   .catch(console.error);
    */
-  async fetchSticker(id) {
+  async fetchSticker(id: string) {
     const data = await this.rest.get(Routes.sticker(id));
     return new Sticker(this, data);
   }
 
-  /**
-   * Options for fetching sticker packs.
-   *
-   * @typedef {Object} StickerPackFetchOptions
-   * @property {Snowflake} [packId] The id of the sticker pack to fetch
-   */
+
 
   /**
    * Obtains the list of available sticker packs.
@@ -671,14 +669,14 @@ export class Client extends AsyncEventEmitter {
    *   .then(pack => console.log(`Sticker pack name: ${pack.name}`))
    *   .catch(console.error);
    */
-  async fetchStickerPacks({ packId } = {}) {
+  async fetchStickerPacks({ packId }: StickerPackFetchOptions = {}) {
     if (packId) {
-      const innerData = await this.rest.get(Routes.stickerPack(packId));
+      const innerData = await this.rest.get(Routes.stickerPack(packId)) as any;
       return new StickerPack(this, innerData);
     }
 
-    const data = await this.rest.get(Routes.stickerPacks());
-    return new Collection(data.sticker_packs.map(stickerPack => [stickerPack.id, new StickerPack(this, stickerPack)]));
+    const data = await this.rest.get(Routes.stickerPacks()) as any;
+    return new Collection(data.sticker_packs.map((stickerPack: any) => [stickerPack.id, new StickerPack(this, stickerPack)]));
   }
 
   /**
@@ -691,8 +689,8 @@ export class Client extends AsyncEventEmitter {
    *  .catch(console.error);
    */
   async fetchDefaultSoundboardSounds() {
-    const data = await this.rest.get(Routes.soundboardDefaultSounds());
-    return new Collection(data.map(sound => [sound.sound_id, new SoundboardSound(this, sound)]));
+    const data = await this.rest.get(Routes.soundboardDefaultSounds()) as any;
+    return new Collection(data.map((sound: any) => [sound.sound_id, new SoundboardSound(this, sound)]));
   }
 
   /**
@@ -701,10 +699,10 @@ export class Client extends AsyncEventEmitter {
    * @param {GuildResolvable} guild The guild to fetch the preview for
    * @returns {Promise<GuildPreview>}
    */
-  async fetchGuildPreview(guild) {
+  async fetchGuildPreview(guild: any) {
     const id = this.guilds.resolveId(guild);
     if (!id) throw new DiscordjsTypeError(ErrorCodes.InvalidType, 'guild', 'GuildResolvable');
-    const data = await this.rest.get(Routes.guildPreview(id));
+    const data = await this.rest.get(Routes.guildPreview(id)) as any;
     return new GuildPreview(this, data);
   }
 
@@ -714,22 +712,14 @@ export class Client extends AsyncEventEmitter {
    * @param {GuildResolvable} guild The guild to fetch the widget data for
    * @returns {Promise<Widget>}
    */
-  async fetchGuildWidget(guild) {
+  async fetchGuildWidget(guild: any) {
     const id = this.guilds.resolveId(guild);
     if (!id) throw new DiscordjsTypeError(ErrorCodes.InvalidType, 'guild', 'GuildResolvable');
-    const data = await this.rest.get(Routes.guildWidgetJSON(id));
+    const data = await this.rest.get(Routes.guildWidgetJSON(id)) as any;
     return new Widget(this, data);
   }
 
-  /**
-   * Options for {@link Client#generateInvite}.
-   *
-   * @typedef {Object} InviteGenerationOptions
-   * @property {OAuth2Scopes[]} scopes Scopes that should be requested
-   * @property {PermissionResolvable} [permissions] Permissions to request
-   * @property {GuildResolvable} [guild] Guild to preselect
-   * @property {boolean} [disableGuildSelect] Whether to disable the guild selection
-   */
+
 
   /**
    * Generates a link that can be used to invite the bot to a guild.
@@ -752,7 +742,7 @@ export class Client extends AsyncEventEmitter {
    * });
    * console.log(`Generated bot invite link: ${link}`);
    */
-  generateInvite(options = {}) {
+  generateInvite(options: InviteGenerationOptions | any = {}) {
     if (typeof options !== 'object') throw new DiscordjsTypeError(ErrorCodes.InvalidType, 'options', 'object', true);
     if (!this.application) throw new DiscordjsError(ErrorCodes.ClientNotReady, 'generate an invite link');
 
@@ -827,7 +817,7 @@ export class Client extends AsyncEventEmitter {
    * @returns {*}
    * @private
    */
-  _eval(script) {
+  _eval(script: string) {
     // eslint-disable-next-line no-eval
     return eval(script);
   }

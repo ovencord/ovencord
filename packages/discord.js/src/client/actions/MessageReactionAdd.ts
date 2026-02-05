@@ -14,7 +14,7 @@ import { Action  } from './Action.js';
 */
 
 export class MessageReactionAddAction extends Action {
-  handle(data, fromStructure = false) {
+  override handle(data: any, fromStructure = false) {
     if (!data.emoji) return false;
 
     const user = this.getUserFromMember(data);
@@ -31,7 +31,7 @@ export class MessageReactionAddAction extends Action {
     if (!channel?.isTextBased()) return false;
 
     // Verify message
-    const message = this.getMessage(data, channel);
+    const message = this.getMessage(data, channel, undefined);
     if (!message) return false;
 
     // Verify reaction

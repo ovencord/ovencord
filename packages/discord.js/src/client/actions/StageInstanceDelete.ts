@@ -2,7 +2,7 @@ import { Events  } from '../../util/Events.js';
 import { Action  } from './Action.js';
 
 export class StageInstanceDeleteAction extends Action {
-  handle(data) {
+  override handle(data: any) {
     const client = this.client;
     const channel = this.getChannel({ id: data.channel_id, guild_id: data.guild_id });
 

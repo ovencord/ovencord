@@ -2,11 +2,11 @@ import { Events  } from '../../util/Events.js';
 import { Action  } from './Action.js';
 
 export class MessagePollVoteRemoveAction extends Action {
-  handle(data) {
+  override handle(data: any) {
     const channel = this.getChannel({ id: data.channel_id, ...('guild_id' in data && { guild_id: data.guild_id }) });
     if (!channel?.isTextBased()) return false;
 
-    const message = this.getMessage(data, channel);
+    const message = this.getMessage(data, channel, undefined);
     if (!message) return false;
 
     const poll = this.getPoll(data, message, channel);

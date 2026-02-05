@@ -10,8 +10,11 @@ import { DiscordjsError, ErrorCodes  } from '../errors/index.js';
 import { ShardEvents  } from '../util/ShardEvents.js';
 import { makeError, makePlainError  } from '../util/Util.js';
 
-let childProcess = null;
-let Worker = null;
+import type { ChildProcess } from 'node:child_process';
+import type { Worker as WorkerThread } from 'node:worker_threads';
+
+let childProcess: typeof import('node:child_process') | null = null;
+let Worker: typeof WorkerThread | null = null;
 
 /**
  * A self-contained shard created by the {@link ShardingManager}. Each one has a {@link ChildProcess} that contains
@@ -27,7 +30,9 @@ export class Shard extends AsyncEventEmitter {
   public args: any;
   public execArgv: any;
   public env: any;
-  public worker: any;
+  public worker: WorkerThread | null = null;
+  public process: ChildProcess | null = null;
+  public ready: boolean = false;
   public _evals: any;
   public _fetches: any;
   public _exitListener: any;

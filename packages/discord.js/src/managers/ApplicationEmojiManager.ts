@@ -12,7 +12,7 @@ import { CachedManager  } from './CachedManager.js';
  */
 export class ApplicationEmojiManager extends CachedManager {
   public application: any;
-  constructor(application, iterable) {
+  constructor(application: any, iterable: any) {
     super(application.client, ApplicationEmoji, iterable);
 
     /**
@@ -23,7 +23,7 @@ export class ApplicationEmojiManager extends CachedManager {
     this.application = application;
   }
 
-  _add(data, cache) {
+  _add(data: any, cache: any) {
     return super._add(data, cache, { extras: [this.application] });
   }
 
@@ -51,14 +51,14 @@ export class ApplicationEmojiManager extends CachedManager {
    *   .then(emoji => console.log(`Created new emoji with name ${emoji.name}!`))
    *   .catch(console.error);
    */
-  async create({ attachment, name }) {
+  async create({ attachment, name }: { attachment: any; name: string }) {
     const image = await resolveImage(attachment);
     if (!image) throw new DiscordjsTypeError(ErrorCodes.ReqResourceType);
 
     const body = { image, name };
 
     const emoji = await this.client.rest.post(Routes.applicationEmojis(this.application.id), { body });
-    return this._add(emoji);
+    return this._add(emoji, true);
   }
 
   /**
@@ -78,7 +78,7 @@ export class ApplicationEmojiManager extends CachedManager {
    *   .then(emoji => console.log(`The emoji name is: ${emoji.name}`))
    *   .catch(console.error);
    */
-  async fetch(id, { cache = true, force = false } = {}) {
+  async fetch(id?: string, { cache = true, force = false }: { cache?: boolean; force?: boolean } = {}) {
     if (id) {
       if (!force) {
         const existing = this.cache.get(id);
@@ -89,7 +89,7 @@ export class ApplicationEmojiManager extends CachedManager {
       return this._add(emoji, cache);
     }
 
-    const { items: data } = await this.client.rest.get(Routes.applicationEmojis(this.application.id));
+    const { items: data } = (await this.client.rest.get(Routes.applicationEmojis(this.application.id))) as any;
     const emojis = new Collection();
     for (const emoji of data) emojis.set(emoji.id, this._add(emoji, cache));
     return emojis;
@@ -101,7 +101,7 @@ export class ApplicationEmojiManager extends CachedManager {
    * @param {EmojiResolvable} emoji The Emoji resolvable to delete
    * @returns {Promise<void>}
    */
-  async delete(emoji) {
+  async delete(emoji: any) {
     const id = this.resolveId(emoji);
     if (!id) throw new DiscordjsTypeError(ErrorCodes.InvalidType, 'emoji', 'EmojiResolvable', true);
     await this.client.rest.delete(Routes.applicationEmoji(this.application.id, id));
@@ -114,7 +114,7 @@ export class ApplicationEmojiManager extends CachedManager {
    * @param {ApplicationEmojiEditOptions} options The options to provide
    * @returns {Promise<ApplicationEmoji>}
    */
-  async edit(emoji, options) {
+  async edit(emoji: any, options: any) {
     const id = this.resolveId(emoji);
     if (!id) throw new DiscordjsTypeError(ErrorCodes.InvalidType, 'emoji', 'EmojiResolvable', true);
 
@@ -129,7 +129,7 @@ export class ApplicationEmojiManager extends CachedManager {
       return existing;
     }
 
-    return this._add(newData);
+    return this._add(newData, true);
   }
 
   /**
@@ -138,12 +138,12 @@ export class ApplicationEmojiManager extends CachedManager {
    * @param {EmojiResolvable} emoji The emoji to fetch the author of
    * @returns {Promise<User>}
    */
-  async fetchAuthor(emoji) {
+  async fetchAuthor(emoji: any) {
     const id = this.resolveId(emoji);
     if (!id) throw new DiscordjsTypeError(ErrorCodes.InvalidType, 'emoji', 'EmojiResolvable', true);
 
     const data = await this.client.rest.get(Routes.applicationEmoji(this.application.id, id));
 
-    return this._add(data).author;
+    return this._add(data, true).author;
   }
 }

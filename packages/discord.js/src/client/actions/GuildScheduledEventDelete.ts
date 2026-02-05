@@ -2,7 +2,7 @@ import { Events  } from '../../util/Events.js';
 import { Action  } from './Action.js';
 
 export class GuildScheduledEventDeleteAction extends Action {
-  handle(data) {
+  override handle(data: any) {
     const client = this.client;
     const guild = client.guilds.cache.get(data.guild_id);
 

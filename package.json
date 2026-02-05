@@ -4,6 +4,9 @@
 	"version": "14.16.3",
 	"description": "Cooking the future of Discord development. A high-performance, Bun-native monorepo for the Discord ecosystem.",
 	"private": true,
+	"workspaces": [
+		"packages/*"
+	],
 	"scripts": {
 		"build": "bun run --recursive build",
 		"test": "bun run --recursive test",

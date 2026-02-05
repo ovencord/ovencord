@@ -2,7 +2,7 @@ import { Events  } from '../../util/Events.js';
 import { Action  } from './Action.js';
 
 export class ChannelDeleteAction extends Action {
-  handle(data) {
+  override handle(data: any) {
     const client = this.client;
     const channel = client.channels.cache.get(data.id);
 

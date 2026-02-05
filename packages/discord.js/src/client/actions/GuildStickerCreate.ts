@@ -2,7 +2,7 @@ import { Events  } from '../../util/Events.js';
 import { Action  } from './Action.js';
 
 export class GuildStickerCreateAction extends Action {
-  handle(guild, createdSticker) {
+  override handle(guild: any, createdSticker: any) {
     const already = guild.stickers.cache.has(createdSticker.id);
     const sticker = guild.stickers._add(createdSticker);
     /**

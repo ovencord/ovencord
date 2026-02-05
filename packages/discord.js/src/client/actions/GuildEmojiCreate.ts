@@ -2,7 +2,7 @@ import { Events  } from '../../util/Events.js';
 import { Action  } from './Action.js';
 
 export class GuildEmojiCreateAction extends Action {
-  handle(guild, createdEmoji) {
+  override handle(guild: any, createdEmoji: any) {
     const already = guild.emojis.cache.has(createdEmoji.id);
     const emoji = guild.emojis._add(createdEmoji);
     /**

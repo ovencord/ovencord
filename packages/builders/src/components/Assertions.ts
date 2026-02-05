@@ -133,6 +133,7 @@ export const selectMenuStringPredicate = selectMenuBasePredicate
 				minimum,
 				type: 'array',
 				path: ['options'],
+				origin: 'value',
 			});
 
 		if (value.min_values !== undefined && value.options.length < value.min_values) {
@@ -151,6 +152,7 @@ export const selectMenuStringPredicate = selectMenuBasePredicate
 				maximum: value.max_values,
 				type: 'number',
 				path: ['min_values'],
+				origin: 'value',
 			});
 		}
 	});

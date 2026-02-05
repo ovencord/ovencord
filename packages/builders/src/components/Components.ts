@@ -70,6 +70,12 @@ export type ModalComponentBuilder =
  */
 export type MessageActionRowComponentBuilder =
 	| ButtonBuilder
+	| PrimaryButtonBuilder
+	| SecondaryButtonBuilder
+	| SuccessButtonBuilder
+	| DangerButtonBuilder
+	| LinkButtonBuilder
+	| PremiumButtonBuilder
 	| ChannelSelectMenuBuilder
 	| MentionableSelectMenuBuilder
 	| RoleSelectMenuBuilder
@@ -238,17 +244,17 @@ export function createComponentBuilder(
 function createButtonBuilder(data: APIButtonComponent): ButtonBuilder {
 	switch (data.style) {
 		case ButtonStyle.Primary:
-			return new PrimaryButtonBuilder(data);
+			return new PrimaryButtonBuilder(data) as any;
 		case ButtonStyle.Secondary:
-			return new SecondaryButtonBuilder(data);
+			return new SecondaryButtonBuilder(data) as any;
 		case ButtonStyle.Success:
-			return new SuccessButtonBuilder(data);
+			return new SuccessButtonBuilder(data) as any;
 		case ButtonStyle.Danger:
-			return new DangerButtonBuilder(data);
+			return new DangerButtonBuilder(data) as any;
 		case ButtonStyle.Link:
-			return new LinkButtonBuilder(data);
+			return new LinkButtonBuilder(data) as any;
 		case ButtonStyle.Premium:
-			return new PremiumButtonBuilder(data);
+			return new PremiumButtonBuilder(data) as any;
 		default:
 			// @ts-expect-error This case can still occur if we get a newer unsupported button style
 			throw new Error(`Cannot properly serialize button with style: ${data.style}`);

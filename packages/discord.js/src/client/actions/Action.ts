@@ -14,39 +14,41 @@ that WebSocket events don't clash with REST methods.
 
 */
 
+import type { Client } from '../Client.js';
+
 export class Action {
-  public client: any;
-  constructor(client) {
+  public client: Client;
+  constructor(client: Client) {
     this.client = client;
   }
 
-  handle(data) {
-    return data;
+  handle(...data: any[]) {
+    return data[0];
   }
 
-  getPayload(data, manager, id, partialType, cache) {
+  getPayload(data: any, manager: any, id: any, partialType: any, cache: any) {
     return this.client.options.partials.includes(partialType) ? manager._add(data, cache) : manager.cache.get(id);
   }
 
-  getChannel(data) {
-    const payloadData = {};
+  getChannel(data: any) {
+    const payloadData: Record<string, any> = {};
     const id = data.channel_id ?? data.id;
 
     if (!('recipients' in data)) {
       // Try to resolve the recipient, but do not add the client user.
       const recipient = data.author ?? data.user ?? { id: data.user_id };
-      if (recipient.id !== this.client.user.id) payloadData.recipients = [recipient];
+      if (recipient.id !== this.client.user?.id) payloadData.recipients = [recipient];
     }
 
     if (id !== undefined) payloadData.id = id;
 
     return (
       data[this.client.actions.injectedChannel] ??
-      this.getPayload({ ...data, ...payloadData }, this.client.channels, id, Partials.Channel)
+      this.getPayload({ ...data, ...payloadData }, this.client.channels, id, Partials.Channel, undefined)
     );
   }
 
-  getMessage(data, channel, cache) {
+  getMessage(data: any, channel: any, cache: any) {
     const id = data.message_id ?? data.id;
     return (
       data[this.client.actions.injectedMessage] ??
@@ -64,7 +66,7 @@ export class Action {
     );
   }
 
-  getPoll(data, message, channel) {
+  getPoll(data: any, message: any, channel: any) {
     const includePollPartial = this.client.options.partials.includes(Partials.Poll);
     const includePollAnswerPartial = this.client.options.partials.includes(Partials.PollAnswer);
     if (message.partial && (!includePollPartial || !includePollAnswerPartial)) return null;
@@ -81,30 +83,31 @@ export class Action {
     return message.poll;
   }
 
-  getReaction(data, message, user) {
+  getReaction(data: any, message: any, user: any) {
     const id = data.emoji.id ?? decodeURIComponent(data.emoji.name);
     return this.getPayload(
       {
         emoji: data.emoji,
         count: message.partial ? null : 0,
-        me: user?.id === this.client.user.id,
+        me: user?.id === this.client.user?.id,
       },
       message.reactions,
       id,
       Partials.Reaction,
+      undefined,
     );
   }
 
-  getMember(data, guild) {
-    return this.getPayload(data, guild.members, data.user.id, Partials.GuildMember);
+  getMember(data: any, guild: any) {
+    return this.getPayload(data, guild.members, data.user.id, Partials.GuildMember, undefined);
   }
 
-  getUser(data) {
+  getUser(data: any) {
     const id = data.user_id;
-    return data[this.client.actions.injectedUser] ?? this.getPayload({ id }, this.client.users, id, Partials.User);
+    return data[this.client.actions.injectedUser] ?? this.getPayload({ id }, this.client.users, id, Partials.User, undefined);
   }
 
-  getUserFromMember(data) {
+  getUserFromMember(data: any) {
     if (data.guild_id && data.member?.user) {
       const guild = this.client.guilds.cache.get(data.guild_id);
       if (guild) {
@@ -117,25 +120,26 @@ export class Action {
     return this.getUser(data);
   }
 
-  getScheduledEvent(data, guild) {
+  getScheduledEvent(data: any, guild: any) {
     const id = data.guild_scheduled_event_id ?? data.id;
     return this.getPayload(
       { id, guild_id: data.guild_id ?? guild.id },
       guild.scheduledEvents,
       id,
       Partials.GuildScheduledEvent,
+      undefined,
     );
   }
 
-  getThreadMember(id, manager) {
+  getThreadMember(id: any, manager: any) {
     return this.getPayload({ user_id: id }, manager, id, Partials.ThreadMember, false);
   }
 
-  getSoundboardSound(data, guild) {
-    return this.getPayload(data, guild.soundboardSounds, data.sound_id, Partials.SoundboardSound);
+  getSoundboardSound(data: any, guild: any) {
+    return this.getPayload(data, guild.soundboardSounds, data.sound_id, Partials.SoundboardSound, undefined);
   }
 
-  spreadInjectedData(data) {
+  spreadInjectedData(data: any) {
     return Object.fromEntries(Object.getOwnPropertySymbols(data).map(symbol => [symbol, data[symbol]]));
   }
 }

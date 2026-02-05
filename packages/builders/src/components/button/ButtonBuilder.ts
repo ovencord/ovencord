@@ -9,6 +9,7 @@ import { EmojiOrLabelButtonMixin } from './mixins/EmojiOrLabelButtonMixin.js';
  * @mixes {@link BaseButtonBuilder}\<{@link discord-api-types/v10#(APIButtonComponent:interface)}\>
  * @mixes {@link EmojiOrLabelButtonMixin}
  */
+// @ts-ignore
 export interface ButtonBuilder extends BaseButtonBuilder<APIButtonComponent>, EmojiOrLabelButtonMixin {}
 
 export class ButtonBuilder extends Mixin(BaseButtonBuilder<APIButtonComponent>, EmojiOrLabelButtonMixin) {
@@ -33,7 +34,7 @@ export class ButtonBuilder extends Mixin(BaseButtonBuilder<APIButtonComponent>, 
 	 * @param customId - The custom id to use
 	 */
 	public setCustomId(customId: string) {
-		this.data.custom_id = customId;
+		(this.data as any).custom_id = customId;
 		return this;
 	}
 
@@ -43,7 +44,7 @@ export class ButtonBuilder extends Mixin(BaseButtonBuilder<APIButtonComponent>, 
 	 * @param style - The style to use
 	 */
 	public setStyle(style: ButtonStyle) {
-		this.data.style = style;
+		(this.data as any).style = style;
 		return this;
 	}
 
@@ -53,7 +54,17 @@ export class ButtonBuilder extends Mixin(BaseButtonBuilder<APIButtonComponent>, 
 	 * @param url - The URL to use
 	 */
 	public setURL(url: string) {
-		this.data.url = url;
+		(this.data as any).url = url;
+		return this;
+	}
+
+	/**
+	 * Sets the SKU id for this button.
+	 *
+	 * @param skuId - The SKU id to use
+	 */
+	public setSKUId(skuId: string) {
+		(this.data as any).sku_id = skuId;
 		return this;
 	}
 }

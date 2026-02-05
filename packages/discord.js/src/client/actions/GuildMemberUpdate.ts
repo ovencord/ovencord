@@ -2,7 +2,7 @@ import { Events  } from '../../util/Events.js';
 import { Action  } from './Action.js';
 
 export class GuildMemberUpdateAction extends Action {
-  handle(data) {
+  override handle(data: any) {
     const { client } = this;
     if (data.user.username) {
       const user = client.users.cache.get(data.user.id);

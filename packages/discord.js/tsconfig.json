@@ -15,6 +15,7 @@
     },
     "types": [
       "bun"
-    ]
+    ],
+    "exactOptionalPropertyTypes": false
   }
 }

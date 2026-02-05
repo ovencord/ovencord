@@ -2,7 +2,7 @@ import { Events  } from '../../util/Events.js';
 import { Action  } from './Action.js';
 
 export class UserUpdateAction extends Action {
-  handle(data) {
+  override handle(data: any) {
     const client = this.client;
 
     const newUser = data.id === client.user.id ? client.user : client.users.cache.get(data.id);

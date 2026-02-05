@@ -15,7 +15,7 @@ import { Events  } from '../../util/Events.js';
 import { Action  } from './Action.js';
 
 export class InteractionCreateAction extends Action {
-  handle(data) {
+  override handle(data: any) {
     const client = this.client;
 
     // Resolve and cache partial channels for Interaction#channel getter

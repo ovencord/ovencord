@@ -181,6 +181,18 @@ export class ActionRowBuilder extends ComponentBuilder<APIActionRowComponent<API
 	}
 
 	/**
+	 * Sets the components in this action row.
+	 *
+	 * @param input - The components to set
+	 */
+	public setComponents(...input: RestOrArray<AnyActionRowComponentBuilder>): this {
+		const normalized = normalizeArray(input);
+		this.data.components = [...normalized];
+
+		return this;
+	}
+
+	/**
 	 * Adds SKU id button components to this action row.
 	 *
 	 * @param input - The buttons to add

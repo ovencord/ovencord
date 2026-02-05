@@ -2,7 +2,7 @@ import { Events  } from '../../util/Events.js';
 import { Action  } from './Action.js';
 
 export class ThreadCreateAction extends Action {
-  handle(data) {
+  override handle(data: any) {
     const client = this.client;
     const existing = client.channels.cache.has(data.id);
     const thread = client.channels._add(data);

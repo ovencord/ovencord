@@ -25,7 +25,15 @@ import { sectionPredicate } from './Assertions.js';
 import { TextDisplayBuilder } from './TextDisplay.js';
 import { ThumbnailBuilder } from './Thumbnail.js';
 
-export type SectionBuilderAccessory = ButtonBuilder | ThumbnailBuilder;
+export type SectionBuilderAccessory =
+	| ButtonBuilder
+	| PrimaryButtonBuilder
+	| SecondaryButtonBuilder
+	| SuccessButtonBuilder
+	| DangerButtonBuilder
+	| LinkButtonBuilder
+	| PremiumButtonBuilder
+	| ThumbnailBuilder;
 
 export interface SectionBuilderData extends Partial<Omit<APISectionComponent, 'accessory' | 'components'>> {
 	accessory?: SectionBuilderAccessory;

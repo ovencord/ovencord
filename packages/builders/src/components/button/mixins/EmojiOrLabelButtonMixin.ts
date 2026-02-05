@@ -19,8 +19,12 @@ export class EmojiOrLabelButtonMixin {
 	 *
 	 * @param emoji - The emoji to use
 	 */
-	public setEmoji(emoji: APIMessageComponentEmoji) {
-		this.data.emoji = emoji;
+	public setEmoji(emoji: APIMessageComponentEmoji | string) {
+		if (typeof emoji === 'string') {
+			this.data.emoji = { name: emoji };
+		} else {
+			this.data.emoji = emoji;
+		}
 		return this;
 	}
 

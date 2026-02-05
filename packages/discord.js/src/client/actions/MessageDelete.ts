@@ -2,7 +2,7 @@ import { Events  } from '../../util/Events.js';
 import { Action  } from './Action.js';
 
 export class MessageDeleteAction extends Action {
-  handle(data) {
+  override handle(data: any) {
     const client = this.client;
     const channel = this.getChannel({ id: data.channel_id, ...('guild_id' in data && { guild_id: data.guild_id }) });
     let message;
@@ -11,7 +11,7 @@ export class MessageDeleteAction extends Action {
 
       if (channel.isThread()) channel.messageCount--;
 
-      message = this.getMessage(data, channel);
+      message = this.getMessage(data, channel, undefined);
       if (message) {
         channel.messages.cache.delete(message.id);
         /**
