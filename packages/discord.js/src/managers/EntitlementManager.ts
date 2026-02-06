@@ -12,7 +12,6 @@ import { CachedManager  } from './CachedManager.js';
  * @extends {CachedManager}
  */
 export class EntitlementManager extends CachedManager {
-  public client: any;
   constructor(client, iterable) {
     super(client, Entitlement, iterable);
   }

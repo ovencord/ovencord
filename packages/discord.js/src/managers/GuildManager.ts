@@ -24,7 +24,6 @@ let cacheWarningEmitted = false;
  * @extends {CachedManager}
  */
 export class GuildManager extends CachedManager {
-  public client: any;
   constructor(client, iterable) {
     super(client, Guild, iterable);
     if (!cacheWarningEmitted && this._cache.constructor.name !== 'Collection') {

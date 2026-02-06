@@ -14,7 +14,6 @@ import { CachedManager  } from './CachedManager.js';
  * @extends {CachedManager}
  */
 export class ApplicationCommandManager extends CachedManager {
-  public client: any;
   public permissions: any;
   constructor(client, iterable) {
     super(client, ApplicationCommand, iterable);

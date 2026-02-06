@@ -5,7 +5,7 @@
     "target": "ESNext",
     "module": "ESNext",
     "moduleResolution": "Bundler",
-    "lib": ["ESNext", "WebWorker"],
+    "lib": ["ES2024", "WebWorker"],
     "types": ["bun"],
     "noEmit": true,
     

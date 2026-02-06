@@ -18,7 +18,6 @@ let cacheWarningEmitted = false;
  * @extends {CachedManager}
  */
 export class ChannelManager extends CachedManager {
-  public client: any;
   constructor(client, iterable) {
     super(client, BaseChannel, iterable);
     const defaultCaching =
