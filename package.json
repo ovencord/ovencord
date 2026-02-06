@@ -1,7 +1,7 @@
 {
 	"$schema": "https://json.schemastore.org/package.json",
 	"name": "@ovencord/monorepo",
-	"version": "14.16.3",
+	"version": "14.16.3-dev.1",
 	"description": "Cooking the future of Discord development. A high-performance, Bun-native monorepo for the Discord ecosystem.",
 	"private": true,
 	"workspaces": [
