@@ -1,6 +1,4 @@
 /* eslint-disable   */
-
-import process from 'node:process';
 import { calculateShardId  } from '@ovencord/util';
 import { WebSocketShardEvents  } from '@ovencord/ws';
 import { DiscordjsError, DiscordjsTypeError, ErrorCodes  } from '../errors/index.js';
@@ -15,8 +13,9 @@ export class ShardClientUtil {
   public client: any;
   public mode: any;
   public parentPort: any;
-  public _singleton: any;
-  constructor(client, mode) {
+  private static _singleton: ShardClientUtil | null = null;
+  
+  constructor(client: any, mode: any) {
     /**
      * Client for the shard
      *
@@ -76,18 +75,18 @@ export class ShardClientUtil {
    * @returns {Promise<void>}
    * @emits Shard#message
    */
-  async send(message) {
+  async send(message: any): Promise<void> {
     return new Promise((resolve, reject) => {
       switch (this.mode) {
         case 'process':
-          process.send(message, err => {
+          process.send!(message, (err: Error | null) => {
             if (err) reject(err);
-            else resolve();
+            else resolve(undefined);
           });
           break;
         case 'worker':
           this.parentPort.postMessage(message);
-          resolve();
+          resolve(undefined);
           break;
         default:
           break;
@@ -107,11 +106,11 @@ export class ShardClientUtil {
    *   .catch(console.error);
    * @see {@link ShardingManager#fetchClientValues}
    */
-  async fetchClientValues(prop, shard) {
+  async fetchClientValues(prop: any, shard: any): Promise<any> {
     return new Promise((resolve, reject) => {
       const parent = this.parentPort ?? process;
 
-      const listener = message => {
+      const listener = (message: any) => {
         if (message?._sFetchProp !== prop || message._sFetchPropShard !== shard) return;
         parent.removeListener('message', listener);
         this.decrementMaxListeners(parent);
@@ -142,7 +141,7 @@ export class ShardClientUtil {
    *   .catch(console.error);
    * @see {@link ShardingManager#broadcastEval}
    */
-  async broadcastEval(script, options = {}) {
+  async broadcastEval(script: any, options: any = {}): Promise<any> {
     return new Promise((resolve, reject) => {
       const parent = this.parentPort ?? process;
       if (typeof script !== 'function') {
@@ -152,7 +151,7 @@ export class ShardClientUtil {
 
       const evalScript = `(${script})(this, ${JSON.stringify(options.context)})`;
 
-      const listener = message => {
+      const listener = (message: any) => {
         if (message?._sEval !== evalScript || message._sEvalShard !== options.shard) return;
         parent.removeListener('message', listener);
         this.decrementMaxListeners(parent);
@@ -177,7 +176,7 @@ export class ShardClientUtil {
    * @returns {Promise<void>} Resolves upon the message being sent
    * @see {@link ShardingManager#respawnAll}
    */
-  async respawnAll({ shardDelay = 5_000, respawnDelay = 500, timeout = 30_000 } = {}) {
+  async respawnAll({ shardDelay = 5_000, respawnDelay = 500, timeout = 30_000 } = {}): Promise<void> {
     return this.send({ _sRespawnAll: { shardDelay, respawnDelay, timeout } });
   }
 
@@ -187,7 +186,7 @@ export class ShardClientUtil {
    * @param {*} message Message received
    * @private
    */
-  async _handleMessage(message) {
+  async _handleMessage(message: any): Promise<void> {
     if (!message) return;
     if (message._fetchProp) {
       try {
@@ -214,7 +213,7 @@ export class ShardClientUtil {
    * @param {*} message Message to send
    * @private
    */
-  _respond(type, message) {
+  _respond(type: string, message: any): void {
     this.send(message).catch(error_ => {
       const error = new Error(`Error when sending ${type} response to master process: ${error_.message}`);
       error.stack = error_.stack;
@@ -239,7 +238,7 @@ export class ShardClientUtil {
    * @param {ShardingManagerMode} mode Mode the shard was spawned with
    * @returns {ShardClientUtil}
    */
-  static singleton(client, mode) {
+  static singleton(client: any, mode: any): ShardClientUtil {
     if (this._singleton) {
       client.emit(
         Events.Warn,
@@ -259,7 +258,7 @@ export class ShardClientUtil {
    * @param {number} shardCount Number of shards
    * @returns {number}
    */
-  static shardIdForGuildId(guildId, shardCount) {
+  static shardIdForGuildId(guildId: string, shardCount: number): number {
     const shard = calculateShardId(guildId, shardCount);
     if (shard < 0) throw new DiscordjsError(ErrorCodes.ShardingShardMiscalculation, shard, guildId, shardCount);
     return shard;
@@ -271,7 +270,7 @@ export class ShardClientUtil {
    * @param {Worker|ChildProcess} emitter The emitter that emits the events.
    * @private
    */
-  incrementMaxListeners(emitter) {
+  incrementMaxListeners(emitter: any): void {
     const maxListeners = emitter.getMaxListeners();
     if (maxListeners !== 0) {
       emitter.setMaxListeners(maxListeners + 1);
@@ -284,7 +283,7 @@ export class ShardClientUtil {
    * @param {Worker|ChildProcess} emitter The emitter that emits the events.
    * @private
    */
-  decrementMaxListeners(emitter) {
+  decrementMaxListeners(emitter: any): void {
     const maxListeners = emitter.getMaxListeners();
     if (maxListeners !== 0) {
       emitter.setMaxListeners(maxListeners - 1);

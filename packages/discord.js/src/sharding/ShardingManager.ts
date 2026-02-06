@@ -22,10 +22,12 @@ export class ShardingManager extends AsyncEventEmitter {
   public shardList: any;
   public totalShards: any;
   public mode: any;
+  public respawn: boolean;
   public silent: any;
   public shardArgs: any;
   public execArgv: any;
   public token: any;
+  public shards: any;
   /**
    * The mode to spawn shards with for a {@link ShardingManager}. Can be either one of:
    * - 'process' to use child processes
@@ -53,7 +55,7 @@ export class ShardingManager extends AsyncEventEmitter {
    * @param {string} file Path to your shard script file
    * @param {ShardingManagerOptions} [options] Options for the sharding manager
    */
-  constructor(file, options) {
+  constructor(file: any, options?: any) {
     super();
     const _options = {
       totalShards: 'auto',
@@ -293,7 +295,7 @@ export class ShardingManager extends AsyncEventEmitter {
    * @param {BroadcastEvalOptions} [options={}] The options for the broadcast
    * @returns {Promise<*|Array<*>>} Results of the script execution
    */
-  async broadcastEval(script, options = {}) {
+  async broadcastEval(script: any, options: any = {}): Promise<any> {
     if (typeof script !== 'function') {
       throw new DiscordjsTypeError(ErrorCodes.ShardingInvalidEvalBroadcast);
     }

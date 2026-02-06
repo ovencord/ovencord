@@ -33,7 +33,7 @@ export class Shard extends AsyncEventEmitter {
   public _evals: any;
   public _fetches: any;
   public _exitListener: any;
-  constructor(manager, id) {
+  constructor(manager: any, id: any) {
     super();
 
     switch (manager.mode) {
@@ -157,14 +157,13 @@ export class Shard extends AsyncEventEmitter {
 
     switch (this.manager.mode) {
       case 'process':
-        this.process = childProcess
-          .fork(path.resolve(this.manager.file), this.args, {
-            env: this.env,
-            execArgv: this.execArgv,
-            silent: this.silent,
-          })
-          .on('message', this._handleMessage.bind(this))
-          .on('exit', this._exitListener);
+        this.process = childProcess.fork(path.resolve(this.manager.file), this.args, {
+          env: this.env,
+          execArgv: this.execArgv,
+          silent: this.silent,
+        });
+        (this.process as any).on('message', this._handleMessage.bind(this));
+        (this.process as any).on('exit', this._exitListener);
         break;
       case 'worker':
         this.worker = new Worker(path.resolve(this.manager.file), {
@@ -172,9 +171,9 @@ export class Shard extends AsyncEventEmitter {
           env: SHARE_ENV,
           execArgv: this.execArgv,
           argv: this.args,
-        })
-          .on('message', this._handleMessage.bind(this))
-          .on('exit', this._exitListener);
+        });
+        (this.worker as any).on('message', this._handleMessage.bind(this));
+        (this.worker as any).on('exit', this._exitListener);
         break;
       default:
         break;
@@ -234,11 +233,11 @@ export class Shard extends AsyncEventEmitter {
    */
   kill() {
     if (this.process) {
-      this.process.removeListener('exit', this._exitListener);
+      (this.process as any).removeListener('exit', this._exitListener);
       this.process.kill();
     } else {
-      this.worker.removeListener('exit', this._exitListener);
-      this.worker.terminate();
+      (this.worker as any).removeListener('exit', this._exitListener);
+      (this.worker as any).terminate();
     }
 
     this._handleExit(false);
@@ -272,15 +271,15 @@ export class Shard extends AsyncEventEmitter {
    * @param {*} message Message to send to the shard
    * @returns {Promise<Shard>}
    */
-  async send(message) {
+  async send(message: any): Promise<Shard> {
     return new Promise((resolve, reject) => {
       if (this.process) {
-        this.process.send(message, err => {
+        (this.process as any).send(message, (err: Error | null) => {
           if (err) reject(err);
           else resolve(this);
         });
       } else {
-        this.worker.postMessage(message);
+        (this.worker as any).postMessage(message);
         resolve(this);
       }
     });
@@ -296,7 +295,7 @@ export class Shard extends AsyncEventEmitter {
    *   .then(count => console.log(`${count} guilds in shard ${shard.id}`))
    *   .catch(console.error);
    */
-  async fetchClientValue(prop) {
+  async fetchClientValue(prop: any): Promise<any> {
     // Shard is dead (maybe respawning), don't cache anything and error immediately
     if (!this.process && !this.worker) {
       throw new DiscordjsError(ErrorCodes.ShardingNoChildExists, this.id);
@@ -308,9 +307,9 @@ export class Shard extends AsyncEventEmitter {
     const promise = new Promise((resolve, reject) => {
       const child = this.process ?? this.worker;
 
-      const listener = message => {
+      const listener = (message: any) => {
         if (message?._fetchProp !== prop) return;
-        child.removeListener('message', listener);
+        (child as any).removeListener('message', listener);
         this.decrementMaxListeners(child);
         this._fetches.delete(prop);
         if (message._error) reject(makeError(message._error));
@@ -318,10 +317,10 @@ export class Shard extends AsyncEventEmitter {
       };
 
       this.incrementMaxListeners(child);
-      child.on('message', listener);
+      (child as any).on('message', listener);
 
       this.send({ _fetchProp: prop }).catch(error => {
-        child.removeListener('message', listener);
+        (child as any).removeListener('message', listener);
         this.decrementMaxListeners(child);
         this._fetches.delete(prop);
         reject(error);
@@ -339,7 +338,7 @@ export class Shard extends AsyncEventEmitter {
    * @param {*} [context] The context for the eval
    * @returns {Promise<*>} Result of the script execution
    */
-  async eval(script, context) {
+  async eval(script: any, context?: any): Promise<any> {
     // Stringify the script if it's a Function
     const _eval = typeof script === 'function' ? `(${script})(this, ${JSON.stringify(context)})` : script;
 
@@ -354,9 +353,9 @@ export class Shard extends AsyncEventEmitter {
     const promise = new Promise((resolve, reject) => {
       const child = this.process ?? this.worker;
 
-      const listener = message => {
+      const listener = (message: any) => {
         if (message?._eval !== _eval) return;
-        child.removeListener('message', listener);
+        (child as any).removeListener('message', listener);
         this.decrementMaxListeners(child);
         this._evals.delete(_eval);
         if (message._error) reject(makeError(message._error));
@@ -364,10 +363,10 @@ export class Shard extends AsyncEventEmitter {
       };
 
       this.incrementMaxListeners(child);
-      child.on('message', listener);
+      (child as any).on('message', listener);
 
       this.send({ _eval }).catch(error => {
-        child.removeListener('message', listener);
+        (child as any).removeListener('message', listener);
         this.decrementMaxListeners(child);
         this._evals.delete(_eval);
         reject(error);
@@ -384,7 +383,7 @@ export class Shard extends AsyncEventEmitter {
    * @param {*} message Message received
    * @private
    */
-  _handleMessage(message) {
+  _handleMessage(message: any): void {
     if (message) {
       // Shard is ready
       if (message._ready) {
