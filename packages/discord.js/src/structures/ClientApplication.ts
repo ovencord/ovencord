@@ -50,33 +50,34 @@ export class ClientApplication extends Application {
   constructor(client, data) {
     super(client, data);
 
+    // Ensure this.client is set before initializing managers
     /**
      * The application command manager for this application
      *
      * @type {ApplicationCommandManager}
      */
-    this.commands = new ApplicationCommandManager(this.client);
+    this.commands = new ApplicationCommandManager(client, undefined);
 
     /**
      * The application emoji manager for this application
      *
      * @type {ApplicationEmojiManager}
      */
-    this.emojis = new ApplicationEmojiManager(this);
+    this.emojis = new ApplicationEmojiManager(this, undefined);
 
     /**
      * The entitlement manager for this application
      *
      * @type {EntitlementManager}
      */
-    this.entitlements = new EntitlementManager(this.client);
+    this.entitlements = new EntitlementManager(client, undefined);
 
     /**
      * The subscription manager for this application
      *
      * @type {SubscriptionManager}
      */
-    this.subscriptions = new SubscriptionManager(this.client);
+    this.subscriptions = new SubscriptionManager(client, undefined);
   }
 
   _patch(data) {
