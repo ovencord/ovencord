@@ -50,7 +50,7 @@ export class ClientApplication extends Application {
   constructor(client, data) {
     super(client, data);
 
-    // Ensure this.client is set before initializing managers
+    // Initialize managers after super() to ensure this.client is set
     /**
      * The application command manager for this application
      *

@@ -47,6 +47,8 @@ export class GuildChannel extends BaseChannel {
      * @type {Snowflake}
      */
     this.guildId = guild?.id ?? data.guild_id;
+
+    // Initialize permissionOverwrites after super() to ensure this.client is set
     /**
      * A manager of permission overwrites that belong to this channel
      *
