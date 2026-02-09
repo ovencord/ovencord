@@ -57,7 +57,9 @@ export const sectionPredicate = z.object({
 	id: idPredicate,
 	components: z.array(textDisplayPredicate).min(1).max(3),
 	accessory: z.union([
-		buttonPredicate,
+		buttonPredicate.refine((data) => 'label' in data && data.label !== undefined, {
+			message: 'Buttons used as section accessories must have a label.',
+		}),
 		thumbnailPredicate,
 	]),
 });

@@ -266,6 +266,15 @@ export class SectionBuilder extends ComponentBuilder<APISectionComponent> {
 		const { components, accessory, ...rest } = this.data;
 
 		// Resolve accessory if it exists
+        if (accessory) {
+            console.log("DEBUG: Section.toJSON accessory:", accessory);
+            console.log("DEBUG: Constructor:", (accessory as any).constructor.name);
+            console.log("DEBUG: Has toJSON?", 'toJSON' in accessory);
+            if ('toJSON' in accessory) {
+                 console.log("DEBUG: calling toJSON result:", (accessory as any).toJSON(validationOverride));
+            }
+        }
+
 		const accessoryData = accessory
 			? (accessory as any).toJSON
 				? (accessory as any).toJSON(validationOverride)
