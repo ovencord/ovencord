@@ -372,7 +372,10 @@ export class REST extends AsyncEventEmitter<RestEvents> {
 						formData.append(key, value as string | Blob);
 					}
 				} else {
-					formData.append('payload_json', JSON.stringify(request.body));
+					formData.append(
+						'payload_json',
+						JSON.stringify(request.body, (_, value) => (typeof value === 'bigint' ? value.toString() : value)),
+					);
 				}
 			}
 
@@ -385,7 +388,9 @@ export class REST extends AsyncEventEmitter<RestEvents> {
 				finalBody = request.body as BodyInit;
 			} else {
 				// Stringify the JSON data
-				finalBody = JSON.stringify(request.body);
+				finalBody = JSON.stringify(request.body, (_, value) =>
+					typeof value === 'bigint' ? value.toString() : value,
+				);
 				// Set the additional headers to specify the content-type
 				additionalHeaders = { 'Content-Type': 'application/json' };
 			}

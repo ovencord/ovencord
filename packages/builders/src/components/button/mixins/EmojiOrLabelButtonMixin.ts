@@ -1,4 +1,5 @@
 import type { APIButtonComponent, APIButtonComponentWithSKUId, APIMessageComponentEmoji } from 'discord-api-types/v10';
+import { parseEmoji } from '../../../util/componentUtil.js';
 
 export interface EmojiOrLabelButtonData extends Pick<
 	Exclude<APIButtonComponent, APIButtonComponentWithSKUId>,
@@ -21,7 +22,7 @@ export class EmojiOrLabelButtonMixin {
 	 */
 	public setEmoji(emoji: APIMessageComponentEmoji | string) {
 		if (typeof emoji === 'string') {
-			this.data.emoji = { name: emoji };
+			this.data.emoji = parseEmoji(emoji);
 		} else {
 			this.data.emoji = emoji;
 		}
