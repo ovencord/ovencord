@@ -12,7 +12,6 @@ import { VoiceState  } from './VoiceState.js';
  * @extends {Base}
  */
 export class GuildMember extends Base {
-  public client: any;
   public guild: any;
   public premiumSinceTimestamp: any;
   public nickname: any;

@@ -12,7 +12,6 @@ import { InviteGuild  } from './InviteGuild.js';
  * @extends {BaseInvite}
  */
 export class GuildInvite extends BaseInvite {
-  public client: any;
   public type: any;
   public guildId: any;
   public flags: any;

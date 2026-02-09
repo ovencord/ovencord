@@ -9,7 +9,6 @@ import { CommandInteractionOptionResolver  } from './CommandInteractionOptionRes
  * @extends {BaseInteraction}
  */
 export class AutocompleteInteraction extends BaseInteraction {
-  public client: any;
   public commandId: any;
   public commandName: any;
   public commandType: any;

@@ -6,7 +6,6 @@ const getMessage = lazy(() => require('./Message.js').Message);
  * Represents the resource that was created by the interaction response.
  */
 export class InteractionCallbackResource {
-  public client: any;
   public type: any;
   public activityInstance: any;
   public message: any;

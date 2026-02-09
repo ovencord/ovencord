@@ -13,7 +13,6 @@ const getMessage = lazy(() => require('./Message.js').Message);
  * @implements {InteractionResponses}
  */
 export class MessageComponentInteraction extends BaseInteraction {
-  public client: any;
   public message: any;
   public customId: any;
   public componentType: any;

@@ -7,7 +7,6 @@ import { Base  } from './Base.js';
  * @extends {Base}
  */
 export class AuthorizingIntegrationOwners extends Base {
-  public client: any;
   public guildId: any;
   public userId: any;
   constructor(client, data) {

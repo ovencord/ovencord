@@ -9,7 +9,6 @@ import { WidgetMember  } from './WidgetMember.js';
  * @extends {Base}
  */
 export class Widget extends Base {
-  public client: any;
   public id: any;
   public name: any;
   public instantInvite: any;

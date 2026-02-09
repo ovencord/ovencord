@@ -11,7 +11,6 @@ import { Sticker  } from './Sticker.js';
  * @extends {Base}
  */
 export class GuildPreview extends Base {
-  public client: any;
   public id: any;
   public name: any;
   public features: any;

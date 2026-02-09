@@ -6,7 +6,6 @@ import { BaseChannel  } from './BaseChannel.js';
  * @extends {BaseChannel}
  */
 export class DirectoryChannel extends BaseChannel {
-  public client: any;
   public guild: any;
   public guildId: any;
   public name: any;

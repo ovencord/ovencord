@@ -7,7 +7,6 @@ import { MessageComponentInteraction  } from './MessageComponentInteraction.js';
  * @extends {MessageComponentInteraction}
  */
 export class ChannelSelectMenuInteraction extends MessageComponentInteraction {
-  public client: any;
   public channels: any;
   constructor(client, data) {
     super(client, data);

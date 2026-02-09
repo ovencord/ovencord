@@ -6,7 +6,6 @@ import { Base  } from './Base.js';
  * @extends {Base}
  */
 export class Subscription extends Base {
-  public client: any;
   public id: any;
   public userId: any;
   public skuIds: any;

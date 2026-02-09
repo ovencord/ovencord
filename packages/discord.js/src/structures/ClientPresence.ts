@@ -10,7 +10,6 @@ import { Presence  } from './Presence.js';
  * @extends {Presence}
  */
 export class ClientPresence extends Presence {
-  public client: any;
   constructor(client, data = {}) {
     super(client, Object.assign(data, { status: data.status ?? 'online', user: { id: null } }));
   }

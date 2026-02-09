@@ -13,7 +13,6 @@ import { Base  } from './Base.js';
  * @abstract
  */
 export class BaseInteraction extends Base {
-  public client: any;
   public type: any;
   public id: any;
   public applicationId: any;

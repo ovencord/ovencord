@@ -53,3 +53,4 @@ bun.lockb
 .prettiercache
 .eslintcache
 .vercel
+/.agent

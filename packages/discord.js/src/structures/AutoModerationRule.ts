@@ -8,7 +8,6 @@ import { Base  } from './Base.js';
  * @extends {Base}
  */
 export class AutoModerationRule extends Base {
-  public client: any;
   public id: any;
   public guild: any;
   public creatorId: any;

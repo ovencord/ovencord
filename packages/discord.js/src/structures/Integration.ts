@@ -26,7 +26,6 @@ import { IntegrationApplication  } from './IntegrationApplication.js';
  * @extends {Base}
  */
 export class Integration extends Base {
-  public client: any;
   public guild: any;
   public id: any;
   public name: any;

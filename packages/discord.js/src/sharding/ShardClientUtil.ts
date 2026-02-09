@@ -12,6 +12,7 @@ import { makeError, makePlainError  } from '../util/Util.js';
 export class ShardClientUtil {
   public client: any;
   public mode: any;
+
   public parentPort: any;
   private static _singleton: ShardClientUtil | null = null;
   

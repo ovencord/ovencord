@@ -11,7 +11,6 @@ import { InteractionResponses  } from './interfaces/InteractionResponses.js';
  * @abstract
  */
 export class CommandInteraction extends BaseInteraction {
-  public client: any;
   public commandId: any;
   public commandName: any;
   public commandType: any;

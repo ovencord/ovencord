@@ -30,7 +30,6 @@ import { flatten  } from '../../util/Util.js';
  * @abstract
  */
 export class Collector extends AsyncEventEmitter {
-  public client: any;
   public options: any;
   public collected: any;
   public ended: any;

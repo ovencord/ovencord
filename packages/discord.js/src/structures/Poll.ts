@@ -9,7 +9,6 @@ import { PollAnswer  } from './PollAnswer.js';
  * @extends {Base}
  */
 export class Poll extends Base {
-  public client: any;
   public channelId: any;
   public messageId: any;
   public answers: any;

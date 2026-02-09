@@ -33,7 +33,6 @@ import { Sticker  } from './Sticker.js';
  * @extends {Base}
  */
 export class Message extends Base {
-  public client: any;
   public channelId: any;
   public guildId: any;
   public id: any;

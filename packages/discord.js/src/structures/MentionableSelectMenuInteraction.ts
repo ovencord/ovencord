@@ -8,7 +8,6 @@ import { MessageComponentInteraction  } from './MessageComponentInteraction.js';
  * @extends {MessageComponentInteraction}
  */
 export class MentionableSelectMenuInteraction extends MessageComponentInteraction {
-  public client: any;
   public users: any;
   public members: any;
   public roles: any;

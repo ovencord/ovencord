@@ -24,7 +24,6 @@ import { Application  } from './interfaces/Application.js';
  * @extends {Application}
  */
 export class ClientApplication extends Application {
-  public client: any;
   public commands: any;
   public emojis: any;
   public entitlements: any;

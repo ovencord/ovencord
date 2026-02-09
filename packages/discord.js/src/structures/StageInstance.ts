@@ -7,7 +7,6 @@ import { Base  } from './Base.js';
  * @extends {Base}
  */
 export class StageInstance extends Base {
-  public client: any;
   public id: any;
   public guildId: any;
   public channelId: any;

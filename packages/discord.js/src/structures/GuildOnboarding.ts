@@ -8,7 +8,6 @@ import { GuildOnboardingPrompt  } from './GuildOnboardingPrompt.js';
  * @extends {Base}
  */
 export class GuildOnboarding extends Base {
-  public client: any;
   public guildId: any;
   public prompts: any;
   public defaultChannels: any;

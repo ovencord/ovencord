@@ -11,7 +11,6 @@ import { Base  } from './Base.js';
  * @extends {Base}
  */
 export class User extends Base {
-  public client: any;
   public id: any;
   public bot: any;
   public system: any;

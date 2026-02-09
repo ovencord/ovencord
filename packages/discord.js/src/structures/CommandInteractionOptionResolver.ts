@@ -5,7 +5,6 @@ import { DiscordjsTypeError, ErrorCodes  } from '../errors/index.js';
  * A resolver for command interaction options.
  */
 export class CommandInteractionOptionResolver {
-  public client: any;
   public _group: any;
   public _subcommand: any;
   public _hoistedOptions: any;

@@ -8,7 +8,6 @@ import { Emoji  } from './Emoji.js';
  * @extends {Base}
  */
 export class GuildOnboardingPromptOption extends Base {
-  public client: any;
   public guildId: any;
   public id: any;
   public channels: any;

@@ -12,7 +12,6 @@ import { TextBasedChannel  } from './interfaces/TextBasedChannel.js';
  * @implements {TextBasedChannel}
  */
 export class DMChannel extends BaseChannel {
-  public client: any;
   public type: any;
   public messages: any;
   public recipientId: any;

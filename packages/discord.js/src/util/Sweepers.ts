@@ -14,7 +14,6 @@ import { Events  } from './Events.js';
  * A container for all cache sweeping intervals and their associated sweep methods.
  */
 export class Sweepers {
-  public client: any;
   public options: any;
   public intervals: any;
   constructor(client, options) {

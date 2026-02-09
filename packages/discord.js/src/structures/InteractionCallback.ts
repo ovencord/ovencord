@@ -4,7 +4,6 @@ import { DiscordSnowflake  } from '@sapphire/snowflake';
  * Represents an interaction callback response from Discord
  */
 export class InteractionCallback {
-  public client: any;
   public id: any;
   public type: any;
   public activityInstanceId: any;

@@ -10,7 +10,6 @@ import { TextBasedChannel  } from './interfaces/TextBasedChannel.js';
  * @implements {TextBasedChannel}
  */
 export class PartialGroupDMChannel extends BaseChannel {
-  public client: any;
   public flags: any;
   public name: any;
   public icon: any;

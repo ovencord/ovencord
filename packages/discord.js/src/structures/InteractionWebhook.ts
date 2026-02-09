@@ -6,7 +6,6 @@ import { Webhook  } from './Webhook.js';
  * @implements {Webhook}
  */
 export class InteractionWebhook {
-  public client: any;
   public id: any;
   /**
    * @param {Client} client The instantiating client

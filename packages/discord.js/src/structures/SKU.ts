@@ -7,7 +7,6 @@ import { Base  } from './Base.js';
  * @extends {Base}
  */
 export class SKU extends Base {
-  public client: any;
   public id: any;
   public type: any;
   public applicationId: any;

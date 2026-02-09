@@ -6,7 +6,6 @@ import { Base  } from './Base.js';
  * @extends {Base}
  */
 export class Entitlement extends Base {
-  public client: any;
   public id: any;
   public skuId: any;
   public userId: any;

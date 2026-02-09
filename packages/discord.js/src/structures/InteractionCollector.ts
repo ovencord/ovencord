@@ -26,7 +26,6 @@ import { Collector  } from './interfaces/Collector.js';
  * @extends {Collector}
  */
 export class InteractionCollector extends Collector {
-  public client: any;
   public messageId: any;
   public channelId: any;
   public guildId: any;

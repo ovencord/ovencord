@@ -10,7 +10,6 @@ import { Base  } from './Base.js';
  * @extends {Base}
  */
 export class Sticker extends Base {
-  public client: any;
   public id: any;
   public description: any;
   public type: any;

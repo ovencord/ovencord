@@ -9,7 +9,6 @@ import { ReactionEmoji  } from './ReactionEmoji.js';
  * Represents a reaction to a message.
  */
 export class MessageReaction {
-  public client: any;
   public message: any;
   public me: any;
   public meBurst: any;

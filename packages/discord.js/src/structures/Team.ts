@@ -9,7 +9,6 @@ import { TeamMember  } from './TeamMember.js';
  * @extends {Base}
  */
 export class Team extends Base {
-  public client: any;
   public id: any;
   public name: any;
   public icon: any;

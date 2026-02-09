@@ -7,7 +7,6 @@ import { Base  } from './Base.js';
  * @extends {Base}
  */
 export class BaseInvite extends Base {
-  public client: any;
   public type: any;
   public code: any;
   public inviterId: any;

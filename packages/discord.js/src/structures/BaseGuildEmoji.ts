@@ -7,7 +7,6 @@ import { Emoji  } from './Emoji.js';
  * @abstract
  */
 export class BaseGuildEmoji extends Emoji {
-  public client: any;
   public guild: any;
   public requiresColons: any;
   public managed: any;

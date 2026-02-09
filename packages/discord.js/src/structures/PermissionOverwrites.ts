@@ -10,7 +10,6 @@ import { Role  } from './Role.js';
  * @extends {Base}
  */
 export class PermissionOverwrites extends Base {
-  public client: any;
   public id: any;
   public type: any;
   public deny: any;

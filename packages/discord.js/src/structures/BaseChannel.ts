@@ -12,7 +12,6 @@ import { Base  } from './Base.js';
  * @abstract
  */
 export class BaseChannel extends Base {
-  public client: any;
   public type: any;
   public flags: any;
   public id: any;

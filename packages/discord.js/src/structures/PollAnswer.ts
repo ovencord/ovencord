@@ -9,7 +9,6 @@ import { Emoji  } from './Emoji.js';
  * @extends {Base}
  */
 export class PollAnswer extends Base {
-  public client: any;
   public id: any;
   public voters: any;
   public voteCount: any;

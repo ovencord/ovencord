@@ -7,7 +7,6 @@ import { Base  } from './Base.js';
  * @extends {Base}
  */
 export class GuildTemplate extends Base {
-  public client: any;
   public code: any;
   public name: any;
   public description: any;

@@ -6,7 +6,6 @@ import { Emoji  } from './Emoji.js';
  * @extends {Emoji}
  */
 export class ApplicationEmoji extends Emoji {
-  public client: any;
   public application: any;
   public name: any;
   public author: any;

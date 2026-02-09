@@ -41,7 +41,9 @@ import { TypingStartAction } from './TypingStart.js';
 import { UserUpdateAction } from './UserUpdate.js';
 
 export class ActionsManager {
+  public client: any;
   public ChannelCreate: ChannelCreateAction;
+
   public ChannelDelete: ChannelDeleteAction;
   public ChannelUpdate: ChannelUpdateAction;
   public GuildChannelsPositionUpdate: GuildChannelsPositionUpdateAction;
@@ -81,7 +83,6 @@ export class ActionsManager {
   public ThreadMembersUpdate: ThreadMembersUpdateAction;
   public TypingStart: TypingStartAction;
   public UserUpdate: UserUpdateAction;
-  public client: any;
   // These symbols represent fully built data that we inject at times when calling actions manually.
   // Action#getUser, for example, will return the injected data (which is assumed to be a built structure)
   // instead of trying to make it from provided data

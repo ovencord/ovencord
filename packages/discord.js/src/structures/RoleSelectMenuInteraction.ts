@@ -7,7 +7,6 @@ import { MessageComponentInteraction  } from './MessageComponentInteraction.js';
  * @extends {MessageComponentInteraction}
  */
 export class RoleSelectMenuInteraction extends MessageComponentInteraction {
-  public client: any;
   public roles: any;
   constructor(client, data) {
     super(client, data);

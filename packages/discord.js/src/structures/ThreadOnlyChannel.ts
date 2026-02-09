@@ -41,7 +41,6 @@ import { TextBasedChannel  } from './interfaces/TextBasedChannel.js';
  * @abstract
  */
 export class ThreadOnlyChannel extends GuildChannel {
-  public client: any;
   public threads: any;
   public availableTags: any;
   public defaultReactionEmoji: any;

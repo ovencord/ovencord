@@ -16,7 +16,6 @@ const getThreadOnlyChannel = lazy(() => require('./ThreadOnlyChannel.js'));
  * @implements {TextBasedChannel}
  */
 export class ThreadChannel extends BaseChannel {
-  public client: any;
   public guild: any;
   public guildId: any;
   public ownerId: any;

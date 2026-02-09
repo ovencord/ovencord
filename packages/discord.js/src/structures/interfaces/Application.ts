@@ -8,7 +8,6 @@ import { Base  } from '../Base.js';
  * @abstract
  */
 export class Application extends Base {
-  public client: any;
   public id: any;
   public name: any;
   public description: any;

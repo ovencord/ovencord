@@ -38,7 +38,6 @@ import { Emoji  } from './Emoji.js';
  * @extends {Base}
  */
 export class Presence extends Base {
-  public client: any;
   public userId: any;
   public guild: any;
   public status: any;

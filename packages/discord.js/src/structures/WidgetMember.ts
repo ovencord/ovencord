@@ -6,7 +6,6 @@ import { Base  } from './Base.js';
  * @extends {Base}
  */
 export class WidgetMember extends Base {
-  public client: any;
   public id: any;
   public username: any;
   public discriminator: any;

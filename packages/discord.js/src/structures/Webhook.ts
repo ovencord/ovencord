@@ -12,7 +12,6 @@ const getMessage = lazy(() => require('./Message.js').Message);
  * Represents a webhook.
  */
 export class Webhook {
-  public client: any;
   public name: any;
   public id: any;
   public type: any;

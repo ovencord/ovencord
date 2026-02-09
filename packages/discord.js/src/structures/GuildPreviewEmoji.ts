@@ -6,7 +6,6 @@ import { BaseGuildEmoji  } from './BaseGuildEmoji.js';
  * @extends {BaseGuildEmoji}
  */
 export class GuildPreviewEmoji extends BaseGuildEmoji {
-  public client: any;
   public roles: any;
   /**
    * The public guild this emoji is part of

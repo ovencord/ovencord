@@ -63,7 +63,6 @@ const getAttachment = lazy(() => require('./Attachment.js').Attachment);
  * @implements {InteractionResponses}
  */
 export class ModalSubmitInteraction extends BaseInteraction {
-  public client: any;
   public customId: any;
   public message: any;
   public components: any;

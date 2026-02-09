@@ -5,7 +5,6 @@ import { InteractionCallbackResource  } from './InteractionCallbackResource.js';
  * Represents an interaction's response
  */
 export class InteractionCallbackResponse {
-  public client: any;
   public interaction: any;
   public resource: any;
   constructor(client, data) {

@@ -9,7 +9,6 @@ import { Sticker  } from './Sticker.js';
  * @extends {Base}
  */
 export class StickerPack extends Base {
-  public client: any;
   public id: any;
   public stickers: any;
   public name: any;

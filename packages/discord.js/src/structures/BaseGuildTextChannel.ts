@@ -10,7 +10,6 @@ import { TextBasedChannel  } from './interfaces/TextBasedChannel.js';
  * @implements {TextBasedChannel}
  */
 export class BaseGuildTextChannel extends GuildChannel {
-  public client: any;
   public messages: any;
   public threads: any;
   public nsfw: any;

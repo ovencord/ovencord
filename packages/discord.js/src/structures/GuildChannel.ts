@@ -21,8 +21,8 @@ import { BaseChannel  } from './BaseChannel.js';
  * @abstract
  */
 export class GuildChannel extends BaseChannel {
-  public client: any;
   public guild: any;
+
   public guildId: any;
   public permissionOverwrites: any;
   public name: any;

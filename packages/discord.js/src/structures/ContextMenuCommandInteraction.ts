@@ -12,7 +12,6 @@ const getMessage = lazy(() => require('./Message.js').Message);
  * @extends {CommandInteraction}
  */
 export class ContextMenuCommandInteraction extends CommandInteraction {
-  public client: any;
   public options: any;
   public targetId: any;
   constructor(client, data) {

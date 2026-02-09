@@ -6,7 +6,6 @@ import { Base  } from './Base.js';
  * @extends {Base}
  */
 export class GuildBan extends Base {
-  public client: any;
   public guild: any;
   public user: any;
   public reason: any;

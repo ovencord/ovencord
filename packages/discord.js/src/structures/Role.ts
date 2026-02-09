@@ -12,8 +12,8 @@ import { Base  } from './Base.js';
  * @extends {Base}
  */
 export class Role extends Base {
-  public client: any;
   public guild: any;
+
   public icon: any;
   public unicodeEmoji: any;
   public name: any;

@@ -7,7 +7,6 @@ import { BaseGuild  } from './BaseGuild.js';
  * @extends {BaseGuild}
  */
 export class OAuth2Guild extends BaseGuild {
-  public client: any;
   public owner: any;
   public permissions: any;
   constructor(client, data) {

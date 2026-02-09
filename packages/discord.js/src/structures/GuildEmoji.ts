@@ -9,7 +9,6 @@ import { BaseGuildEmoji  } from './BaseGuildEmoji.js';
  * @extends {BaseGuildEmoji}
  */
 export class GuildEmoji extends BaseGuildEmoji {
-  public client: any;
   public author: any;
   public _roles: any;
   constructor(client, data, guild) {
