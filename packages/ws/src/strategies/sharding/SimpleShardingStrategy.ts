@@ -81,4 +81,14 @@ export class SimpleShardingStrategy implements IShardingStrategy {
 	public async fetchStatus() {
 		return this.shards.mapValues((shard) => shard.status);
 	}
+
+	/**
+	 * {@inheritDoc IShardingStrategy.getShards}
+	 */
+	public async getShards() {
+		return this.shards.mapValues((shard) => ({
+			ping: shard.ping,
+			status: shard.status,
+		}));
+	}
 }

@@ -268,6 +268,9 @@ export class SectionBuilder extends ComponentBuilder<APISectionComponent> {
 		};
 
 		validate(sectionPredicate, data, validationOverride);
+    
+    // DEBUG LOGGING
+    console.log('[SectionBuilder] toJSON Payload:', JSON.stringify(data, null, 2));
 
 		return data as APISectionComponent;
 	}

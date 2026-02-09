@@ -7,6 +7,7 @@ import { InteractionType,
   MessageFlags,
   MessageReferenceType,
   PermissionFlagsBits,
+  ComponentType,
  } from 'discord-api-types/v10';
 import { DiscordjsError, ErrorCodes  } from '../errors/index.js';
 import { ReactionManager  } from '../managers/ReactionManager.js';
@@ -24,8 +25,19 @@ import { InteractionCollector  } from './InteractionCollector.js';
 import { MessageMentions  } from './MessageMentions.js';
 import { MessagePayload  } from './MessagePayload.js';
 import { Poll  } from './Poll.js';
-import { ReactionCollector  } from './ReactionCollector.js';
+import { ReactionCollector, type ReactionCollectorOptions } from './ReactionCollector.js';
 import { Sticker  } from './Sticker.js';
+import type { CollectorOptions } from './interfaces/Collector.js';
+export interface AwaitReactionsOptions extends ReactionCollectorOptions {
+  errors?: string[];
+}
+
+export interface MessageComponentCollectorOptions extends CollectorOptions {
+  componentType?: ComponentType;
+  max?: number;
+  maxComponents?: number;
+  maxUsers?: number;
+}
 
 /**
  * Represents a message on Discord.
@@ -639,23 +651,10 @@ export class Message extends Base {
    *
    * @param {ReactionCollectorOptions} [options={}] Options to send to the collector
    * @returns {ReactionCollector}
-   * @example
-   * // Create a reaction collector
-   * const filter = (reaction, user) => reaction.emoji.name === '👌' && user.id === 'someId';
-   * const collector = message.createReactionCollector({ filter, time: 15_000 });
-   * collector.on('collect', r => console.log(`Collected ${r.emoji.name}`));
-   * collector.on('end', collected => console.log(`Collected ${collected.size} items`));
    */
-  createReactionCollector(options = {}) {
+  createReactionCollector(options: ReactionCollectorOptions = {}) {
     return new ReactionCollector(this, options);
   }
-
-  /**
-   * An object containing the same properties as CollectorOptions, but a few more:
-   *
-   * @typedef {ReactionCollectorOptions} AwaitReactionsOptions
-   * @property {string[]} [errors] Stop/end reasons that cause the promise to reject
-   */
 
   /**
    * Similar to createReactionCollector but in promise form.
@@ -663,14 +662,8 @@ export class Message extends Base {
    *
    * @param {AwaitReactionsOptions} [options={}] Optional options to pass to the internal collector
    * @returns {Promise<Collection<string|Snowflake, MessageReaction>>}
-   * @example
-   * // Create a reaction collector
-   * const filter = (reaction, user) => reaction.emoji.name === '👌' && user.id === 'someId'
-   * message.awaitReactions({ filter, time: 15_000 })
-   *   .then(collected => console.log(`Collected ${collected.size} reactions`))
-   *   .catch(console.error);
    */
-  async awaitReactions(options = {}) {
+  async awaitReactions(options: AwaitReactionsOptions = {}) {
     return new Promise((resolve, reject) => {
       const collector = this.createReactionCollector(options);
       collector.once('end', (reactions, reason) => {
@@ -681,26 +674,12 @@ export class Message extends Base {
   }
 
   /**
-   * @typedef {CollectorOptions} MessageComponentCollectorOptions
-   * @property {ComponentType} [componentType] The type of component to listen for
-   * @property {number} [max] The maximum total amount of interactions to collect
-   * @property {number} [maxComponents] The maximum number of components to collect
-   * @property {number} [maxUsers] The maximum number of users to interact
-   */
-
-  /**
    * Creates a message component interaction collector.
    *
    * @param {MessageComponentCollectorOptions} [options={}] Options to send to the collector
    * @returns {InteractionCollector}
-   * @example
-   * // Create a message component interaction collector
-   * const filter = (interaction) => interaction.customId === 'button' && interaction.user.id === 'someId';
-   * const collector = message.createMessageComponentCollector({ filter, time: 15_000 });
-   * collector.on('collect', i => console.log(`Collected ${i.customId}`));
-   * collector.on('end', collected => console.log(`Collected ${collected.size} items`));
    */
-  createMessageComponentCollector(options = {}) {
+  createMessageComponentCollector(options: MessageComponentCollectorOptions = {}) {
     return new InteractionCollector(this.client, {
       ...options,
       interactionType: InteractionType.MessageComponent,

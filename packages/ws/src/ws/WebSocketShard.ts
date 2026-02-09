@@ -98,6 +98,11 @@ export class WebSocketShard extends AsyncEventEmitter<WebSocketShardEventsMap> {
 
 	private lastHeartbeatAt = -1;
 
+	/**
+	 * The latency of the last heartbeat in milliseconds
+	 */
+	public ping = -1;
+
 	// Indicates whether the shard has already resolved its original connect() call
 	private initialConnectResolved = false;
 
@@ -689,10 +694,13 @@ export class WebSocketShard extends AsyncEventEmitter<WebSocketShardEventsMap> {
 				this.isAck = true;
 
 				const ackAt = Date.now();
+				const latency = ackAt - this.lastHeartbeatAt;
+				this.ping = latency;
+				
 				this.emit(WebSocketShardEvents.HeartbeatComplete, {
 					ackAt,
 					heartbeatAt: this.lastHeartbeatAt,
-					latency: ackAt - this.lastHeartbeatAt,
+					latency,
 				});
 
 				break;

@@ -13,7 +13,7 @@ import type {
 import type { IShardingStrategy } from '../strategies/sharding/IShardingStrategy.js';
 import type { IIdentifyThrottler } from '../throttling/IIdentifyThrottler.js';
 import { DefaultWebSocketManagerOptions, type CompressionMethod, type Encoding } from '../utils/constants.js';
-import type { WebSocketShardDestroyOptions, WebSocketShardEvents, WebSocketShardStatus } from './WebSocketShard.js';
+import { WebSocketShardStatus, type WebSocketShardDestroyOptions, type WebSocketShardEvents } from './WebSocketShard.js';
 
 /**
  * Represents a range of shard ids
@@ -262,6 +262,32 @@ export class WebSocketManager extends AsyncEventEmitter<ManagerShardEventsMap> i
 		}
 
 		return this.#token;
+	}
+
+	/**
+	 * Gets the average ping of all active shards
+	 *
+	 * @returns The average ping in milliseconds, or -1 if no shards are ready
+	 */
+	public get ping(): number {
+		return -1; // Will be calculated asynchronously
+	}
+
+	/**
+	 * Gets the average ping of all active shards asynchronously
+	 *
+	 * @returns The average ping in milliseconds, or -1 if no shards are ready
+	 */
+	public async getPing(): Promise<number> {
+		const shards = await this.strategy.getShards();
+		const activeShards = [...shards.values()].filter(
+			(shard) => shard.status === WebSocketShardStatus.Ready && shard.ping !== undefined && shard.ping >= 0
+		);
+
+		if (activeShards.length === 0) return -1;
+
+		const totalPing = activeShards.reduce((sum, shard) => sum + (shard.ping ?? 0), 0);
+		return Math.round(totalPing / activeShards.length);
 	}
 
 	public constructor(options: CreateWebSocketManagerOptions) {

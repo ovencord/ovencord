@@ -1,13 +1,14 @@
 import { Collection  } from '@ovencord/collection';
 import { Events  } from '../util/Events.js';
-import { Collector  } from './interfaces/Collector.js';
+import { Collector, type CollectorOptions } from './interfaces/Collector.js';
 
-/**
- * @typedef {CollectorOptions} ReactionCollectorOptions
- * @property {number} max The maximum total amount of reactions to collect
- * @property {number} maxEmojis The maximum number of emojis to collect
- * @property {number} maxUsers The maximum number of users to react
- */
+
+
+export interface ReactionCollectorOptions extends CollectorOptions {
+  max?: number;
+  maxEmojis?: number;
+  maxUsers?: number;
+}
 
 /**
  * Collects reactions on messages.

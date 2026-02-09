@@ -27,4 +27,8 @@ export interface IShardingStrategy {
 	 * Spawns all the shards
 	 */
 	spawn(shardIds: number[]): Awaitable<void>;
+	/**
+	 * Gets all the shards managed by this strategy
+	 */
+	getShards(): Awaitable<Collection<number, { ping?: number; status: WebSocketShardStatus }>>;
 }

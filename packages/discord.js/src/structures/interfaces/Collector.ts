@@ -13,15 +13,12 @@ import { flatten  } from '../../util/Util.js';
  * @returns {boolean|Promise<boolean>}
  */
 
-/**
- * Options to be applied to the collector.
- *
- * @typedef {Object} CollectorOptions
- * @property {CollectorFilter} [filter] The filter applied to this collector
- * @property {number} [time] How long to run the collector for in milliseconds
- * @property {number} [idle] How long to stop the collector after inactivity in milliseconds
- * @property {boolean} [dispose=false] Whether to dispose data when it's deleted
- */
+export interface CollectorOptions {
+  filter?: (...args: any[]) => boolean | Promise<boolean>;
+  time?: number;
+  idle?: number;
+  dispose?: boolean;
+}
 
 /**
  * Abstract class for defining a new Collector.
@@ -30,14 +27,16 @@ import { flatten  } from '../../util/Util.js';
  * @abstract
  */
 export class Collector extends AsyncEventEmitter {
-  public options: any;
-  public collected: any;
-  public ended: any;
-  public _timeout: any;
-  public _idletimeout: any;
-  public _endReason: any;
-  public lastCollectedTimestamp: any;
-  constructor(client, options = {}) {
+  public options: CollectorOptions;
+  public collected: Collection<unknown, unknown>;
+  public ended: boolean;
+  public _timeout: NodeJS.Timeout | null;
+  public _idletimeout: NodeJS.Timeout | null;
+  public _endReason: string | null;
+  public lastCollectedTimestamp: number | null;
+  public client: any;
+  public filter: (...args: any[]) => boolean | Promise<boolean>;
+  constructor(client: any, options: CollectorOptions = {}) {
     super();
 
     /**
@@ -211,9 +210,9 @@ export class Collector extends AsyncEventEmitter {
 
       const cleanup = () => {
         // eslint-disable-next-line no-use-before-define
-        this.removeListener('collect', onCollect);
+        this.off('collect', onCollect);
         // eslint-disable-next-line no-use-before-define
-        this.removeListener('end', onEnd);
+        this.off('end', onEnd);
       };
 
       const onCollect = item => {
@@ -305,8 +304,10 @@ export class Collector extends AsyncEventEmitter {
    * @see {@link https://developer.mozilla.org/docs/Web/JavaScript/Reference/Statements/for-await...of}
    */
   async *[Symbol.asyncIterator]() {
-    const queue = [];
-    const onCollect = (...item) => queue.push(item);
+    const queue: any[] = [];
+    const onCollect = (...item: any[]) => {
+      queue.push(item);
+    };
     this.on('collect', onCollect);
 
     try {
@@ -314,10 +315,10 @@ export class Collector extends AsyncEventEmitter {
         if (queue.length) {
           yield queue.shift();
         } else {
-          await new Promise(resolve => {
+          await new Promise<void>(resolve => {
             const tick = () => {
-              this.removeListener('collect', tick);
-              this.removeListener('end', tick);
+              this.off('collect', tick);
+              this.off('end', tick);
               resolve();
             };
 
@@ -327,7 +328,7 @@ export class Collector extends AsyncEventEmitter {
         }
       }
     } finally {
-      this.removeListener('collect', onCollect);
+      this.off('collect', onCollect);
     }
   }
 
