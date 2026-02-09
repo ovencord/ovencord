@@ -25,6 +25,12 @@ export class AsyncEventEmitter<Events extends EventMap = EventMap> {
     return this;
   }
 
+  public addListener<K extends keyof Events>(event: K, listener: (...args: Events[K]) => void | Promise<void>): this;
+  public addListener<K extends string | symbol>(event: K, listener: (...args: any[]) => void | Promise<void>): this;
+  public addListener(event: string | symbol, listener: Function): this {
+    return this.on(event, listener as any);
+  }
+
   public once<K extends keyof Events>(event: K, listener: (...args: Events[K]) => void | Promise<void>): this;
   public once<K extends string | symbol>(event: K, listener: (...args: any[]) => void | Promise<void>): this;
   public once(event: string | symbol, listener: Function): this {
@@ -59,6 +65,12 @@ export class AsyncEventEmitter<Events extends EventMap = EventMap> {
     }
 
     return this;
+  }
+
+  public removeListener<K extends keyof Events>(event: K, listener: (...args: Events[K]) => void | Promise<void>): this;
+  public removeListener<K extends string | symbol>(event: K, listener: (...args: any[]) => void | Promise<void>): this;
+  public removeListener(event: string | symbol, listener: Function): this {
+    return this.off(event, listener as any);
   }
 
   public async emit<K extends keyof Events>(event: K, ...args: Events[K]): Promise<boolean>;
