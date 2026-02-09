@@ -2,6 +2,7 @@ export * from './components/button/mixins/EmojiOrLabelButtonMixin.js';
 export * from './components/button/Button.js';
 export * from './components/button/ButtonBuilder.js';
 export * from './components/button/CustomIdButton.js';
+export { PrimaryButtonBuilder, SecondaryButtonBuilder, SuccessButtonBuilder, DangerButtonBuilder } from './components/button/CustomIdButton.js';
 export * from './components/button/LinkButton.js';
 export * from './components/button/PremiumButton.js';
 
