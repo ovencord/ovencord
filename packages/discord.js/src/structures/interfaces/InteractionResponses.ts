@@ -13,6 +13,10 @@ import { MessagePayload  } from '../MessagePayload.js';
  * @interface
  */
 export class InteractionResponses {
+  public client: any;
+  public id: any;
+  public token: any;
+  public webhook: any;
   public deferred: any;
   public ephemeral: any;
   public replied: any;

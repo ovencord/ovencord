@@ -16,6 +16,10 @@ const getGuildMessageManager = lazy(() => require('../../managers/GuildMessageMa
  * @interface
  */
 export class TextBasedChannel {
+  public client: any;
+  public id: any;
+  public guild: any;
+  public edit: any;
   public messages: any;
   public lastMessageId: any;
   public lastPinTimestamp: any;
