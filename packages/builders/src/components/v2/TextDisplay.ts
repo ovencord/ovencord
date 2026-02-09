@@ -56,8 +56,15 @@ export class TextDisplayBuilder extends ComponentBuilder<APITextDisplayComponent
 	 */
 	public override toJSON(validationOverride?: boolean): APITextDisplayComponent {
 		const clone = structuredClone(this.data);
-		validate(textDisplayPredicate, clone, validationOverride);
+		
+		// Enforce only type and content are present
+		const data: APITextDisplayComponent = {
+			type: ComponentType.TextDisplay,
+			content: clone.content!,
+		};
 
-		return clone as APITextDisplayComponent;
+		validate(textDisplayPredicate, data, validationOverride);
+
+		return data;
 	}
 }

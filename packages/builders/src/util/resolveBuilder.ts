@@ -36,5 +36,9 @@ export function resolveBuilder<Builder extends JSONEncodable<any>, BuilderData e
 		return builder(new Constructor());
 	}
 
-	return new Constructor(builder);
+	if (typeof builder === 'object' && builder !== null && 'toJSON' in builder) {
+		return new Constructor((builder as unknown as JSONEncodable<BuilderData>).toJSON());
+	}
+
+	return new Constructor(builder as BuilderData);
 }

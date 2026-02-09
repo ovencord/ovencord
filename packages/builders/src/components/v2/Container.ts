@@ -8,6 +8,7 @@ import {
 	type APIComponentInContainer,
 	type APIMediaGalleryComponent,
 	type APISectionComponent,
+	type APIComponentInActionRow,
 	ComponentType,
 } from 'discord-api-types/v10';
 import { normalizeArray, type RestOrArray } from '../../util/normalizeArray';
@@ -19,7 +20,7 @@ import { createComponentBuilder } from '../Components';
 import { containerPredicate } from './Assertions';
 import { FileBuilder } from './File.js';
 import { MediaGalleryBuilder } from './MediaGallery';
-import { SectionBuilder } from './Section';
+import { SectionBuilder } from './Section.js';
 import { SeparatorBuilder } from './Separator.js';
 import { TextDisplayBuilder } from './TextDisplay';
 
@@ -109,7 +110,7 @@ export class ContainerBuilder extends ComponentBuilder<APIContainerComponent> {
 		>
 	): this {
 		const normalized = normalizeArray(input);
-		const resolved = normalized.map((component) => resolveBuilder(component, ActionRowBuilder));
+		const resolved = normalized.map((component) => resolveBuilder<ActionRowBuilder, Partial<APIActionRowComponent<APIComponentInActionRow>>>(component, ActionRowBuilder));
 
 		this.data.components.push(...resolved);
 		return this;

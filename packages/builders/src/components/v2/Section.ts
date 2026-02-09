@@ -94,6 +94,7 @@ export class SectionBuilder extends ComponentBuilder<APISectionComponent> {
 	public constructor(data: Partial<APISectionComponent> = {}) {
 		super();
 
+
 		const { components = [], accessory, ...rest } = data;
 
 		this.data = {
@@ -258,20 +259,30 @@ export class SectionBuilder extends ComponentBuilder<APISectionComponent> {
 	/**
 	 * {@inheritDoc ComponentBuilder.toJSON}
 	 */
+	/**
+	 * {@inheritDoc ComponentBuilder.toJSON}
+	 */
 	public override toJSON(validationOverride?: boolean): APISectionComponent {
 		const { components, accessory, ...rest } = this.data;
 
+		// Resolve accessory if it exists
+		const accessoryData = accessory
+			? (accessory as any).toJSON
+				? (accessory as any).toJSON(validationOverride)
+				: accessory
+			: undefined;
+
 		const data = {
 			...structuredClone(rest),
-			components: components.map((component) => component.toJSON(false)),
-			accessory: accessory?.toJSON(validationOverride),
-		};
+			type: ComponentType.Section,
+			components: components.map((component) => component.toJSON(validationOverride)),
+			accessory: accessoryData,
+		} as APISectionComponent;
+
+
 
 		validate(sectionPredicate, data, validationOverride);
-    
-    // DEBUG LOGGING
-    console.log('[SectionBuilder] toJSON Payload:', JSON.stringify(data, null, 2));
 
-		return data as APISectionComponent;
+		return data;
 	}
 }

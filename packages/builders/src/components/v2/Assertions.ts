@@ -1,7 +1,7 @@
 import { ComponentType, SeparatorSpacingSize } from 'discord-api-types/v10';
 import { z } from 'zod';
 import { idPredicate } from '../../Assertions.js';
-import { actionRowPredicate } from '../Assertions.js';
+import { actionRowPredicate, buttonPredicate } from '../Assertions.js';
 
 const unfurledMediaItemPredicate = z.object({
 	url: z.string().url().refine((url) => url.startsWith('http:') || url.startsWith('https:') || url.startsWith('attachment:'), { message: 'URL must use http, https, or attachment protocol' }),
@@ -57,8 +57,8 @@ export const sectionPredicate = z.object({
 	id: idPredicate,
 	components: z.array(textDisplayPredicate).min(1).max(3),
 	accessory: z.union([
-		z.object({ type: z.literal(ComponentType.Button) }),
-		z.object({ type: z.literal(ComponentType.Thumbnail) }),
+		buttonPredicate,
+		thumbnailPredicate,
 	]),
 });
 

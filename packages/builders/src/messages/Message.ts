@@ -17,6 +17,7 @@ import type {
 	APISeparatorComponent,
 	APITextDisplayComponent,
 	APIMessageTopLevelComponent,
+	APIComponentInActionRow,
 } from 'discord-api-types/v10';
 import { ActionRowBuilder } from '../components/ActionRow.js';
 import { ComponentBuilder } from '../components/Component.js';
@@ -310,7 +311,7 @@ export class MessageBuilder
 	): this {
 		this.data.components ??= [];
 
-		const resolved = normalizeArray(components).map((component) => resolveBuilder(component, ActionRowBuilder));
+		const resolved = normalizeArray(components).map((component) => resolveBuilder<ActionRowBuilder, Partial<APIActionRowComponent<APIComponentInActionRow>>>(component, ActionRowBuilder));
 		this.data.components.push(...resolved);
 
 		return this;
