@@ -11,7 +11,7 @@ import type { APIMessageComponentEmoji } from 'discord-api-types/v10';
  */
 export function parseEmoji(text: string): APIMessageComponentEmoji {
 	const decodedText = text.includes('%') ? decodeURIComponent(text) : text;
-	if (!decodedText.includes(':')) return { animated: false, name: decodedText, id: undefined };
+	if (!decodedText.includes(':')) return { animated: false, name: decodedText.replace(/\uFE0F/g, ''), id: undefined };
 	const match = /<?(?:(?<animated>a):)?(?<name>\w{2,32}):(?<id>\d{17,19})?>?/.exec(decodedText);
 	
     if (!match || !match.groups) {
