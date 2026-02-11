@@ -1,4 +1,3 @@
-import process from 'node:process';
 import { Collection  } from '@ovencord/collection';
 import { ChannelType, Routes  } from 'discord-api-types/v10';
 import { DiscordjsError, DiscordjsTypeError, ErrorCodes  } from '../errors/index.js';

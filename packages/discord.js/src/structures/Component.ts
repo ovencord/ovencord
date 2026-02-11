@@ -1,5 +1,3 @@
-import isEqual from 'fast-deep-equal';
-
 /**
  * Represents a component
  */
@@ -42,10 +40,10 @@ export class Component {
    */
   equals(other) {
     if (other instanceof Component) {
-      return isEqual(other.data, this.data);
+      return Bun.deepEquals(other.data, this.data);
     }
 
-    return isEqual(other, this.data);
+    return Bun.deepEquals(other, this.data);
   }
 
   /**

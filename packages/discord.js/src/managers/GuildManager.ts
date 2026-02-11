@@ -1,5 +1,3 @@
-import process from 'node:process';
-import { setTimeout, clearTimeout  } from 'node:timers';
 import { Collection  } from '@ovencord/collection';
 import { makeURLSearchParams  } from '@ovencord/rest';
 import { GatewayOpcodes, Routes, RouteBases  } from 'discord-api-types/v10';

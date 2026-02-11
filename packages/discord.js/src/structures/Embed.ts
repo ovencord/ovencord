@@ -1,5 +1,5 @@
 import { embedLength  } from '@ovencord/util';
-import isEqual from 'fast-deep-equal';
+
 
 /**
  * Represents an embed.
@@ -227,7 +227,7 @@ export class Embed {
    */
   equals(other) {
     if (other instanceof Embed) {
-      return isEqual(this.data, other.data);
+      return Bun.deepEquals(this.data, other.data);
     }
 
     return (
@@ -244,8 +244,8 @@ export class Embed {
       this.title === (other.title ?? null) &&
       this.url === (other.url ?? null) &&
       this.video?.url === other.video?.url &&
-      isEqual(this.fields, other.fields?.map(field => ({ ...field, inline: field.inline ?? false })) ?? []) &&
-      isEqual(this.provider, other.provider ?? null)
+      Bun.deepEquals(this.fields, other.fields?.map(field => ({ ...field, inline: field.inline ?? false })) ?? []) &&
+      Bun.deepEquals(this.provider, other.provider ?? null)
     );
   }
 }

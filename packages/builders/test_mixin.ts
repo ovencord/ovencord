@@ -15,8 +15,7 @@ function log(msg: string) {
 try {
     const btn = new PrimaryButtonBuilder()
         .setCustomId("test")
-        .setCustomId("test")
-        .setEmoji("👍")
+        .setEmoji("🔄️")
         .setLabel("Test");
 
     log("Original Button toJSON: " + JSON.stringify((btn as any).toJSON(), null, 2));

@@ -1,4 +1,3 @@
-import { Buffer  } from 'node:buffer';
 import { isJSONEncodable, lazy  } from '@ovencord/util';
 import { DiscordSnowflake  } from '@sapphire/snowflake';
 import { DiscordjsError, DiscordjsRangeError, ErrorCodes  } from '../errors/index.js';

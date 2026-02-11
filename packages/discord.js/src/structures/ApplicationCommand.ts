@@ -1,6 +1,6 @@
 import { DiscordSnowflake  } from '@sapphire/snowflake';
 import { ApplicationCommandOptionType  } from 'discord-api-types/v10';
-import isEqual from 'fast-deep-equal';
+
 import { ApplicationCommandPermissionsManager  } from '../managers/ApplicationCommandPermissionsManager.js';
 import { PermissionsBitField  } from '../util/PermissionsBitField.js';
 import { Base  } from './Base.js';
@@ -455,13 +455,13 @@ export class ApplicationCommand extends Base {
       ('nsfw' in command && command.nsfw !== this.nsfw) ||
       command.options?.length !== this.options?.length ||
       defaultMemberPermissions !== (this.defaultMemberPermissions?.bitfield ?? null) ||
-      !isEqual(command.nameLocalizations ?? command.name_localizations ?? {}, this.nameLocalizations ?? {}) ||
-      !isEqual(
+      !Bun.deepEquals(command.nameLocalizations ?? command.name_localizations ?? {}, this.nameLocalizations ?? {}) ||
+      !Bun.deepEquals(
         command.descriptionLocalizations ?? command.description_localizations ?? {},
         this.descriptionLocalizations ?? {},
       ) ||
-      !isEqual(command.integrationTypes ?? command.integration_types ?? [], this.integrationTypes ?? []) ||
-      !isEqual(command.contexts ?? [], this.contexts ?? []) ||
+      !Bun.deepEquals(command.integrationTypes ?? command.integration_types ?? [], this.integrationTypes ?? []) ||
+      !Bun.deepEquals(command.contexts ?? [], this.contexts ?? []) ||
       ('handler' in command && command.handler !== this.handler)
     ) {
       return false;
@@ -530,8 +530,8 @@ export class ApplicationCommand extends Base {
       (option.maxValue ?? option.max_value) !== existing.maxValue ||
       (option.minLength ?? option.min_length) !== existing.minLength ||
       (option.maxLength ?? option.max_length) !== existing.maxLength ||
-      !isEqual(option.nameLocalizations ?? option.name_localizations ?? {}, existing.nameLocalizations ?? {}) ||
-      !isEqual(
+      !Bun.deepEquals(option.nameLocalizations ?? option.name_localizations ?? {}, existing.nameLocalizations ?? {}) ||
+      !Bun.deepEquals(
         option.descriptionLocalizations ?? option.description_localizations ?? {},
         existing.descriptionLocalizations ?? {},
       )
@@ -546,7 +546,7 @@ export class ApplicationCommand extends Base {
           (choice, index) =>
             choice.name === option.choices[index].name &&
             choice.value === option.choices[index].value &&
-            isEqual(
+            Bun.deepEquals(
               choice.nameLocalizations ?? {},
               option.choices[index].nameLocalizations ?? option.choices[index].name_localizations ?? {},
             ),

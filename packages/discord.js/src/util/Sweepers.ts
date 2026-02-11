@@ -1,4 +1,3 @@
-import { setInterval, clearInterval  } from 'node:timers';
 import { DiscordjsTypeError, ErrorCodes  } from '../errors/index.js';
 import { ThreadChannelTypes, SweeperKeys  } from './Constants.js';
 import { Events  } from './Events.js';

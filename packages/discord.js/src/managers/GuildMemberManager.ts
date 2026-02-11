@@ -1,4 +1,3 @@
-import { setTimeout, clearTimeout  } from 'node:timers';
 import { Collection  } from '@ovencord/collection';
 import { makeURLSearchParams  } from '@ovencord/rest';
 import { GatewayRateLimitError  } from '@ovencord/util';

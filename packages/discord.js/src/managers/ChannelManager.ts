@@ -1,4 +1,3 @@
-import process from 'node:process';
 import { lazy, isFileBodyEncodable, isJSONEncodable  } from '@ovencord/util';
 import { Routes  } from 'discord-api-types/v10';
 import { BaseChannel  } from '../structures/BaseChannel.js';

@@ -1,4 +1,4 @@
-import { createHash } from 'node:crypto';
+
 import type { RESTPatchAPIChannelJSONBody, Snowflake } from 'discord-api-types/v10';
 import type { REST } from '../REST.js';
 import { RateLimitError } from '../errors/RateLimitError.js';
@@ -134,9 +134,7 @@ export function calculateUserDefaultAvatarIndex(userId: Snowflake) {
  * @param ms - The amount of time (in milliseconds) to sleep for
  */
 export async function sleep(ms: number): Promise<void> {
-	return new Promise<void>((resolve) => {
-		setTimeout(() => resolve(), ms);
-	});
+	return Bun.sleep(ms);
 }
 
 /**
@@ -226,7 +224,7 @@ export function uuidv5(value: string | Uint8Array, namespace: string): string {
     data.set(valueBytes, namespaceBytes.length);
 
     // 5. Hash with SHA-1
-    const buffer = createHash('sha1').update(data).digest();
+    const buffer = new Bun.CryptoHasher('sha1').update(data).digest();
     const hash = new Uint8Array(buffer);
 
     // 6. Set version to 5 (0101)
