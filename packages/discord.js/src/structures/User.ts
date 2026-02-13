@@ -1,6 +1,6 @@
 import { userMention  } from '@ovencord/formatters';
 import { calculateUserDefaultAvatarIndex  } from '@ovencord/rest';
-import { DiscordSnowflake  } from '@sapphire/snowflake';
+import { DiscordSnowflake } from '@ovencord/util';
 import { _transformCollectibles  } from '../util/Transformers.js';
 import { UserFlagsBitField  } from '../util/UserFlagsBitField.js';
 import { Base  } from './Base.js';

@@ -1,4 +1,4 @@
-import { DiscordSnowflake  } from '@sapphire/snowflake';
+import { DiscordSnowflake } from '@ovencord/util';
 
 /**
  * Represents an interaction callback response from Discord

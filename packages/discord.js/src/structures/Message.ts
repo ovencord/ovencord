@@ -1,6 +1,6 @@
 import { Collection  } from '@ovencord/collection';
 import { messageLink  } from '@ovencord/formatters';
-import { DiscordSnowflake  } from '@sapphire/snowflake';
+import { DiscordSnowflake } from '@ovencord/util';
 import { InteractionType,
   ChannelType,
   MessageType,

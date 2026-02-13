@@ -1,5 +1,5 @@
 import { isJSONEncodable, lazy  } from '@ovencord/util';
-import { DiscordSnowflake  } from '@sapphire/snowflake';
+import { DiscordSnowflake } from '@ovencord/util';
 import { DiscordjsError, DiscordjsRangeError, ErrorCodes  } from '../errors/index.js';
 import { resolveFile  } from '../util/DataResolver.js';
 import { MessageFlagsBitField  } from '../util/MessageFlagsBitField.js';

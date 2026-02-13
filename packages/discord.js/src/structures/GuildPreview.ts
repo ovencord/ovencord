@@ -1,5 +1,5 @@
 import { Collection  } from '@ovencord/collection';
-import { DiscordSnowflake  } from '@sapphire/snowflake';
+import { DiscordSnowflake } from '@ovencord/util';
 import { Routes  } from 'discord-api-types/v10';
 import { Base  } from './Base.js';
 import { GuildPreviewEmoji  } from './GuildPreviewEmoji.js';

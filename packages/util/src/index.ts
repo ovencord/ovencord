@@ -1,4 +1,6 @@
 export type * from './types.js';
+export { DiscordSnowflake, Snowflake as SnowflakeClass } from './Snowflake.js';
+export type { DeconstructedSnowflake, SnowflakeGenerateOptions } from './Snowflake.js';
 export * from './functions/index.js';
 export * from './encodables.js';
 export type * from './RawFile.js';

@@ -1,4 +1,4 @@
-import { DiscordSnowflake } from '@sapphire/snowflake';
+import { DiscordSnowflake } from '@ovencord/util';
 import type { APISoundboardSound } from 'discord-api-types/v10';
 import { Structure } from '../Structure';
 import { kData } from '../utils/symbols';

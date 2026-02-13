@@ -1,5 +1,5 @@
 import { Collection  } from '@ovencord/collection';
-import { DiscordSnowflake  } from '@sapphire/snowflake';
+import { DiscordSnowflake } from '@ovencord/util';
 import { Base  } from './Base.js';
 import { Sticker  } from './Sticker.js';
 

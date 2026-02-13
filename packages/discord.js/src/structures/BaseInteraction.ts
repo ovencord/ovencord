@@ -1,5 +1,5 @@
 import { Collection  } from '@ovencord/collection';
-import { DiscordSnowflake  } from '@sapphire/snowflake';
+import { DiscordSnowflake } from '@ovencord/util';
 import { InteractionType, ApplicationCommandType, ComponentType  } from 'discord-api-types/v10';
 import { SelectMenuTypes  } from '../util/Constants.js';
 import { PermissionsBitField  } from '../util/PermissionsBitField.js';

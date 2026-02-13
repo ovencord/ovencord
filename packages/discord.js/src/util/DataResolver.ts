@@ -1,6 +1,4 @@
 
-import fs from 'node:fs/promises';
-import path from 'node:path';
 import { lazy } from '@ovencord/util';
 import { DiscordjsError, DiscordjsTypeError, ErrorCodes } from '../errors/index.js';
 import { BaseInvite } from '../structures/BaseInvite.js';
@@ -98,11 +96,9 @@ export async function resolveFile(resource) {
       return { data: Buffer.from(await res.arrayBuffer()), contentType: res.headers.get('content-type') };
     }
 
-    const file = path.resolve(resource);
-
-    const stats = await fs.stat(file);
-    if (!stats.isFile()) throw new DiscordjsError(ErrorCodes.FileNotFound, file);
-    return { data: await fs.readFile(file) };
+    const bunFile = Bun.file(resource);
+    if (!await bunFile.exists()) throw new DiscordjsError(ErrorCodes.FileNotFound, resource);
+    return { data: Buffer.from(await bunFile.arrayBuffer()) };
   }
 
   throw new DiscordjsTypeError(ErrorCodes.ReqResourceType);

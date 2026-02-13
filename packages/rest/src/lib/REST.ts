@@ -1,5 +1,5 @@
 import { Collection } from '@ovencord/collection';
-import { DiscordSnowflake } from '@sapphire/snowflake';
+import { DiscordSnowflake } from '@ovencord/util';
 import { AsyncEventEmitter } from './utils/AsyncEventEmitter.js';
 import { uuidv5 as uuidV5 } from './utils/utils.js';
 import { CDN } from './CDN.js';

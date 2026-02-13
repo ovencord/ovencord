@@ -1,4 +1,3 @@
-import { __exportStar  } from 'tslib';
 
 // "Root" classes (starting points)
 export { Client } from './client/Client.js';
@@ -35,7 +34,7 @@ export { PermissionsBitField } from './util/PermissionsBitField.js';
 export { RoleFlagsBitField } from './util/RoleFlagsBitField.js';
 export { ShardEvents } from './util/ShardEvents.js';
 export { SKUFlagsBitField } from './util/SKUFlagsBitField.js';
-import { DiscordSnowflake as SnowflakeUtil } from '@sapphire/snowflake';
+import { DiscordSnowflake as SnowflakeUtil } from '@ovencord/util';
 export { SnowflakeUtil };
 export { Status } from './util/Status.js';
 export { Sweepers } from './util/Sweepers.js';

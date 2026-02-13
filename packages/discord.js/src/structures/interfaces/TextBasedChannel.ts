@@ -1,6 +1,6 @@
 import { Collection  } from '@ovencord/collection';
 import { lazy  } from '@ovencord/util';
-import { DiscordSnowflake  } from '@sapphire/snowflake';
+import { DiscordSnowflake } from '@ovencord/util';
 import { InteractionType, Routes  } from 'discord-api-types/v10';
 import { DiscordjsTypeError, DiscordjsError, ErrorCodes  } from '../../errors/index.js';
 import { MaxBulkDeletableMessageAge  } from '../../util/Constants.js';

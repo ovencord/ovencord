@@ -3266,7 +3266,7 @@ export {
   DiscordSnowflake as SnowflakeUtil,
   type SnowflakeGenerateOptions,
   type DeconstructedSnowflake,
-} from '@sapphire/snowflake';
+} from '@ovencord/util';
 
 export class SKU extends Base {
   private constructor(client: Client<true>, data: APISKU);

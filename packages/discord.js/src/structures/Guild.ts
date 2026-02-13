@@ -1,6 +1,6 @@
 import { Collection  } from '@ovencord/collection';
 import { makeURLSearchParams  } from '@ovencord/rest';
-import { DiscordSnowflake  } from '@sapphire/snowflake';
+import { DiscordSnowflake } from '@ovencord/util';
 import { ChannelType, GuildPremiumTier, Routes, GuildFeature  } from 'discord-api-types/v10';
 import { DiscordjsError, DiscordjsTypeError, ErrorCodes  } from '../errors/index.js';
 import { AutoModerationRuleManager  } from '../managers/AutoModerationRuleManager.js';

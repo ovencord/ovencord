@@ -37,8 +37,6 @@
 	"homepage": "https://ovencord.dev",
 	"funding": "https://github.com/ovencord/ovencord?sponsor",
 	"dependencies": {
-		"tslib": "^2.6.2",
-		"@sapphire/snowflake": "3.5.5",
 		"discord-api-types": "^0.38.36",
 		"@ovencord/builders": "^1.11.5",
 		"@ovencord/collection": "^2.1.1",

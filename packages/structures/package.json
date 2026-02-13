@@ -35,7 +35,7 @@
 	},
 	"homepage": "https://ovencord.dev",
 	"dependencies": {
-		"@sapphire/snowflake": "^3.5.5",
+		"@ovencord/util": "^1.1.1",
 		"discord-api-types": "^0.38.36",
 		"@ovencord/formatters": "^0.6.1"
 	},

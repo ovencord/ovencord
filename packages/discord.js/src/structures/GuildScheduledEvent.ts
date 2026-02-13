@@ -1,4 +1,4 @@
-import { DiscordSnowflake  } from '@sapphire/snowflake';
+import { DiscordSnowflake } from '@ovencord/util';
 import { GuildScheduledEventStatus, GuildScheduledEventEntityType, RouteBases  } from 'discord-api-types/v10';
 import { DiscordjsError, ErrorCodes  } from '../errors/index.js';
 import { Base  } from './Base.js';

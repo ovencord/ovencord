@@ -1,6 +1,6 @@
 
 import { formatEmoji  } from '@ovencord/formatters';
-import { DiscordSnowflake  } from '@sapphire/snowflake';
+import { DiscordSnowflake } from '@ovencord/util';
 import { Base  } from './Base.js';
 
 /**

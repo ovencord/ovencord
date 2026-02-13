@@ -2,7 +2,7 @@ import { Collection  } from '@ovencord/collection';
 import { makeURLSearchParams  } from '@ovencord/rest';
 import { GatewayRateLimitError  } from '@ovencord/util';
 import { WebSocketShardEvents  } from '@ovencord/ws';
-import { DiscordSnowflake  } from '@sapphire/snowflake';
+import { DiscordSnowflake } from '@ovencord/util';
 import { Routes, GatewayOpcodes, GatewayDispatchEvents  } from 'discord-api-types/v10';
 import { DiscordjsError, DiscordjsTypeError, DiscordjsRangeError, ErrorCodes  } from '../errors/index.js';
 import { BaseGuildVoiceChannel  } from '../structures/BaseGuildVoiceChannel.js';

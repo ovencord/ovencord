@@ -1,6 +1,6 @@
 import { makeURLSearchParams  } from '@ovencord/rest';
 import { lazy  } from '@ovencord/util';
-import { DiscordSnowflake  } from '@sapphire/snowflake';
+import { DiscordSnowflake } from '@ovencord/util';
 import { Routes, WebhookType  } from 'discord-api-types/v10';
 import { DiscordjsError, ErrorCodes  } from '../errors/index.js';
 import { resolveImage  } from '../util/DataResolver.js';

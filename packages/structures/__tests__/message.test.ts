@@ -1,4 +1,4 @@
-import { DiscordSnowflake } from '@sapphire/snowflake';
+import { DiscordSnowflake } from '@ovencord/util';
 import type {
 	APIActionRowComponent,
 	APIButtonComponent,

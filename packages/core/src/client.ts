@@ -1,7 +1,6 @@
 import type { REST } from '@ovencord/rest';
-import { calculateShardId, GatewayRateLimitError } from '@ovencord/util';
+import { calculateShardId, DiscordSnowflake, GatewayRateLimitError } from '@ovencord/util';
 import { WebSocketShardEvents } from '@ovencord/ws';
-import { DiscordSnowflake } from '@sapphire/snowflake';
 import { AsyncEventEmitter } from '@vladfrangu/async_event_emitter';
 import {
 	GatewayDispatchEvents,

@@ -1,5 +1,5 @@
 import { Buffer } from 'node:buffer';
-import { DiscordSnowflake } from '@sapphire/snowflake';
+import { DiscordSnowflake } from '@ovencord/util';
 import type { Snowflake } from 'discord-api-types/v10';
 import { Routes } from 'discord-api-types/v10';
 import { type FormData, fetch } from 'undici';

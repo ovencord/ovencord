@@ -1,5 +1,5 @@
 import { roleMention  } from '@ovencord/formatters';
-import { DiscordSnowflake  } from '@sapphire/snowflake';
+import { DiscordSnowflake } from '@ovencord/util';
 import { PermissionFlagsBits  } from 'discord-api-types/v10';
 import { DiscordjsError, ErrorCodes  } from '../errors/index.js';
 import { PermissionsBitField  } from '../util/PermissionsBitField.js';

@@ -1,4 +1,4 @@
-import { DiscordSnowflake } from '@sapphire/snowflake';
+import { DiscordSnowflake } from '@ovencord/util';
 import type { APIChannel, APIPartialChannel, ChannelType, ChannelFlags } from 'discord-api-types/v10';
 import { Structure } from '../Structure.js';
 import { ChannelFlagsBitField } from '../bitfields/ChannelFlagsBitField.js';

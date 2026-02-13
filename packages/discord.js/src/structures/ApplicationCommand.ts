@@ -1,4 +1,4 @@
-import { DiscordSnowflake  } from '@sapphire/snowflake';
+import { DiscordSnowflake } from '@ovencord/util';
 import { ApplicationCommandOptionType  } from 'discord-api-types/v10';
 
 import { ApplicationCommandPermissionsManager  } from '../managers/ApplicationCommandPermissionsManager.js';

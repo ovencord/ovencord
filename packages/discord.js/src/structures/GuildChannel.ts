@@ -1,4 +1,4 @@
-import { Snowflake  } from '@sapphire/snowflake';
+import { SnowflakeClass as Snowflake  } from '@ovencord/util';
 import { PermissionFlagsBits, ChannelType  } from 'discord-api-types/v10';
 import { DiscordjsError, ErrorCodes  } from '../errors/index.js';
 import { PermissionOverwriteManager  } from '../managers/PermissionOverwriteManager.js';

@@ -1,5 +1,5 @@
 
-import { DiscordSnowflake  } from '@sapphire/snowflake';
+import { DiscordSnowflake } from '@ovencord/util';
 import { DiscordjsError, ErrorCodes  } from '../errors/index.js';
 import { Base  } from './Base.js';
 import { Emoji  } from './Emoji.js';

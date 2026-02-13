@@ -1,5 +1,5 @@
 import { makeURLSearchParams  } from '@ovencord/rest';
-import { DiscordSnowflake  } from '@sapphire/snowflake';
+import { DiscordSnowflake } from '@ovencord/util';
 import { Routes, GuildFeature  } from 'discord-api-types/v10';
 import { Base  } from './Base.js';
 

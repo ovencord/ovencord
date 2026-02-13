@@ -1,5 +1,5 @@
 import { channelLink, channelMention  } from '@ovencord/formatters';
-import { DiscordSnowflake  } from '@sapphire/snowflake';
+import { DiscordSnowflake } from '@ovencord/util';
 import { ChannelType, Routes  } from 'discord-api-types/v10';
 import { ChannelFlagsBitField  } from '../util/ChannelFlagsBitField.js';
 import { ThreadChannelTypes  } from '../util/Constants.js';

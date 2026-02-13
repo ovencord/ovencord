@@ -1,4 +1,4 @@
-import { DiscordSnowflake  } from '@sapphire/snowflake';
+import { DiscordSnowflake } from '@ovencord/util';
 import { AuditLogOptionsType, AuditLogEvent  } from 'discord-api-types/v10';
 import { Partials  } from '../util/Partials.js';
 import { flatten  } from '../util/Util.js';
