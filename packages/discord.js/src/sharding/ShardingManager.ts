@@ -1,5 +1,5 @@
 
-import path from 'node:path';
+const isAbsolutePath = (p: string) => p.startsWith('/') || /^[A-Za-z]:[/\\]/.test(p);
 import { Collection  } from '@ovencord/collection';
 import { range  } from '@ovencord/util';
 import { AsyncEventEmitter  } from '../util/AsyncEventEmitter.js';
@@ -75,7 +75,7 @@ export class ShardingManager extends AsyncEventEmitter {
      */
     this.file = file;
     if (!file) throw new DiscordjsError(ErrorCodes.ClientInvalidOption, 'File', 'specified.');
-    if (!path.isAbsolute(file)) this.file = path.resolve(process.cwd(), file);
+    if (!isAbsolutePath(file)) this.file = Bun.resolveSync(file, process.cwd());
     const bunFile = Bun.file(this.file);
     if (!bunFile.size) throw new DiscordjsError(ErrorCodes.ClientInvalidOption, 'File', 'a file');
 
@@ -176,7 +176,7 @@ export class ShardingManager extends AsyncEventEmitter {
      */
     this.shards = new Collection();
 
-    process.env.SHARDING_MANAGER = true;
+    process.env.SHARDING_MANAGER = 'true';
     process.env.SHARDING_MANAGER_MODE = this.mode;
     process.env.DISCORD_TOKEN = this.token;
   }

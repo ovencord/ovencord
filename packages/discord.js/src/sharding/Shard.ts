@@ -1,22 +1,16 @@
 /* eslint-disable   no-use-before-define */
 
-import path from 'node:path';
-import { SHARE_ENV  } from 'node:worker_threads';
-import { AsyncEventEmitter  } from '../util/AsyncEventEmitter.js';
-import { DiscordjsError, ErrorCodes  } from '../errors/index.js';
-import { ShardEvents  } from '../util/ShardEvents.js';
-import { makeError, makePlainError  } from '../util/Util.js';
+import { AsyncEventEmitter } from '../util/AsyncEventEmitter.js';
+import { DiscordjsError, ErrorCodes } from '../errors/index.js';
+import { ShardEvents } from '../util/ShardEvents.js';
+import { makeError, makePlainError } from '../util/Util.js';
 
-import type { ChildProcess } from 'node:child_process';
-import type { Worker as WorkerThread } from 'node:worker_threads';
-
-let childProcess: typeof import('node:child_process') | null = null;
-let Worker: typeof WorkerThread | null = null;
+import type { Subprocess } from 'bun';
 
 /**
- * A self-contained shard created by the {@link ShardingManager}. Each one has a {@link ChildProcess} that contains
- * an instance of the bot and its {@link Client}. When its child process/worker exits for any reason, the shard will
- * spawn a new one to replace it as necessary.
+ * A self-contained shard created by the {@link ShardingManager}. Each one has a {@link Subprocess} or {@link Worker}
+ * that contains an instance of the bot and its {@link Client}. When its child process/worker exits for any reason,
+ * the shard will spawn a new one to replace it as necessary.
  *
  * @extends {AsyncEventEmitter}
  */
@@ -27,24 +21,17 @@ export class Shard extends AsyncEventEmitter {
   public args: any;
   public execArgv: any;
   public env: any;
-  public worker: WorkerThread | null = null;
-  public process: ChildProcess | null = null;
+  public worker: Worker | null = null;
+  public process: Subprocess | null = null;
   public ready: boolean = false;
   public _evals: any;
   public _fetches: any;
-  public _exitListener: any;
+
   constructor(manager: any, id: any) {
     super();
 
-    switch (manager.mode) {
-      case 'process':
-        childProcess = require('node:child_process');
-        break;
-      case 'worker':
-        Worker = require('node:worker_threads').Worker;
-        break;
-      default:
-        throw new Error(`Invalid sharding mode in Shard ${id}`);
+    if (manager.mode !== 'process' && manager.mode !== 'worker') {
+      throw new Error(`Invalid sharding mode in Shard ${id}`);
     }
 
     /**
@@ -83,13 +70,13 @@ export class Shard extends AsyncEventEmitter {
     this.execArgv = manager.execArgv;
 
     /**
-     * Environment variables for the shard's process, or workerData for the shard's worker
+     * Environment variables for the shard's process/worker
      *
      * @type {Object}
      */
     this.env = {
       ...process.env,
-      SHARDING_MANAGER: true,
+      SHARDING_MANAGER: 'true',
       SHARDS: this.id,
       SHARD_COUNT: this.manager.totalShards,
       DISCORD_TOKEN: this.manager.token,
@@ -105,7 +92,7 @@ export class Shard extends AsyncEventEmitter {
     /**
      * Process of the shard (if {@link ShardingManager#mode} is `process`)
      *
-     * @type {?ChildProcess}
+     * @type {?Subprocess}
      */
     this.process = null;
 
@@ -131,14 +118,6 @@ export class Shard extends AsyncEventEmitter {
      * @private
      */
     this._fetches = new Map();
-
-    /**
-     * Listener function for the {@link ChildProcess}' `exit` event
-     *
-     * @type {Function}
-     * @private
-     */
-    this._exitListener = null;
   }
 
   /**
@@ -147,34 +126,45 @@ export class Shard extends AsyncEventEmitter {
    *
    * @param {number} [timeout=30000] The amount in milliseconds to wait until the {@link Client} has become ready
    * before resolving (`-1` or `Infinity` for no wait)
-   * @returns {Promise<ChildProcess>}
+   * @returns {Promise<Subprocess|Worker>}
    */
   async spawn(timeout = 30_000) {
     if (this.process) throw new DiscordjsError(ErrorCodes.ShardingProcessExists, this.id);
     if (this.worker) throw new DiscordjsError(ErrorCodes.ShardingWorkerExists, this.id);
 
-    this._exitListener = this._handleExit.bind(this, undefined, timeout);
+    const resolved = Bun.resolveSync(this.manager.file, process.cwd());
 
     switch (this.manager.mode) {
-      case 'process':
-        this.process = childProcess.fork(path.resolve(this.manager.file), this.args, {
+      case 'process': {
+        this.process = Bun.spawn(['bun', resolved, ...this.args], {
           env: this.env,
-          execArgv: this.execArgv,
-          silent: this.silent,
+          stdout: this.silent ? 'ignore' : 'inherit',
+          stderr: this.silent ? 'ignore' : 'inherit',
+          ipc: (message: any) => {
+            this._handleMessage(message);
+          },
+          onExit: (_proc: any, exitCode: number | null, signalCode: number | null) => {
+            this._handleExit(undefined, timeout);
+          },
         });
-        (this.process as any).on('message', this._handleMessage.bind(this));
-        (this.process as any).on('exit', this._exitListener);
         break;
-      case 'worker':
-        this.worker = new Worker(path.resolve(this.manager.file), {
-          workerData: this.env,
-          env: SHARE_ENV,
-          execArgv: this.execArgv,
+      }
+      case 'worker': {
+        this.worker = new Worker(resolved, {
+          env: this.env,
           argv: this.args,
         });
-        (this.worker as any).on('message', this._handleMessage.bind(this));
-        (this.worker as any).on('exit', this._exitListener);
+        this.worker.onmessage = (event: MessageEvent) => {
+          this._handleMessage(event.data);
+        };
+        this.worker.addEventListener('error', (event: ErrorEvent) => {
+          this.emit(ShardEvents.Error, event.error ?? event);
+        });
+        this.worker.addEventListener('close', () => {
+          this._handleExit(undefined, timeout);
+        });
         break;
+      }
       default:
         break;
     }
@@ -188,7 +178,7 @@ export class Shard extends AsyncEventEmitter {
      * Emitted upon the creation of the shard's child process/worker.
      *
      * @event Shard#spawn
-     * @param {ChildProcess|Worker} process Child process/worker that was created
+     * @param {Subprocess|Worker} process Child process/worker that was created
      */
     this.emit(ShardEvents.Spawn, child);
 
@@ -233,11 +223,9 @@ export class Shard extends AsyncEventEmitter {
    */
   kill() {
     if (this.process) {
-      (this.process as any).removeListener('exit', this._exitListener);
       this.process.kill();
-    } else {
-      (this.worker as any).removeListener('exit', this._exitListener);
-      (this.worker as any).terminate();
+    } else if (this.worker) {
+      this.worker.terminate();
     }
 
     this._handleExit(false);
@@ -257,7 +245,7 @@ export class Shard extends AsyncEventEmitter {
    * Kills and restarts the shard's process/worker.
    *
    * @param {ShardRespawnOptions} [options] Options for respawning the shard
-   * @returns {Promise<ChildProcess>}
+   * @returns {Promise<Subprocess|Worker>}
    */
   async respawn({ delay = 500, timeout = 30_000 } = {}) {
     this.kill();
@@ -272,17 +260,12 @@ export class Shard extends AsyncEventEmitter {
    * @returns {Promise<Shard>}
    */
   async send(message: any): Promise<Shard> {
-    return new Promise((resolve, reject) => {
-      if (this.process) {
-        (this.process as any).send(message, (err: Error | null) => {
-          if (err) reject(err);
-          else resolve(this);
-        });
-      } else {
-        (this.worker as any).postMessage(message);
-        resolve(this);
-      }
-    });
+    if (this.process) {
+      this.process.send(message);
+    } else if (this.worker) {
+      this.worker.postMessage(message);
+    }
+    return this;
   }
 
   /**
@@ -305,28 +288,27 @@ export class Shard extends AsyncEventEmitter {
     if (this._fetches.has(prop)) return this._fetches.get(prop);
 
     const promise = new Promise((resolve, reject) => {
-      const child = this.process ?? this.worker;
+      const originalHandler = this._handleMessage.bind(this);
 
       const listener = (message: any) => {
         if (message?._fetchProp !== prop) return;
-        (child as any).removeListener('message', listener);
-        this.decrementMaxListeners(child);
+        // Remove this specific listener by replacing the handler
         this._fetches.delete(prop);
         if (message._error) reject(makeError(message._error));
         else resolve(message._result);
       };
 
-      this.incrementMaxListeners(child);
-      (child as any).on('message', listener);
+      // For process mode, the ipc handler is already set up in spawn()
+      // We handle this by storing the listener and checking in _handleMessage
+      this._fetches.set(prop, { promise: null as any, listener });
 
       this.send({ _fetchProp: prop }).catch(error => {
-        (child as any).removeListener('message', listener);
-        this.decrementMaxListeners(child);
         this._fetches.delete(prop);
         reject(error);
       });
     });
 
+    // Store the actual promise
     this._fetches.set(prop, promise);
     return promise;
   }
@@ -351,23 +333,7 @@ export class Shard extends AsyncEventEmitter {
     if (this._evals.has(_eval)) return this._evals.get(_eval);
 
     const promise = new Promise((resolve, reject) => {
-      const child = this.process ?? this.worker;
-
-      const listener = (message: any) => {
-        if (message?._eval !== _eval) return;
-        (child as any).removeListener('message', listener);
-        this.decrementMaxListeners(child);
-        this._evals.delete(_eval);
-        if (message._error) reject(makeError(message._error));
-        else resolve(message._result);
-      };
-
-      this.incrementMaxListeners(child);
-      (child as any).on('message', listener);
-
       this.send({ _eval }).catch(error => {
-        (child as any).removeListener('message', listener);
-        this.decrementMaxListeners(child);
         this._evals.delete(_eval);
         reject(error);
       });
@@ -449,6 +415,24 @@ export class Shard extends AsyncEventEmitter {
         });
         return;
       }
+
+      // Handle fetchClientValue responses
+      if (message._fetchProp !== undefined) {
+        const cached = this._fetches.get(message._fetchProp);
+        if (cached && typeof cached === 'object' && cached.listener) {
+          cached.listener(message);
+          return;
+        }
+      }
+
+      // Handle eval responses
+      if (message._eval !== undefined) {
+        const cached = this._evals.get(message._eval);
+        if (cached && typeof cached === 'object' && cached.listener) {
+          cached.listener(message);
+          return;
+        }
+      }
     }
 
     /**
@@ -473,7 +457,7 @@ export class Shard extends AsyncEventEmitter {
      * Emitted upon the shard's child process/worker exiting.
      *
      * @event Shard#death
-     * @param {ChildProcess|Worker} process Child process/worker that exited
+     * @param {Subprocess|Worker} process Child process/worker that exited
      */
     this.emit(ShardEvents.Death, this.process ?? this.worker);
 
@@ -484,31 +468,5 @@ export class Shard extends AsyncEventEmitter {
     this._fetches.clear();
 
     if (respawn) this.spawn(timeout).catch(error => this.emit(ShardEvents.Error, error));
-  }
-
-  /**
-   * Increments max listeners by one for a given emitter, if they are not zero.
-   *
-   * @param {Worker|ChildProcess} emitter The emitter that emits the events.
-   * @private
-   */
-  incrementMaxListeners(emitter) {
-    const maxListeners = emitter.getMaxListeners();
-    if (maxListeners !== 0) {
-      emitter.setMaxListeners(maxListeners + 1);
-    }
-  }
-
-  /**
-   * Decrements max listeners by one for a given emitter, if they are not zero.
-   *
-   * @param {Worker|ChildProcess} emitter The emitter that emits the events.
-   * @private
-   */
-  decrementMaxListeners(emitter) {
-    const maxListeners = emitter.getMaxListeners();
-    if (maxListeners !== 0) {
-      emitter.setMaxListeners(maxListeners - 1);
-    }
   }
 }

@@ -1,9 +1,12 @@
 /* eslint-disable   */
-import { calculateShardId  } from '@ovencord/util';
-import { WebSocketShardEvents  } from '@ovencord/ws';
-import { DiscordjsError, DiscordjsTypeError, ErrorCodes  } from '../errors/index.js';
-import { Events  } from '../util/Events.js';
-import { makeError, makePlainError  } from '../util/Util.js';
+import { calculateShardId } from '@ovencord/util';
+import { WebSocketShardEvents } from '@ovencord/ws';
+import { DiscordjsError, DiscordjsTypeError, ErrorCodes } from '../errors/index.js';
+import { Events } from '../util/Events.js';
+import { makeError, makePlainError } from '../util/Util.js';
+
+// Declare self for worker thread context
+declare var self: Worker;
 
 /**
  * Helper class for sharded clients spawned as a child process/worker, such as from a {@link ShardingManager}.
@@ -13,7 +16,6 @@ export class ShardClientUtil {
   public client: any;
   public mode: any;
 
-  public parentPort: any;
   private static _singleton: ShardClientUtil | null = null;
   
   constructor(client: any, mode: any) {
@@ -31,37 +33,31 @@ export class ShardClientUtil {
      */
     this.mode = mode;
 
-    /**
-     * Message port for the master process (only when {@link ShardClientUtil#mode} is `worker`)
-     *
-     * @type {?MessagePort}
-     */
-    this.parentPort = null;
-
     switch (mode) {
       case 'process':
         process.on('message', this._handleMessage.bind(this));
         client.on(Events.ClientReady, () => {
-          process.send({ _ready: true });
+          process.send!({ _ready: true });
         });
         client.ws.on(WebSocketShardEvents.Closed, () => {
-          process.send({ _disconnect: true });
+          process.send!({ _disconnect: true });
         });
         client.ws.on(WebSocketShardEvents.Resumed, () => {
-          process.send({ _resume: true });
+          process.send!({ _resume: true });
         });
         break;
       case 'worker':
-        this.parentPort = require('node:worker_threads').parentPort;
-        this.parentPort.on('message', this._handleMessage.bind(this));
+        self.onmessage = (event: MessageEvent) => {
+          this._handleMessage(event.data);
+        };
         client.on(Events.ClientReady, () => {
-          this.parentPort.postMessage({ _ready: true });
+          self.postMessage({ _ready: true });
         });
         client.ws.on(WebSocketShardEvents.Closed, () => {
-          this.parentPort.postMessage({ _disconnect: true });
+          self.postMessage({ _disconnect: true });
         });
         client.ws.on(WebSocketShardEvents.Resumed, () => {
-          this.parentPort.postMessage({ _resume: true });
+          self.postMessage({ _resume: true });
         });
         break;
       default:
@@ -86,7 +82,7 @@ export class ShardClientUtil {
           });
           break;
         case 'worker':
-          this.parentPort.postMessage(message);
+          self.postMessage(message);
           resolve(undefined);
           break;
         default:
@@ -109,22 +105,29 @@ export class ShardClientUtil {
    */
   async fetchClientValues(prop: any, shard: any): Promise<any> {
     return new Promise((resolve, reject) => {
-      const parent = this.parentPort ?? process;
-
-      const listener = (message: any) => {
-        if (message?._sFetchProp !== prop || message._sFetchPropShard !== shard) return;
-        parent.removeListener('message', listener);
-        this.decrementMaxListeners(parent);
-        if (message._error) reject(makeError(message._error));
-        else resolve(message._result);
-      };
-
-      this.incrementMaxListeners(parent);
-      parent.on('message', listener);
+      if (this.mode === 'worker') {
+        const originalOnMessage = self.onmessage;
+        self.onmessage = (event: MessageEvent) => {
+          const message = event.data;
+          if (message?._sFetchProp === prop && message._sFetchPropShard === shard) {
+            self.onmessage = originalOnMessage;
+            if (message._error) reject(makeError(message._error));
+            else resolve(message._result);
+          } else if (originalOnMessage) {
+            originalOnMessage.call(self, event);
+          }
+        };
+      } else {
+        const listener = (message: any) => {
+          if (message?._sFetchProp !== prop || message._sFetchPropShard !== shard) return;
+          process.removeListener('message', listener);
+          if (message._error) reject(makeError(message._error));
+          else resolve(message._result);
+        };
+        process.on('message', listener);
+      }
 
       this.send({ _sFetchProp: prop, _sFetchPropShard: shard }).catch(error => {
-        parent.removeListener('message', listener);
-        this.decrementMaxListeners(parent);
         reject(error);
       });
     });
@@ -144,7 +147,6 @@ export class ShardClientUtil {
    */
   async broadcastEval(script: any, options: any = {}): Promise<any> {
     return new Promise((resolve, reject) => {
-      const parent = this.parentPort ?? process;
       if (typeof script !== 'function') {
         reject(new DiscordjsTypeError(ErrorCodes.ShardingInvalidEvalBroadcast));
         return;
@@ -152,19 +154,29 @@ export class ShardClientUtil {
 
       const evalScript = `(${script})(this, ${JSON.stringify(options.context)})`;
 
-      const listener = (message: any) => {
-        if (message?._sEval !== evalScript || message._sEvalShard !== options.shard) return;
-        parent.removeListener('message', listener);
-        this.decrementMaxListeners(parent);
-        if (message._error) reject(makeError(message._error));
-        else resolve(message._result);
-      };
+      if (this.mode === 'worker') {
+        const originalOnMessage = self.onmessage;
+        self.onmessage = (event: MessageEvent) => {
+          const message = event.data;
+          if (message?._sEval === evalScript && message._sEvalShard === options.shard) {
+            self.onmessage = originalOnMessage;
+            if (message._error) reject(makeError(message._error));
+            else resolve(message._result);
+          } else if (originalOnMessage) {
+            originalOnMessage.call(self, event);
+          }
+        };
+      } else {
+        const listener = (message: any) => {
+          if (message?._sEval !== evalScript || message._sEvalShard !== options.shard) return;
+          process.removeListener('message', listener);
+          if (message._error) reject(makeError(message._error));
+          else resolve(message._result);
+        };
+        process.on('message', listener);
+      }
 
-      this.incrementMaxListeners(parent);
-      parent.on('message', listener);
       this.send({ _sEval: evalScript, _sEvalShard: options.shard }).catch(error => {
-        parent.removeListener('message', listener);
-        this.decrementMaxListeners(parent);
         reject(error);
       });
     });
@@ -220,10 +232,6 @@ export class ShardClientUtil {
       error.stack = error_.stack;
       /**
        * Emitted when the client encounters an error.
-       * <warn>Errors thrown within this event do not have a catch handler, it is
-       * recommended to not use async functions as `error` event handlers. See the
-       * {@link https://nodejs.org/api/events.html#capture-rejections-of-promises Node.js documentation}
-       * for details.)</warn>
        *
        * @event Client#error
        * @param {Error} error The error encountered
@@ -263,31 +271,5 @@ export class ShardClientUtil {
     const shard = calculateShardId(guildId, shardCount);
     if (shard < 0) throw new DiscordjsError(ErrorCodes.ShardingShardMiscalculation, shard, guildId, shardCount);
     return shard;
-  }
-
-  /**
-   * Increments max listeners by one for a given emitter, if they are not zero.
-   *
-   * @param {Worker|ChildProcess} emitter The emitter that emits the events.
-   * @private
-   */
-  incrementMaxListeners(emitter: any): void {
-    const maxListeners = emitter.getMaxListeners();
-    if (maxListeners !== 0) {
-      emitter.setMaxListeners(maxListeners + 1);
-    }
-  }
-
-  /**
-   * Decrements max listeners by one for a given emitter, if they are not zero.
-   *
-   * @param {Worker|ChildProcess} emitter The emitter that emits the events.
-   * @private
-   */
-  decrementMaxListeners(emitter: any): void {
-    const maxListeners = emitter.getMaxListeners();
-    if (maxListeners !== 0) {
-      emitter.setMaxListeners(maxListeners - 1);
-    }
   }
 }

@@ -1,4 +1,3 @@
-import { workerData } from 'node:worker_threads';
 import { Collection  } from '@ovencord/collection';
 import { REST, RESTEvents, makeURLSearchParams  } from '@ovencord/rest';
 import { WebSocketManager, WebSocketShardEvents, WebSocketShardStatus  } from '@ovencord/ws';
@@ -156,7 +155,8 @@ export class Client extends AsyncEventEmitter {
 
     this.rest.on(RESTEvents.Debug, message => this.emit(Events.Debug, message));
 
-    const data = workerData ?? process.env;
+    // In Bun, Worker env vars and Bun.spawn env vars populate process.env directly
+    const data = process.env;
 
     if (this.options.ws.shardIds === defaultOptions.ws.shardIds && 'SHARDS' in data) {
       const shards = JSON.parse(data.SHARDS);
