@@ -1,4 +1,4 @@
-import fs from 'node:fs';
+
 import path from 'node:path';
 import { Collection  } from '@ovencord/collection';
 import { range  } from '@ovencord/util';
@@ -76,9 +76,8 @@ export class ShardingManager extends AsyncEventEmitter {
     this.file = file;
     if (!file) throw new DiscordjsError(ErrorCodes.ClientInvalidOption, 'File', 'specified.');
     if (!path.isAbsolute(file)) this.file = path.resolve(process.cwd(), file);
-    // eslint-disable-next-line
-    const stats = fs.statSync(this.file);
-    if (!stats.isFile()) throw new DiscordjsError(ErrorCodes.ClientInvalidOption, 'File', 'a file');
+    const bunFile = Bun.file(this.file);
+    if (!bunFile.size) throw new DiscordjsError(ErrorCodes.ClientInvalidOption, 'File', 'a file');
 
     /**
      * List of shards this sharding manager spawns

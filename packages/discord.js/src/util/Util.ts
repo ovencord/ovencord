@@ -1,5 +1,5 @@
 
-import { parse } from 'node:path';
+
 import { Collection } from '@ovencord/collection';
 import { lazy } from '@ovencord/util';
 import { ChannelType, RouteBases, Routes } from 'discord-api-types/v10';
@@ -351,9 +351,11 @@ export async function setPosition(item: any, position: number, relative: boolean
  * @returns {string} Basename of the path
  * @private
  */
-export function basename(path: string, ext?: string): string {
-  const res = parse(path);
-  return ext && res.ext.startsWith(ext) ? res.name : res.base.split('?')[0];
+export function basename(filePath: string, ext?: string): string {
+  const lastSlash = Math.max(filePath.lastIndexOf('/'), filePath.lastIndexOf('\\'));
+  const base = filePath.slice(lastSlash + 1).split('?')[0];
+  if (ext && base.endsWith(ext)) return base.slice(0, -ext.length);
+  return base;
 }
 
 /**

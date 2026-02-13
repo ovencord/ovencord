@@ -891,13 +891,8 @@ export class Client extends AsyncEventEmitter {
 
 /**
  * @class SnowflakeUtil
- * @classdesc This class is an alias for {@link https://www.npmjs.com/package/@sapphire/snowflake @sapphire/snowflake}'s
+ * @classdesc This class is an alias for {@link https://www.npmjs.com/package/@ovencord/util @ovencord/util}'s
  * `DiscordSnowflake` class.
- *
- * Check their documentation
- * {@link https://www.sapphirejs.dev/docs/Documentation/api-utilities/classes/sapphire_snowflake.Snowflake here}
- * ({@link https://www.sapphirejs.dev/docs/Guide/utilities/snowflake guide})
- * to see what you can do.
  * @hideconstructor
  */
 

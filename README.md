@@ -163,13 +163,19 @@ bun install
 ```
 ovencord/
 ├── packages/
-│   ├── rest/       # Discord REST API client
-│   ├── ws/         # WebSocket gateway client
-│   ├── collection/ # Performance-optimized Map
-│   └── util/       # Shared utilities
-├── .vscode/        # Editor config
-├── .github/        # CI/CD workflows
-└── package.json    # Workspace root
+│   ├── builders/    # Discord payload builders (Zod 3)
+│   ├── collection/  # Performance-optimized Map
+│   ├── core/        # High-level client abstraction
+│   ├── discord.js/  # Full Bun-native Discord.js fork
+│   ├── formatters/  # Message formatting utilities
+│   ├── rest/        # Discord REST API client
+│   ├── structures/  # Discord data structures
+│   ├── util/        # Shared utilities
+│   ├── voice/       # Voice connection support
+│   └── ws/          # WebSocket gateway client
+├── .vscode/         # Editor config
+├── .github/         # CI/CD workflows
+└── package.json     # Workspace root
 ```
 
 
