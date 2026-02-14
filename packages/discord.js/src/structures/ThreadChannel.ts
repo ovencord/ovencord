@@ -158,6 +158,22 @@ export class ThreadChannel extends BaseChannel {
 // ...
 
   /**
+   * Fetches the message that started this thread, if any.
+   *
+   * The starter message has the same id as the thread itself.
+   *
+   * @param {BaseFetchOptions} [options] Additional options for this fetch
+   * @returns {Promise<Message<true>|null>}
+   */
+  async fetchStarterMessage(options: any = {}) {
+    try {
+      return await this.messages.fetch({ message: this.id, force: options.force ?? true, cache: options.cache });
+    } catch {
+      return null;
+    }
+  }
+
+  /**
    * Deletes this thread.
    *
    * @param {string} [reason] Reason for deleting this thread

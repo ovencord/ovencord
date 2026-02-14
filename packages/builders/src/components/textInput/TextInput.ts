@@ -51,6 +51,24 @@ export class TextInputBuilder extends ComponentBuilder<APITextInputComponent> {
 	}
 
 	/**
+	 * Sets the label for this text input.
+	 *
+	 * @param label - The label to use
+	 */
+	public setLabel(label: string) {
+		this.data.label = label;
+		return this;
+	}
+
+	/**
+	 * Clears the label for this text input.
+	 */
+	public clearLabel() {
+		this.data.label = undefined;
+		return this;
+	}
+
+	/**
 	 * Sets the style for this text input.
 	 *
 	 * @param style - The style to use
