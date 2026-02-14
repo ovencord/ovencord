@@ -1,7 +1,7 @@
 {
 	"$schema": "https://json.schemastore.org/package.json",
 	"name": "@ovencord/structures",
-	"version": "0.1.0",
+	"version": "0.1.1",
 	"description": "Wrapper around Discord's structures",
 	"scripts": {
 		"test": "bun test",
