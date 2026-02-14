@@ -1,10 +1,12 @@
 import type { JSONEncodable } from '@ovencord/util';
 import type {
+	APIActionRowComponent,
+	APIComponentInActionRow,
 	APILabelComponent,
 	APIModalInteractionResponseCallbackData,
 	APITextDisplayComponent,
 } from 'discord-api-types/v10';
-import type { ActionRowBuilder } from '../../components/ActionRow.js';
+import { ActionRowBuilder } from '../../components/ActionRow.js';
 import type { AnyModalComponentBuilder } from '../../components/Components.js';
 import { createComponentBuilder } from '../../components/Components.js';
 import { LabelBuilder } from '../../components/label/Label.js';
@@ -98,6 +100,41 @@ export class ModalBuilder implements JSONEncodable<APIModalInteractionResponseCa
 		const resolved = normalized.map((row) => resolveBuilder(row, TextDisplayBuilder));
 
 		this.data.components.push(...resolved);
+
+		return this;
+	}
+
+	/**
+	 * Adds action row components to this modal (for TextInput fields).
+	 *
+	 * @param components - The action rows to add
+	 */
+	public addActionRowComponents(
+		...components: RestOrArray<
+			ActionRowBuilder | APIActionRowComponent<APIComponentInActionRow>
+		>
+	) {
+		const normalized = normalizeArray(components);
+		const resolved = normalized.map((row) =>
+			row instanceof ActionRowBuilder ? row : new ActionRowBuilder(row),
+		);
+
+		this.data.components.push(...resolved);
+
+		return this;
+	}
+
+	/**
+	 * Adds components to this modal. Accepts ActionRowBuilder instances,
+	 * or any other valid modal component builder.
+	 *
+	 * @param components - The components to add
+	 */
+	public addComponents(
+		...components: RestOrArray<ActionRowBuilder | AnyModalComponentBuilder>
+	) {
+		const normalized = normalizeArray(components);
+		this.data.components.push(...normalized);
 
 		return this;
 	}
