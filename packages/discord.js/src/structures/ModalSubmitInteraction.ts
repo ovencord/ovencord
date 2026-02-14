@@ -66,6 +66,7 @@ export class ModalSubmitInteraction extends BaseInteraction {
   public customId: any;
   public message: any;
   public components: any;
+  public fields: any;
   public deferred: any;
   public replied: any;
   public ephemeral: any;
@@ -100,6 +101,14 @@ export class ModalSubmitInteraction extends BaseInteraction {
       data.data.components?.map(component => this.transformComponent(component, data.data.resolved)),
       transformResolved({ client: this.client, guild: this.guild, channel: this.channel }, data.data.resolved),
     );
+
+    /**
+     * The fields within the modal (alias for components).
+     * Provides backward compatibility with the classic discord.js API.
+     *
+     * @type {ModalComponentResolver}
+     */
+    this.fields = this.components;
 
     /**
      * Whether the reply to this interaction has been deferred
