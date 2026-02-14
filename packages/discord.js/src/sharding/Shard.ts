@@ -77,9 +77,10 @@ export class Shard extends AsyncEventEmitter {
     this.env = {
       ...process.env,
       SHARDING_MANAGER: 'true',
-      SHARDS: this.id,
-      SHARD_COUNT: this.manager.totalShards,
-      DISCORD_TOKEN: this.manager.token,
+      SHARDING_MANAGER_MODE: this.manager.mode,
+      SHARDS: String(this.id),
+      SHARD_COUNT: String(this.manager.totalShards),
+      DISCORD_TOKEN: this.manager.token ?? '',
     };
 
     /**
