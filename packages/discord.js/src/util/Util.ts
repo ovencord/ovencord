@@ -22,7 +22,15 @@ const isObject = (data: any): boolean => typeof data === 'object' && data !== nu
  * @returns {Object}
  */
 export function flatten(obj: any, ...props: any[]): any {
+  return _flatten(obj, new WeakSet(), ...props);
+}
+
+function _flatten(obj: any, seen: WeakSet<object>, ...props: any[]): any {
   if (!isObject(obj)) return obj;
+
+  // Circular reference guard
+  if (seen.has(obj)) return '[Circular]';
+  seen.add(obj);
 
   const objProps = Object.keys(obj)
     .filter(key => !key.startsWith('_'))
@@ -47,13 +55,13 @@ export function flatten(obj: any, ...props: any[]): any {
     // If the valueOf is a Collection, use its array of keys
     else if (valueOf instanceof Collection) out[newProp as string] = Array.from(valueOf.keys());
     // If it's an array, call toJSON function on each element if present, otherwise flatten each element
-    else if (Array.isArray(element)) out[newProp as string] = element.map(elm => elm.toJSON?.() ?? flatten(elm));
+    else if (Array.isArray(element)) out[newProp as string] = element.map(elm => elm.toJSON?.() ?? _flatten(elm, seen));
     // If it's an object with a primitive `valueOf`, use that value
     else if (typeof valueOf !== 'object') out[newProp as string] = valueOf;
     // If it's an object with a toJSON function, use the return value of it
     else if (hasToJSON) out[newProp as string] = element.toJSON();
     // If element is an object, use the flattened version of it
-    else if (typeof element === 'object') out[newProp as string] = flatten(element);
+    else if (typeof element === 'object') out[newProp as string] = _flatten(element, seen);
     // If it's a primitive
     else if (!elemIsObj) out[newProp as string] = element;
   }
