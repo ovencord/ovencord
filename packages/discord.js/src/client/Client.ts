@@ -428,6 +428,9 @@ export class Client extends AsyncEventEmitter {
    * @private
    */
   async _handlePacket(packet: any, shardId: number) {
+    // Emit raw packet for connectors (Bunraku/Shoukaku) that need VOICE_SERVER_UPDATE / VOICE_STATE_UPDATE
+    this.emit('raw', packet);
+
     if (this.status !== Status.Ready && !BeforeReadyWhitelist.includes(packet.t)) {
       this.incomingPacketQueue.push({ packet, shardId });
     } else {
