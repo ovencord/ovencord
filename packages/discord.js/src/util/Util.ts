@@ -22,11 +22,16 @@ const isObject = (data: any): boolean => typeof data === 'object' && data !== nu
  * @returns {Object}
  */
 export function flatten(obj: any, ...props: any[]): any {
-  return _flatten(obj, new WeakSet(), ...props);
+  return _flatten(obj, new WeakSet(), 0, ...props);
 }
 
-function _flatten(obj: any, seen: WeakSet<object>, ...props: any[]): any {
+const MAX_FLATTEN_DEPTH = 10;
+
+function _flatten(obj: any, seen: WeakSet<object>, depth: number, ...props: any[]): any {
   if (!isObject(obj)) return obj;
+
+  // Depth guard — prevents stack overflow from deeply nested object trees
+  if (depth > MAX_FLATTEN_DEPTH) return {};
 
   // Circular reference guard
   if (seen.has(obj)) return '[Circular]';
@@ -55,13 +60,13 @@ function _flatten(obj: any, seen: WeakSet<object>, ...props: any[]): any {
     // If the valueOf is a Collection, use its array of keys
     else if (valueOf instanceof Collection) out[newProp as string] = Array.from(valueOf.keys());
     // If it's an array, call toJSON function on each element if present, otherwise flatten each element
-    else if (Array.isArray(element)) out[newProp as string] = element.map(elm => elm.toJSON?.() ?? _flatten(elm, seen));
+    else if (Array.isArray(element)) out[newProp as string] = element.map(elm => elm.toJSON?.() ?? _flatten(elm, seen, depth + 1));
     // If it's an object with a primitive `valueOf`, use that value
     else if (typeof valueOf !== 'object') out[newProp as string] = valueOf;
     // If it's an object with a toJSON function, use the return value of it
     else if (hasToJSON) out[newProp as string] = element.toJSON();
     // If element is an object, use the flattened version of it
-    else if (typeof element === 'object') out[newProp as string] = _flatten(element, seen);
+    else if (typeof element === 'object') out[newProp as string] = _flatten(element, seen, depth + 1);
     // If it's a primitive
     else if (!elemIsObj) out[newProp as string] = element;
   }

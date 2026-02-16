@@ -10,7 +10,8 @@ export abstract class Base {
   public client: any;
 
   constructor(client: any) {
-    this.client = client;
+    // Non-enumerable so flatten()/Object.keys() won't recurse into the massive Client object
+    Object.defineProperty(this, 'client', { value: client, writable: true, enumerable: false });
   }
 
   _clone(): any {
