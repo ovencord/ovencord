@@ -269,6 +269,18 @@ export class MessagePayload {
    * @returns {Promise<RawFile>}
    */
   static async resolveFile(fileLike) {
+    // New AttachmentBuilder (from @ovencord/builders) — use getRawFile() API
+    if (typeof fileLike?.getRawFile === 'function') {
+      const raw = fileLike.getRawFile();
+      if (raw?.data) {
+        return {
+          data: Buffer.isBuffer(raw.data) ? raw.data : Buffer.from(raw.data),
+          name: raw.name ?? fileLike.toJSON?.()?.filename ?? 'file.bin',
+          contentType: raw.contentType,
+        };
+      }
+    }
+
     let attachment;
     let name;
 

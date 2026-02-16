@@ -84,6 +84,20 @@ export function resolveGuildTemplateCode(data) {
 export async function resolveFile(resource) {
   if (Buffer.isBuffer(resource)) return { data: resource };
 
+  // Uint8Array (non-Buffer) — from image generators, canvas, etc.
+  if (resource instanceof Uint8Array) return { data: Buffer.from(resource) };
+
+  // ArrayBuffer
+  if (resource instanceof ArrayBuffer) return { data: Buffer.from(resource) };
+
+  // Blob / File (Web API)
+  if (resource instanceof Blob) {
+    return {
+      data: Buffer.from(await resource.arrayBuffer()),
+      contentType: resource.type || undefined,
+    };
+  }
+
   if (typeof resource[Symbol.asyncIterator] === 'function') {
     const buffers = [];
     for await (const data of resource) buffers.push(Buffer.from(data));

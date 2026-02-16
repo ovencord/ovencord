@@ -378,6 +378,8 @@ export function basename(filePath: string, ext?: string): string {
  * @returns {string} filename to use
  */
 export function findName(thing: any): string {
+  if (!thing) return 'file.bin';
+
   if (typeof thing === 'string') {
     return basename(thing);
   }
