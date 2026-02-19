@@ -99,9 +99,20 @@ export async function resolveFile(resource) {
   }
 
   if (typeof resource[Symbol.asyncIterator] === 'function') {
-    const buffers = [];
-    for await (const data of resource) buffers.push(Buffer.from(data));
-    return { data: Buffer.concat(buffers) };
+    const chunks: Uint8Array[] = [];
+    let totalLen = 0;
+    for await (const data of resource) {
+      const chunk = data instanceof Uint8Array ? data : new Uint8Array(data);
+      chunks.push(chunk);
+      totalLen += chunk.byteLength;
+    }
+    const merged = new Uint8Array(totalLen);
+    let offset = 0;
+    for (const chunk of chunks) {
+      merged.set(chunk, offset);
+      offset += chunk.byteLength;
+    }
+    return { data: merged };
   }
 
   if (typeof resource === 'string') {

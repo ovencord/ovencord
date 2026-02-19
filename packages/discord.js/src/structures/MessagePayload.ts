@@ -279,6 +279,11 @@ export class MessagePayload {
           contentType: raw.contentType,
         };
       }
+      // getRawFile() returned no data — try toJSON() for metadata-only attachment
+      const json = fileLike.toJSON?.();
+      if (json?.filename) {
+        return { data: Buffer.alloc(0), name: json.filename };
+      }
     }
 
     let attachment;

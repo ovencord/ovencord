@@ -380,6 +380,11 @@ export function basename(filePath: string, ext?: string): string {
 export function findName(thing: any): string {
   if (!thing) return 'file.bin';
 
+  // Binary data types — no path available
+  if (Buffer.isBuffer(thing) || thing instanceof Uint8Array || thing instanceof ArrayBuffer || thing instanceof Blob) {
+    return 'file.bin';
+  }
+
   if (typeof thing === 'string') {
     return basename(thing);
   }
