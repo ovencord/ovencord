@@ -193,8 +193,8 @@ export class MessagePayload {
 
     const attachments = this.options.files?.map((file, index) => {
       // Extract filename from builder API or direct property
+      // NOTE: Do NOT call file.toJSON() here — it triggers Zod validation that requires 'id' to be set
       const filename = file.name
-        ?? (typeof file.toJSON === 'function' ? file.toJSON()?.filename : undefined)
         ?? (typeof file.getRawFile === 'function' ? file.getRawFile()?.name : undefined);
 
       return {
