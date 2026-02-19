@@ -191,13 +191,21 @@ export class MessagePayload {
       }
     }
 
-    const attachments = this.options.files?.map((file, index) => ({
-      id: index.toString(),
-      description: file.description,
-      title: file.title,
-      waveform: file.waveform,
-      duration_secs: file.duration,
-    }));
+    const attachments = this.options.files?.map((file, index) => {
+      // Extract filename from builder API or direct property
+      const filename = file.name
+        ?? (typeof file.toJSON === 'function' ? file.toJSON()?.filename : undefined)
+        ?? (typeof file.getRawFile === 'function' ? file.getRawFile()?.name : undefined);
+
+      return {
+        id: index.toString(),
+        filename,
+        description: file.description,
+        title: file.title,
+        waveform: file.waveform,
+        duration_secs: file.duration,
+      };
+    });
 
     // Only passable during edits
     if (Array.isArray(this.options.attachments)) {
@@ -258,7 +266,7 @@ export class MessagePayload {
   async resolveFiles() {
     if (this.files) return this;
 
-    this.files = await Promise.all(this.options.files?.map(file => this.constructor.resolveFile(file)) ?? []);
+    this.files = await Promise.all(this.options.files?.map(file => (this.constructor as typeof MessagePayload).resolveFile(file)) ?? []);
     return this;
   }
 
