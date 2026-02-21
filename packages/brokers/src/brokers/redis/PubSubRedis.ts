@@ -1,4 +1,3 @@
-import type { Buffer } from 'node:buffer';
 import type { IPubSubBroker } from '../Broker.js';
 import { BaseRedisBroker } from './BaseRedis.js';
 
@@ -37,14 +36,14 @@ export class PubSubRedisBroker<TEvents extends Record<string, any>>
 	 * {@inheritDoc IPubSubBroker.publish}
 	 */
 	public async publish<Event extends keyof TEvents>(event: Event, data: TEvents[Event]): Promise<void> {
-		await this.redisClient.xadd(event as string, '*', BaseRedisBroker.STREAM_DATA_KEY, this.options.encode(data));
+		await this.redisClient.xadd(event as string, '*', BaseRedisBroker.STREAM_DATA_KEY, this.options.encode(data) as any);
 	}
 
-	protected emitEvent(id: Buffer, group: string, event: string, data: unknown) {
+	protected emitEvent(id: Uint8Array, group: string, event: string, data: unknown) {
 		const payload: { ack(): Promise<void>; data: unknown } = {
 			data,
 			ack: async () => {
-				await this.redisClient.xack(event, group, id);
+				await this.redisClient.xack(event, group, id as any);
 			},
 		};
 

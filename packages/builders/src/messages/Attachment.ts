@@ -1,4 +1,3 @@
-import type { Buffer } from 'node:buffer';
 import type { JSONEncodable, RawFile } from '@ovencord/util';
 import type { RESTAPIAttachment, Snowflake } from 'discord-api-types/v10';
 import { validate } from '../util/validation.js';
@@ -109,7 +108,7 @@ export class AttachmentBuilder implements JSONEncodable<RESTAPIAttachment> {
 	 * @param data - The file data
 	 * @remarks Note that this data is NOT included in the {@link toJSON} output. To retrieve it, use {@link getRawFile}.
 	 */
-	public setFileData(data: Buffer | Uint8Array | string): this {
+	public setFileData(data: Uint8Array | string): this {
 		this.fileData.data = data as any;
 		return this;
 	}

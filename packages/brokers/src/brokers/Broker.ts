@@ -1,4 +1,3 @@
-import { Buffer } from 'node:buffer';
 import { encode, decode } from '@msgpack/msgpack';
 import type { AsyncEventEmitter } from '@vladfrangu/async_event_emitter';
 
@@ -10,21 +9,21 @@ export interface BaseBrokerOptions {
 	 * Function to use for decoding messages
 	 */
 	// eslint-disable-next-line @typescript-eslint/method-signature-style
-	decode?: (data: Buffer) => unknown;
+	decode?: (data: Uint8Array) => unknown;
 	/**
 	 * Function to use for encoding messages
 	 */
 	// eslint-disable-next-line @typescript-eslint/method-signature-style
-	encode?: (data: unknown) => Buffer;
+	encode?: (data: unknown) => Uint8Array;
 }
 
 /**
  * Default broker options
  */
 export const DefaultBrokerOptions = {
-	encode: (data): Buffer => {
+	encode: (data): Uint8Array => {
 		const encoded = encode(data);
-		return Buffer.from(encoded.buffer, encoded.byteOffset, encoded.byteLength);
+		return new Uint8Array(encoded.buffer, encoded.byteOffset, encoded.byteLength);
 	},
 	decode: (data): unknown => decode(data),
 } as const satisfies Required<BaseBrokerOptions>;

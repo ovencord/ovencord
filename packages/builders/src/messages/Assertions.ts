@@ -1,4 +1,3 @@
-import { Buffer } from 'node:buffer';
 import { AllowedMentionsTypes, ComponentType, MessageFlags, MessageReferenceType } from 'discord-api-types/v10';
 import { z } from 'zod';
 import { snowflakePredicate } from '../Assertions.js';
@@ -8,7 +7,7 @@ import { pollPredicate } from './poll/Assertions.js';
 const fileKeyRegex = /^files\[(?<placeholder>\d+?)]$/;
 
 export const rawFilePredicate = z.object({
-	data: z.union([z.instanceof(Buffer), z.instanceof(Uint8Array), z.string()]),
+	data: z.union([z.instanceof(Uint8Array), z.string()]),
 	name: z.string().min(1),
 	contentType: z.string().optional(),
 	key: z.string().regex(fileKeyRegex).optional(),

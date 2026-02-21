@@ -1,4 +1,3 @@
-import type { Buffer } from 'node:buffer';
 import type Redis from 'ioredis/built/Redis.js';
 import type { IRPCBroker } from '../Broker.js';
 import type { RedisBrokerOptions } from './BaseRedis.js';
@@ -71,8 +70,8 @@ export class RPCRedisBroker<TEvents extends Record<string, any[]>, TResponses ex
 		super(redisClient, options);
 		this.options = { ...DefaultRPCRedisBrokerOptions, ...options };
 
-		this.streamReadClient.on('messageBuffer', (channel: Buffer, message: Buffer) => {
-			const [, id] = channel.toString().split(':');
+		this.streamReadClient.on('messageBuffer', (channel: Uint8Array, message: Uint8Array) => {
+			const [, id] = new TextDecoder().decode(channel).split(':');
 			if (id && this.promises.has(id)) {
 				// eslint-disable-next-line @typescript-eslint/unbound-method
 				const { resolve, timeout } = this.promises.get(id)!;
@@ -94,7 +93,7 @@ export class RPCRedisBroker<TEvents extends Record<string, any[]>, TResponses ex
 			event as string,
 			'*',
 			BaseRedisBroker.STREAM_DATA_KEY,
-			this.options.encode(data),
+			this.options.encode(data) as any,
 		);
 		// This id! assertion is valid. From redis docs:
 		// "The command returns a Null reply when used with the NOMKSTREAM option and the key doesn't exist."
@@ -116,14 +115,14 @@ export class RPCRedisBroker<TEvents extends Record<string, any[]>, TResponses ex
 		});
 	}
 
-	protected emitEvent(id: Buffer, event: string, data: unknown) {
+	protected emitEvent(id: Uint8Array, group: string, event: string, data: unknown) {
 		const payload: { ack(): Promise<void>; data: unknown; reply(data: unknown): Promise<void> } = {
 			data,
 			ack: async () => {
-				await this.redisClient.xack(event, this.group, id);
+				await this.redisClient.xack(event, group, id as any);
 			},
 			reply: async (data) => {
-				await this.redisClient.publish(`${event}:${id.toString()}`, this.options.encode(data));
+				await this.redisClient.publish(`${event}:${new TextDecoder().decode(id)}`, this.options.encode(data) as any);
 			},
 		};
 

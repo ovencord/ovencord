@@ -1,5 +1,3 @@
-import type { Buffer } from 'node:buffer';
-import { randomBytes } from 'node:crypto';
 import { readFileSync } from 'node:fs';
 import { resolve } from 'node:path';
 import { AsyncEventEmitter } from '@vladfrangu/async_event_emitter';
@@ -8,20 +6,20 @@ import { ReplyError } from 'ioredis';
 import type { BaseBrokerOptions, IBaseBroker, ToEventMap } from '../Broker.js';
 import { DefaultBrokerOptions } from '../Broker.js';
 
-type RedisReadGroupData = [Buffer, [Buffer, Buffer[]][]][];
+type RedisReadGroupData = [Uint8Array, [Uint8Array, Uint8Array[]][]][];
 
 // For some reason ioredis doesn't have those typed, but they exist
 declare module 'ioredis' {
 	interface Redis {
 		xclaimBuffer(
-			key: Buffer | string,
-			group: Buffer | string,
-			consumer: Buffer | string,
+			key: Uint8Array | string,
+			group: Uint8Array | string,
+			consumer: Uint8Array | string,
 			minIdleTime: number,
-			id: Buffer | string,
-			...args: (Buffer | string)[]
+			id: Uint8Array | string,
+			...args: (Uint8Array | string)[]
 		): Promise<string[]>;
-		xreadgroupBuffer(...args: (Buffer | string)[]): Promise<RedisReadGroupData | null>;
+		xreadgroupBuffer(...args: (Uint8Array | string)[]): Promise<RedisReadGroupData | null>;
 	}
 }
 
@@ -126,7 +124,7 @@ export abstract class BaseRedisBroker<
 	) {
 		super();
 		this.options = { ...DefaultRedisBrokerOptions, ...options };
-		this.group = this.options.group === kUseRandomGroupName ? randomBytes(16).toString('hex') : this.options.group;
+		this.group = this.options.group === kUseRandomGroupName ? crypto.randomUUID().replace(/-/g, '') : this.options.group;
 		redisClient.defineCommand('xcleangroup', {
 			numberOfKeys: 1,
 			lua: readFileSync(resolve(__dirname, '..', 'scripts', 'xcleangroup.lua'), 'utf8'),
@@ -139,7 +137,6 @@ export abstract class BaseRedisBroker<
 	 */
 	public async subscribe(events: (keyof TEvents)[]): Promise<void> {
 		await Promise.all(
-			// @ts-expect-error: Intended
 			events.map(async (event) => {
 				this.subscribedEvents.add(event as string);
 				try {
@@ -228,11 +225,12 @@ export abstract class BaseRedisBroker<
 	}
 
 	private async processMessages(data: RedisReadGroupData): Promise<void> {
+		const decoder = new TextDecoder('utf-8');
 		for (const [event, messages] of data) {
-			const eventName = event.toString('utf8');
+			const eventName = decoder.decode(event);
 
 			for (const [id, packet] of messages) {
-				const idx = packet.findIndex((value, idx) => value.toString('utf8') === 'data' && idx % 2 === 0);
+				const idx = packet.findIndex((value, idx) => decoder.decode(value) === 'data' && idx % 2 === 0);
 				if (idx < 0) continue;
 
 				const payload = packet[idx + 1];
@@ -292,7 +290,8 @@ export abstract class BaseRedisBroker<
 				}
 
 				const [msgId, fields] = entries[0]!;
-				const idx = fields.findIndex((value, idx) => value.toString('utf8') === 'data' && idx % 2 === 0);
+				const decoder = new TextDecoder('utf-8');
+				const idx = fields.findIndex((value, idx) => decoder.decode(value) === 'data' && idx % 2 === 0);
 				if (idx < 0) {
 					continue;
 				}
@@ -319,5 +318,5 @@ export abstract class BaseRedisBroker<
 	/**
 	 * Handles an incoming Redis event
 	 */
-	protected abstract emitEvent(id: Buffer, group: string, event: string, data: unknown): unknown;
+	protected abstract emitEvent(id: Uint8Array, group: string, event: string, data: unknown): unknown;
 }
