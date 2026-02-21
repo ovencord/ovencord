@@ -1,7 +1,9 @@
+import type { Client } from '../../Client.js';
+import type { GatewayDispatchPayload } from 'discord-api-types/v10';
 
 import { Events  } from '../../../util/Events.js';
 
-export default (client, { d: data }) => {
+export default (client: Client, { d: data }: GatewayDispatchPayload) => {
   const oldEntitlement = client.application.entitlements.cache.get(data.id)?._clone() ?? null;
   const newEntitlement = client.application.entitlements._add(data);
 

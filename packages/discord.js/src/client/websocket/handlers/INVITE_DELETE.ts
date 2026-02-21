@@ -1,8 +1,10 @@
+import type { Client } from '../../Client.js';
+import type { GatewayDispatchPayload } from 'discord-api-types/v10';
 
 import { GuildInvite  } from '../../../structures/GuildInvite.js';
 import { Events  } from '../../../util/Events.js';
 
-export default (client, { d: data }) => {
+export default (client: Client, { d: data }: GatewayDispatchPayload) => {
   const channel = client.channels.cache.get(data.channel_id);
   const guild = client.guilds.cache.get(data.guild_id);
   if (!channel) return;

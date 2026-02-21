@@ -1,7 +1,9 @@
+import type { Client } from '../../Client.js';
+import type { GatewayDispatchPayload } from 'discord-api-types/v10';
 
 import { Events  } from '../../../util/Events.js';
 
-export default (client, packet) => {
+export default (client: Client, packet: GatewayDispatchPayload) => {
   const { old, updated } = client.actions.MessageUpdate.handle(packet.d);
   if (old && updated) {
     /**

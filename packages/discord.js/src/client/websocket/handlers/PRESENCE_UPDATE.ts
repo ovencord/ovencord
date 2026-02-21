@@ -1,8 +1,10 @@
+import type { Client } from '../../Client.js';
+import type { GatewayDispatchPayload } from 'discord-api-types/v10';
 
 import { Events  } from '../../../util/Events.js';
 import { Partials  } from '../../../util/Partials.js';
 
-export default (client, { d: data }) => {
+export default (client: Client, { d: data }: GatewayDispatchPayload) => {
   let user = client.users.cache.get(data.user.id);
   if (!user && ('username' in data.user || client.options.partials.includes(Partials.User))) {
     user = client.users._add(data.user);
