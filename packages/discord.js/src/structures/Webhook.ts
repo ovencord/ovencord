@@ -522,7 +522,7 @@ export class Webhook {
       'url',
     ]) {
       if (ignore.includes(prop)) continue;
-      Object.defineProperty(structure.prototype, prop, Object.getOwnPropertyDescriptor(Webhook.prototype, prop));
+      Object.defineProperty(structure.prototype, prop, Object.getOwnPropertyDescriptor(Webhook.prototype, prop) as PropertyDescriptor);
     }
   }
 }

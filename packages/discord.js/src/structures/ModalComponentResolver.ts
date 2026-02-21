@@ -164,7 +164,7 @@ export class ModalComponentResolver {
    * @returns {?Collection<Snowflake, GuildChannel|ThreadChannel|APIChannel>} The selected channels, or null if none were selected and not required
    */
   // @ts-ignore
-  getSelectedChannels(customId: any, required = false, channelTypes = []) {
+  getSelectedChannels(customId: any, required = false, channelTypes: any[] = []) {
     const component = this._getTypedComponent(customId, [ComponentType.ChannelSelect], ['channels'], required);
     const channels = component.channels;
     if (channels && channelTypes.length > 0) {

@@ -7,11 +7,11 @@ import { Application  } from './interfaces/Application.js';
  */
 export class IntegrationApplication extends Application {
   public bot: any;
-  public termsOfServiceURL: any;
-  public privacyPolicyURL: any;
-  public rpcOrigins: any;
-  public cover: any;
-  public verifyKey: any;
+  public declare termsOfServiceURL: any;
+  public declare privacyPolicyURL: any;
+  public declare rpcOrigins: any;
+  public declare cover: any;
+  public declare verifyKey: any;
   _patch(data: any) {
     super._patch(data);
 

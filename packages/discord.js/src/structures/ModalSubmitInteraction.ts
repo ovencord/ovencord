@@ -269,4 +269,4 @@ export class ModalSubmitInteraction extends BaseInteraction {
   launchActivity(options?: any): any {}
 }
 
-InteractionResponses.applyToClass(ModalSubmitInteraction, ['showModal']);
+InteractionResponses.applyToClass(ModalSubmitInteraction, ['showModal'] as any);

@@ -371,7 +371,7 @@ export class InteractionResponses {
   }
 
   // @ts-ignore
-  static applyToClass(structure: any, ignore = []) {
+  static applyToClass(structure: any, ignore: any[] = []) {
     const props = [
       'deferReply',
       'reply',

@@ -7,7 +7,7 @@ import { Emoji  } from './Emoji.js';
  */
 export class ApplicationEmoji extends Emoji {
   public application: any;
-  public name: any;
+  public declare name: any;
   public author: any;
   public managed: any;
   public requiresColons: any;

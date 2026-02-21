@@ -145,4 +145,4 @@ TextBasedChannel.applyToClass(DMChannel, [
   'createWebhook',
   'setRateLimitPerUser',
   'setNSFW',
-]);
+] as any);

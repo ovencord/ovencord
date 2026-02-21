@@ -48,7 +48,7 @@ export class ClientPresence extends Presence {
   _parse({ status, since, afk, activities }: any) {
     const data = {
       // @ts-ignore
-      activities: [],
+      activities: [] as any[],
       afk: typeof afk === 'boolean' ? afk : false,
       since: typeof since === 'number' && !Number.isNaN(since) ? since : null,
       status: status ?? this.status,

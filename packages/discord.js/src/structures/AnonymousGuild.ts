@@ -7,7 +7,7 @@ import { BaseGuild  } from './BaseGuild.js';
  * @abstract
  */
 export class AnonymousGuild extends BaseGuild {
-  public features: any;
+  public declare features: any;
   public description: any;
   public verificationLevel: any;
   public vanityURLCode: any;

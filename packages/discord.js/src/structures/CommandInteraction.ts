@@ -191,4 +191,4 @@ export class CommandInteraction extends BaseInteraction {
   awaitModalSubmit(options?: any): any {}
 }
 
-InteractionResponses.applyToClass(CommandInteraction, ['deferUpdate', 'update']);
+InteractionResponses.applyToClass(CommandInteraction, ['deferUpdate', 'update'] as any);

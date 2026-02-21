@@ -535,14 +535,14 @@ export class Deserializer {
 				kind: ApiItemKind.Interface,
 				canonicalReference: `${_package}!${_interface.name}:interface`,
 				name: _interface.name,
-				extendsTokenRanges: [{ startIndex: 0, endIndex: 0, typeParameters: [] }],
+				extendsTokenRanges: [{ startIndex: 0, endIndex: 0, typeParameters: [] as any[] }],
 				excerptTokens: [
 					{
 						kind: ExcerptTokenKind.Content,
 						text: `${_interface.access === 'public' ? 'export ' : ''}interface ${_interface.name}`,
 					},
 				],
-				typeParameters: [],
+				typeParameters: [] as any[],
 				releaseTag: _interface.access === 'public' ? 'Public' : 'Internal',
 				docComment: `/**\n * ${_interface.description}\n${
 					_interface.see?.map((see) => ` * @see ${see}\n`).join('') ?? ''

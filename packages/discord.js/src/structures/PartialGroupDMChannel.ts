@@ -147,4 +147,4 @@ TextBasedChannel.applyToClass(PartialGroupDMChannel, [
   'createWebhook',
   'setRateLimitPerUser',
   'setNSFW',
-]);
+] as any);

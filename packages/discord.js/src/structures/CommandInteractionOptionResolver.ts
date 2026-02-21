@@ -168,7 +168,7 @@ export class CommandInteractionOptionResolver {
    * The value of the option, or null if not set and not required.
    */
   // @ts-ignore
-  getChannel(name: any, required = false, channelTypes = []) {
+  getChannel(name: any, required = false, channelTypes: any[] = []) {
     const option = this._getTypedOption(name, [ApplicationCommandOptionType.Channel], ['channel'], required);
     const channel = option?.channel ?? null;
 

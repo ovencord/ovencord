@@ -212,13 +212,13 @@ export class ShardClientUtil {
         for (const prop of props) value = value[prop];
         this._respond('fetchProp', { _fetchProp: message._fetchProp, _result: value });
       } catch (error) {
-        this._respond('fetchProp', { _fetchProp: message._fetchProp, _error: makePlainError(error) });
+        this._respond('fetchProp', { _fetchProp: message._fetchProp, _error: makePlainError(error as Error) });
       }
     } else if (message._eval) {
       try {
         this._respond('eval', { _eval: message._eval, _result: await this.client._eval(message._eval) });
       } catch (error) {
-        this._respond('eval', { _eval: message._eval, _error: makePlainError(error) });
+        this._respond('eval', { _eval: message._eval, _error: makePlainError(error as Error) });
       }
     }
   }

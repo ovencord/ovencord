@@ -488,7 +488,7 @@ export class ApiModelGenerator {
 		const children: readonly ts.Node[] = astDeclaration.declaration.getChildren(
 			astDeclaration.declaration.getSourceFile(),
 		);
-		return children.find(ts.isFunctionTypeNode) as ts.FunctionDeclaration | undefined;
+		return children.find(ts.isFunctionTypeNode) as unknown as ts.FunctionDeclaration | undefined;
 	}
 
 	private _processChildDeclarations(astDeclaration: AstDeclaration, context: IProcessAstEntityContext): void {

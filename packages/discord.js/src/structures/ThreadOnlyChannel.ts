@@ -48,7 +48,7 @@ export class ThreadOnlyChannel extends GuildChannel {
   public rateLimitPerUser: any;
   public defaultAutoArchiveDuration: any;
   public nsfw: any;
-  public topic: any;
+  public declare topic: any;
   public defaultSortOrder: any;
   constructor(guild: any, data: any, client: any) {
     super(guild, data, client, false);

@@ -28,8 +28,8 @@ export class GuildChannel extends BaseChannel {
   public name: any;
   public rawPosition: any;
   public parentId: any;
-  public type: any;
-  public id: any;
+  public declare type: any;
+  public declare id: any;
   public topic: any;
   constructor(guild: any, data: any, client: any, immediatePatch = true) {
     super(client, data, false);

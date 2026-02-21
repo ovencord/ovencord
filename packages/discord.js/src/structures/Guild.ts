@@ -52,9 +52,9 @@ export class Guild extends AnonymousGuild {
   public soundboardSounds: any;
   public available: any;
   public shardId: any;
-  public id: any;
-  public name: any;
-  public icon: any;
+  public declare id: any;
+  public declare name: any;
+  public declare icon: any;
   public memberCount: any;
   public large: any;
   public premiumProgressBarEnabled: any;
@@ -84,12 +84,12 @@ export class Guild extends AnonymousGuild {
   public emojis: any;
   public stickers: any;
   public incidentsData: any;
-  public vanityURLCode: any;
+  public declare vanityURLCode: any;
   public vanityURLUses: any;
-  public splash: any;
+  public declare splash: any;
   public discoverySplash: any;
-  public verificationLevel: any;
-  public features: any;
+  public declare verificationLevel: any;
+  public declare features: any;
   constructor(client: any, data: any) {
     super(client, data, false);
 

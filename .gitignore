@@ -55,3 +55,4 @@ bun.lockb
 .vercel
 /.agent
 /opus-main
+/scripts

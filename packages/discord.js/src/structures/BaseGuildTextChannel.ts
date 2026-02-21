@@ -13,7 +13,7 @@ export class BaseGuildTextChannel extends GuildChannel {
   public messages: any;
   public threads: any;
   public nsfw: any;
-  public topic: any;
+  public declare topic: any;
   public lastMessageId: any;
   public lastPinTimestamp: any;
   public defaultAutoArchiveDuration: any;
