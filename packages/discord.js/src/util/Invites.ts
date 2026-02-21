@@ -22,6 +22,6 @@ const InviteTypeToClass = {
  * @returns {BaseInvite}
  * @ignore
  */
-export function createInvite(client, data) {
+export function createInvite(client: any, data: any) {
   return new (InviteTypeToClass[data.type] ?? BaseInvite)(client, data);
 }

@@ -8,7 +8,7 @@ export class CommandInteractionOptionResolver {
   public _group: any;
   public _subcommand: any;
   public _hoistedOptions: any;
-  constructor(client, options, resolved) {
+  constructor(client: any, options: any, resolved: any) {
     /**
      * The client that instantiated this.
      *
@@ -80,7 +80,7 @@ export class CommandInteractionOptionResolver {
    * @param {boolean} [required=false] Whether to throw an error if the option is not found.
    * @returns {?CommandInteractionOption} The option, if found.
    */
-  get(name, required = false) {
+  get(name: any, required = false) {
     const option = this._hoistedOptions.find(opt => opt.name === name);
     if (!option) {
       if (required) {
@@ -103,7 +103,7 @@ export class CommandInteractionOptionResolver {
    * @returns {?CommandInteractionOption} The option, if found.
    * @private
    */
-  _getTypedOption(name, allowedTypes, properties, required) {
+  _getTypedOption(name: any, allowedTypes: any, properties: any, required: any) {
     const option = this.get(name, required);
     if (!option) {
       return null;
@@ -151,7 +151,7 @@ export class CommandInteractionOptionResolver {
    * @param {boolean} [required=false] Whether to throw an error if the option is not found.
    * @returns {?boolean} The value of the option, or null if not set and not required.
    */
-  getBoolean(name, required = false) {
+  getBoolean(name: any, required = false) {
     const option = this._getTypedOption(name, [ApplicationCommandOptionType.Boolean], ['value'], required);
     return option?.value ?? null;
   }
@@ -165,7 +165,7 @@ export class CommandInteractionOptionResolver {
    * @returns {?(GuildChannel|ThreadChannel|APIChannel)}
    * The value of the option, or null if not set and not required.
    */
-  getChannel(name, required = false, channelTypes = []) {
+  getChannel(name: any, required = false, channelTypes = []) {
     const option = this._getTypedOption(name, [ApplicationCommandOptionType.Channel], ['channel'], required);
     const channel = option?.channel ?? null;
 
@@ -188,7 +188,7 @@ export class CommandInteractionOptionResolver {
    * @param {boolean} [required=false] Whether to throw an error if the option is not found.
    * @returns {?string} The value of the option, or null if not set and not required.
    */
-  getString(name, required = false) {
+  getString(name: any, required = false) {
     const option = this._getTypedOption(name, [ApplicationCommandOptionType.String], ['value'], required);
     return option?.value ?? null;
   }
@@ -200,7 +200,7 @@ export class CommandInteractionOptionResolver {
    * @param {boolean} [required=false] Whether to throw an error if the option is not found.
    * @returns {?number} The value of the option, or null if not set and not required.
    */
-  getInteger(name, required = false) {
+  getInteger(name: any, required = false) {
     const option = this._getTypedOption(name, [ApplicationCommandOptionType.Integer], ['value'], required);
     return option?.value ?? null;
   }
@@ -212,7 +212,7 @@ export class CommandInteractionOptionResolver {
    * @param {boolean} [required=false] Whether to throw an error if the option is not found.
    * @returns {?number} The value of the option, or null if not set and not required.
    */
-  getNumber(name, required = false) {
+  getNumber(name: any, required = false) {
     const option = this._getTypedOption(name, [ApplicationCommandOptionType.Number], ['value'], required);
     return option?.value ?? null;
   }
@@ -224,7 +224,7 @@ export class CommandInteractionOptionResolver {
    * @param {boolean} [required=false] Whether to throw an error if the option is not found.
    * @returns {?User} The value of the option, or null if not set and not required.
    */
-  getUser(name, required = false) {
+  getUser(name: any, required = false) {
     const option = this._getTypedOption(
       name,
       [ApplicationCommandOptionType.User, ApplicationCommandOptionType.Mentionable],
@@ -241,7 +241,7 @@ export class CommandInteractionOptionResolver {
    * @returns {?(GuildMember|APIGuildMember)}
    * The value of the option, or null if the user is not present in the guild or the option is not set.
    */
-  getMember(name) {
+  getMember(name: any) {
     const option = this._getTypedOption(
       name,
       [ApplicationCommandOptionType.User, ApplicationCommandOptionType.Mentionable],
@@ -258,7 +258,7 @@ export class CommandInteractionOptionResolver {
    * @param {boolean} [required=false] Whether to throw an error if the option is not found.
    * @returns {?(Role|APIRole)} The value of the option, or null if not set and not required.
    */
-  getRole(name, required = false) {
+  getRole(name: any, required = false) {
     const option = this._getTypedOption(
       name,
       [ApplicationCommandOptionType.Role, ApplicationCommandOptionType.Mentionable],
@@ -275,7 +275,7 @@ export class CommandInteractionOptionResolver {
    * @param {boolean} [required=false] Whether to throw an error if the option is not found.
    * @returns {?Attachment} The value of the option, or null if not set and not required.
    */
-  getAttachment(name, required = false) {
+  getAttachment(name: any, required = false) {
     const option = this._getTypedOption(name, [ApplicationCommandOptionType.Attachment], ['attachment'], required);
     return option?.attachment ?? null;
   }
@@ -288,7 +288,7 @@ export class CommandInteractionOptionResolver {
    * @returns {?(User|GuildMember|APIGuildMember|Role|APIRole)}
    * The value of the option, or null if not set and not required.
    */
-  getMentionable(name, required = false) {
+  getMentionable(name: any, required = false) {
     const option = this._getTypedOption(
       name,
       [ApplicationCommandOptionType.Mentionable],
@@ -306,7 +306,7 @@ export class CommandInteractionOptionResolver {
    * @returns {?Message}
    * The value of the option, or null if not set and not required.
    */
-  getMessage(name, required = false) {
+  getMessage(name: any, required = false) {
     const option = this._getTypedOption(name, ['_MESSAGE'], ['message'], required);
     return option?.message ?? null;
   }

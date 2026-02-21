@@ -11,7 +11,7 @@ import { CachedManager  } from './CachedManager.js';
  */
 export class PollAnswerVoterManager extends CachedManager {
   public answer: any;
-  constructor(answer) {
+  constructor(answer: any) {
     super(answer.client, User);
 
     /**
@@ -50,7 +50,7 @@ export class PollAnswerVoterManager extends CachedManager {
       query,
     });
 
-    return data.users.reduce((coll, rawUser) => {
+    return data.users.reduce((coll: any, rawUser: any) => {
       const user = this.client.users._add(rawUser);
       this.cache.set(user.id, user);
       return coll.set(user.id, user);

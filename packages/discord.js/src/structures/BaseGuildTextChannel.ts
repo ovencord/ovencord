@@ -18,7 +18,7 @@ export class BaseGuildTextChannel extends GuildChannel {
   public lastPinTimestamp: any;
   public defaultAutoArchiveDuration: any;
   public defaultThreadRateLimitPerUser: any;
-  constructor(guild, data, client) {
+  constructor(guild: any, data: any, client: any) {
     super(guild, data, client, false);
 
     /**
@@ -45,7 +45,7 @@ export class BaseGuildTextChannel extends GuildChannel {
     this._patch(data);
   }
 
-  _patch(data) {
+  _patch(data: any) {
     super._patch(data);
 
     if ('topic' in data) {
@@ -111,7 +111,7 @@ export class BaseGuildTextChannel extends GuildChannel {
    * @param {string} [reason] Reason for changing the channel's default auto archive duration
    * @returns {Promise<TextChannel>}
    */
-  async setDefaultAutoArchiveDuration(defaultAutoArchiveDuration, reason) {
+  async setDefaultAutoArchiveDuration(defaultAutoArchiveDuration: any, reason: any) {
     return this.edit({ defaultAutoArchiveDuration, reason });
   }
 
@@ -123,7 +123,7 @@ export class BaseGuildTextChannel extends GuildChannel {
    * @param {string} [reason] Reason for changing the channel's type
    * @returns {Promise<GuildChannel>}
    */
-  async setType(type, reason) {
+  async setType(type: any, reason: any) {
     return this.edit({ type, reason });
   }
 
@@ -139,7 +139,7 @@ export class BaseGuildTextChannel extends GuildChannel {
    *   .then(newChannel => console.log(`Channel's new topic is ${newChannel.topic}`))
    *   .catch(console.error);
    */
-  async setTopic(topic, reason) {
+  async setTopic(topic: any, reason: any) {
     return this.edit({ topic, reason });
   }
 
@@ -181,7 +181,7 @@ export class BaseGuildTextChannel extends GuildChannel {
    *   .then(invite => console.log(`Created an invite with a code of ${invite.code}`))
    *   .catch(console.error);
    */
-  async createInvite(options) {
+  async createInvite(options: any) {
     return this.guild.invites.create(this.id, options);
   }
 

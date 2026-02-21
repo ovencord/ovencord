@@ -12,7 +12,7 @@ export class MentionableSelectMenuInteraction extends MessageComponentInteractio
   public members: any;
   public roles: any;
   public values: any;
-  constructor(client, data) {
+  constructor(client: any, data: any) {
     super(client, data);
     const { resolved, values } = data.data;
     const { members, users, roles } = resolved ?? {};

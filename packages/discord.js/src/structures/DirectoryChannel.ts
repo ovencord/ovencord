@@ -9,7 +9,7 @@ export class DirectoryChannel extends BaseChannel {
   public guild: any;
   public guildId: any;
   public name: any;
-  constructor(guild, data, client) {
+  constructor(guild: any, data: any, client: any) {
     super(client, data);
 
     /**
@@ -27,7 +27,7 @@ export class DirectoryChannel extends BaseChannel {
     this.guildId = guild.id;
   }
 
-  _patch(data) {
+  _patch(data: any) {
     super._patch(data);
     /**
      * The channel's name

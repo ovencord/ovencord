@@ -10,7 +10,7 @@ import { Emoji  } from './Emoji.js';
  */
 export class ReactionEmoji extends Emoji {
   public reaction: any;
-  constructor(reaction, emoji) {
+  constructor(reaction: any, emoji: any) {
     super(reaction.message.client, emoji);
     /**
      * The message reaction this emoji refers to

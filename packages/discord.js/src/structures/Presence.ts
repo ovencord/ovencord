@@ -43,7 +43,7 @@ export class Presence extends Base {
   public status: any;
   public activities: any;
   public clientStatus: any;
-  constructor(client, data: any = {}) {
+  constructor(client, data = {}: any) {
     super(client);
 
     /**
@@ -83,7 +83,7 @@ export class Presence extends Base {
     return this.guild.members.resolve(this.userId);
   }
 
-  _patch(data) {
+  _patch(data: any) {
     if ('status' in data) {
       /**
        * The status of this presence
@@ -139,7 +139,7 @@ export class Presence extends Base {
    * @param {Presence} presence The presence to compare with
    * @returns {boolean}
    */
-  equals(presence) {
+  equals(presence: any) {
     return (
       this === presence ||
       (presence &&
@@ -175,7 +175,7 @@ export class Activity {
   public emoji: any;
   public buttons: any;
   public createdTimestamp: any;
-  constructor(presence, data) {
+  constructor(presence: any, data: any) {
     /**
      * The presence of the Activity
      *
@@ -312,7 +312,7 @@ export class Activity {
    * @param {Activity} activity The activity to compare with
    * @returns {boolean}
    */
-  equals(activity) {
+  equals(activity: any) {
     return (
       this === activity ||
       (activity &&
@@ -359,7 +359,7 @@ export class RichPresenceAssets {
   public largeImage: any;
   public smallImage: any;
   public activity: any;
-  constructor(activity, assets) {
+  constructor(activity: any, assets: any) {
     /**
      * The activity of the RichPresenceAssets
      *

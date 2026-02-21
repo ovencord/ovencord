@@ -1,10 +1,9 @@
 import type { Client } from '../../Client.js';
-import type { GatewayDispatchPayload } from 'discord-api-types/v10';
-
+import type { GatewayVoiceChannelEffectSendDispatch } from 'discord-api-types/v10';
 import { VoiceChannelEffect  } from '../../../structures/VoiceChannelEffect.js';
 import { Events  } from '../../../util/Events.js';
 
-export default (client: Client, { d: data }: GatewayDispatchPayload) => {
+export default (client: Client, { d: data }: GatewayVoiceChannelEffectSendDispatch) => {
   const guild = client.guilds.cache.get(data.guild_id);
   if (!guild) return;
 

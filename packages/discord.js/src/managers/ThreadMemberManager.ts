@@ -30,7 +30,7 @@ export class ThreadMemberManager extends CachedManager {
    * @name ThreadMemberManager#cache
    */
 
-  _add(data, cache = true) {
+  _add(data: any, cache = true) {
     const existing = this.cache.get(data.user_id);
     if (cache) existing?._patch(data, { cache });
     if (existing) return existing;
@@ -46,7 +46,7 @@ export class ThreadMemberManager extends CachedManager {
    * @param {BaseFetchOptions} [options] The options for fetching the member
    * @returns {Promise<ThreadMember>}
    */
-  async fetchMe(options) {
+  async fetchMe(options: any) {
     return this.fetch({ ...options, member: this.client.user.id });
   }
 
@@ -74,7 +74,7 @@ export class ThreadMemberManager extends CachedManager {
    * @param {ThreadMemberResolvable} member The user that is part of the thread
    * @returns {?GuildMember}
    */
-  resolve(member) {
+  resolve(member: any) {
     const memberResolvable = super.resolve(member);
     if (memberResolvable) return memberResolvable;
     const userId = this.client.users.resolveId(member);
@@ -88,7 +88,7 @@ export class ThreadMemberManager extends CachedManager {
    * @param {ThreadMemberResolvable} member The user that is part of the guild
    * @returns {?Snowflake}
    */
-  resolveId(member) {
+  resolveId(member: any) {
     const memberResolvable = super.resolveId(member);
     if (memberResolvable) return memberResolvable;
     const userResolvable = this.client.users.resolveId(member);
@@ -101,7 +101,7 @@ export class ThreadMemberManager extends CachedManager {
    * @param {UserResolvable|'@me'} member The member to add
    * @returns {Promise<Snowflake>}
    */
-  async add(member) {
+  async add(member: any) {
     const id = member === '@me' ? member : this.client.users.resolveId(member);
     if (!id) throw new DiscordjsTypeError(ErrorCodes.InvalidType, 'member', 'UserResolvable');
     await this.client.rest.put(Routes.threadMembers(this.thread.id, id));
@@ -114,7 +114,7 @@ export class ThreadMemberManager extends CachedManager {
    * @param {UserResolvable|'@me'} member The member to remove
    * @returns {Promise<Snowflake>}
    */
-  async remove(member) {
+  async remove(member: any) {
     const id = member === '@me' ? member : this.client.users.resolveId(member);
     if (!id) throw new DiscordjsTypeError(ErrorCodes.InvalidType, 'member', 'UserResolvable');
     await this.client.rest.delete(Routes.threadMembers(this.thread.id, id));
@@ -163,7 +163,7 @@ export class ThreadMemberManager extends CachedManager {
    * Options for fetching thread member(s)
    * @returns {Promise<ThreadMember|Collection<Snowflake, ThreadMember>>}
    */
-  async fetch(options) {
+  async fetch(options: any) {
     if (!options) return this._fetchMany();
     const { member, withMember, cache, force } = options;
     const resolvedMember = this.resolveId(member ?? options);
@@ -171,7 +171,7 @@ export class ThreadMemberManager extends CachedManager {
     return this._fetchMany(options);
   }
 
-  async _fetchSingle({ member, withMember, cache, force = false }) {
+  async _fetchSingle({ member, withMember, cache, force = false }: any) {
     if (!force) {
       const existing = this.cache.get(member);
       if (existing) return existing;
@@ -189,6 +189,6 @@ export class ThreadMemberManager extends CachedManager {
       query: makeURLSearchParams({ with_member: withMember, after, limit }),
     });
 
-    return data.reduce((col, member) => col.set(member.user_id, this._add(member, cache)), new Collection());
+    return data.reduce((col: any, member: any) => col.set(member.user_id, this._add(member, cache)), new Collection());
   }
 }

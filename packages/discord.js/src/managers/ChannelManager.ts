@@ -39,7 +39,7 @@ export class ChannelManager extends CachedManager {
    * @name ChannelManager#cache
    */
 
-  _add(data: any, guild?: any, { cache = true, allowUnknownGuild = false }: any = {}) {
+  _add(data, guild?: any, { cache = true, allowUnknownGuild = false }: any = {}: any) {
     const existing = this.cache.get(data.id);
     if (existing) {
       if (cache) existing._patch(data);
@@ -63,7 +63,7 @@ export class ChannelManager extends CachedManager {
     return channel;
   }
 
-  _remove(id) {
+  _remove(id: any) {
     const channel = this.cache.get(id);
     channel?.guild?.channels.cache.delete(id);
 
@@ -130,7 +130,7 @@ export class ChannelManager extends CachedManager {
    *   .then(channel => console.log(channel.name))
    *   .catch(console.error);
    */
-  async fetch(id, { allowUnknownGuild = false, cache = true, force = false } = {}) {
+  async fetch(id, { allowUnknownGuild = false, cache = true, force = false } = {}: any) {
     if (!force) {
       const existing = this.cache.get(id);
       if (existing && !existing.partial) return existing;
@@ -170,7 +170,7 @@ export class ChannelManager extends CachedManager {
    *   .then(console.log)
    *   .catch(console.error);
    */
-  async createMessage(channel, options) {
+  async createMessage(channel: any, options: any) {
     let payload;
 
     if (options instanceof MessagePayload) {

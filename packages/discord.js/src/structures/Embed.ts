@@ -6,7 +6,7 @@ import { embedLength  } from '@ovencord/util';
  */
 export class Embed {
   public data: any;
-  constructor(data) {
+  constructor(data: any) {
     /**
      * The API embed data.
      *
@@ -225,7 +225,7 @@ export class Embed {
    * @param {Embed|APIEmbed} other The embed to compare against
    * @returns {boolean}
    */
-  equals(other) {
+  equals(other: any) {
     if (other instanceof Embed) {
       return Bun.deepEquals(this.data, other.data);
     }

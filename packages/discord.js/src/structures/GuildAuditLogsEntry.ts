@@ -99,8 +99,8 @@ const Targets = {
  * @returns {Object}
  * @ignore
  */
-export function changesReduce(changes, initialData = {}) {
-  return changes.reduce((accumulator, change) => {
+export function changesReduce(changes, initialData = {}: any) {
+  return changes.reduce((accumulator: any, change: any) => {
     accumulator[change.key] = change.new ?? change.old;
     return accumulator;
   }, initialData);
@@ -342,7 +342,7 @@ export class GuildAuditLogsEntry {
           }),
         );
     } else if (targetType === Targets.Invite) {
-      const inviteChange = this.changes.find(({ key }) => key === 'code');
+      const inviteChange = this.changes.find(({ key }: any) => key === 'code');
 
       this.target =
         guild.invites.cache.get(inviteChange.new ?? inviteChange.old) ??
@@ -410,7 +410,7 @@ export class GuildAuditLogsEntry {
    * @param {AuditLogEvent} target The action target
    * @returns {AuditLogTargetType}
    */
-  static targetType(target) {
+  static targetType(target: any) {
     if (target < 10) return Targets.Guild;
     if (target < 20) return Targets.Channel;
     if (target < 30) return Targets.User;
@@ -438,7 +438,7 @@ export class GuildAuditLogsEntry {
    * @param {AuditLogEvent} action The action target
    * @returns {AuditLogActionType}
    */
-  static actionType(action) {
+  static actionType(action: any) {
     if (
       [
         AuditLogEvent.ChannelCreate,
@@ -549,7 +549,7 @@ export class GuildAuditLogsEntry {
    * @param {AuditLogEvent} action The type to check for
    * @returns {boolean}
    */
-  isAction(action) {
+  isAction(action: any) {
     return this.action === action;
   }
 

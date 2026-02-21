@@ -30,7 +30,7 @@ export class GuildInviteManager extends CachedManager {
    * @name GuildInviteManager#cache
    */
 
-  _add(data, cache) {
+  _add(data: any, cache: any) {
     return super._add(data, cache, { id: data.code, extras: [this.guild] });
   }
 
@@ -165,7 +165,7 @@ export class GuildInviteManager extends CachedManager {
     });
   }
 
-  async _fetchSingle({ code, cache, force = false }) {
+  async _fetchSingle({ code, cache, force = false }: any) {
     if (!force) {
       const existing = this.cache.get(code);
       if (existing) return existing;
@@ -182,7 +182,7 @@ export class GuildInviteManager extends CachedManager {
     return data.reduce((col, invite) => col.set(invite.code, this._add(invite, cache)), new Collection());
   }
 
-  async _fetchChannelMany(channelId, cache) {
+  async _fetchChannelMany(channelId: any, cache: any) {
     const data = await this.client.rest.get(Routes.channelInvites(channelId));
     return data.reduce((col, invite) => col.set(invite.code, this._add(invite, cache)), new Collection());
   }
@@ -200,7 +200,7 @@ export class GuildInviteManager extends CachedManager {
    *   .catch(console.error);
    */
   async create(
-    channel,
+    channel: any,
     { temporary, maxAge, maxUses, unique, targetUser, targetApplication, targetType, reason }: any = {},
   ) {
     const id = this.guild.channels.resolveId(channel);
@@ -228,7 +228,7 @@ export class GuildInviteManager extends CachedManager {
    * @param {string} [reason] Reason for deleting the invite
    * @returns {Promise<void>}
    */
-  async delete(invite, reason) {
+  async delete(invite: any, reason: any) {
     const code = resolveInviteCode(invite);
 
     await this.client.rest.delete(Routes.invite(code), { reason });

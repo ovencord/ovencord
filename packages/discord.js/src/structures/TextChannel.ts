@@ -7,7 +7,7 @@ import { BaseGuildTextChannel  } from './BaseGuildTextChannel.js';
  */
 export class TextChannel extends BaseGuildTextChannel {
   public rateLimitPerUser: any;
-  _patch(data) {
+  _patch(data: any) {
     super._patch(data);
 
     if ('rate_limit_per_user' in data) {

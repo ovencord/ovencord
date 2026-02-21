@@ -116,7 +116,7 @@ export class SoundboardSound extends Base {
    *   .then(sound => console.log(`Updated the name of the soundboard sound to ${sound.name}`))
    *   .catch(console.error);
    */
-  async edit(options) {
+  async edit(options: any) {
     if (!this.guildId) throw new DiscordjsError(ErrorCodes.NotGuildSoundboardSound, 'edited');
 
     return this.guild.soundboardSounds.edit(this, options);
@@ -133,7 +133,7 @@ export class SoundboardSound extends Base {
    *   .then(sound => console.log(`Deleted soundboard sound ${sound.name}`))
    *   .catch(console.error);
    */
-  async delete(reason) {
+  async delete(reason: any) {
     if (!this.guildId) throw new DiscordjsError(ErrorCodes.NotGuildSoundboardSound, 'deleted');
 
     await this.guild.soundboardSounds.delete(this, reason);

@@ -9,7 +9,7 @@ export class Typing extends Base {
   public channel: any;
   public user: any;
   public startedTimestamp: any;
-  constructor(channel, user, data) {
+  constructor(channel: any, user: any, data: any) {
     super(channel.client);
 
     /**
@@ -29,7 +29,7 @@ export class Typing extends Base {
     this._patch(data);
   }
 
-  _patch(data) {
+  _patch(data: any) {
     if ('timestamp' in data) {
       /**
        * The UNIX timestamp in milliseconds the user started typing at

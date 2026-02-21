@@ -37,7 +37,7 @@ export class InteractionCollector extends Collector {
    * @param {Client} client The client on which to collect interactions
    * @param {InteractionCollectorOptions} [options={}] The options to apply to this collector
    */
-  constructor(client, options: any = {}) {
+  constructor(client, options = {}: any) {
     super(client, options);
 
     /**
@@ -143,7 +143,7 @@ export class InteractionCollector extends Collector {
    * @returns {?Snowflake}
    * @private
    */
-  collect(interaction) {
+  collect(interaction: any) {
     /**
      * Emitted whenever an interaction is collected.
      *
@@ -166,7 +166,7 @@ export class InteractionCollector extends Collector {
    * @param {BaseInteraction} interaction The interaction that could be disposed of
    * @returns {?Snowflake}
    */
-  dispose(interaction) {
+  dispose(interaction: any) {
     /**
      * Emitted whenever an interaction is disposed of.
      *
@@ -212,7 +212,7 @@ export class InteractionCollector extends Collector {
    * @param {Message} message The message that was deleted
    * @returns {void}
    */
-  _handleMessageDeletion(message) {
+  _handleMessageDeletion(message: any) {
     if (message.id === this.messageId) {
       this.stop('messageDelete');
     }
@@ -225,7 +225,7 @@ export class InteractionCollector extends Collector {
    * @param {GuildChannel} channel The channel that was deleted
    * @returns {void}
    */
-  _handleChannelDeletion(channel) {
+  _handleChannelDeletion(channel: any) {
     if (channel.id === this.channelId || channel.threads?.cache.has(this.channelId)) {
       this.stop('channelDelete');
     }
@@ -238,7 +238,7 @@ export class InteractionCollector extends Collector {
    * @param {ThreadChannel} thread The thread that was deleted
    * @returns {void}
    */
-  _handleThreadDeletion(thread) {
+  _handleThreadDeletion(thread: any) {
     if (thread.id === this.channelId) {
       this.stop('threadDelete');
     }
@@ -251,7 +251,7 @@ export class InteractionCollector extends Collector {
    * @param {Guild} guild The guild that was deleted
    * @returns {void}
    */
-  _handleGuildDeletion(guild) {
+  _handleGuildDeletion(guild: any) {
     if (guild.id === this.guildId) {
       this.stop('guildDelete');
     }

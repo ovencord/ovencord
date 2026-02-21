@@ -31,7 +31,7 @@ const getMediaChannel = lazy(() => require('../structures/MediaChannel.js').Medi
  * @returns {BaseChannel} Any kind of channel.
  * @ignore
  */
-export function createChannel(client, data, guild, { allowUnknownGuild }: any = {}) {
+export function createChannel(client, data, guild, { allowUnknownGuild }: any = {}: any) {
   let channel;
   const resolvedGuild = guild ?? client.guilds.cache.get(data.guild_id);
 
@@ -102,7 +102,7 @@ export function createChannel(client, data, guild, { allowUnknownGuild }: any = 
  * @returns {GuildForumTag}
  * @ignore
  */
-export function transformAPIGuildForumTag(tag) {
+export function transformAPIGuildForumTag(tag: any) {
   return {
     id: tag.id,
     name: tag.name,
@@ -124,7 +124,7 @@ export function transformAPIGuildForumTag(tag) {
  * @returns {APIGuildForumTag}
  * @ignore
  */
-export function transformGuildForumTag(tag) {
+export function transformGuildForumTag(tag: any) {
   return {
     id: tag.id,
     name: tag.name,
@@ -142,7 +142,7 @@ export function transformGuildForumTag(tag) {
  * @returns {DefaultReactionEmoji}
  * @ignore
  */
-export function transformAPIGuildDefaultReaction(defaultReaction) {
+export function transformAPIGuildDefaultReaction(defaultReaction: any) {
   return {
     id: defaultReaction.emoji_id,
     name: defaultReaction.emoji_name,
@@ -157,7 +157,7 @@ export function transformAPIGuildDefaultReaction(defaultReaction) {
  * @returns {APIGuildForumDefaultReactionEmoji}
  * @ignore
  */
-export function transformGuildDefaultReaction(defaultReaction) {
+export function transformGuildDefaultReaction(defaultReaction: any) {
   return {
     emoji_id: defaultReaction.id,
     emoji_name: defaultReaction.name,

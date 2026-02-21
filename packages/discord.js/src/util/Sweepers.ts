@@ -16,7 +16,7 @@ export class Sweepers {
   public options: any;
   public intervals: any;
   public client: any;
-  constructor(client, options) {
+  constructor(client: any, options: any) {
     /**
      * The client that instantiated this
      *
@@ -73,7 +73,7 @@ export class Sweepers {
    * @param {Function} filter The function used to determine which commands will be removed from the caches.
    * @returns {number} Amount of commands that were removed from the caches
    */
-  sweepApplicationCommands(filter) {
+  sweepApplicationCommands(filter: any) {
     const { guilds, items: guildCommands } = this._sweepGuildDirectProp('commands', filter, { emit: false });
 
     const globalCommands = this.client.application?.commands.cache.sweep(filter) ?? 0;
@@ -92,7 +92,7 @@ export class Sweepers {
    * which auto moderation rules will be removed from the caches
    * @returns {number} Amount of auto moderation rules that were removed from the caches
    */
-  sweepAutoModerationRules(filter) {
+  sweepAutoModerationRules(filter: any) {
     return this._sweepGuildDirectProp('autoModerationRules', filter).items;
   }
 
@@ -102,7 +102,7 @@ export class Sweepers {
    * @param {Function} filter The function used to determine which bans will be removed from the caches.
    * @returns {number} Amount of bans that were removed from the caches
    */
-  sweepBans(filter) {
+  sweepBans(filter: any) {
     return this._sweepGuildDirectProp('bans', filter).items;
   }
 
@@ -112,7 +112,7 @@ export class Sweepers {
    * @param {Function} filter The function used to determine which emojis will be removed from the caches.
    * @returns {number} Amount of emojis that were removed from the caches
    */
-  sweepEmojis(filter) {
+  sweepEmojis(filter: any) {
     return this._sweepGuildDirectProp('emojis', filter).items;
   }
 
@@ -122,7 +122,7 @@ export class Sweepers {
    * @param {Function} filter The function used to determine which entitlements will be removed from the caches.
    * @returns {number} Amount of entitlements that were removed from the caches
    */
-  sweepEntitlements(filter) {
+  sweepEntitlements(filter: any) {
     if (typeof filter !== 'function') {
       throw new DiscordjsTypeError(ErrorCodes.InvalidType, 'filter', 'function');
     }
@@ -140,7 +140,7 @@ export class Sweepers {
    * @param {Function} filter The function used to determine which invites will be removed from the caches.
    * @returns {number} Amount of invites that were removed from the caches
    */
-  sweepInvites(filter) {
+  sweepInvites(filter: any) {
     return this._sweepGuildDirectProp('invites', filter).items;
   }
 
@@ -151,7 +151,7 @@ export class Sweepers {
    * @param {Function} filter The function used to determine which guild members will be removed from the caches.
    * @returns {number} Amount of guild members that were removed from the caches
    */
-  sweepGuildMembers(filter) {
+  sweepGuildMembers(filter: any) {
     return this._sweepGuildDirectProp('members', filter, { outputName: 'guild members' }).items;
   }
 
@@ -170,7 +170,7 @@ export class Sweepers {
    * );
    * console.log(`Successfully removed ${amount} messages from the cache.`);
    */
-  sweepMessages(filter) {
+  sweepMessages(filter: any) {
     if (typeof filter !== 'function') {
       throw new DiscordjsTypeError(ErrorCodes.InvalidType, 'filter', 'function');
     }
@@ -195,7 +195,7 @@ export class Sweepers {
    * @param {Function} filter The function used to determine which presences will be removed from the caches.
    * @returns {number} Amount of presences that were removed from the caches
    */
-  sweepPresences(filter) {
+  sweepPresences(filter: any) {
     return this._sweepGuildDirectProp('presences', filter).items;
   }
 
@@ -205,7 +205,7 @@ export class Sweepers {
    * @param {Function} filter The function used to determine which reactions will be removed from the caches.
    * @returns {number} Amount of reactions that were removed from the caches
    */
-  sweepReactions(filter) {
+  sweepReactions(filter: any) {
     if (typeof filter !== 'function') {
       throw new DiscordjsTypeError(ErrorCodes.InvalidType, 'filter', 'function');
     }
@@ -237,7 +237,7 @@ export class Sweepers {
    * @param {Function} filter The function used to determine which stage instances will be removed from the caches.
    * @returns {number} Amount of stage instances that were removed from the caches
    */
-  sweepStageInstances(filter) {
+  sweepStageInstances(filter: any) {
     return this._sweepGuildDirectProp('stageInstances', filter, { outputName: 'stage instances' }).items;
   }
 
@@ -247,7 +247,7 @@ export class Sweepers {
    * @param {Function} filter The function used to determine which stickers will be removed from the caches.
    * @returns {number} Amount of stickers that were removed from the caches
    */
-  sweepStickers(filter) {
+  sweepStickers(filter: any) {
     return this._sweepGuildDirectProp('stickers', filter).items;
   }
 
@@ -258,7 +258,7 @@ export class Sweepers {
    * @param {Function} filter The function used to determine which thread members will be removed from the caches.
    * @returns {number} Amount of thread members that were removed from the caches
    */
-  sweepThreadMembers(filter) {
+  sweepThreadMembers(filter: any) {
     if (typeof filter !== 'function') {
       throw new DiscordjsTypeError(ErrorCodes.InvalidType, 'filter', 'function');
     }
@@ -290,7 +290,7 @@ export class Sweepers {
    * );
    * console.log(`Successfully removed ${amount} threads from the cache.`);
    */
-  sweepThreads(filter) {
+  sweepThreads(filter: any) {
     if (typeof filter !== 'function') {
       throw new DiscordjsTypeError(ErrorCodes.InvalidType, 'filter', 'function');
     }
@@ -314,7 +314,7 @@ export class Sweepers {
    * @param {Function} filter The function used to determine which users will be removed from the caches.
    * @returns {number} Amount of users that were removed from the caches
    */
-  sweepUsers(filter) {
+  sweepUsers(filter: any) {
     if (typeof filter !== 'function') {
       throw new DiscordjsTypeError(ErrorCodes.InvalidType, 'filter', 'function');
     }
@@ -332,7 +332,7 @@ export class Sweepers {
    * @param {Function} filter The function used to determine which voice states will be removed from the caches.
    * @returns {number} Amount of voice states that were removed from the caches
    */
-  sweepVoiceStates(filter) {
+  sweepVoiceStates(filter: any) {
     return this._sweepGuildDirectProp('voiceStates', filter, { outputName: 'voice states' }).items;
   }
 
@@ -367,9 +367,9 @@ export class Sweepers {
    */
   static filterByLifetime({
     lifetime = 14_400,
-    getComparisonTimestamp = (item: any, _key?: any, _coll?: any): number | null | undefined => item?.createdTimestamp,
+    getComparisonTimestamp = (item, _key?: any, _coll?: any): number | null | undefined => item?.createdTimestamp,
     excludeFromSweep = (_item?: any, _key?: any, _coll?: any): boolean => false,
-  } = {}) {
+  }: any = {}) {
     if (typeof lifetime !== 'number') {
       throw new DiscordjsTypeError(ErrorCodes.InvalidType, 'lifetime', 'number');
     }
@@ -386,7 +386,7 @@ export class Sweepers {
       if (lifetime <= 0) return null;
       const lifetimeMs = lifetime * 1_000;
       const now = Date.now();
-      return (entry, key, coll) => {
+      return (entry: any, key: any, coll: any) => {
         if (excludeFromSweep(entry, key, coll)) {
           return false;
         }
@@ -407,9 +407,9 @@ export class Sweepers {
   static archivedThreadSweepFilter(lifetime = 14_400) {
     return this.filterByLifetime({
       lifetime,
-      getComparisonTimestamp: (thread: any) => thread.archiveTimestamp,
-      excludeFromSweep: (thread: any) => !thread.archived,
-    });
+      getComparisonTimestamp: (thread) => thread.archiveTimestamp,
+      excludeFromSweep: (thread) => !thread.archived,
+    }: any);
   }
 
   /**
@@ -421,8 +421,8 @@ export class Sweepers {
   static expiredInviteSweepFilter(lifetime = 14_400) {
     return this.filterByLifetime({
       lifetime,
-      getComparisonTimestamp: (invite: any) => invite.expiresTimestamp,
-    });
+      getComparisonTimestamp: (invite) => invite.expiresTimestamp,
+    }: any);
   }
 
   /**
@@ -434,8 +434,8 @@ export class Sweepers {
   static outdatedMessageSweepFilter(lifetime = 3_600) {
     return this.filterByLifetime({
       lifetime,
-      getComparisonTimestamp: (message: any) => message.editedTimestamp ?? message.createdTimestamp,
-    });
+      getComparisonTimestamp: (message) => message.editedTimestamp ?? message.createdTimestamp,
+    }: any);
   }
 
   /**
@@ -456,7 +456,7 @@ export class Sweepers {
    * @returns {Object} Object containing the number of guilds swept and the number of items swept
    * @private
    */
-  _sweepGuildDirectProp(key, filter, { emit = true, outputName }: any = {}) {
+  _sweepGuildDirectProp(key, filter, { emit = true, outputName }: any = {}: any) {
     if (typeof filter !== 'function') {
       throw new DiscordjsTypeError(ErrorCodes.InvalidType, 'filter', 'function');
     }
@@ -487,7 +487,7 @@ export class Sweepers {
    * @param {string} key Key of the options object to check
    * @private
    */
-  _validateProperties(key) {
+  _validateProperties(key: any) {
     const props = this.options[key];
     if (typeof props !== 'object') {
       throw new DiscordjsTypeError(ErrorCodes.InvalidType, `sweepers.${key}`, 'object', true);
@@ -519,7 +519,7 @@ export class Sweepers {
    * @param {Object} opts Validated options for a sweep
    * @private
    */
-  _initInterval(intervalKey, sweepKey, opts) {
+  _initInterval(intervalKey: any, sweepKey: any, opts: any) {
     if (opts.interval <= 0 || opts.interval === Infinity) return;
     this.intervals[intervalKey] = setInterval(() => {
       const sweepFn = opts.filter();

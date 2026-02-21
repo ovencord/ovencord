@@ -12,7 +12,7 @@ export class ApplicationEmoji extends Emoji {
   public managed: any;
   public requiresColons: any;
   public available: any;
-  constructor(client, data, application) {
+  constructor(client: any, data: any, application: any) {
     super(client, data);
 
     /**
@@ -25,7 +25,7 @@ export class ApplicationEmoji extends Emoji {
     this._patch(data);
   }
 
-  _patch(data) {
+  _patch(data: any) {
     if ('name' in data) this.name = data.name;
     if (data.user) {
       /**
@@ -91,7 +91,7 @@ export class ApplicationEmoji extends Emoji {
    *   .then(emoji => console.log(`Edited emoji ${emoji}`))
    *   .catch(console.error);
    */
-  async edit(options) {
+  async edit(options: any) {
     return this.application.emojis.edit(this.id, options);
   }
 
@@ -101,7 +101,7 @@ export class ApplicationEmoji extends Emoji {
    * @param {string} name The new name for the emoji
    * @returns {Promise<ApplicationEmoji>}
    */
-  async setName(name) {
+  async setName(name: any) {
     return this.edit({ name });
   }
 
@@ -121,7 +121,7 @@ export class ApplicationEmoji extends Emoji {
    * @param {ApplicationEmoji|APIEmoji} other The emoji to compare it to
    * @returns {boolean}
    */
-  equals(other) {
+  equals(other: any) {
     if (other instanceof ApplicationEmoji) {
       return (
         other.animated === this.animated &&

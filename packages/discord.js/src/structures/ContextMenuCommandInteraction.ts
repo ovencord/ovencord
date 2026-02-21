@@ -14,7 +14,7 @@ const getMessage = lazy(() => require('./Message.js').Message);
 export class ContextMenuCommandInteraction extends CommandInteraction {
   public options: any;
   public targetId: any;
-  constructor(client, data) {
+  constructor(client: any, data: any) {
     super(client, data);
     /**
      * The target of the interaction, parsed into options
@@ -42,7 +42,7 @@ export class ContextMenuCommandInteraction extends CommandInteraction {
    * @returns {CommandInteractionOption[]}
    * @private
    */
-  resolveContextMenuOptions({ target_id, resolved }) {
+  resolveContextMenuOptions({ target_id, resolved }: any) {
     const result = [];
 
     if (resolved.users?.[target_id]) {

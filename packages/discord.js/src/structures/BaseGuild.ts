@@ -14,7 +14,7 @@ export class BaseGuild extends Base {
   public name: any;
   public features: any;
   public icon: any;
-  constructor(client, data) {
+  constructor(client: any, data: any) {
     super(client);
 
     /**

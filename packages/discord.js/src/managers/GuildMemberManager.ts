@@ -39,7 +39,7 @@ export class GuildMemberManager extends CachedManager {
    * @name GuildMemberManager#cache
    */
 
-  _add(data, cache = true) {
+  _add(data: any, cache = true) {
     return super._add(data, cache, { id: data.user.id, extras: [this.guild] });
   }
 
@@ -49,7 +49,7 @@ export class GuildMemberManager extends CachedManager {
    * @param {UserResolvable} member The user that is part of the guild
    * @returns {?GuildMember}
    */
-  resolve(member) {
+  resolve(member: any) {
     const memberResolvable = super.resolve(member);
     if (memberResolvable) return memberResolvable;
     const userResolvable = this.client.users.resolveId(member);
@@ -63,7 +63,7 @@ export class GuildMemberManager extends CachedManager {
    * @param {UserResolvable} member The user that is part of the guild
    * @returns {?Snowflake}
    */
-  resolveId(member) {
+  resolveId(member: any) {
     const memberResolvable = super.resolveId(member);
     if (memberResolvable) return memberResolvable;
     const userResolvable = this.client.users.resolveId(member);
@@ -96,7 +96,7 @@ export class GuildMemberManager extends CachedManager {
    * @param {AddGuildMemberOptions} options Options for adding the user to the guild
    * @returns {Promise<?GuildMember>}
    */
-  async add(user, options) {
+  async add(user: any, options: any) {
     const userId = this.client.users.resolveId(user);
     if (!userId) throw new DiscordjsTypeError(ErrorCodes.InvalidType, 'user', 'UserResolvable');
     if (!options.force) {
@@ -214,7 +214,7 @@ export class GuildMemberManager extends CachedManager {
    *   .then(console.log)
    *   .catch(console.error);
    */
-  async fetch(options) {
+  async fetch(options: any) {
     if (!options) return this._fetchMany();
     const { user: users, limit, withPresences, cache, force } = options;
     const resolvedUser = this.client.users.resolveId(users ?? options);
@@ -223,7 +223,7 @@ export class GuildMemberManager extends CachedManager {
     return this._fetchMany({ ...options, users: resolvedUsers });
   }
 
-  async _fetchSingle({ user, cache, force = false }) {
+  async _fetchSingle({ user, cache, force = false }: any) {
     if (!force) {
       const existing = this.cache.get(user);
       if (existing && !existing.partial) return existing;
@@ -264,7 +264,7 @@ export class GuildMemberManager extends CachedManager {
         reject(new DiscordjsError(ErrorCodes.GuildMembersTimeout));
       }, time).unref();
 
-      const handler = (members, _, chunk) => {
+      const handler = (members: any, _: any, chunk: any) => {
         if (chunk.nonce !== nonce) return;
 
         timeout.refresh();
@@ -314,7 +314,7 @@ export class GuildMemberManager extends CachedManager {
    * @param {BaseFetchOptions} [options] The options for fetching the member
    * @returns {Promise<GuildMember>}
    */
-  async fetchMe(options) {
+  async fetchMe(options: any) {
     return this.fetch({ ...options, user: this.client.user.id });
   }
 
@@ -337,7 +337,7 @@ export class GuildMemberManager extends CachedManager {
     const data = await this.client.rest.get(Routes.guildMembersSearch(this.guild.id), {
       query: makeURLSearchParams({ query, limit }),
     });
-    return data.reduce((col, member) => col.set(member.user.id, this._add(member, cache)), new Collection());
+    return data.reduce((col: any, member: any) => col.set(member.user.id, this._add(member, cache)), new Collection());
   }
 
   /**
@@ -358,7 +358,7 @@ export class GuildMemberManager extends CachedManager {
   async list({ after, limit, cache = true }: any = {}) {
     const query = makeURLSearchParams({ limit, after });
     const data = await this.client.rest.get(Routes.guildMembers(this.guild.id), { query });
-    return data.reduce((col, member) => col.set(member.user.id, this._add(member, cache)), new Collection());
+    return data.reduce((col: any, member: any) => col.set(member.user.id, this._add(member, cache)), new Collection());
   }
 
   /**
@@ -384,7 +384,7 @@ export class GuildMemberManager extends CachedManager {
    * @param {GuildMemberEditOptions} options The options to provide
    * @returns {Promise<GuildMember>}
    */
-  async edit(user, { reason, ...options }) {
+  async edit(user, { reason, ...options }: any) {
     const id = this.client.users.resolveId(user);
     if (!id) throw new DiscordjsTypeError(ErrorCodes.InvalidType, 'user', 'UserResolvable');
 
@@ -438,7 +438,7 @@ export class GuildMemberManager extends CachedManager {
    * @param {GuildMemberEditMeOptions} options The options to provide
    * @returns {Promise<GuildMember>}
    */
-  async editMe({ reason, ...options }) {
+  async editMe({ reason, ...options }: any) {
     const data = await this.client.rest.patch(Routes.guildMember(this.guild.id, '@me'), {
       body: {
         ...options,
@@ -490,7 +490,7 @@ export class GuildMemberManager extends CachedManager {
   async prune({ days, dry = false, count: compute_prune_count, roles = [], reason }: any = {}) {
     if (typeof days !== 'number') throw new DiscordjsTypeError(ErrorCodes.PruneDaysType);
 
-    const query: any = { days };
+    const query = { days };
     const resolvedRoles = [];
 
     for (const role of roles) {
@@ -526,7 +526,7 @@ export class GuildMemberManager extends CachedManager {
    * // Kick a user by id (or with a user/guild member object)
    * await guild.members.kick('84484653687267328');
    */
-  async kick(user, reason) {
+  async kick(user: any, reason: any) {
     const id = this.client.users.resolveId(user);
     if (!id) throw new DiscordjsTypeError(ErrorCodes.InvalidType, 'user', 'UserResolvable');
 
@@ -543,7 +543,7 @@ export class GuildMemberManager extends CachedManager {
    * // Ban a user by id (or with a user/guild member object)
    * await guild.members.ban('84484653687267328');
    */
-  async ban(user, options) {
+  async ban(user: any, options: any) {
     await this.guild.bans.create(user, options);
   }
 
@@ -557,7 +557,7 @@ export class GuildMemberManager extends CachedManager {
    * // Unban a user by id (or with a user/guild member object)
    * await guild.members.unban('84484653687267328');
    */
-  async unban(user, reason) {
+  async unban(user: any, reason: any) {
     await this.guild.bans.remove(user, reason);
   }
 
@@ -577,7 +577,7 @@ export class GuildMemberManager extends CachedManager {
    *   })
    *   .catch(console.error);
    */
-  async bulkBan(users, options = {}) {
+  async bulkBan(users, options = {}: any) {
     return this.guild.bans.bulkCreate(users, options);
   }
 
@@ -596,7 +596,7 @@ export class GuildMemberManager extends CachedManager {
    * @param {AddOrRemoveGuildMemberRoleOptions} options Options for adding the role
    * @returns {Promise<void>}
    */
-  async addRole(options) {
+  async addRole(options: any) {
     const { user, role, reason } = options;
     const userId = this.resolveId(user);
     const roleId = this.guild.roles.resolveId(role);
@@ -609,7 +609,7 @@ export class GuildMemberManager extends CachedManager {
    * @param {AddOrRemoveGuildMemberRoleOptions} options Options for removing the role
    * @returns {Promise<void>}
    */
-  async removeRole(options) {
+  async removeRole(options: any) {
     const { user, role, reason } = options;
     const userId = this.resolveId(user);
     const roleId = this.guild.roles.resolveId(role);

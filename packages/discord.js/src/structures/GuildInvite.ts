@@ -25,7 +25,7 @@ export class GuildInvite extends BaseInvite {
   public maxUses: any;
   public temporary: any;
   public approximatePresenceCount: any;
-  constructor(client, data) {
+  constructor(client: any, data: any) {
     super(client, data);
 
     // Type may be missing from audit logs.
@@ -57,7 +57,7 @@ export class GuildInvite extends BaseInvite {
      */
   }
 
-  _patch(data) {
+  _patch(data: any) {
     super._patch(data);
 
     if ('flags' in data) {
@@ -213,7 +213,7 @@ export class GuildInvite extends BaseInvite {
    * @param {string} [reason] Reason for deleting this invite
    * @returns {Promise<void>}
    */
-  async delete(reason) {
+  async delete(reason: any) {
     await this.client.rest.delete(Routes.invite(this.code), { reason });
   }
 

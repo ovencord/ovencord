@@ -21,7 +21,7 @@ export class MessageComponentInteraction extends BaseInteraction {
   public replied: any;
   public webhook: any;
   public token: any;
-  constructor(client, data) {
+  constructor(client: any, data: any) {
     super(client, data);
 
     /**

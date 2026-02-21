@@ -3,7 +3,7 @@
  */
 export class Component {
   public data: any;
-  constructor(data) {
+  constructor(data: any) {
     /**
      * The API data associated with this component
      *
@@ -38,7 +38,7 @@ export class Component {
    * @param {Component|APIMessageComponent} other The component to compare against
    * @returns {boolean}
    */
-  equals(other) {
+  equals(other: any) {
     if (other instanceof Component) {
       return Bun.deepEquals(other.data, this.data);
     }

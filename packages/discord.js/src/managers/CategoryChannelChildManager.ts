@@ -73,7 +73,7 @@ export class CategoryChannelChildManager extends DataManager {
    * @param {CategoryCreateChannelOptions} options Options for creating the new channel
    * @returns {Promise<GuildChannel>}
    */
-  async create(options) {
+  async create(options: any) {
     return this.guild.channels.create({
       ...options,
       parent: this.channel.id,

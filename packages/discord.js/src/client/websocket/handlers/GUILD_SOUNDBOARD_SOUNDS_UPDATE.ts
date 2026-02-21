@@ -1,10 +1,9 @@
 import type { Client } from '../../Client.js';
-import type { GatewayDispatchPayload } from 'discord-api-types/v10';
-
+import type { GatewayGuildSoundboardSoundsUpdateDispatch } from 'discord-api-types/v10';
 import { Collection  } from '@ovencord/collection';
 import { Events  } from '../../../util/Events.js';
 
-export default (client: Client, { d: data }: GatewayDispatchPayload) => {
+export default (client: Client, { d: data }: GatewayGuildSoundboardSoundsUpdateDispatch) => {
   const guild = client.guilds.cache.get(data.guild_id);
 
   if (!guild) return;

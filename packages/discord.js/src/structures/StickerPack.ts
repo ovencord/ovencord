@@ -16,7 +16,7 @@ export class StickerPack extends Base {
   public coverStickerId: any;
   public description: any;
   public bannerId: any;
-  constructor(client, pack) {
+  constructor(client: any, pack: any) {
     super(client);
     /**
      * The Sticker pack's id

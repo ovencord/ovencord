@@ -7,7 +7,7 @@ import { InteractionCallbackResource  } from './InteractionCallbackResource.js';
 export class InteractionCallbackResponse {
   public interaction: any;
   public resource: any;
-  constructor(client, data) {
+  constructor(client: any, data: any) {
     /**
      * The client that instantiated this
      *

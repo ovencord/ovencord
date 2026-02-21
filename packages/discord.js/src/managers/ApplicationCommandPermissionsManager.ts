@@ -13,7 +13,7 @@ export class ApplicationCommandPermissionsManager extends BaseManager {
   public guild: any; // Add public guild
   public guildId: any;
   public commandId: any;
-  constructor(manager) {
+  constructor(manager: any) {
     super(manager.client);
 
     /**
@@ -425,7 +425,7 @@ export class ApplicationCommandPermissionsManager extends BaseManager {
     return existing.some(perm => perm.id === resolvedId && (permissionType ?? perm.type) === perm.type);
   }
 
-  _validateOptions(guild, command) {
+  _validateOptions(guild: any, command: any) {
     const guildId = this.guildId ?? this.client.guilds.resolveId(guild);
     if (!guildId) throw new DiscordjsError(ErrorCodes.GlobalCommandPermissions);
     let commandId = this.commandId;

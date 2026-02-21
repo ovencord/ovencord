@@ -7,7 +7,7 @@ import { BaseGuildVoiceChannel  } from './BaseGuildVoiceChannel.js';
  */
 export class StageChannel extends BaseGuildVoiceChannel {
   public topic: any;
-  _patch(data) {
+  _patch(data: any) {
     super._patch(data);
 
     if ('topic' in data) {
@@ -36,7 +36,7 @@ export class StageChannel extends BaseGuildVoiceChannel {
    * @param {StageInstanceCreateOptions} options The options to create the stage instance
    * @returns {Promise<StageInstance>}
    */
-  async createStageInstance(options) {
+  async createStageInstance(options: any) {
     return this.guild.stageInstances.create(this.id, options);
   }
 
@@ -52,7 +52,7 @@ export class StageChannel extends BaseGuildVoiceChannel {
    *   .then(channel => console.log(`Channel's new topic is ${channel.topic}`))
    *   .catch(console.error);
    */
-  async setTopic(topic, reason) {
+  async setTopic(topic: any, reason: any) {
     return this.edit({ topic, reason });
   }
 }

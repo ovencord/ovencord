@@ -7,7 +7,7 @@ import { MessageComponentInteraction  } from './MessageComponentInteraction.js';
  */
 export class StringSelectMenuInteraction extends MessageComponentInteraction {
   public values: any;
-  constructor(client, data) {
+  constructor(client: any, data: any) {
     super(client, data);
 
     /**

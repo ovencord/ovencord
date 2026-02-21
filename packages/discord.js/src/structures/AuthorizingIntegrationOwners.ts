@@ -10,7 +10,7 @@ export class AuthorizingIntegrationOwners extends Base {
   public guildId: any;
   public userId: any;
   public data: any;
-  constructor(client, data) {
+  constructor(client: any, data: any) {
     super(client);
 
     Object.defineProperty(this, 'data', { value: data });

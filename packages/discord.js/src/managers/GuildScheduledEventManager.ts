@@ -90,7 +90,7 @@ export class GuildScheduledEventManager extends CachedManager {
    * @param {GuildScheduledEventCreateOptions} options Options for creating the guild scheduled event
    * @returns {Promise<GuildScheduledEvent>}
    */
-  async create(options) {
+  async create(options: any) {
     if (typeof options !== 'object') throw new DiscordjsTypeError(ErrorCodes.InvalidType, 'options', 'object', true);
     const {
       privacyLevel,
@@ -160,7 +160,7 @@ export class GuildScheduledEventManager extends CachedManager {
    * The id of the guild scheduled event or options
    * @returns {Promise<GuildScheduledEvent|Collection<Snowflake, GuildScheduledEvent>>}
    */
-  async fetch(options: any = {}) {
+  async fetch(options = {}: any) {
     const id = this.resolveId(options.guildScheduledEvent ?? options);
 
     if (id) {
@@ -180,7 +180,7 @@ export class GuildScheduledEventManager extends CachedManager {
     });
 
     return data.reduce(
-      (coll, rawGuildScheduledEventData) =>
+      (coll: any, rawGuildScheduledEventData: any) =>
         coll.set(rawGuildScheduledEventData.id, this._add(rawGuildScheduledEventData, options.cache)),
       new Collection(),
     );
@@ -215,7 +215,7 @@ export class GuildScheduledEventManager extends CachedManager {
    * @param {GuildScheduledEventEditOptions} options Options to edit the guild scheduled event
    * @returns {Promise<GuildScheduledEvent>}
    */
-  async edit(guildScheduledEvent, options) {
+  async edit(guildScheduledEvent: any, options: any) {
     const guildScheduledEventId = this.resolveId(guildScheduledEvent);
     if (!guildScheduledEventId) throw new DiscordjsError(ErrorCodes.GuildScheduledEventResolve);
 
@@ -268,7 +268,7 @@ export class GuildScheduledEventManager extends CachedManager {
    * @param {GuildScheduledEventResolvable} guildScheduledEvent The guild scheduled event to delete
    * @returns {Promise<void>}
    */
-  async delete(guildScheduledEvent) {
+  async delete(guildScheduledEvent: any) {
     const guildScheduledEventId = this.resolveId(guildScheduledEvent);
     if (!guildScheduledEventId) throw new DiscordjsError(ErrorCodes.GuildScheduledEventResolve);
 
@@ -302,7 +302,7 @@ export class GuildScheduledEventManager extends CachedManager {
    * @param {FetchGuildScheduledEventSubscribersOptions} [options={}] Options for fetching the subscribers
    * @returns {Promise<Collection<Snowflake, GuildScheduledEventUser>>}
    */
-  async fetchSubscribers(guildScheduledEvent: any, options: any = {}) {
+  async fetchSubscribers(guildScheduledEvent, options = {}: any) {
     const guildScheduledEventId = this.resolveId(guildScheduledEvent);
     if (!guildScheduledEventId) throw new DiscordjsError(ErrorCodes.GuildScheduledEventResolve);
 
@@ -318,7 +318,7 @@ export class GuildScheduledEventManager extends CachedManager {
     });
 
     return data.reduce(
-      (coll, rawData) =>
+      (coll: any, rawData: any) =>
         coll.set(rawData.user.id, {
           guildScheduledEventId: rawData.guild_scheduled_event_id,
           user: this.client.users._add(rawData.user),

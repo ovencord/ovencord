@@ -8,7 +8,7 @@ import { MediaGalleryItem  } from './MediaGalleryItem.js';
  */
 export class MediaGalleryComponent extends Component {
   public items: any;
-  constructor({ items, ...data }) {
+  constructor({ items, ...data }: any) {
     super(data);
 
     /**

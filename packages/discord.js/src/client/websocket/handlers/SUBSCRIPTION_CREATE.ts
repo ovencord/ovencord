@@ -1,9 +1,8 @@
 import type { Client } from '../../Client.js';
-import type { GatewayDispatchPayload } from 'discord-api-types/v10';
-
+import type { GatewaySubscriptionCreateDispatch } from 'discord-api-types/v10';
 import { Events  } from '../../../util/Events.js';
 
-export default (client: Client, { d: data }: GatewayDispatchPayload) => {
+export default (client: Client, { d: data }: GatewaySubscriptionCreateDispatch) => {
   const subscription = client.application.subscriptions._add(data);
 
   /**

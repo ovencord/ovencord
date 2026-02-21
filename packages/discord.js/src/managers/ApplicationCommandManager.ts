@@ -34,7 +34,7 @@ export class ApplicationCommandManager extends CachedManager {
    * @name ApplicationCommandManager#cache
    */
 
-  _add(data, cache, guildId) {
+  _add(data: any, cache: any, guildId: any) {
     return super._add(data, cache, { extras: [this.guild, guildId] });
   }
 
@@ -122,7 +122,7 @@ export class ApplicationCommandManager extends CachedManager {
    *   .then(command => console.log(`Fetched command ${command.name}`))
    *   .catch(console.error)
    */
-  async fetch(options) {
+  async fetch(options: any) {
     if (!options) return this._fetchMany();
 
     if (typeof options === 'string') return this._fetchSingle({ id: options });
@@ -152,7 +152,7 @@ export class ApplicationCommandManager extends CachedManager {
       query: makeURLSearchParams({ with_localizations: withLocalizations }),
     });
 
-    return data.reduce((coll, command) => coll.set(command.id, this._add(command, cache, guildId)), new Collection());
+    return data.reduce((coll: any, command: any) => coll.set(command.id, this._add(command, cache, guildId)), new Collection());
   }
 
   /**
@@ -171,7 +171,7 @@ export class ApplicationCommandManager extends CachedManager {
    *   .then(console.log)
    *   .catch(console.error);
    */
-  async create(command, guildId) {
+  async create(command: any, guildId: any) {
     const data = await this.client.rest.post(this.commandPath({ guildId }), {
       body: (this.constructor as typeof ApplicationCommandManager).transformCommand(command),
     });
@@ -201,12 +201,12 @@ export class ApplicationCommandManager extends CachedManager {
    *   .then(console.log)
    *   .catch(console.error);
    */
-  async set(commands, guildId) {
+  async set(commands: any, guildId: any) {
     const data = await this.client.rest.put(this.commandPath({ guildId }), {
-      body: commands.map((command: any) => (this.constructor as typeof ApplicationCommandManager).transformCommand(command)),
-    });
+      body: commands.map((command) => (this.constructor as typeof ApplicationCommandManager).transformCommand(command)),
+    }: any);
     return data.reduce(
-      (collection, command) => collection.set(command.id, this._add(command, true, guildId)),
+      (collection: any, command: any) => collection.set(command.id, this._add(command, true, guildId)),
       new Collection(),
     );
   }
@@ -227,7 +227,7 @@ export class ApplicationCommandManager extends CachedManager {
    *   .then(console.log)
    *   .catch(console.error);
    */
-  async edit(command, data, guildId) {
+  async edit(command: any, data: any, guildId: any) {
     const id = this.resolveId(command);
     if (!id) throw new DiscordjsTypeError(ErrorCodes.InvalidType, 'command', 'ApplicationCommandResolvable');
 
@@ -250,7 +250,7 @@ export class ApplicationCommandManager extends CachedManager {
    *   .then(console.log)
    *   .catch(console.error);
    */
-  async delete(command, guildId) {
+  async delete(command: any, guildId: any) {
     const id = this.resolveId(command);
     if (!id) throw new DiscordjsTypeError(ErrorCodes.InvalidType, 'command', 'ApplicationCommandResolvable');
 
@@ -268,7 +268,7 @@ export class ApplicationCommandManager extends CachedManager {
    * @returns {APIApplicationCommand}
    * @private
    */
-  static transformCommand(command) {
+  static transformCommand(command: any) {
     if (isJSONEncodable(command)) return command.toJSON();
 
     let default_member_permissions;

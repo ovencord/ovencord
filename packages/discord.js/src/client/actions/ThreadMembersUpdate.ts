@@ -12,11 +12,11 @@ export class ThreadMembersUpdateAction extends Action {
       const removedMembers = new Collection();
 
       data.added_members?.reduce(
-        (_addedMembers, addedMember) => _addedMembers.set(addedMember.user_id, thread.members._add(addedMember)),
+        (_addedMembers: any, addedMember: any) => _addedMembers.set(addedMember.user_id, thread.members._add(addedMember)),
         addedMembers,
       );
 
-      data.removed_member_ids?.reduce((removedMembersIds, removedMembersId) => {
+      data.removed_member_ids?.reduce((removedMembersIds: any, removedMembersId: any) => {
         const threadMember = this.getThreadMember(removedMembersId, thread.members);
         if (threadMember) removedMembersIds.set(threadMember.id, threadMember);
         thread.members.cache.delete(removedMembersId);

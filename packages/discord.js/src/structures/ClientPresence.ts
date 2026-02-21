@@ -10,7 +10,7 @@ import { Presence  } from './Presence.js';
  * @extends {Presence}
  */
 export class ClientPresence extends Presence {
-  constructor(client, data: any = {}) {
+  constructor(client, data = {}: any) {
     super(client, Object.assign(data, { status: data.status ?? 'online', user: { id: null } }));
   }
 
@@ -20,7 +20,7 @@ export class ClientPresence extends Presence {
    * @param {PresenceData} presence The data to set the presence to
    * @returns {Promise<ClientPresence>}
    */
-  async set(presence) {
+  async set(presence: any) {
     const packet = this._parse(presence);
     this._patch(packet);
     if (presence.shardId === undefined) {
@@ -43,7 +43,7 @@ export class ClientPresence extends Presence {
    * @returns {GatewayPresenceUpdateData}
    * @private
    */
-  _parse({ status, since, afk, activities }) {
+  _parse({ status, since, afk, activities }: any) {
     const data = {
       activities: [],
       afk: typeof afk === 'boolean' ? afk : false,

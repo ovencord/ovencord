@@ -14,7 +14,7 @@ export class GuildPreviewEmoji extends BaseGuildEmoji {
    * @name GuildPreviewEmoji#guild
    */
 
-  constructor(client, data, guild) {
+  constructor(client: any, data: any, guild: any) {
     super(client, data, guild);
 
     /**

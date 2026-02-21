@@ -13,7 +13,7 @@ import { flatten  } from '../../util/Util.js';
  */
 
 export interface CollectorOptions {
-  filter?: (...args: any[]) => boolean | Promise<boolean>;
+  filter?: (...args[]) => boolean | Promise<boolean>;
   time?: number;
   idle?: number;
   dispose?: boolean;
@@ -35,7 +35,7 @@ export class Collector extends AsyncEventEmitter {
   public lastCollectedTimestamp: number | null;
   public client: any;
   public filter: (...args: any[]) => boolean | Promise<boolean>;
-  constructor(client: any, options: CollectorOptions = {}) {
+  constructor(client, options: CollectorOptions = {}: any) {
     super();
 
     /**
@@ -355,7 +355,7 @@ export class Collector extends AsyncEventEmitter {
    * @abstract
    */
   // eslint-disable-next-line no-unused-vars
-  collect(...args: any[]): any {}
+  collect(...args[]): any {}
 
   /**
    * Handles incoming events from the `handleDispose`. Returns null if the event should not
@@ -367,5 +367,5 @@ export class Collector extends AsyncEventEmitter {
    * @abstract
    */
   // eslint-disable-next-line no-unused-vars
-  dispose(...args: any[]): any {}
+  dispose(...args[]): any {}
 }

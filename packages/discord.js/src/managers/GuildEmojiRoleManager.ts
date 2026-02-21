@@ -11,7 +11,7 @@ import { DataManager  } from './DataManager.js';
 export class GuildEmojiRoleManager extends DataManager {
   public emoji: any;
   public guild: any;
-  constructor(emoji) {
+  constructor(emoji: any) {
     super(emoji.client, Role);
 
     /**
@@ -52,7 +52,7 @@ export class GuildEmojiRoleManager extends DataManager {
    * @param {RoleResolvable|RoleResolvable[]|Collection<Snowflake, Role>} roleOrRoles The role or roles to add
    * @returns {Promise<GuildEmoji>}
    */
-  async add(roleOrRoles) {
+  async add(roleOrRoles: any) {
     const roles = Array.isArray(roleOrRoles) || roleOrRoles instanceof Collection ? roleOrRoles : [roleOrRoles];
 
     const resolvedRoleIds = [];
@@ -75,7 +75,7 @@ export class GuildEmojiRoleManager extends DataManager {
    * @param {RoleResolvable|RoleResolvable[]|Collection<Snowflake, Role>} roleOrRoles The role or roles to remove
    * @returns {Promise<GuildEmoji>}
    */
-  async remove(roleOrRoles) {
+  async remove(roleOrRoles: any) {
     const roles = Array.isArray(roleOrRoles) || roleOrRoles instanceof Collection ? roleOrRoles : [roleOrRoles];
 
     const resolvedRoleIds = [];
@@ -108,7 +108,7 @@ export class GuildEmojiRoleManager extends DataManager {
    *    .then(console.log)
    *    .catch(console.error);
    */
-  async set(roles) {
+  async set(roles: any) {
     return this.emoji.edit({ roles });
   }
 
@@ -124,7 +124,7 @@ export class GuildEmojiRoleManager extends DataManager {
    * @param {Snowflake[]} roles The new roles
    * @private
    */
-  _patch(roles) {
+  _patch(roles: any) {
     this.emoji._roles = roles;
   }
 

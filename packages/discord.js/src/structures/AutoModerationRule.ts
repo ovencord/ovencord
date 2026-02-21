@@ -19,7 +19,7 @@ export class AutoModerationRule extends Base {
   public enabled: any;
   public exemptRoles: any;
   public exemptChannels: any;
-  constructor(client, data, guild) {
+  constructor(client: any, data: any, guild: any) {
     super(client);
 
     /**
@@ -53,7 +53,7 @@ export class AutoModerationRule extends Base {
     this._patch(data);
   }
 
-  _patch(data) {
+  _patch(data: any) {
     if ('name' in data) {
       /**
        * The name of this auto moderation rule.
@@ -169,7 +169,7 @@ export class AutoModerationRule extends Base {
    * @param {AutoModerationRuleEditOptions} options Options for editing this auto moderation rule
    * @returns {Promise<AutoModerationRule>}
    */
-  async edit(options) {
+  async edit(options: any) {
     return this.guild.autoModerationRules.edit(this.id, options);
   }
 
@@ -179,7 +179,7 @@ export class AutoModerationRule extends Base {
    * @param {string} [reason] The reason for deleting this auto moderation rule
    * @returns {Promise<void>}
    */
-  async delete(reason) {
+  async delete(reason: any) {
     return this.guild.autoModerationRules.delete(this.id, reason);
   }
 
@@ -190,7 +190,7 @@ export class AutoModerationRule extends Base {
    * @param {string} [reason] The reason for changing the name of this auto moderation rule
    * @returns {Promise<AutoModerationRule>}
    */
-  async setName(name, reason) {
+  async setName(name: any, reason: any) {
     return this.edit({ name, reason });
   }
 
@@ -201,7 +201,7 @@ export class AutoModerationRule extends Base {
    * @param {string} [reason] The reason for changing the event type of this auto moderation rule
    * @returns {Promise<AutoModerationRule>}
    */
-  async setEventType(eventType, reason) {
+  async setEventType(eventType: any, reason: any) {
     return this.edit({ eventType, reason });
   }
 
@@ -212,7 +212,7 @@ export class AutoModerationRule extends Base {
    * @param {string} [reason] The reason for changing the keyword filter of this auto moderation rule
    * @returns {Promise<AutoModerationRule>}
    */
-  async setKeywordFilter(keywordFilter, reason) {
+  async setKeywordFilter(keywordFilter: any, reason: any) {
     return this.edit({ triggerMetadata: { ...this.triggerMetadata, keywordFilter }, reason });
   }
 
@@ -224,7 +224,7 @@ export class AutoModerationRule extends Base {
    * @param {string} [reason] The reason for changing the regular expression patterns of this auto moderation rule
    * @returns {Promise<AutoModerationRule>}
    */
-  async setRegexPatterns(regexPatterns, reason) {
+  async setRegexPatterns(regexPatterns: any, reason: any) {
     return this.edit({ triggerMetadata: { ...this.triggerMetadata, regexPatterns }, reason });
   }
 
@@ -235,7 +235,7 @@ export class AutoModerationRule extends Base {
    * @param {string} [reason] The reason for changing the presets of this auto moderation rule
    * @returns {Promise<AutoModerationRule>}
    */
-  async setPresets(presets, reason) {
+  async setPresets(presets: any, reason: any) {
     return this.edit({ triggerMetadata: { ...this.triggerMetadata, presets }, reason });
   }
 
@@ -249,7 +249,7 @@ export class AutoModerationRule extends Base {
    * @param {string} [reason] The reason for changing the allow list of this auto moderation rule
    * @returns {Promise<AutoModerationRule>}
    */
-  async setAllowList(allowList, reason) {
+  async setAllowList(allowList: any, reason: any) {
     return this.edit({ triggerMetadata: { ...this.triggerMetadata, allowList }, reason });
   }
 
@@ -260,7 +260,7 @@ export class AutoModerationRule extends Base {
    * @param {string} [reason] The reason for changing the mention total limit of this auto moderation rule
    * @returns {Promise<AutoModerationRule>}
    */
-  async setMentionTotalLimit(mentionTotalLimit, reason) {
+  async setMentionTotalLimit(mentionTotalLimit: any, reason: any) {
     return this.edit({ triggerMetadata: { ...this.triggerMetadata, mentionTotalLimit }, reason });
   }
 
@@ -272,7 +272,7 @@ export class AutoModerationRule extends Base {
    * @param {string} [reason] The reason for changing the mention raid protection of this auto moderation rule
    * @returns {Promise<AutoModerationRule>}
    */
-  async setMentionRaidProtectionEnabled(mentionRaidProtectionEnabled, reason) {
+  async setMentionRaidProtectionEnabled(mentionRaidProtectionEnabled: any, reason: any) {
     return this.edit({ triggerMetadata: { ...this.triggerMetadata, mentionRaidProtectionEnabled }, reason });
   }
 
@@ -283,7 +283,7 @@ export class AutoModerationRule extends Base {
    * @param {string} [reason] The reason for changing the actions of this auto moderation rule
    * @returns {Promise<AutoModerationRule>}
    */
-  async setActions(actions, reason) {
+  async setActions(actions: any, reason: any) {
     return this.edit({ actions, reason });
   }
 
@@ -306,7 +306,7 @@ export class AutoModerationRule extends Base {
    * @param {string} [reason] The reason for changing the exempt roles of this auto moderation rule
    * @returns {Promise<AutoModerationRule>}
    */
-  async setExemptRoles(exemptRoles, reason) {
+  async setExemptRoles(exemptRoles: any, reason: any) {
     return this.edit({ exemptRoles, reason });
   }
 
@@ -318,7 +318,7 @@ export class AutoModerationRule extends Base {
    * @param {string} [reason] The reason for changing the exempt channels of this auto moderation rule
    * @returns {Promise<AutoModerationRule>}
    */
-  async setExemptChannels(exemptChannels, reason) {
+  async setExemptChannels(exemptChannels: any, reason: any) {
     return this.edit({ exemptChannels, reason });
   }
 }

@@ -18,7 +18,7 @@ export class PartialGroupDMChannel extends BaseChannel {
   public ownerId: any;
   public lastMessageId: any;
   public lastPinTimestamp: any;
-  constructor(client, data) {
+  constructor(client: any, data: any) {
     super(client, data);
 
     // No flags are present when fetching partial group DM channels.
@@ -109,7 +109,7 @@ export class PartialGroupDMChannel extends BaseChannel {
    * @param {BaseFetchOptions} [options] The options for fetching the user
    * @returns {Promise<User>}
    */
-  async fetchOwner(options) {
+  async fetchOwner(options: any) {
     if (!this.ownerId) {
       throw new DiscordjsError(ErrorCodes.FetchOwnerId, 'group DM');
     }

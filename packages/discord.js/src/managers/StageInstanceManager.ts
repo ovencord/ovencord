@@ -62,7 +62,7 @@ export class StageInstanceManager extends CachedManager {
    *  .then(stageInstance => console.log(stageInstance))
    *  .catch(console.error);
    */
-  async create(channel, options) {
+  async create(channel: any, options: any) {
     const channelId = this.guild.channels.resolveId(channel);
     if (!channelId) throw new DiscordjsError(ErrorCodes.StageChannelResolve);
     if (typeof options !== 'object') throw new DiscordjsTypeError(ErrorCodes.InvalidType, 'options', 'object', true);
@@ -95,7 +95,7 @@ export class StageInstanceManager extends CachedManager {
    *  .then(stageInstance => console.log(stageInstance))
    *  .catch(console.error);
    */
-  async fetch(channel, { cache = true, force = false } = {}) {
+  async fetch(channel, { cache = true, force = false } = {}: any) {
     const channelId = this.guild.channels.resolveId(channel);
     if (!channelId) throw new DiscordjsError(ErrorCodes.StageChannelResolve);
 
@@ -128,7 +128,7 @@ export class StageInstanceManager extends CachedManager {
    *  .then(stageInstance => console.log(stageInstance))
    *  .catch(console.error);
    */
-  async edit(channel, options) {
+  async edit(channel: any, options: any) {
     if (typeof options !== 'object') throw new DiscordjsTypeError(ErrorCodes.InvalidType, 'options', 'object', true);
     const channelId = this.guild.channels.resolveId(channel);
     if (!channelId) throw new DiscordjsError(ErrorCodes.StageChannelResolve);
@@ -157,7 +157,7 @@ export class StageInstanceManager extends CachedManager {
    * @param {StageChannelResolvable} channel The stage channel whose associated stage instance is to be deleted
    * @returns {Promise<void>}
    */
-  async delete(channel) {
+  async delete(channel: any) {
     const channelId = this.guild.channels.resolveId(channel);
     if (!channelId) throw new DiscordjsError(ErrorCodes.StageChannelResolve);
 

@@ -1,9 +1,8 @@
 import type { Client } from '../../Client.js';
-import type { GatewayDispatchPayload } from 'discord-api-types/v10';
-
+import type { GatewayApplicationCommandPermissionsUpdateDispatch } from 'discord-api-types/v10';
 import { Events  } from '../../../util/Events.js';
 
-export default (client: Client, { d: data }: GatewayDispatchPayload) => {
+export default (client: Client, { d: data }: GatewayApplicationCommandPermissionsUpdateDispatch) => {
   /**
    * Emitted whenever permissions for an application command in a guild were updated.
    * <warn>This includes permission updates for other applications in addition to the logged in client,

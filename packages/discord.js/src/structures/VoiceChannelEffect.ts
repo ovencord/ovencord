@@ -12,7 +12,7 @@ export class VoiceChannelEffect {
   public animationId: any;
   public soundId: any;
   public soundVolume: any;
-  constructor(data, guild) {
+  constructor(data: any, guild: any) {
     /**
      * The guild where the effect was sent from.
      *

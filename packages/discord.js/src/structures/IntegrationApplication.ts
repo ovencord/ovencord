@@ -12,7 +12,7 @@ export class IntegrationApplication extends Application {
   public rpcOrigins: any;
   public cover: any;
   public verifyKey: any;
-  _patch(data) {
+  _patch(data: any) {
     super._patch(data);
 
     if ('bot' in data) {

@@ -20,7 +20,7 @@ import { DiscordjsTypeError, ErrorCodes  } from '../errors/index.js';
 export class LimitedCollection<K, V> extends Collection<K, V> {
   public maxSize: any;
   public keepOverLimit: any;
-  constructor(options: any = {}, iterable = undefined) {
+  constructor(options = {}: any, iterable = undefined) {
     if (typeof options !== 'object' || options === null) {
       throw new DiscordjsTypeError(ErrorCodes.InvalidType, 'options', 'object', true);
     }
@@ -52,7 +52,7 @@ export class LimitedCollection<K, V> extends Collection<K, V> {
     this.keepOverLimit = keepOverLimit;
   }
 
-  set(key, value) {
+  set(key: any, value: any) {
     if (this.maxSize === 0 && !this.keepOverLimit?.(value, key, this)) return this;
     if (this.size >= this.maxSize && !this.has(key)) {
       for (const [iteratedKey, iteratedValue] of this.entries()) {

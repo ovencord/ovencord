@@ -20,7 +20,7 @@ export class VoiceState extends Base {
   public channelId: any;
   public suppress: any;
   public requestToSpeakTimestamp: any;
-  constructor(guild, data) {
+  constructor(guild: any, data: any) {
     super(guild.client);
     /**
      * The guild of this voice state
@@ -37,7 +37,7 @@ export class VoiceState extends Base {
     this._patch(data);
   }
 
-  _patch(data) {
+  _patch(data: any) {
     if ('deaf' in data) {
       /**
        * Whether this member is deafened server-wide
@@ -221,7 +221,7 @@ export class VoiceState extends Base {
    * @param {string} [reason] Reason for disconnecting the member from the channel
    * @returns {Promise<GuildMember>}
    */
-  async disconnect(reason) {
+  async disconnect(reason: any) {
     return this.setChannel(null, reason);
   }
 
@@ -233,7 +233,7 @@ export class VoiceState extends Base {
    * @param {string} [reason] Reason for moving member to another channel or disconnecting
    * @returns {Promise<GuildMember>}
    */
-  async setChannel(channel, reason) {
+  async setChannel(channel: any, reason: any) {
     return this.guild.members.edit(this.id, { channel, reason });
   }
 
@@ -252,7 +252,7 @@ export class VoiceState extends Base {
    * @param {VoiceStateEditOptions} options The options to provide
    * @returns {Promise<VoiceState>}
    */
-  async edit(options) {
+  async edit(options: any) {
     if (this.channel?.type !== ChannelType.GuildStageVoice) throw new DiscordjsError(ErrorCodes.VoiceNotStageChannel);
 
     const target = this.client.user.id === this.id ? '@me' : this.id;

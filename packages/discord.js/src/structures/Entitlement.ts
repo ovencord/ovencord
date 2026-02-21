@@ -16,7 +16,7 @@ export class Entitlement extends Base {
   public startsTimestamp: any;
   public endsTimestamp: any;
   public consumed: any;
-  constructor(client, data) {
+  constructor(client: any, data: any) {
     super(client);
 
     /**
@@ -29,7 +29,7 @@ export class Entitlement extends Base {
     this._patch(data);
   }
 
-  _patch(data) {
+  _patch(data: any) {
     if ('sku_id' in data) {
       /**
        * The id of the associated SKU

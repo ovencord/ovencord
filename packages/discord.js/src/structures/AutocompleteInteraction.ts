@@ -16,7 +16,7 @@ export class AutocompleteInteraction extends BaseInteraction {
   public responded: any;
   public options: any;
   public token: any;
-  constructor(client, data) {
+  constructor(client: any, data: any) {
     super(client, data);
 
     /**
@@ -95,14 +95,14 @@ export class AutocompleteInteraction extends BaseInteraction {
    *  .then(() => console.log('Successfully responded to the autocomplete interaction'))
    *  .catch(console.error);
    */
-  async respond(options) {
+  async respond(options: any) {
     if (this.responded) throw new DiscordjsError(ErrorCodes.InteractionAlreadyReplied);
 
     await this.client.rest.post(Routes.interactionCallback(this.id, this.token), {
       body: {
         type: InteractionResponseType.ApplicationCommandAutocompleteResult,
         data: {
-          choices: options.map(({ nameLocalizations, ...option }) => ({
+          choices: options.map(({ nameLocalizations, ...option }: any) => ({
             ...this.client.options.jsonTransformer(option),
             name_localizations: nameLocalizations,
           })),

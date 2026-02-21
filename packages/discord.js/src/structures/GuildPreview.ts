@@ -22,7 +22,7 @@ export class GuildPreview extends Base {
   public icon: any;
   public splash: any;
   public discoverySplash: any;
-  constructor(client, data) {
+  constructor(client: any, data: any) {
     super(client);
 
     if (!data) return;
@@ -30,7 +30,7 @@ export class GuildPreview extends Base {
     this._patch(data);
   }
 
-  _patch(data) {
+  _patch(data: any) {
     /**
      * The id of this guild
      *
@@ -133,7 +133,7 @@ export class GuildPreview extends Base {
      * @type {Collection<Snowflake, Sticker>}
      */
     this.stickers = data.stickers.reduce(
-      (stickers, sticker) => stickers.set(sticker.id, new Sticker(this.client, sticker)),
+      (stickers: any, sticker: any) => stickers.set(sticker.id, new Sticker(this.client, sticker)),
       new Collection(),
     );
   }

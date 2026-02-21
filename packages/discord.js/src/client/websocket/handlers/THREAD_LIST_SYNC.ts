@@ -1,10 +1,9 @@
 import type { Client } from '../../Client.js';
-import type { GatewayDispatchPayload } from 'discord-api-types/v10';
-
+import type { GatewayThreadListSyncDispatch } from 'discord-api-types/v10';
 import { Collection  } from '@ovencord/collection';
 import { Events  } from '../../../util/Events.js';
 
-export default (client: Client, { d: data }: GatewayDispatchPayload) => {
+export default (client: Client, { d: data }: GatewayThreadListSyncDispatch) => {
   const guild = client.guilds.cache.get(data.guild_id);
   if (!guild) return;
 
@@ -42,7 +41,7 @@ export default (client: Client, { d: data }: GatewayDispatchPayload) => {
   client.emit(Events.ThreadListSync, syncedThreads, guild);
 };
 
-function removeStaleThreads(client, channel) {
+function removeStaleThreads(client: any, channel: any) {
   if (!channel.threads) return;
 
   for (const thread of channel.threads.cache.values()) {

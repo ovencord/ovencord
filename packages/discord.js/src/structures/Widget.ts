@@ -15,7 +15,7 @@ export class Widget extends Base {
   public channels: any;
   public members: any;
   public presenceCount: any;
-  constructor(client, data) {
+  constructor(client: any, data: any) {
     super(client);
     this._patch(data);
   }
@@ -29,7 +29,7 @@ export class Widget extends Base {
    * @property {number} position Position of the channel
    */
 
-  _patch(data) {
+  _patch(data: any) {
     /**
      * The id of the guild.
      *
@@ -103,7 +103,7 @@ export class Widget extends Base {
    * @param {GuildWidgetStyle} [style] The style for the widget image
    * @returns {string}
    */
-  imageURL(style) {
+  imageURL(style: any) {
     return this.client.guilds.widgetImageURL(this.id, style);
   }
 }

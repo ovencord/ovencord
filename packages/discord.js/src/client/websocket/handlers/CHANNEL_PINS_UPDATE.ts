@@ -1,9 +1,8 @@
 import type { Client } from '../../Client.js';
-import type { GatewayDispatchPayload } from 'discord-api-types/v10';
-
+import type { GatewayChannelPinsUpdateDispatch } from 'discord-api-types/v10';
 import { Events  } from '../../../util/Events.js';
 
-export default (client: Client, { d: data }: GatewayDispatchPayload) => {
+export default (client: Client, { d: data }: GatewayChannelPinsUpdateDispatch) => {
   const channel = client.channels.cache.get(data.channel_id);
   const time = data.last_pin_timestamp ? Date.parse(data.last_pin_timestamp) : null;
 

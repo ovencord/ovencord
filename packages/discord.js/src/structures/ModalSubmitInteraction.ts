@@ -72,7 +72,7 @@ export class ModalSubmitInteraction extends BaseInteraction {
   public ephemeral: any;
   public webhook: any;
   public token: any;
-  constructor(client, data) {
+  constructor(client: any, data: any) {
     super(client, data);
     /**
      * The custom id of the modal.
@@ -148,7 +148,7 @@ export class ModalSubmitInteraction extends BaseInteraction {
    * @returns {ModalData[]}
    * @private
    */
-  transformComponent(rawComponent, resolved) {
+  transformComponent(rawComponent: any, resolved: any) {
     if ('components' in rawComponent) {
       return {
         type: rawComponent.type,

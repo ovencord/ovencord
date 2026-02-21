@@ -76,7 +76,7 @@ export class Message extends Base {
   public poll: any;
   public messageSnapshots: any;
   public call: any;
-  constructor(client, data) {
+  constructor(client: any, data: any) {
     super(client);
 
     /**
@@ -96,7 +96,7 @@ export class Message extends Base {
     this._patch(data);
   }
 
-  _patch(data) {
+  _patch(data: any) {
     /**
      * The message's id
      *
@@ -496,7 +496,7 @@ export class Message extends Base {
        *
        * @type {Collection<Snowflake, Message>}
        */
-      this.messageSnapshots = data.message_snapshots.reduce((coll, snapshot) => {
+      this.messageSnapshots = data.message_snapshots.reduce((coll: any, snapshot: any) => {
         const channel = this.client.channels.resolve(this.reference.channelId);
         const snapshotData = {
           ...snapshot.message,
@@ -864,7 +864,7 @@ export class Message extends Base {
    *   .then(msg => console.log(`Updated the content of a message to ${msg.content}`))
    *   .catch(console.error);
    */
-  async edit(options) {
+  async edit(options: any) {
     if (!this.channel) throw new DiscordjsError(ErrorCodes.ChannelNotCached);
     return this.channel.messages.edit(this, options);
   }
@@ -897,7 +897,7 @@ export class Message extends Base {
    *   .then(console.log)
    *   .catch(console.error)
    */
-  async pin(reason) {
+  async pin(reason: any) {
     if (!this.channel) throw new DiscordjsError(ErrorCodes.ChannelNotCached);
     await this.channel.messages.pin(this.id, reason);
     return this;
@@ -914,7 +914,7 @@ export class Message extends Base {
    *   .then(console.log)
    *   .catch(console.error)
    */
-  async unpin(reason) {
+  async unpin(reason: any) {
     if (!this.channel) throw new DiscordjsError(ErrorCodes.ChannelNotCached);
     await this.channel.messages.unpin(this.id, reason);
     return this;
@@ -936,7 +936,7 @@ export class Message extends Base {
    *   .then(console.log)
    *   .catch(console.error);
    */
-  async react(emoji) {
+  async react(emoji: any) {
     if (!this.channel) throw new DiscordjsError(ErrorCodes.ChannelNotCached);
     await this.channel.messages.react(this.id, emoji);
 
@@ -986,7 +986,7 @@ export class Message extends Base {
    *   .then(() => console.log(`Replied to message "${message.content}"`))
    *   .catch(console.error);
    */
-  async reply(options) {
+  async reply(options: any) {
     let data;
 
     if (options instanceof MessagePayload) {
@@ -1012,7 +1012,7 @@ export class Message extends Base {
    * @param {TextChannelResolvable} channel The channel to forward this message to.
    * @returns {Promise<Message>}
    */
-  async forward(channel) {
+  async forward(channel: any) {
     return this.client.channels.createMessage(channel, {
       messageReference: {
         messageId: this.id,
@@ -1106,7 +1106,7 @@ export class Message extends Base {
    * @param {string} customId The custom id to resolve against
    * @returns {?MessageActionRowComponent}
    */
-  resolveComponent(customId) {
+  resolveComponent(customId: any) {
     return findComponentByCustomId(this.components, customId);
   }
 
@@ -1119,7 +1119,7 @@ export class Message extends Base {
    * @param {APIMessage} [rawData] Raw data passed through the WebSocket about this message
    * @returns {boolean}
    */
-  equals(message, rawData) {
+  equals(message: any, rawData: any) {
     if (!message) return false;
     const embedUpdate = !message.author && !message.attachments;
     if (embedUpdate) return this.id === message.id && this.embeds.length === message.embeds.length;
@@ -1133,7 +1133,7 @@ export class Message extends Base {
       this.attachments.size === message.attachments.size &&
       this.embeds.length === message.embeds.length &&
       this.attachments.every(attachment => message.attachments.has(attachment.id)) &&
-      this.embeds.every((embed, index) => embed.equals(message.embeds[index]));
+      this.embeds.every((embed: any, index: any) => embed.equals(message.embeds[index]));
 
     if (equal && rawData) {
       equal =

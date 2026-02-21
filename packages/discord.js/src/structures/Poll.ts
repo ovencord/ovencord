@@ -19,7 +19,7 @@ export class Poll extends Base {
   public question: any;
   public channel: any;
   public message: any;
-  constructor(client, data, message, channel) {
+  constructor(client: any, data: any, message: any, channel: any) {
     super(client);
 
     /**
@@ -66,7 +66,7 @@ export class Poll extends Base {
     this._patch(data);
   }
 
-  _patch(data) {
+  _patch(data: any) {
     if (data.answers) {
       for (const answer of data.answers) {
         const existing = this.answers.get(answer.answer_id);

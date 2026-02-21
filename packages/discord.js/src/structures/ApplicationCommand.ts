@@ -30,7 +30,7 @@ export class ApplicationCommand extends Base {
   public contexts: any;
   public handler: any;
   public version: any;
-  constructor(client, data, guild, guildId) {
+  constructor(client: any, data: any, guild: any, guildId: any) {
     super(client);
 
     /**
@@ -86,7 +86,7 @@ export class ApplicationCommand extends Base {
     this._patch(data);
   }
 
-  _patch(data) {
+  _patch(data: any) {
     if ('name' in data) {
       /**
        * The name of this command
@@ -323,7 +323,7 @@ export class ApplicationCommand extends Base {
    *   .then(console.log)
    *   .catch(console.error);
    */
-  async edit(data) {
+  async edit(data: any) {
     return this.manager.edit(this, data, this.guildId);
   }
 
@@ -333,7 +333,7 @@ export class ApplicationCommand extends Base {
    * @param {string} name The new name of the command
    * @returns {Promise<ApplicationCommand>}
    */
-  async setName(name) {
+  async setName(name: any) {
     return this.edit({ name });
   }
 
@@ -351,7 +351,7 @@ export class ApplicationCommand extends Base {
    *   .then(console.log)
    *   .catch(console.error)
    */
-  async setNameLocalizations(nameLocalizations) {
+  async setNameLocalizations(nameLocalizations: any) {
     return this.edit({ nameLocalizations });
   }
 
@@ -361,7 +361,7 @@ export class ApplicationCommand extends Base {
    * @param {string} description The new description of the command
    * @returns {Promise<ApplicationCommand>}
    */
-  async setDescription(description) {
+  async setDescription(description: any) {
     return this.edit({ description });
   }
 
@@ -379,7 +379,7 @@ export class ApplicationCommand extends Base {
    *   .then(console.log)
    *   .catch(console.error)
    */
-  async setDescriptionLocalizations(descriptionLocalizations) {
+  async setDescriptionLocalizations(descriptionLocalizations: any) {
     return this.edit({ descriptionLocalizations });
   }
 
@@ -389,7 +389,7 @@ export class ApplicationCommand extends Base {
    * @param {?PermissionResolvable} defaultMemberPermissions The default member permissions required to run this command
    * @returns {Promise<ApplicationCommand>}
    */
-  async setDefaultMemberPermissions(defaultMemberPermissions) {
+  async setDefaultMemberPermissions(defaultMemberPermissions: any) {
     return this.edit({ defaultMemberPermissions });
   }
 
@@ -399,7 +399,7 @@ export class ApplicationCommand extends Base {
    * @param {ApplicationCommandOptionData[]} options The options to set for this command
    * @returns {Promise<ApplicationCommand>}
    */
-  async setOptions(options) {
+  async setOptions(options: any) {
     return this.edit({ options });
   }
 
@@ -427,7 +427,7 @@ export class ApplicationCommand extends Base {
    * order in the array <info>The client may not always respect this ordering!</info>
    * @returns {boolean}
    */
-  equals(command, enforceOptionOrder = false) {
+  equals(command: any, enforceOptionOrder = false) {
     // If given an id, check if the id matches
     if (command.id && this.id !== command.id) return false;
 
@@ -486,7 +486,7 @@ export class ApplicationCommand extends Base {
    * order in the array <info>The client may not always respect this ordering!</info>
    * @returns {boolean}
    */
-  static optionsEqual(existing, options, enforceOptionOrder = false) {
+  static optionsEqual(existing: any, options: any, enforceOptionOrder = false) {
     if (existing.length !== options.length) return false;
     if (enforceOptionOrder) {
       return existing.every((option, index) => this._optionEquals(option, options[index], enforceOptionOrder));
@@ -513,7 +513,7 @@ export class ApplicationCommand extends Base {
    * @returns {boolean}
    * @private
    */
-  static _optionEquals(existing, option, enforceOptionOrder = false) {
+  static _optionEquals(existing: any, option: any, enforceOptionOrder = false) {
     if (
       option.name !== existing.name ||
       option.type !== existing.type ||
@@ -543,7 +543,7 @@ export class ApplicationCommand extends Base {
       if (
         enforceOptionOrder &&
         !existing.choices.every(
-          (choice, index) =>
+          (choice: any, index: any) =>
             choice.name === option.choices[index].name &&
             choice.value === option.choices[index].value &&
             Bun.deepEquals(

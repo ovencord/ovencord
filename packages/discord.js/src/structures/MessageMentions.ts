@@ -71,7 +71,7 @@ export class MessageMentions {
    */
   static GlobalUsersPattern = new RegExp(this.UsersPattern.source, 'g');
 
-  constructor(message, users, roles, everyone, crosspostedChannels, repliedUser) {
+  constructor(message: any, users: any, roles: any, everyone: any, crosspostedChannels: any, repliedUser: any) {
     /**
      * The client the message is from
      *
@@ -292,7 +292,7 @@ export class MessageMentions {
    * @param {MessageMentionsHasOptions} [options] The options for the check
    * @returns {boolean}
    */
-  has(data, { ignoreDirect = false, ignoreRoles = false, ignoreRepliedUser = false, ignoreEveryone = false } = {}) {
+  has(data, { ignoreDirect = false, ignoreRoles = false, ignoreRepliedUser = false, ignoreEveryone = false } = {}: any) {
     const user = this.client.users.resolve(data);
 
     if (!ignoreEveryone && user && this.everyone) return true;

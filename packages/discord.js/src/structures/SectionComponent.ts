@@ -9,7 +9,7 @@ import { Component  } from './Component.js';
 export class SectionComponent extends Component {
   public components: any;
   public accessory: any;
-  constructor({ accessory, components, ...data }) {
+  constructor({ accessory, components, ...data }: any) {
     super(data);
 
     /**

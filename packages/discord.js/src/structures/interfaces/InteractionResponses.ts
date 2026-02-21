@@ -84,7 +84,7 @@ export class InteractionResponses {
    *   .then(console.log)
    *   .catch(console.error);
    */
-  async deferReply(options: any = {}) {
+  async deferReply(options = {}: any) {
     if (this.deferred || this.replied) throw new DiscordjsError(ErrorCodes.InteractionAlreadyReplied);
 
     const resolvedFlags = new MessageFlagsBitField(options.flags);
@@ -125,7 +125,7 @@ export class InteractionResponses {
    *   .then(() => console.log('Reply sent.'))
    *   .catch(console.error);
    */
-  async reply(options) {
+  async reply(options: any) {
     if (this.deferred || this.replied) throw new DiscordjsError(ErrorCodes.InteractionAlreadyReplied);
 
     let messagePayload;
@@ -185,7 +185,7 @@ export class InteractionResponses {
    *   .then(console.log)
    *   .catch(console.error);
    */
-  async editReply(options) {
+  async editReply(options: any) {
     if (!this.deferred && !this.replied) throw new DiscordjsError(ErrorCodes.InteractionNotReplied);
     const msg = await this.webhook.editMessage(options.message ?? '@original', options);
     this.replied = true;
@@ -216,7 +216,7 @@ export class InteractionResponses {
    * @param {string|MessagePayload|InteractionReplyOptions} options The options for the reply
    * @returns {Promise<Message>}
    */
-  async followUp(options) {
+  async followUp(options: any) {
     if (!this.deferred && !this.replied) throw new DiscordjsError(ErrorCodes.InteractionNotReplied);
     const msg = await this.webhook.send(options);
     this.replied = true;
@@ -234,7 +234,7 @@ export class InteractionResponses {
    *   .then(console.log)
    *   .catch(console.error);
    */
-  async deferUpdate(options: any = {}) {
+  async deferUpdate(options = {}: any) {
     if (this.deferred || this.replied) throw new DiscordjsError(ErrorCodes.InteractionAlreadyReplied);
     const response = await this.client.rest.post(Routes.interactionCallback(this.id, this.token), {
       body: {
@@ -262,7 +262,7 @@ export class InteractionResponses {
    *   .then(console.log)
    *   .catch(console.error);
    */
-  async update(options: any = {}) {
+  async update(options = {}: any) {
     if (this.deferred || this.replied) throw new DiscordjsError(ErrorCodes.InteractionAlreadyReplied);
 
     let messagePayload;
@@ -312,7 +312,7 @@ export class InteractionResponses {
    * @param {ShowModalOptions} [options={}] The options for sending this interaction response
    * @returns {Promise<InteractionCallbackResponse|undefined>}
    */
-  async showModal(modal: any, options: any = {}) {
+  async showModal(modal, options = {}: any) {
     if (this.deferred || this.replied) throw new DiscordjsError(ErrorCodes.InteractionAlreadyReplied);
     const response = await this.client.rest.post(Routes.interactionCallback(this.id, this.token), {
       body: {
@@ -348,7 +348,7 @@ export class InteractionResponses {
    *   .then(interaction => console.log(`${interaction.customId} was submitted!`))
    *   .catch(console.error);
    */
-  async awaitModalSubmit(options) {
+  async awaitModalSubmit(options: any) {
     if (typeof options.time !== 'number') throw new DiscordjsError(ErrorCodes.InvalidType, 'time', 'number');
     const _options = { ...options, max: 1, interactionType: InteractionType.ModalSubmit };
     return new Promise((resolve, reject) => {
@@ -361,7 +361,7 @@ export class InteractionResponses {
     });
   }
 
-  static applyToClass(structure, ignore = []) {
+  static applyToClass(structure: any, ignore = []) {
     const props = [
       'deferReply',
       'reply',

@@ -13,7 +13,7 @@ export class StageInstance extends Base {
   public topic: any;
   public privacyLevel: any;
   public guildScheduledEventId: any;
-  constructor(client, data) {
+  constructor(client: any, data: any) {
     super(client);
 
     /**
@@ -26,7 +26,7 @@ export class StageInstance extends Base {
     this._patch(data);
   }
 
-  _patch(data) {
+  _patch(data: any) {
     if ('guild_id' in data) {
       /**
        * The id of the guild associated with the stage channel
@@ -116,7 +116,7 @@ export class StageInstance extends Base {
    *  .then(stageInstance => console.log(stageInstance))
    *  .catch(console.error)
    */
-  async edit(options) {
+  async edit(options: any) {
     return this.guild.stageInstances.edit(this.channelId, options);
   }
 
@@ -146,7 +146,7 @@ export class StageInstance extends Base {
    *  .then(stageInstance => console.log(`Set the topic to: ${stageInstance.topic}`))
    *  .catch(console.error);
    */
-  async setTopic(topic) {
+  async setTopic(topic: any) {
     return this.guild.stageInstances.edit(this.channelId, { topic });
   }
 

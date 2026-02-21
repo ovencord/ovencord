@@ -43,7 +43,7 @@ export class Integration extends Base {
   public expireGracePeriod: any;
   public application: any;
   public scopes: any;
-  constructor(client, data, guild) {
+  constructor(client: any, data: any, guild: any) {
     super(client);
 
     /**
@@ -185,7 +185,7 @@ export class Integration extends Base {
     return roles.filter(role => role.tags?.integrationId === this.id);
   }
 
-  _patch(data) {
+  _patch(data: any) {
     if ('expire_behavior' in data) {
       /**
        * The behavior of expiring subscribers
@@ -241,7 +241,7 @@ export class Integration extends Base {
    * @returns {Promise<Integration>}
    * @param {string} [reason] Reason for deleting this integration
    */
-  async delete(reason) {
+  async delete(reason: any) {
     await this.client.rest.delete(Routes.guildIntegration(this.guild.id, this.id), { reason });
     return this;
   }

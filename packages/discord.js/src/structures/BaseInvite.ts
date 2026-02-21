@@ -15,7 +15,7 @@ export class BaseInvite extends Base {
   public _expiresTimestamp: any;
   public channelId: any;
   public approximateMemberCount: any;
-  constructor(client, data) {
+  constructor(client: any, data: any) {
     super(client);
 
     /**
@@ -35,7 +35,7 @@ export class BaseInvite extends Base {
     this._patch(data);
   }
 
-  _patch(data) {
+  _patch(data: any) {
     if ('inviter_id' in data) {
       /**
        * The id of the user that created this invite.

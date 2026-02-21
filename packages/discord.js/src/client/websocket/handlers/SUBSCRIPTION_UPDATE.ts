@@ -1,9 +1,8 @@
 import type { Client } from '../../Client.js';
-import type { GatewayDispatchPayload } from 'discord-api-types/v10';
-
+import type { GatewaySubscriptionUpdateDispatch } from 'discord-api-types/v10';
 import { Events  } from '../../../util/Events.js';
 
-export default (client: Client, { d: data }: GatewayDispatchPayload) => {
+export default (client: Client, { d: data }: GatewaySubscriptionUpdateDispatch) => {
   const oldSubscription = client.application.subscriptions.cache.get(data.id)?._clone() ?? null;
   const newSubscription = client.application.subscriptions._add(data);
 

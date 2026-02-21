@@ -1,12 +1,10 @@
 import type { Client } from '../../Client.js';
-import type { GatewayDispatchPayload } from 'discord-api-types/v10';
-
-
+import type { GatewayRateLimitedDispatch } from 'discord-api-types/v10';
 import { GatewayOpcodes  } from 'discord-api-types/v10';
 
 const emittedFor = new Set();
 
-export default (client: Client, { d: data }: GatewayDispatchPayload) => {
+export default (client: Client, { d: data }: GatewayRateLimitedDispatch) => {
   switch (data.opcode) {
     case GatewayOpcodes.RequestGuildMembers: {
       break;

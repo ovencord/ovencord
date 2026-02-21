@@ -17,7 +17,7 @@ export class DMChannel extends BaseChannel {
   public recipientId: any;
   public lastMessageId: any;
   public lastPinTimestamp: any;
-  constructor(client, data) {
+  constructor(client: any, data: any) {
     super(client, data);
 
     // Override the channel type so partials have a known type
@@ -31,7 +31,7 @@ export class DMChannel extends BaseChannel {
     this.messages = new DMMessageManager(this);
   }
 
-  _patch(data) {
+  _patch(data: any) {
     super._patch(data);
 
     if (data.recipients) {

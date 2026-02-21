@@ -11,7 +11,7 @@ export class UserSelectMenuInteraction extends MessageComponentInteraction {
   public users: any;
   public members: any;
   public values: any;
-  constructor(client, data) {
+  constructor(client: any, data: any) {
     super(client, data);
     const { resolved, values } = data.data;
 

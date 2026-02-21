@@ -9,7 +9,7 @@ export class GuildBan extends Base {
   public guild: any;
   public user: any;
   public reason: any;
-  constructor(client, data, guild) {
+  constructor(client: any, data: any, guild: any) {
     super(client);
 
     /**
@@ -22,7 +22,7 @@ export class GuildBan extends Base {
     this._patch(data);
   }
 
-  _patch(data) {
+  _patch(data: any) {
     if ('user' in data) {
       /**
        * The user this ban applies to

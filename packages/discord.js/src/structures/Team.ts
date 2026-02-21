@@ -14,12 +14,12 @@ export class Team extends Base {
   public icon: any;
   public ownerId: any;
   public members: any;
-  constructor(client, data) {
+  constructor(client: any, data: any) {
     super(client);
     this._patch(data);
   }
 
-  _patch(data) {
+  _patch(data: any) {
     /**
      * The Team's id
      *

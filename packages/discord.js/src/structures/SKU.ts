@@ -13,7 +13,7 @@ export class SKU extends Base {
   public name: any;
   public slug: any;
   public flags: any;
-  constructor(client, data) {
+  constructor(client: any, data: any) {
     super(client);
 
     /**

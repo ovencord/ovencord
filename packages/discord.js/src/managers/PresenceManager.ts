@@ -18,7 +18,7 @@ export class PresenceManager extends CachedManager {
    * @name PresenceManager#cache
    */
 
-  _add(data, cache) {
+  _add(data: any, cache: any) {
     return super._add(data, cache, { id: data.user.id });
   }
 
@@ -37,7 +37,7 @@ export class PresenceManager extends CachedManager {
    * @param {PresenceResolvable} presence The presence resolvable to resolve
    * @returns {?Presence}
    */
-  resolve(presence) {
+  resolve(presence: any) {
     const presenceResolvable = super.resolve(presence);
     if (presenceResolvable) return presenceResolvable;
     const userId = this.client.users.resolveId(presence);
@@ -50,7 +50,7 @@ export class PresenceManager extends CachedManager {
    * @param {PresenceResolvable} presence The presence resolvable to resolve
    * @returns {?Snowflake}
    */
-  resolveId(presence) {
+  resolveId(presence: any) {
     const presenceResolvable = super.resolveId(presence);
     if (presenceResolvable) return presenceResolvable;
     const userId = this.client.users.resolveId(presence);

@@ -24,7 +24,7 @@ export const Messages = {
   [ErrorCodes.ShardingReadyDisconnected]: id => `Shard ${id}'s Client disconnected before becoming ready.`,
   [ErrorCodes.ShardingReadyDied]: id => `Shard ${id}'s process exited before its Client became ready.`,
   [ErrorCodes.ShardingNoChildExists]: id => `Shard ${id} has no active process or worker.`,
-  [ErrorCodes.ShardingShardMiscalculation]: (shard, guild, count) =>
+  [ErrorCodes.ShardingShardMiscalculation]: (shard: any, guild: any, count: any) =>
     `Calculated invalid shard ${shard} for guild ${guild} with ${count} shards.`,
 
   [ErrorCodes.ColorRange]: 'Color must be within the range 0 - 16777215 (0xFFFFFF).',
@@ -113,23 +113,23 @@ export const Messages = {
   [ErrorCodes.InteractionNotReplied]: 'The reply to this interaction has not been sent or deferred.',
 
   [ErrorCodes.CommandInteractionOptionNotFound]: name => `Required option "${name}" not found.`,
-  [ErrorCodes.CommandInteractionOptionType]: (name, type, expected) =>
+  [ErrorCodes.CommandInteractionOptionType]: (name: any, type: any, expected: any) =>
     `Option "${name}" is of type: ${type}; expected ${expected}.`,
-  [ErrorCodes.CommandInteractionOptionEmpty]: (name, type) =>
+  [ErrorCodes.CommandInteractionOptionEmpty]: (name: any, type: any) =>
     `Required option "${name}" is of type: ${type}; expected a non-empty value.`,
   [ErrorCodes.CommandInteractionOptionNoSubcommand]: 'No subcommand specified for interaction.',
   [ErrorCodes.CommandInteractionOptionNoSubcommandGroup]: 'No subcommand group specified for interaction.',
-  [ErrorCodes.CommandInteractionOptionInvalidChannelType]: (name, type, expected) =>
+  [ErrorCodes.CommandInteractionOptionInvalidChannelType]: (name: any, type: any, expected: any) =>
     `The type of channel of the option "${name}" is: ${type}; expected ${expected}.`,
   [ErrorCodes.AutocompleteInteractionOptionNoFocusedOption]: 'No focused option for autocomplete interaction.',
 
   [ErrorCodes.ModalSubmitInteractionComponentNotFound]: customId =>
     `Required component with custom id "${customId}" not found.`,
-  [ErrorCodes.ModalSubmitInteractionComponentType]: (customId, type, expected) =>
+  [ErrorCodes.ModalSubmitInteractionComponentType]: (customId: any, type: any, expected: any) =>
     `Component with custom id "${customId}" is of type: ${type}; expected ${expected}.`,
-  [ErrorCodes.ModalSubmitInteractionComponentEmpty]: (customId, type) =>
+  [ErrorCodes.ModalSubmitInteractionComponentEmpty]: (customId: any, type: any) =>
     `Required component with custom id "${customId}" is of type: ${type}; expected a non-empty value.`,
-  [ErrorCodes.ModalSubmitInteractionComponentInvalidChannelType]: (customId, type, expected) =>
+  [ErrorCodes.ModalSubmitInteractionComponentInvalidChannelType]: (customId: any, type: any, expected: any) =>
     `The type of channel of the component with custom id "${customId}" is: ${type}; expected ${expected}.`,
 
   [ErrorCodes.InvalidMissingScopes]: 'At least one valid scope must be provided for the invite',

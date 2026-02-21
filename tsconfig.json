@@ -22,7 +22,7 @@
     /* --- RELAXING (DISCORD.JS COMPATIBILITY) --- */
     "strict": false,
     "skipLibCheck": true,
-    "noImplicitAny": false,
+    "noImplicitAny": true,
     "esModuleInterop": true,
     "allowSyntheticDefaultImports": true,
     "forceConsistentCasingInFileNames": true,

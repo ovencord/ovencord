@@ -29,7 +29,7 @@ const getGuildTemplate = lazy(() => require('../structures/GuildTemplate.js').Gu
  * @param {RegExp} regex The RegExp used to extract the code
  * @returns {string}
  */
-export function resolveCode(data, regex) {
+export function resolveCode(data: any, regex: any) {
   return regex.exec(data)?.[1] ?? data;
 }
 
@@ -39,7 +39,7 @@ export function resolveCode(data, regex) {
  * @param {InviteResolvable} data The invite resolvable to resolve
  * @returns {string}
  */
-export function resolveInviteCode(data) {
+export function resolveInviteCode(data: any) {
   return resolveCode(data, BaseInvite.InvitesPattern);
 }
 
@@ -49,7 +49,7 @@ export function resolveInviteCode(data) {
  * @param {GuildTemplateResolvable} data The template resolvable to resolve
  * @returns {string}
  */
-export function resolveGuildTemplateCode(data) {
+export function resolveGuildTemplateCode(data: any) {
   return resolveCode(data, getGuildTemplate().GuildTemplatesPattern);
 }
 
@@ -81,7 +81,7 @@ export function resolveGuildTemplateCode(data) {
  * @param {BufferResolvable|Stream} resource The buffer or stream resolvable to resolve
  * @returns {Promise<ResolvedFile>}
  */
-export async function resolveFile(resource) {
+export async function resolveFile(resource: any) {
   if (Buffer.isBuffer(resource)) return { data: resource };
 
   // Uint8Array (non-Buffer) — from image generators, canvas, etc.
@@ -144,7 +144,7 @@ export async function resolveFile(resource) {
  * @param {string} [contentType='image/jpg'] The content type of the data
  * @returns {string}
  */
-export function resolveBase64(data, contentType = 'image/jpg') {
+export function resolveBase64(data: any, contentType = 'image/jpg') {
   if (Buffer.isBuffer(data)) return `data:${contentType};base64,${data.toString('base64')}`;
   return data;
 }
@@ -155,7 +155,7 @@ export function resolveBase64(data, contentType = 'image/jpg') {
  * @param {BufferResolvable|Base64Resolvable} image The image to be resolved
  * @returns {Promise<?string>}
  */
-export async function resolveImage(image) {
+export async function resolveImage(image: any) {
   if (!image) return null;
   if (typeof image === 'string' && image.startsWith('data:')) {
     return image;

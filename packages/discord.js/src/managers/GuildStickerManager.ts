@@ -30,7 +30,7 @@ export class GuildStickerManager extends CachedManager {
    * @name GuildStickerManager#cache
    */
 
-  _add(data, cache) {
+  _add(data: any, cache: any) {
     return super._add(data, cache, { extras: [this.guild] });
   }
 
@@ -111,7 +111,7 @@ export class GuildStickerManager extends CachedManager {
    * @param {GuildStickerEditOptions} [options={}] The new data for the sticker
    * @returns {Promise<Sticker>}
    */
-  async edit(sticker, options: any = {}) {
+  async edit(sticker, options = {}: any) {
     const stickerId = this.resolveId(sticker);
     if (!stickerId) throw new DiscordjsTypeError(ErrorCodes.InvalidType, 'sticker', 'StickerResolvable');
 
@@ -137,7 +137,7 @@ export class GuildStickerManager extends CachedManager {
    * @param {string} [reason] Reason for deleting this sticker
    * @returns {Promise<void>}
    */
-  async delete(sticker, reason) {
+  async delete(sticker: any, reason: any) {
     const resolvedStickerId = this.resolveId(sticker);
     if (!resolvedStickerId) throw new DiscordjsTypeError(ErrorCodes.InvalidType, 'sticker', 'StickerResolvable');
 
@@ -161,7 +161,7 @@ export class GuildStickerManager extends CachedManager {
    *   .then(sticker => console.log(`The sticker name is: ${sticker.name}`))
    *   .catch(console.error);
    */
-  async fetch(id, { cache = true, force = false } = {}) {
+  async fetch(id, { cache = true, force = false } = {}: any) {
     if (id) {
       if (!force) {
         const existing = this.cache.get(id);
@@ -182,7 +182,7 @@ export class GuildStickerManager extends CachedManager {
    * @param {StickerResolvable} sticker The sticker to fetch the user for
    * @returns {Promise<?User>}
    */
-  async fetchUser(sticker) {
+  async fetchUser(sticker: any) {
     const resolvedSticker = this.resolve(sticker);
     if (!resolvedSticker) throw new DiscordjsTypeError(ErrorCodes.InvalidType, 'sticker', 'StickerResolvable');
     const data = await this.client.rest.get(Routes.guildSticker(this.guild.id, resolvedSticker.id));

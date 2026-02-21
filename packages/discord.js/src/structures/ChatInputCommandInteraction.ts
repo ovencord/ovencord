@@ -9,7 +9,7 @@ import { CommandInteractionOptionResolver  } from './CommandInteractionOptionRes
  */
 export class ChatInputCommandInteraction extends CommandInteraction {
   public options: any;
-  constructor(client, data) {
+  constructor(client: any, data: any) {
     super(client, data);
 
     /**

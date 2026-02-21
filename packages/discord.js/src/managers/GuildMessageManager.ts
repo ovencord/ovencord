@@ -21,7 +21,7 @@ export class GuildMessageManager extends MessageManager {
    * @param {MessageResolvable} message The message to publish
    * @returns {Promise<Message>}
    */
-  async crosspost(message) {
+  async crosspost(message: any) {
     const messageId = this.resolveId(message);
     if (!messageId) throw new DiscordjsTypeError(ErrorCodes.InvalidType, 'message', 'MessageResolvable');
 

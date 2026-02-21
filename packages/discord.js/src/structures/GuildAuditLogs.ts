@@ -15,7 +15,7 @@ export class GuildAuditLogs {
   public applicationCommands: any;
   public autoModerationRules: any;
   public entries: any;
-  constructor(guild, data) {
+  constructor(guild: any, data: any) {
     if (data.users) for (const user of data.users) guild.client.users._add(user);
     if (data.threads) for (const thread of data.threads) guild.client.channels._add(thread, guild);
     /**
@@ -51,7 +51,7 @@ export class GuildAuditLogs {
      * @private
      */
     this.guildScheduledEvents = data.guild_scheduled_events.reduce(
-      (guildScheduledEvents, guildScheduledEvent) =>
+      (guildScheduledEvents: any, guildScheduledEvent: any) =>
         guildScheduledEvents.set(guildScheduledEvent.id, guild.scheduledEvents._add(guildScheduledEvent)),
       new Collection(),
     );
@@ -76,7 +76,7 @@ export class GuildAuditLogs {
      * @private
      */
     this.autoModerationRules = data.auto_moderation_rules.reduce(
-      (autoModerationRules, autoModerationRule) =>
+      (autoModerationRules: any, autoModerationRule: any) =>
         autoModerationRules.set(autoModerationRule.id, guild.autoModerationRules._add(autoModerationRule)),
       new Collection(),
     );

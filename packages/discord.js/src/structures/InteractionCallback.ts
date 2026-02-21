@@ -10,7 +10,7 @@ export class InteractionCallback {
   public responseMessageId: any;
   public responseMessageLoading: any;
   public responseMessageEphemeral: any;
-  constructor(client, data) {
+  constructor(client: any, data: any) {
     /**
      * The client that instantiated this.
      *

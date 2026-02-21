@@ -31,7 +31,7 @@ export class BaseInteraction extends Base {
   public attachmentSizeLimit: any;
   public commandType: any;
   public componentType: any;
-  constructor(client, data) {
+  constructor(client: any, data: any) {
     super(client);
 
     /**
@@ -135,7 +135,7 @@ export class BaseInteraction extends Base {
      * @type {Collection<Snowflake, Entitlement>}
      */
     this.entitlements = data.entitlements.reduce(
-      (coll, entitlement) => coll.set(entitlement.id, this.client.application.entitlements._add(entitlement)),
+      (coll: any, entitlement: any) => coll.set(entitlement.id, this.client.application.entitlements._add(entitlement)),
       new Collection(),
     );
 

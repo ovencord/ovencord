@@ -123,7 +123,7 @@ export class Options extends null {
    *  });
    */
   static cacheWithLimits(settings = {}) {
-    return ({ managerType, manager }) => {
+    return ({ managerType, manager }: any) => {
       const setting = settings[manager.name] ?? settings[managerType.name];
       /* eslint-disable-next-line eqeqeq */
       if (setting == null) {

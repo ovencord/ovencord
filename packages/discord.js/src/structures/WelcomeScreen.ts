@@ -12,7 +12,7 @@ export class WelcomeScreen extends Base {
   public guild: any;
   public description: any;
   public welcomeChannels: any;
-  constructor(guild, data) {
+  constructor(guild: any, data: any) {
     super(guild.client);
 
     /**

@@ -61,7 +61,7 @@ export class GuildManager extends CachedManager {
    * @param {GuildResolvable} guild The guild resolvable to identify
    * @returns {?Guild}
    */
-  resolve(guild) {
+  resolve(guild: any) {
     if (
       guild instanceof GuildChannel ||
       guild instanceof GuildMember ||
@@ -84,7 +84,7 @@ export class GuildManager extends CachedManager {
    * @param {GuildResolvable} guild The guild resolvable to identify
    * @returns {?Snowflake}
    */
-  resolveId(guild) {
+  resolveId(guild: any) {
     if (
       guild instanceof GuildChannel ||
       guild instanceof GuildMember ||
@@ -121,7 +121,7 @@ export class GuildManager extends CachedManager {
    * @param {GuildResolvable|FetchGuildOptions|FetchGuildsOptions} [options] The guild's id or options
    * @returns {Promise<Guild|Collection<Snowflake, OAuth2Guild>>}
    */
-  async fetch(options: any = {}) {
+  async fetch(options = {}: any) {
     const id = this.resolveId(options) ?? this.resolveId(options.guild);
 
     if (id) {
@@ -138,7 +138,7 @@ export class GuildManager extends CachedManager {
     }
 
     const data = await this.client.rest.get(Routes.userGuilds(), { query: makeURLSearchParams(options) });
-    return data.reduce((coll, guild) => coll.set(guild.id, new OAuth2Guild(this.client, guild)), new Collection());
+    return data.reduce((coll: any, guild: any) => coll.set(guild.id, new OAuth2Guild(this.client, guild)), new Collection());
   }
 
   /**
@@ -179,7 +179,7 @@ export class GuildManager extends CachedManager {
 
       const fetchedSoundboardSounds = new Collection();
 
-      const handler = (soundboardSounds, guild) => {
+      const handler = (soundboardSounds: any, guild: any) => {
         // eslint-disable-next-line no-use-before-define
         timeout.refresh();
 
@@ -225,7 +225,7 @@ export class GuildManager extends CachedManager {
    * @param {IncidentActionsEditOptions} incidentActions The incident actions to set
    * @returns {Promise<IncidentActions>}
    */
-  async setIncidentActions(guild, { invitesDisabledUntil, dmsDisabledUntil }) {
+  async setIncidentActions(guild, { invitesDisabledUntil, dmsDisabledUntil }: any) {
     const guildId = this.resolveId(guild);
 
     const data = await this.client.rest.put(Routes.guildIncidentActions(guildId), {
@@ -252,7 +252,7 @@ export class GuildManager extends CachedManager {
    * @param {GuildWidgetStyle} [style] The style for the widget image
    * @returns {string}
    */
-  widgetImageURL(guild, style) {
+  widgetImageURL(guild: any, style: any) {
     const urlSearchParams = String(makeURLSearchParams({ style }));
 
     return `${RouteBases.api}${Routes.guildWidgetImage(this.resolveId(guild))}${

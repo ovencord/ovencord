@@ -53,7 +53,7 @@ export class GuildEmojiManager extends CachedManager {
    * @param {EmojiResolvable} emoji The Emoji resolvable to identify
    * @returns {?GuildEmoji}
    */
-  resolve(emoji) {
+  resolve(emoji: any) {
     if (emoji instanceof ReactionEmoji) return super.cache.get(emoji.id) ?? null;
     if (emoji instanceof ApplicationEmoji) return super.cache.get(emoji.id) ?? null;
     return super.resolve(emoji);
@@ -65,7 +65,7 @@ export class GuildEmojiManager extends CachedManager {
    * @param {EmojiResolvable} emoji The Emoji resolvable to identify
    * @returns {?Snowflake}
    */
-  resolveId(emoji) {
+  resolveId(emoji: any) {
     if (emoji instanceof ReactionEmoji) return emoji.id;
     if (emoji instanceof ApplicationEmoji) return emoji.id;
     return super.resolveId(emoji);
@@ -86,7 +86,7 @@ export class GuildEmojiManager extends CachedManager {
    * @param {EmojiIdentifierResolvable} emoji The emoji resolvable to resolve
    * @returns {?string}
    */
-  resolveIdentifier(emoji) {
+  resolveIdentifier(emoji: any) {
     const emojiResolvable = this.resolve(emoji);
     if (emojiResolvable) return emojiResolvable.identifier;
     if (emoji instanceof ReactionEmoji) return emoji.identifier;
@@ -131,11 +131,11 @@ export class GuildEmojiManager extends CachedManager {
    *   .then(emoji => console.log(`Created new emoji with name ${emoji.name}!`))
    *   .catch(console.error);
    */
-  async create({ attachment, name, roles, reason }) {
+  async create({ attachment, name, roles, reason }: any) {
     const image = await resolveImage(attachment);
     if (!image) throw new DiscordjsTypeError(ErrorCodes.ReqResourceType);
 
-    const body: any = { image, name };
+    const body = { image, name };
     if (roles) {
       if (!Array.isArray(roles) && !(roles instanceof Collection)) {
         throw new DiscordjsTypeError(
@@ -178,7 +178,7 @@ export class GuildEmojiManager extends CachedManager {
    *   .then(emoji => console.log(`The emoji name is: ${emoji.name}`))
    *   .catch(console.error);
    */
-  async fetch(id, { cache = true, force = false } = {}) {
+  async fetch(id, { cache = true, force = false } = {}: any) {
     if (id) {
       if (!force) {
         const existing = this.cache.get(id);
@@ -202,7 +202,7 @@ export class GuildEmojiManager extends CachedManager {
    * @param {string} [reason] Reason for deleting the emoji
    * @returns {Promise<void>}
    */
-  async delete(emoji, reason) {
+  async delete(emoji: any, reason: any) {
     const id = this.resolveId(emoji);
     if (!id) throw new DiscordjsTypeError(ErrorCodes.InvalidType, 'emoji', 'EmojiResolvable', true);
     await this.client.rest.delete(Routes.guildEmoji(this.guild.id, id), { reason });
@@ -215,7 +215,7 @@ export class GuildEmojiManager extends CachedManager {
    * @param {GuildEmojiEditOptions} options The options to provide
    * @returns {Promise<GuildEmoji>}
    */
-  async edit(emoji, options) {
+  async edit(emoji: any, options: any) {
     const id = this.resolveId(emoji);
     if (!id) throw new DiscordjsTypeError(ErrorCodes.InvalidType, 'emoji', 'EmojiResolvable', true);
     const roles = options.roles?.map(role => this.guild.roles.resolveId(role));
@@ -242,7 +242,7 @@ export class GuildEmojiManager extends CachedManager {
    * @param {EmojiResolvable} emoji The emoji to fetch the author of
    * @returns {Promise<User>}
    */
-  async fetchAuthor(emoji) {
+  async fetchAuthor(emoji: any) {
     const resolvedEmoji = this.resolve(emoji);
     if (!resolvedEmoji) throw new DiscordjsTypeError(ErrorCodes.InvalidType, 'emoji', 'EmojiResolvable', true);
     if (resolvedEmoji.managed) {

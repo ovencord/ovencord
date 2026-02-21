@@ -15,7 +15,7 @@ export class PermissionOverwrites extends Base {
   public deny: any;
   public allow: any;
   public channel: any;
-  constructor(client, data, channel) {
+  constructor(client: any, data: any, channel: any) {
     super(client);
 
     /**
@@ -30,7 +30,7 @@ export class PermissionOverwrites extends Base {
     this._patch(data);
   }
 
-  _patch(data) {
+  _patch(data: any) {
     /**
      * The overwrite's id, either a {@link User} or a {@link Role} id
      *
@@ -80,7 +80,7 @@ export class PermissionOverwrites extends Base {
    *   .then(channel => console.log(channel.permissionOverwrites.get(message.author.id)))
    *   .catch(console.error);
    */
-  async edit(options, reason) {
+  async edit(options: any, reason: any) {
     await this.channel.permissionOverwrites.upsert(this.id, options, { type: this.type, reason }, this);
     return this;
   }
@@ -91,7 +91,7 @@ export class PermissionOverwrites extends Base {
    * @param {string} [reason] Reason for deleting this overwrite
    * @returns {Promise<PermissionOverwrites>}
    */
-  async delete(reason) {
+  async delete(reason: any) {
     await this.channel.permissionOverwrites.delete(this.id, reason);
     return this;
   }
@@ -131,7 +131,7 @@ export class PermissionOverwrites extends Base {
    * @param {ResolvedOverwriteOptions} initialPermissions The initial permissions
    * @returns {ResolvedOverwriteOptions}
    */
-  static resolveOverwriteOptions(options: any, initialPermissions: any = {}) {
+  static resolveOverwriteOptions(options, initialPermissions = {}: any) {
     const allow = new PermissionsBitField(initialPermissions.allow);
     const deny = new PermissionsBitField(initialPermissions.deny);
 
@@ -186,7 +186,7 @@ export class PermissionOverwrites extends Base {
    * @param {Guild} [guild] The guild to resolve from
    * @returns {RawOverwriteData}
    */
-  static resolve(overwrite, guild) {
+  static resolve(overwrite: any, guild: any) {
     if (overwrite instanceof this) return overwrite.toJSON();
 
     const id = guild.roles.resolveId(overwrite.id) ?? guild.client.users.resolveId(overwrite.id);

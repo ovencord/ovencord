@@ -31,7 +31,7 @@ export class GuildChannel extends BaseChannel {
   public type: any;
   public id: any;
   public topic: any;
-  constructor(guild, data, client, immediatePatch = true) {
+  constructor(guild: any, data: any, client: any, immediatePatch = true) {
     super(client, data, false);
 
     /**
@@ -59,7 +59,7 @@ export class GuildChannel extends BaseChannel {
     if (data && immediatePatch) this._patch(data);
   }
 
-  _patch(data) {
+  _patch(data: any) {
     super._patch(data);
 
     if ('name' in data) {
@@ -193,14 +193,14 @@ export class GuildChannel extends BaseChannel {
    * will return all permissions
    * @returns {?Readonly<PermissionsBitField>}
    */
-  permissionsFor(memberOrRole, checkAdmin = true) {
+  permissionsFor(memberOrRole: any, checkAdmin = true) {
     const member = this.guild.members.resolve(memberOrRole);
     if (member) return this.memberPermissions(member, checkAdmin);
     const role = this.guild.roles.resolve(memberOrRole);
     return role && this.rolePermissions(role, checkAdmin);
   }
 
-  overwritesFor(member, verified = false, roles = null) {
+  overwritesFor(member: any, verified = false, roles = null) {
     const resolvedMember = verified ? member : this.guild.members.resolve(member);
     if (!resolvedMember) return [];
 
@@ -235,7 +235,7 @@ export class GuildChannel extends BaseChannel {
    * @returns {Readonly<PermissionsBitField>}
    * @private
    */
-  memberPermissions(member, checkAdmin) {
+  memberPermissions(member: any, checkAdmin: any) {
     if (checkAdmin && member.id === this.guild.ownerId) {
       return new PermissionsBitField(PermissionsBitField.All).freeze();
     }
@@ -268,7 +268,7 @@ export class GuildChannel extends BaseChannel {
    * @returns {Readonly<PermissionsBitField>}
    * @private
    */
-  rolePermissions(role, checkAdmin) {
+  rolePermissions(role: any, checkAdmin: any) {
     if (checkAdmin && role.permissions.has(PermissionFlagsBits.Administrator)) {
       return new PermissionsBitField(PermissionsBitField.All).freeze();
     }
@@ -321,7 +321,7 @@ export class GuildChannel extends BaseChannel {
    *   .then(console.log)
    *   .catch(console.error);
    */
-  async edit(options) {
+  async edit(options: any) {
     return this.guild.channels.edit(this, options);
   }
 
@@ -337,7 +337,7 @@ export class GuildChannel extends BaseChannel {
    *   .then(newChannel => console.log(`Channel's new name is ${newChannel.name}`))
    *   .catch(console.error);
    */
-  async setName(name, reason) {
+  async setName(name: any, reason: any) {
     return this.edit({ name, reason });
   }
 
@@ -366,7 +366,7 @@ export class GuildChannel extends BaseChannel {
    *   .then(channel => console.log(`Moved ${message.channel.name} to ${channel.parent.name}`))
    *   .catch(console.error);
    */
-  async setParent(channel, { lockPermissions = false, reason }: any = {}) {
+  async setParent(channel, { lockPermissions = false, reason }: any = {}: any) {
     return this.edit({
       parent: channel ?? null,
       lockPermissions,
@@ -394,7 +394,7 @@ export class GuildChannel extends BaseChannel {
    *   .then(newChannel => console.log(`Channel's new position is ${newChannel.position}`))
    *   .catch(console.error);
    */
-  async setPosition(position, options = {}) {
+  async setPosition(position, options = {}: any) {
     return this.guild.channels.setPosition(this, position, options);
   }
 
@@ -411,7 +411,7 @@ export class GuildChannel extends BaseChannel {
    * @param {GuildChannelCloneOptions} [options] The options for cloning this channel
    * @returns {Promise<GuildChannel>}
    */
-  async clone(options: any = {}) {
+  async clone(options = {}: any) {
     return this.guild.channels.create({
       name: options.name ?? this.name,
       permissionOverwrites: this.permissionOverwrites.cache,
@@ -435,7 +435,7 @@ export class GuildChannel extends BaseChannel {
    * @param {GuildChannel} channel Channel to compare with
    * @returns {boolean}
    */
-  equals(channel) {
+  equals(channel: any) {
     let equal =
       channel &&
       this.id === channel.id &&

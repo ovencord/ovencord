@@ -50,7 +50,7 @@ export class ThreadOnlyChannel extends GuildChannel {
   public nsfw: any;
   public topic: any;
   public defaultSortOrder: any;
-  constructor(guild, data, client) {
+  constructor(guild: any, data: any, client: any) {
     super(guild, data, client, false);
 
     /**
@@ -63,7 +63,7 @@ export class ThreadOnlyChannel extends GuildChannel {
     this._patch(data);
   }
 
-  _patch(data) {
+  _patch(data: any) {
     super._patch(data);
     if ('available_tags' in data) {
       /**
@@ -161,7 +161,7 @@ export class ThreadOnlyChannel extends GuildChannel {
    * @param {string} [reason] Reason for changing the available tags
    * @returns {Promise<this>}
    */
-  async setAvailableTags(availableTags, reason) {
+  async setAvailableTags(availableTags: any, reason: any) {
     return this.edit({ availableTags, reason });
   }
 
@@ -172,7 +172,7 @@ export class ThreadOnlyChannel extends GuildChannel {
    * @param {string} [reason] Reason for changing the default reaction emoji
    * @returns {Promise<this>}
    */
-  async setDefaultReactionEmoji(defaultReactionEmoji, reason) {
+  async setDefaultReactionEmoji(defaultReactionEmoji: any, reason: any) {
     return this.edit({ defaultReactionEmoji, reason });
   }
 
@@ -183,7 +183,7 @@ export class ThreadOnlyChannel extends GuildChannel {
    * @param {string} [reason] Reason for changing the default rate limit
    * @returns {Promise<this>}
    */
-  async setDefaultThreadRateLimitPerUser(defaultThreadRateLimitPerUser, reason) {
+  async setDefaultThreadRateLimitPerUser(defaultThreadRateLimitPerUser: any, reason: any) {
     return this.edit({ defaultThreadRateLimitPerUser, reason });
   }
 
@@ -198,7 +198,7 @@ export class ThreadOnlyChannel extends GuildChannel {
    *   .then(invite => console.log(`Created an invite with a code of ${invite.code}`))
    *   .catch(console.error);
    */
-  async createInvite(options) {
+  async createInvite(options: any) {
     return this.guild.invites.create(this.id, options);
   }
 
@@ -209,7 +209,7 @@ export class ThreadOnlyChannel extends GuildChannel {
    * @param {boolean} [cache=true] Whether to cache the fetched invites
    * @returns {Promise<Collection<string, Invite>>}
    */
-  async fetchInvites(cache) {
+  async fetchInvites(cache: any) {
     return this.guild.invites.fetch({ channelId: this.id, cache });
   }
 
@@ -220,7 +220,7 @@ export class ThreadOnlyChannel extends GuildChannel {
    * @param {string} [reason] Reason for changing the channel's default auto archive duration
    * @returns {Promise<this>}
    */
-  async setDefaultAutoArchiveDuration(defaultAutoArchiveDuration, reason) {
+  async setDefaultAutoArchiveDuration(defaultAutoArchiveDuration: any, reason: any) {
     return this.edit({ defaultAutoArchiveDuration, reason });
   }
 
@@ -236,7 +236,7 @@ export class ThreadOnlyChannel extends GuildChannel {
    *   .then(newChannel => console.log(`Channel's new topic is ${newChannel.topic}`))
    *   .catch(console.error);
    */
-  async setTopic(topic, reason) {
+  async setTopic(topic: any, reason: any) {
     return this.edit({ topic, reason });
   }
 
@@ -247,7 +247,7 @@ export class ThreadOnlyChannel extends GuildChannel {
    * @param {string} [reason] Reason for changing the default sort order
    * @returns {Promise<this>}
    */
-  async setDefaultSortOrder(defaultSortOrder, reason) {
+  async setDefaultSortOrder(defaultSortOrder: any, reason: any) {
     return this.edit({ defaultSortOrder, reason });
   }
 

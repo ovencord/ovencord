@@ -18,7 +18,7 @@ export class MessageReaction {
   public countDetails: any;
   public count: any;
   public client: any;
-  constructor(client, data, message) {
+  constructor(client: any, data: any, message: any) {
     /**
      * The client that instantiated this message reaction
      *
@@ -63,7 +63,7 @@ export class MessageReaction {
     this._patch(data);
   }
 
-  _patch(data) {
+  _patch(data: any) {
     if (data.burst_colors) {
       /**
        * Hexadecimal colors used for this super reaction
@@ -183,7 +183,7 @@ export class MessageReaction {
     return this._emoji.id ?? this._emoji.name;
   }
 
-  _add(user, burst) {
+  _add(user: any, burst: any) {
     if (this.partial) return;
     this.users.cache.set(user.id, user);
     if (!this.me || user.id !== this.message.client.user.id || this.count === 0) {
@@ -198,7 +198,7 @@ export class MessageReaction {
     }
   }
 
-  _remove(user, burst) {
+  _remove(user: any, burst: any) {
     if (this.partial) return;
     this.users.cache.delete(user.id);
     if (!this.me || user.id !== this.message.client.user.id) {

@@ -23,7 +23,7 @@ export class MessageCollector extends Collector {
    * @param {MessageCollectorOptions} options The options to be applied to this collector
    * @emits MessageCollector#message
    */
-  constructor(channel, options = {}) {
+  constructor(channel, options = {}: any) {
     super(channel.client, options);
 
     /**
@@ -74,7 +74,7 @@ export class MessageCollector extends Collector {
    * @returns {?Snowflake}
    * @private
    */
-  collect(message) {
+  collect(message: any) {
     /**
      * Emitted whenever a message is collected.
      *
@@ -92,7 +92,7 @@ export class MessageCollector extends Collector {
    * @param {Message} message The message that could be disposed of
    * @returns {?Snowflake}
    */
-  dispose(message) {
+  dispose(message: any) {
     /**
      * Emitted whenever a message is disposed of.
      *
@@ -121,7 +121,7 @@ export class MessageCollector extends Collector {
    * @param {GuildChannel} channel The channel that was deleted
    * @returns {void}
    */
-  _handleChannelDeletion(channel) {
+  _handleChannelDeletion(channel: any) {
     if (channel.id === this.channel.id || channel.id === this.channel.parentId) {
       this.stop('channelDelete');
     }
@@ -134,7 +134,7 @@ export class MessageCollector extends Collector {
    * @param {ThreadChannel} thread The thread that was deleted
    * @returns {void}
    */
-  _handleThreadDeletion(thread) {
+  _handleThreadDeletion(thread: any) {
     if (thread.id === this.channel.id) {
       this.stop('threadDelete');
     }
@@ -147,7 +147,7 @@ export class MessageCollector extends Collector {
    * @param {Guild} guild The guild that was deleted
    * @returns {void}
    */
-  _handleGuildDeletion(guild) {
+  _handleGuildDeletion(guild: any) {
     if (guild.id === this.channel.guild?.id) {
       this.stop('guildDelete');
     }

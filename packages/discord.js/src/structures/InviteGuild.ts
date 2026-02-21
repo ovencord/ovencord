@@ -8,7 +8,7 @@ import { WelcomeScreen  } from './WelcomeScreen.js';
  */
 export class InviteGuild extends AnonymousGuild {
   public welcomeScreen: any;
-  constructor(client, data) {
+  constructor(client: any, data: any) {
     super(client, data);
 
     /**

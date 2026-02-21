@@ -9,7 +9,7 @@ export class VoiceRegion {
   public deprecated: any;
   public optimal: any;
   public custom: any;
-  constructor(data) {
+  constructor(data: any) {
     /**
      * The region's id
      *

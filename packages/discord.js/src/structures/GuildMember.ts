@@ -24,7 +24,7 @@ export class GuildMember extends Base {
   public _roles: any;
   public flags: any;
   public avatarDecorationData: any;
-  constructor(client, data, guild) {
+  constructor(client: any, data: any, guild: any) {
     super(client);
 
     /**
@@ -74,7 +74,7 @@ export class GuildMember extends Base {
     this._patch(data);
   }
 
-  _patch(data) {
+  _patch(data: any) {
     if ('user' in data) {
       /**
        * The user that this guild member instance represents
@@ -234,7 +234,7 @@ export class GuildMember extends Base {
    * @param {ImageURLOptions} [options={}] Options for the image URL
    * @returns {string}
    */
-  displayAvatarURL(options) {
+  displayAvatarURL(options: any) {
     return this.avatarURL(options) ?? this.user.displayAvatarURL(options);
   }
 
@@ -245,7 +245,7 @@ export class GuildMember extends Base {
    * @param {ImageURLOptions} [options={}] Options for the image URL
    * @returns {?string}
    */
-  displayBannerURL(options) {
+  displayBannerURL(options: any) {
     return this.bannerURL(options) ?? this.user.bannerURL(options);
   }
 
@@ -426,7 +426,7 @@ export class GuildMember extends Base {
    * @param {GuildChannelResolvable} channel The guild channel to use as context
    * @returns {Readonly<PermissionsBitField>}
    */
-  permissionsIn(channel) {
+  permissionsIn(channel: any) {
     const resolvedChannel = this.guild.channels.resolve(channel);
     if (!resolvedChannel) throw new DiscordjsError(ErrorCodes.GuildChannelResolve);
     return resolvedChannel.permissionsFor(this);
@@ -438,7 +438,7 @@ export class GuildMember extends Base {
    * @param {GuildMemberEditOptions} options The options to provide
    * @returns {Promise<GuildMember>}
    */
-  async edit(options) {
+  async edit(options: any) {
     return this.guild.members.edit(this, options);
   }
 
@@ -449,7 +449,7 @@ export class GuildMember extends Base {
    * @param {string} [reason] Reason for setting the flags
    * @returns {Promise<GuildMember>}
    */
-  async setFlags(flags, reason) {
+  async setFlags(flags: any, reason: any) {
     return this.edit({ flags, reason });
   }
 
@@ -470,7 +470,7 @@ export class GuildMember extends Base {
    *   .then(member => console.log(`Removed nickname for ${member.user.username}`))
    *   .catch(console.error);
    */
-  async setNickname(nick, reason) {
+  async setNickname(nick: any, reason: any) {
     return this.user.id === this.client.user.id
       ? this.guild.members.editMe({ nick, reason })
       : this.edit({ nick, reason });
@@ -501,7 +501,7 @@ export class GuildMember extends Base {
    * @param {string} [reason] Reason for kicking user
    * @returns {Promise<void>}
    */
-  async kick(reason) {
+  async kick(reason: any) {
     await this.guild.members.kick(this, reason);
   }
 
@@ -514,7 +514,7 @@ export class GuildMember extends Base {
    * // Ban a guild member, deleting a week's worth of messages
    * await guildMember.ban({ deleteMessageSeconds: 60 * 60 * 24 * 7, reason: 'They deserved it' });
    */
-  async ban(options) {
+  async ban(options: any) {
     await this.guild.bans.create(this, options);
   }
 
@@ -536,7 +536,7 @@ export class GuildMember extends Base {
    *   .then(member => console.log(`Removed timeout for ${member.displayName}`))
    *   .catch(console.error);
    */
-  async disableCommunicationUntil(communicationDisabledUntil, reason) {
+  async disableCommunicationUntil(communicationDisabledUntil: any, reason: any) {
     return this.edit({ communicationDisabledUntil, reason });
   }
 
@@ -553,7 +553,7 @@ export class GuildMember extends Base {
    *   .then(console.log)
    *   .catch(console.error);
    */
-  async timeout(timeout, reason) {
+  async timeout(timeout: any, reason: any) {
     return this.disableCommunicationUntil(timeout && Date.now() + timeout, reason);
   }
 
@@ -578,7 +578,7 @@ export class GuildMember extends Base {
    *   .then(message => console.log(`Sent message: ${message.content} to ${guildMember.displayName}`))
    *   .catch(console.error);
    */
-  async send(options) {
+  async send(options: any) {
     const dmChannel = await this.createDM();
 
     return this.client.channels.createMessage(dmChannel, options);
@@ -594,7 +594,7 @@ export class GuildMember extends Base {
    */
   equals(member: any) {
     const isMember = member && member instanceof this.constructor;
-    const m: any = member;
+    const m = member;
     return (
       isMember &&
       this.id === m.id &&
@@ -609,7 +609,7 @@ export class GuildMember extends Base {
       this.flags.bitfield === m.flags.bitfield &&
       (this._roles === m._roles ||
         (this._roles.length === m._roles.length &&
-          this._roles.every((role: any, index: any) => role === m._roles[index]))) &&
+          this._roles.every((role, index) => role === m._roles[index]))) &&
       this.avatarDecorationData?.asset === m.avatarDecorationData?.asset &&
       this.avatarDecorationData?.skuId === m.avatarDecorationData?.skuId
     );

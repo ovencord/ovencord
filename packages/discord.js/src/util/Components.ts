@@ -244,7 +244,7 @@ const ComponentTypeToClass = {
  * @returns {Component}
  * @ignore
  */
-export function createComponent(data) {
+export function createComponent(data: any) {
   return data instanceof getComponent() ? data : new (ComponentTypeToClass[data.type]?.() ?? getComponent())(data);
 }
 
@@ -255,7 +255,7 @@ export function createComponent(data) {
  * @returns {Array<Component|APIMessageComponent>}
  * @ignore
  */
-export function extractInteractiveComponents(component) {
+export function extractInteractiveComponents(component: any) {
   switch (component.type) {
     case ComponentType.ActionRow:
       return component.components;
@@ -276,7 +276,7 @@ export function extractInteractiveComponents(component) {
  * @returns {Component|APIMessageComponent}
  * @ignore
  */
-export function findComponentByCustomId(components, customId) {
+export function findComponentByCustomId(components: any, customId: any) {
   return (
     components
       .flatMap(extractInteractiveComponents)

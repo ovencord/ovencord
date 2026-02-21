@@ -8,7 +8,7 @@ export class ApplicationRoleConnectionMetadata {
   public descriptionLocalizations: any;
   public key: any;
   public type: any;
-  constructor(data) {
+  constructor(data: any) {
     /**
      * The name of this metadata field
      *

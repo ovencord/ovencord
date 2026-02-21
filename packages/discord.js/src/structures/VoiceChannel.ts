@@ -48,7 +48,7 @@ export class VoiceChannel extends BaseGuildVoiceChannel {
    * @param {SoundboardSound|SendSoundboardSoundOptions} sound The sound to send
    * @returns {Promise<void>}
    */
-  async sendSoundboardSound(sound) {
+  async sendSoundboardSound(sound: any) {
     await this.client.rest.post(Routes.sendSoundboardSound(this.id), {
       body: {
         sound_id: sound.soundId,

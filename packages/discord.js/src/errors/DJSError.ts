@@ -9,13 +9,13 @@ import { Messages  } from './Messages.js';
  * @returns {DiscordjsError}
  * @ignore
  */
-export function makeDiscordjsError(Base) {
+export function makeDiscordjsError(Base: any) {
   return class extends Base {
     static {
       Object.defineProperty(this, 'name', { value: `Discordjs${Base.name}` });
     }
 
-    constructor(code, ...args) {
+    constructor(code: any, ...args) {
       super(message(code, args));
       this.code = code;
       Error.captureStackTrace(this, this.constructor);

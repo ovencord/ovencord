@@ -24,7 +24,7 @@ export class Webhook {
   public avatar: any;
   public client: any;
   public token: any;
-  constructor(client, data) {
+  constructor(client: any, data: any) {
     /**
      * The client that instantiated the webhook
      *
@@ -36,7 +36,7 @@ export class Webhook {
     this._patch(data);
   }
 
-  _patch(data) {
+  _patch(data: any) {
     if ('name' in data) {
       /**
        * The name of the webhook
@@ -233,7 +233,7 @@ export class Webhook {
    *   .then(console.log)
    *   .catch(console.error);
    */
-  async send(options) {
+  async send(options: any) {
     if (!this.token) throw new DiscordjsError(ErrorCodes.WebhookTokenUnavailable);
 
     let messagePayload;
@@ -283,7 +283,7 @@ export class Webhook {
    * }).catch(console.error);
    * @see {@link https://api.slack.com/messaging/webhooks}
    */
-  async sendSlackMessage(body) {
+  async sendSlackMessage(body: any) {
     if (!this.token) throw new DiscordjsError(ErrorCodes.WebhookTokenUnavailable);
 
     const data = await this.client.rest.post(Routes.webhookPlatform(this.id, this.token, 'slack'), {
@@ -311,7 +311,7 @@ export class Webhook {
    * @param {WebhookEditOptions} options Options for editing the webhook
    * @returns {Promise<Webhook>}
    */
-  async edit({ name = this.name, avatar: newAvatar, channel: newChannel, reason }) {
+  async edit({ name = this.name, avatar: newAvatar, channel: newChannel, reason }: any) {
     let avatar = newAvatar;
     if (avatar && !(typeof avatar === 'string' && avatar.startsWith('data:'))) {
       avatar = await resolveImage(avatar);
@@ -346,7 +346,7 @@ export class Webhook {
    * @param {WebhookFetchMessageOptions} [options={}] The options to provide to fetch the message.
    * @returns {Promise<Message>} Returns the message sent by this webhook
    */
-  async fetchMessage(message, { threadId }: any = {}) {
+  async fetchMessage(message, { threadId }: any = {}: any) {
     if (!this.token) throw new DiscordjsError(ErrorCodes.WebhookTokenUnavailable);
 
     const data = await this.client.rest.get(Routes.webhookMessage(this.id, this.token, message), {
@@ -367,7 +367,7 @@ export class Webhook {
    * @param {string|MessagePayload|WebhookMessageEditOptions} options The options to provide
    * @returns {Promise<Message>} Returns the message edited by this webhook
    */
-  async editMessage(message, options) {
+  async editMessage(message: any, options: any) {
     if (!this.token) throw new DiscordjsError(ErrorCodes.WebhookTokenUnavailable);
 
     let messagePayload;
@@ -409,7 +409,7 @@ export class Webhook {
    * @param {string} [reason] Reason for deleting this webhook
    * @returns {Promise<void>}
    */
-  async delete(reason) {
+  async delete(reason: any) {
     return this.client.deleteWebhook(this.id, { token: this.token, reason });
   }
 
@@ -420,7 +420,7 @@ export class Webhook {
    * @param {Snowflake} [threadId] The id of the thread this message belongs to
    * @returns {Promise<void>}
    */
-  async deleteMessage(message, threadId) {
+  async deleteMessage(message: any, threadId: any) {
     if (!this.token) throw new DiscordjsError(ErrorCodes.WebhookTokenUnavailable);
 
     await this.client.rest.delete(
@@ -508,7 +508,7 @@ export class Webhook {
     return this.type === WebhookType.Incoming;
   }
 
-  static applyToClass(structure, ignore = []) {
+  static applyToClass(structure: any, ignore: any[] = []) {
     for (const prop of [
       'send',
       'sendSlackMessage',

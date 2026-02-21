@@ -15,12 +15,12 @@ export class AnonymousGuild extends BaseGuild {
   public splash: any;
   public banner: any;
   public premiumSubscriptionCount: any;
-  constructor(client, data, immediatePatch = true) {
+  constructor(client: any, data: any, immediatePatch = true) {
     super(client, data);
     if (immediatePatch) this._patch(data);
   }
 
-  _patch(data) {
+  _patch(data: any) {
     if ('features' in data) this.features = data.features;
 
     if ('splash' in data) {

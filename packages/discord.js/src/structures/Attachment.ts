@@ -30,7 +30,7 @@ export class Attachment {
   public name: any;
   public description: any;
   public title: any;
-  constructor(data) {
+  constructor(data: any) {
     this.attachment = data.url;
     /**
      * The name of this attachment
@@ -41,7 +41,7 @@ export class Attachment {
     this._patch(data);
   }
 
-  _patch(data) {
+  _patch(data: any) {
     /**
      * The attachment's id
      *

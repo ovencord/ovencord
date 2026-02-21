@@ -24,7 +24,7 @@ export class MessagePayload {
    * @param {MessageTarget} target The target for this message to be sent to
    * @param {MessagePayloadOption} options The payload of this message
    */
-  constructor(target, options) {
+  constructor(target: any, options: any) {
     /**
      * The target for this message to be sent to
      *
@@ -191,7 +191,7 @@ export class MessagePayload {
       }
     }
 
-    const attachments = this.options.files?.map((file, index) => {
+    const attachments = this.options.files?.map((file: any, index: any) => {
       // Extract filename from builder API or direct property
       // NOTE: Do NOT call file.toJSON() here — it triggers Zod validation that requires 'id' to be set
       const filename = file.name
@@ -276,7 +276,7 @@ export class MessagePayload {
    * @param {AttachmentPayload|BufferResolvable|Stream} fileLike Something that could be resolved to a file
    * @returns {Promise<RawFile>}
    */
-  static async resolveFile(fileLike) {
+  static async resolveFile(fileLike: any) {
     // New AttachmentBuilder (from @ovencord/builders) — use getRawFile() API
     if (typeof fileLike?.getRawFile === 'function') {
       const raw = fileLike.getRawFile();
@@ -319,7 +319,7 @@ export class MessagePayload {
    * @param {MessagePayloadOption} [extra={}] Extra options to add onto specified options
    * @returns {MessagePayload}
    */
-  static create(target, options, extra = {}) {
+  static create(target, options, extra = {}: any) {
     return new this(
       target,
       typeof options !== 'object' || options === null ? { content: options, ...extra } : { ...options, ...extra },

@@ -13,7 +13,7 @@ export class GuildOnboarding extends Base {
   public defaultChannels: any;
   public enabled: any;
   public mode: any;
-  constructor(client, data) {
+  constructor(client: any, data: any) {
     super(client);
 
     /**
@@ -31,7 +31,7 @@ export class GuildOnboarding extends Base {
      * @type {Collection<Snowflake, GuildOnboardingPrompt>}
      */
     this.prompts = data.prompts.reduce(
-      (prompts, prompt) => prompts.set(prompt.id, new GuildOnboardingPrompt(client, prompt, this.guildId)),
+      (prompts: any, prompt: any) => prompts.set(prompt.id, new GuildOnboardingPrompt(client, prompt, this.guildId)),
       new Collection(),
     );
 
@@ -41,7 +41,7 @@ export class GuildOnboarding extends Base {
      * @type {Collection<Snowflake, GuildChannel>}
      */
     this.defaultChannels = data.default_channel_ids.reduce(
-      (channels, channelId) => channels.set(channelId, guild.channels.cache.get(channelId)),
+      (channels: any, channelId: any) => channels.set(channelId, guild.channels.cache.get(channelId)),
       new Collection(),
     );
 

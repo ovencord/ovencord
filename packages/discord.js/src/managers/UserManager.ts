@@ -41,7 +41,7 @@ export class UserManager extends CachedManager {
    * @returns {?DMChannel}
    * @private
    */
-  dmChannel(userId) {
+  dmChannel(userId: any) {
     return (
       this.client.channels.cache.find(channel => channel.type === ChannelType.DM && channel.recipientId === userId) ??
       null
@@ -55,7 +55,7 @@ export class UserManager extends CachedManager {
    * @param {BaseFetchOptions} [options] Additional options for this fetch
    * @returns {Promise<DMChannel>}
    */
-  async createDM(user, { cache = true, force = false } = {}) {
+  async createDM(user, { cache = true, force = false } = {}: any) {
     const id = this.resolveId(user);
 
     if (!force) {
@@ -73,7 +73,7 @@ export class UserManager extends CachedManager {
    * @param {UserResolvable} user The UserResolvable to identify
    * @returns {Promise<DMChannel>}
    */
-  async deleteDM(user) {
+  async deleteDM(user: any) {
     const id = this.resolveId(user);
     const dmChannel = this.dmChannel(id);
     if (!dmChannel) throw new DiscordjsError(ErrorCodes.UserNoDMChannel);
@@ -89,7 +89,7 @@ export class UserManager extends CachedManager {
    * @param {BaseFetchOptions} [options] Additional options for this fetch
    * @returns {Promise<User>}
    */
-  async fetch(user, { cache = true, force = false } = {}) {
+  async fetch(user, { cache = true, force = false } = {}: any) {
     const id = this.resolveId(user);
     if (!force) {
       const existing = this.cache.get(id);
@@ -107,7 +107,7 @@ export class UserManager extends CachedManager {
    * @param {string|MessagePayload|MessageCreateOptions} options The options to provide
    * @returns {Promise<Message>}
    */
-  async send(user, options) {
+  async send(user: any, options: any) {
     return (await this.createDM(user)).send(options);
   }
 
@@ -117,7 +117,7 @@ export class UserManager extends CachedManager {
    * @param {UserResolvable} user The UserResolvable to identify
    * @returns {?User}
    */
-  resolve(user) {
+  resolve(user: any) {
     if (user instanceof GuildMember || user instanceof ThreadMember) return user.user;
     if (user instanceof Message) return user.author;
     return super.resolve(user);
@@ -129,7 +129,7 @@ export class UserManager extends CachedManager {
    * @param {UserResolvable} user The UserResolvable to identify
    * @returns {?Snowflake}
    */
-  resolveId(user) {
+  resolveId(user: any) {
     if (user instanceof ThreadMember) return user.id;
     if (user instanceof GuildMember) return user.user.id;
     if (user instanceof Message) return user.author.id;

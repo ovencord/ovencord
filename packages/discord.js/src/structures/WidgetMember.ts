@@ -26,7 +26,7 @@ export class WidgetMember extends Base {
    * @property {string} name The name of the activity
    */
 
-  constructor(client, data) {
+  constructor(client: any, data: any) {
     super(client);
 
     /**

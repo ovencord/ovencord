@@ -11,7 +11,7 @@ export class WelcomeChannel extends Base {
   public description: any;
   public _emoji: any;
   public channelId: any;
-  constructor(guild, data) {
+  constructor(guild: any, data: any) {
     super(guild.client);
 
     /**

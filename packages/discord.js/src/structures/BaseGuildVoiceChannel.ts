@@ -19,7 +19,7 @@ export class BaseGuildVoiceChannel extends GuildChannel {
   public videoQualityMode: any;
   public lastMessageId: any;
   public rateLimitPerUser: any;
-  constructor(guild, data, client) {
+  constructor(guild: any, data: any, client: any) {
     super(guild, data, client, false);
     /**
      * A manager of the messages sent to this channel
@@ -38,7 +38,7 @@ export class BaseGuildVoiceChannel extends GuildChannel {
     this._patch(data);
   }
 
-  _patch(data) {
+  _patch(data: any) {
     super._patch(data);
 
     if ('rtc_region' in data) {
@@ -164,7 +164,7 @@ export class BaseGuildVoiceChannel extends GuildChannel {
    *   .then(invite => console.log(`Created an invite with a code of ${invite.code}`))
    *   .catch(console.error);
    */
-  async createInvite(options) {
+  async createInvite(options: any) {
     return this.guild.invites.create(this.id, options);
   }
 
@@ -190,7 +190,7 @@ export class BaseGuildVoiceChannel extends GuildChannel {
    *   .then(channel => console.log(`Set bitrate to ${channel.bitrate}bps for ${channel.name}`))
    *   .catch(console.error);
    */
-  async setBitrate(bitrate, reason) {
+  async setBitrate(bitrate: any, reason: any) {
     return this.edit({ bitrate, reason });
   }
 
@@ -207,7 +207,7 @@ export class BaseGuildVoiceChannel extends GuildChannel {
    * // Remove a fixed region for this channel - let Discord decide automatically
    * channel.setRTCRegion(null, 'We want to let Discord decide.');
    */
-  async setRTCRegion(rtcRegion, reason) {
+  async setRTCRegion(rtcRegion: any, reason: any) {
     return this.edit({ rtcRegion, reason });
   }
 
@@ -223,7 +223,7 @@ export class BaseGuildVoiceChannel extends GuildChannel {
    *   .then(channel => console.log(`Set user limit to ${channel.userLimit} for ${channel.name}`))
    *   .catch(console.error);
    */
-  async setUserLimit(userLimit, reason) {
+  async setUserLimit(userLimit: any, reason: any) {
     return this.edit({ userLimit, reason });
   }
 
@@ -234,7 +234,7 @@ export class BaseGuildVoiceChannel extends GuildChannel {
    * @param {string} [reason] Reason for changing the camera video quality mode.
    * @returns {Promise<BaseGuildVoiceChannel>}
    */
-  async setVideoQualityMode(videoQualityMode, reason) {
+  async setVideoQualityMode(videoQualityMode: any, reason: any) {
     return this.edit({ videoQualityMode, reason });
   }
 

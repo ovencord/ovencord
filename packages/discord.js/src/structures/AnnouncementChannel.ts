@@ -19,7 +19,7 @@ export class AnnouncementChannel extends BaseGuildTextChannel {
    *     .catch(console.error);
    * }
    */
-  async addFollower(channel, reason) {
+  async addFollower(channel: any, reason: any) {
     return this.guild.channels.addFollower(this, channel, reason);
   }
 }

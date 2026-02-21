@@ -12,7 +12,7 @@ import { DataManager  } from './DataManager.js';
 export class GuildMemberRoleManager extends DataManager {
   public member: any;
   public guild: any;
-  constructor(member) {
+  constructor(member: any) {
     super(member.client, Role);
 
     /**
@@ -127,7 +127,7 @@ export class GuildMemberRoleManager extends DataManager {
    * @param {string} [reason] Reason for adding the role(s)
    * @returns {Promise<GuildMember>}
    */
-  async add(roleOrRoles, reason) {
+  async add(roleOrRoles: any, reason: any) {
     if (roleOrRoles instanceof Collection || Array.isArray(roleOrRoles)) {
       const resolvedRoles = [];
       for (const role of roleOrRoles.values()) {
@@ -168,7 +168,7 @@ export class GuildMemberRoleManager extends DataManager {
    * @param {string} [reason] Reason for removing the role(s)
    * @returns {Promise<GuildMember>}
    */
-  async remove(roleOrRoles, reason) {
+  async remove(roleOrRoles: any, reason: any) {
     if (roleOrRoles instanceof Collection || Array.isArray(roleOrRoles)) {
       const resolvedRoles = [];
       for (const role of roleOrRoles.values()) {
@@ -218,7 +218,7 @@ export class GuildMemberRoleManager extends DataManager {
    *   .then(member => console.log(`Member roles is now of ${member.roles.cache.size} size`))
    *   .catch(console.error);
    */
-  async set(roles, reason) {
+  async set(roles: any, reason: any) {
     return this.member.edit({ roles, reason });
   }
 

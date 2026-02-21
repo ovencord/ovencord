@@ -41,7 +41,7 @@ export class RoleManager extends CachedManager {
    * @name RoleManager#cache
    */
 
-  _add(data, cache) {
+  _add(data: any, cache: any) {
     return super._add(data, cache, { extras: [this.guild] });
   }
 
@@ -62,7 +62,7 @@ export class RoleManager extends CachedManager {
    *   .then(role => console.log(`The role color is: ${role.colors.primaryColor}`))
    *   .catch(console.error);
    */
-  async fetch(id, { cache = true, force = false } = {}) {
+  async fetch(id, { cache = true, force = false } = {}: any) {
     if (!id) {
       const innerData = await this.client.rest.get(Routes.guildRoles(this.guild.id));
       const roles = new Collection();
@@ -181,7 +181,7 @@ export class RoleManager extends CachedManager {
    *   .then(console.log)
    *   .catch(console.error);
    */
-  async create(options: any = {}) {
+  async create(options = {}: any) {
     let { permissions, icon } = options;
     const { name, hoist, position, mentionable, reason, unicodeEmoji } = options;
     if (permissions !== undefined) permissions = new PermissionsBitField(permissions);
@@ -236,7 +236,7 @@ export class RoleManager extends CachedManager {
    *   .then(updated => console.log(`Edited role name to ${updated.name}`))
    *   .catch(console.error);
    */
-  async edit(role, options: any) {
+  async edit(role: any, options: any) {
     const resolvedRole = this.resolve(role);
     if (!resolvedRole) throw new DiscordjsTypeError(ErrorCodes.InvalidType, 'role', 'RoleResolvable');
 
@@ -289,7 +289,7 @@ export class RoleManager extends CachedManager {
    *   .then(() => console.log('Deleted the role'))
    *   .catch(console.error);
    */
-  async delete(role, reason) {
+  async delete(role: any, reason: any) {
     const id = this.resolveId(role);
     await this.client.rest.delete(Routes.guildRole(this.guild.id, id), { reason });
     this.client.actions.GuildRoleDelete.handle({ guild_id: this.guild.id, role_id: id });
@@ -308,7 +308,7 @@ export class RoleManager extends CachedManager {
    *   .then(updated => console.log(`Role position: ${updated.position}`))
    *   .catch(console.error);
    */
-  async setPosition(role, position, { relative, reason }: any = {}) {
+  async setPosition(role, position, { relative, reason }: any = {}: any) {
     const resolvedRole = this.resolve(role);
     if (!resolvedRole) throw new DiscordjsTypeError(ErrorCodes.InvalidType, 'role', 'RoleResolvable');
     const updatedRoles = await setPosition(
@@ -346,7 +346,7 @@ export class RoleManager extends CachedManager {
    *  .then(guild => console.log(`Role positions updated for ${guild}`))
    *  .catch(console.error);
    */
-  async setPositions(rolePositions) {
+  async setPositions(rolePositions: any) {
     // Make sure rolePositions are prepared for API
     const resolvedRolePositions = rolePositions.map(rolePosition => ({
       id: this.resolveId(rolePosition.role),
@@ -369,7 +369,7 @@ export class RoleManager extends CachedManager {
    * @returns {number} Negative number if the first role's position is lower (second role's is higher),
    * positive number if the first's is higher (second's is lower), 0 if equal
    */
-  comparePositions(role1, role2) {
+  comparePositions(role1: any, role2: any) {
     const resolvedRole1 = this.resolve(role1);
     const resolvedRole2 = this.resolve(role2);
     if (!resolvedRole1 || !resolvedRole2) {
@@ -393,7 +393,7 @@ export class RoleManager extends CachedManager {
    * @param {UserResolvable} user The user to access the bot role for
    * @returns {?Role}
    */
-  botRoleFor(user) {
+  botRoleFor(user: any) {
     const userId = this.client.users.resolveId(user);
     if (!userId) return null;
     return this.cache.find(role => role.tags?.botId === userId) ?? null;

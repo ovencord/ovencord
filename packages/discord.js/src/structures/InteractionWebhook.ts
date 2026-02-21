@@ -12,7 +12,7 @@ export class InteractionWebhook {
    * @param {Snowflake} id The application's id
    * @param {string} token The interaction's token
    */
-  constructor(client, id, token) {
+  constructor(client: any, id: any, token: any) {
     /**
      * The client that instantiated the interaction webhook
      *

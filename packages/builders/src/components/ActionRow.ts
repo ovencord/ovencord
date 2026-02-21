@@ -34,25 +34,25 @@ import { StringSelectMenuBuilder } from './selectMenu/StringSelectMenu.js';
 import { UserSelectMenuBuilder } from './selectMenu/UserSelectMenu.js';
 import { TextInputBuilder } from './textInput/TextInput.js';
 
-export interface ActionRowBuilderData<ComponentType extends AnyActionRowComponentBuilder = AnyActionRowComponentBuilder> extends Partial<
+export interface ActionRowBuilderData<T extends AnyActionRowComponentBuilder = AnyActionRowComponentBuilder> extends Partial<
 	Omit<APIActionRowComponent<APIComponentInActionRow>, 'components'>
 > {
-	components: ComponentType[];
+	components: T[];
 }
 
 /**
  * A builder that creates API-compatible JSON data for action rows.
  */
-export class ActionRowBuilder<ComponentType extends AnyActionRowComponentBuilder = AnyActionRowComponentBuilder> extends ComponentBuilder<APIActionRowComponent<APIComponentInActionRow>> {
+export class ActionRowBuilder<T extends AnyActionRowComponentBuilder = AnyActionRowComponentBuilder> extends ComponentBuilder<APIActionRowComponent<APIComponentInActionRow>> {
 	/**
 	 * @internal
 	 */
-	protected readonly data: ActionRowBuilderData<ComponentType>;
+	protected readonly data: ActionRowBuilderData<T>;
 
 	/**
 	 * The components within this action row.
 	 */
-	public get components(): readonly ComponentType[] {
+	public get components(): readonly T[] {
 		return this.data.components;
 	}
 
@@ -97,7 +97,7 @@ export class ActionRowBuilder<ComponentType extends AnyActionRowComponentBuilder
 
 		this.data = {
 			...structuredClone(rest),
-			components: components.map((component) => createComponentBuilder(component)) as ComponentType[],
+			components: components.map((component) => createComponentBuilder(component)) as T[],
 			type: ComponentType.ActionRow,
 		};
 	}
@@ -115,7 +115,7 @@ export class ActionRowBuilder<ComponentType extends AnyActionRowComponentBuilder
 		const normalized = normalizeArray(input);
 		const resolved = normalized.map((component) => resolveBuilder(component, PrimaryButtonBuilder));
 
-		this.data.components.push(...(resolved as ComponentType[]));
+		this.data.components.push(...(resolved as T[]));
 		return this;
 	}
 
@@ -134,7 +134,7 @@ export class ActionRowBuilder<ComponentType extends AnyActionRowComponentBuilder
 		const normalized = normalizeArray(input);
 		const resolved = normalized.map((component) => resolveBuilder(component, SecondaryButtonBuilder));
 
-		this.data.components.push(...(resolved as ComponentType[]));
+		this.data.components.push(...(resolved as T[]));
 		return this;
 	}
 
@@ -151,7 +151,7 @@ export class ActionRowBuilder<ComponentType extends AnyActionRowComponentBuilder
 		const normalized = normalizeArray(input);
 		const resolved = normalized.map((component) => resolveBuilder(component, SuccessButtonBuilder));
 
-		this.data.components.push(...(resolved as ComponentType[]));
+		this.data.components.push(...(resolved as T[]));
 		return this;
 	}
 
@@ -166,7 +166,7 @@ export class ActionRowBuilder<ComponentType extends AnyActionRowComponentBuilder
 		const normalized = normalizeArray(input);
 		const resolved = normalized.map((component) => resolveBuilder(component, DangerButtonBuilder));
 
-		this.data.components.push(...(resolved as ComponentType[]));
+		this.data.components.push(...(resolved as T[]));
 		return this;
 	}
 
@@ -175,7 +175,7 @@ export class ActionRowBuilder<ComponentType extends AnyActionRowComponentBuilder
 	 */
 	public addComponents(...input: RestOrArray<AnyActionRowComponentBuilder>): this {
 		const normalized = normalizeArray(input);
-		this.data.components.push(...(normalized as ComponentType[]));
+		this.data.components.push(...(normalized as T[]));
 
 		return this;
 	}
@@ -187,7 +187,7 @@ export class ActionRowBuilder<ComponentType extends AnyActionRowComponentBuilder
 	 */
 	public setComponents(...input: RestOrArray<AnyActionRowComponentBuilder>): this {
 		const normalized = normalizeArray(input);
-		this.data.components = [...normalized] as ComponentType[];
+		this.data.components = [...normalized] as T[];
 
 		return this;
 	}
@@ -205,7 +205,7 @@ export class ActionRowBuilder<ComponentType extends AnyActionRowComponentBuilder
 		const normalized = normalizeArray(input);
 		const resolved = normalized.map((component) => resolveBuilder(component, PremiumButtonBuilder));
 
-		this.data.components.push(...(resolved as ComponentType[]));
+		this.data.components.push(...(resolved as T[]));
 		return this;
 	}
 
@@ -222,7 +222,7 @@ export class ActionRowBuilder<ComponentType extends AnyActionRowComponentBuilder
 		const normalized = normalizeArray(input);
 		const resolved = normalized.map((component) => resolveBuilder(component, LinkButtonBuilder));
 
-		this.data.components.push(...(resolved as ComponentType[]));
+		this.data.components.push(...(resolved as T[]));
 		return this;
 	}
 
@@ -237,7 +237,7 @@ export class ActionRowBuilder<ComponentType extends AnyActionRowComponentBuilder
 			| ChannelSelectMenuBuilder
 			| ((builder: ChannelSelectMenuBuilder) => ChannelSelectMenuBuilder),
 	): this {
-		this.data.components.push(resolveBuilder(input, ChannelSelectMenuBuilder) as ComponentType);
+		this.data.components.push(resolveBuilder(input, ChannelSelectMenuBuilder) as T);
 		return this;
 	}
 
@@ -252,7 +252,7 @@ export class ActionRowBuilder<ComponentType extends AnyActionRowComponentBuilder
 			| MentionableSelectMenuBuilder
 			| ((builder: MentionableSelectMenuBuilder) => MentionableSelectMenuBuilder),
 	): this {
-		this.data.components.push(resolveBuilder(input, MentionableSelectMenuBuilder) as ComponentType);
+		this.data.components.push(resolveBuilder(input, MentionableSelectMenuBuilder) as T);
 		return this;
 	}
 
@@ -264,7 +264,7 @@ export class ActionRowBuilder<ComponentType extends AnyActionRowComponentBuilder
 	public addRoleSelectMenuComponent(
 		input: APIRoleSelectComponent | RoleSelectMenuBuilder | ((builder: RoleSelectMenuBuilder) => RoleSelectMenuBuilder),
 	): this {
-		this.data.components.push(resolveBuilder(input, RoleSelectMenuBuilder) as ComponentType);
+		this.data.components.push(resolveBuilder(input, RoleSelectMenuBuilder) as T);
 		return this;
 	}
 
@@ -279,7 +279,7 @@ export class ActionRowBuilder<ComponentType extends AnyActionRowComponentBuilder
 			| StringSelectMenuBuilder
 			| ((builder: StringSelectMenuBuilder) => StringSelectMenuBuilder),
 	): this {
-		this.data.components.push(resolveBuilder(input, StringSelectMenuBuilder) as ComponentType);
+		this.data.components.push(resolveBuilder(input, StringSelectMenuBuilder) as T);
 		return this;
 	}
 
@@ -291,7 +291,7 @@ export class ActionRowBuilder<ComponentType extends AnyActionRowComponentBuilder
 	public addUserSelectMenuComponent(
 		input: APIUserSelectComponent | UserSelectMenuBuilder | ((builder: UserSelectMenuBuilder) => UserSelectMenuBuilder),
 	): this {
-		this.data.components.push(resolveBuilder(input, UserSelectMenuBuilder) as ComponentType);
+		this.data.components.push(resolveBuilder(input, UserSelectMenuBuilder) as T);
 		return this;
 	}
 
@@ -303,7 +303,7 @@ export class ActionRowBuilder<ComponentType extends AnyActionRowComponentBuilder
 	public addTextInputComponent(
 		input: APITextInputComponent | TextInputBuilder | ((builder: TextInputBuilder) => TextInputBuilder),
 	): this {
-		this.data.components.push(resolveBuilder(input, TextInputBuilder) as ComponentType);
+		this.data.components.push(resolveBuilder(input, TextInputBuilder) as T);
 		return this;
 	}
 
@@ -336,7 +336,7 @@ export class ActionRowBuilder<ComponentType extends AnyActionRowComponentBuilder
 	 * @param components - The replacing component objects
 	 */
 	public spliceComponents(index: number, deleteCount: number, ...components: AnyActionRowComponentBuilder[]): this {
-		this.data.components.splice(index, deleteCount, ...(components as unknown as ComponentType[]));
+		this.data.components.splice(index, deleteCount, ...(components as unknown as T[]));
 		return this;
 	}
 

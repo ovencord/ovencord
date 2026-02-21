@@ -12,7 +12,7 @@ export class BaseGuildEmoji extends Emoji {
   public managed: any;
   public available: any;
   public name: any;
-  constructor(client, data, guild) {
+  constructor(client: any, data: any, guild: any) {
     super(client, data);
 
     /**
@@ -29,7 +29,7 @@ export class BaseGuildEmoji extends Emoji {
     this._patch(data);
   }
 
-  _patch(data) {
+  _patch(data: any) {
     if ('name' in data) this.name = data.name;
 
     if ('require_colons' in data) {

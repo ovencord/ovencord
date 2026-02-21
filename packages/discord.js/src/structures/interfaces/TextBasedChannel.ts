@@ -187,7 +187,7 @@ export class TextBasedChannel {
    *   .then(console.log)
    *   .catch(console.error);
    */
-  async send(options) {
+  async send(options: any) {
     return this.client.channels.createMessage(this, options);
   }
 
@@ -240,7 +240,7 @@ export class TextBasedChannel {
    *   .then(collected => console.log(collected.size))
    *   .catch(collected => console.log(`After a minute, only ${collected.size} out of 4 voted.`));
    */
-  async awaitMessages(options: any = {}) {
+  async awaitMessages(options = {}: any) {
     return new Promise((resolve, reject) => {
       const collector = this.createMessageCollector(options);
       collector.once('end', (collection, reason) => {
@@ -311,7 +311,7 @@ export class TextBasedChannel {
    *   .then(messages => console.log(`Bulk deleted ${messages.length} messages`))
    *   .catch(console.error);
    */
-  async bulkDelete(messages, filterOld = false) {
+  async bulkDelete(messages: any, filterOld = false) {
     if (Array.isArray(messages) || messages instanceof Collection) {
       let messageIds =
         messages instanceof Collection ? [...messages.keys()] : messages.map(message => message.id ?? message);
@@ -379,7 +379,7 @@ export class TextBasedChannel {
    *   .then(console.log)
    *   .catch(console.error)
    */
-  async createWebhook(options) {
+  async createWebhook(options: any) {
     return this.guild.channels.createWebhook({ channel: this.id, ...options });
   }
 
@@ -390,7 +390,7 @@ export class TextBasedChannel {
    * @param {string} [reason] Reason for changing the channel's rate limit
    * @returns {Promise<this>}
    */
-  async setRateLimitPerUser(rateLimitPerUser, reason) {
+  async setRateLimitPerUser(rateLimitPerUser: any, reason: any) {
     return this.edit({ rateLimitPerUser, reason });
   }
 
@@ -405,7 +405,7 @@ export class TextBasedChannel {
     return this.edit({ nsfw, reason });
   }
 
-  static applyToClass(structure, ignore = []) {
+  static applyToClass(structure: any, ignore = []) {
     const props = [
       'lastMessage',
       'lastPinAt',

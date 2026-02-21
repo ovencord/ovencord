@@ -37,7 +37,7 @@ export class MessageManager extends CachedManager {
    * @name MessageManager#cache
    */
 
-  _add(data, cache) {
+  _add(data: any, cache: any) {
     return super._add(data, cache);
   }
 
@@ -97,7 +97,7 @@ export class MessageManager extends CachedManager {
    *          message.author.id === '84484653687267328').size} messages`))
    *   .catch(console.error);
    */
-  async fetch(options) {
+  async fetch(options: any) {
     if (!options) return this._fetchMany();
     const { message, cache, force } = options;
     const resolvedMessage = this.resolveId(message ?? options);
@@ -105,7 +105,7 @@ export class MessageManager extends CachedManager {
     return this._fetchMany(options);
   }
 
-  async _fetchSingle({ message, cache, force = false }) {
+  async _fetchSingle({ message, cache, force = false }: any) {
     if (!force) {
       const existing = this.cache.get(message);
       if (existing && !existing.partial) return existing;
@@ -120,7 +120,7 @@ export class MessageManager extends CachedManager {
       query: makeURLSearchParams(apiOptions),
     });
 
-    return data.reduce((_data, message) => _data.set(message.id, this._add(message, cache)), new Collection());
+    return data.reduce((_data: any, message: any) => _data.set(message.id, this._add(message, cache)), new Collection());
   }
 
   /**
@@ -226,7 +226,7 @@ export class MessageManager extends CachedManager {
    * @param {string|MessageEditOptions|MessagePayload|FileBodyEncodable<RESTPatchAPIChannelMessageJSONBody>|JSONEncodable<RESTPatchAPIChannelMessageJSONBody>} options The options to edit the message
    * @returns {Promise<Message>}
    */
-  async edit(message, options) {
+  async edit(message: any, options: any) {
     const messageId = this.resolveId(message);
     if (!messageId) throw new DiscordjsTypeError(ErrorCodes.InvalidType, 'message', 'MessageResolvable');
 
@@ -262,7 +262,7 @@ export class MessageManager extends CachedManager {
    * @param {string} [reason] Reason for pinning
    * @returns {Promise<void>}
    */
-  async pin(message, reason) {
+  async pin(message: any, reason: any) {
     const messageId = this.resolveId(message);
     if (!messageId) throw new DiscordjsTypeError(ErrorCodes.InvalidType, 'message', 'MessageResolvable');
 
@@ -276,7 +276,7 @@ export class MessageManager extends CachedManager {
    * @param {string} [reason] Reason for unpinning
    * @returns {Promise<void>}
    */
-  async unpin(message, reason) {
+  async unpin(message: any, reason: any) {
     const messageId = this.resolveId(message);
     if (!messageId) throw new DiscordjsTypeError(ErrorCodes.InvalidType, 'message', 'MessageResolvable');
 
@@ -290,7 +290,7 @@ export class MessageManager extends CachedManager {
    * @param {EmojiIdentifierResolvable} emoji The emoji to react with
    * @returns {Promise<void>}
    */
-  async react(message, emoji) {
+  async react(message: any, emoji: any) {
     const messageId = this.resolveId(message);
     if (!messageId) throw new DiscordjsTypeError(ErrorCodes.InvalidType, 'message', 'MessageResolvable');
 
@@ -310,7 +310,7 @@ export class MessageManager extends CachedManager {
    * @param {MessageResolvable} message The message to delete
    * @returns {Promise<void>}
    */
-  async delete(message) {
+  async delete(message: any) {
     const messageId = this.resolveId(message);
     if (!messageId) throw new DiscordjsTypeError(ErrorCodes.InvalidType, 'message', 'MessageResolvable');
 
@@ -323,7 +323,7 @@ export class MessageManager extends CachedManager {
    * @param {Snowflake} messageId The id of the message
    * @returns {Promise<Message>}
    */
-  async endPoll(messageId) {
+  async endPoll(messageId: any) {
     const message = await this.client.rest.post(Routes.expirePoll(this.channel.id, messageId));
     return this._add(message, false);
   }
@@ -342,11 +342,11 @@ export class MessageManager extends CachedManager {
    * @param {FetchPollAnswerVotersOptions} options The options for fetching the poll answer voters
    * @returns {Promise<Collection<Snowflake, User>>}
    */
-  async fetchPollAnswerVoters({ messageId, answerId, after, limit }) {
+  async fetchPollAnswerVoters({ messageId, answerId, after, limit }: any) {
     const voters = await this.client.rest.get(Routes.pollAnswerVoters(this.channel.id, messageId, answerId), {
       query: makeURLSearchParams({ limit, after }),
     });
 
-    return voters.users.reduce((acc, user) => acc.set(user.id, this.client.users._add(user, false)), new Collection());
+    return voters.users.reduce((acc: any, user: any) => acc.set(user.id, this.client.users._add(user, false)), new Collection());
   }
 }

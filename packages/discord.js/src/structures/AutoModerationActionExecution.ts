@@ -15,7 +15,7 @@ export class AutoModerationActionExecution {
   public content: any;
   public matchedKeyword: any;
   public matchedContent: any;
-  constructor(data, guild) {
+  constructor(data: any, guild: any) {
     /**
      * The guild where this action was executed from.
      *

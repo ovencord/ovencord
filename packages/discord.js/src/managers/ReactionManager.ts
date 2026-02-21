@@ -20,7 +20,7 @@ export class ReactionManager extends CachedManager {
     this.message = message;
   }
 
-  _add(data, cache) {
+  _add(data: any, cache: any) {
     return super._add(data, cache, { id: data.emoji.id ?? data.emoji.name, extras: [this.message] });
   }
 

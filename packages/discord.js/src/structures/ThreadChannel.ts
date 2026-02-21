@@ -41,7 +41,7 @@ export class ThreadChannel extends BaseChannel {
   get parent() {
     return this.guild?.channels.resolve(this.parentId);
   }
-  constructor(guild, data, client) {
+  constructor(guild: any, data: any, client: any) {
     super(guild?.client ?? client, data, false);
 
     /**
@@ -92,7 +92,7 @@ export class ThreadChannel extends BaseChannel {
    * will return all permissions
    * @returns {?Readonly<PermissionsBitField>}
    */
-  permissionsFor(memberOrRole, checkAdmin = true) {
+  permissionsFor(memberOrRole: any, checkAdmin = true) {
     return this.parent?.permissionsFor(memberOrRole, checkAdmin) ?? null;
   }
 
@@ -169,7 +169,7 @@ export class ThreadChannel extends BaseChannel {
    * @param {BaseFetchOptions} [options] Additional options for this fetch
    * @returns {Promise<Message<true>|null>}
    */
-  async fetchStarterMessage(options: any = {}) {
+  async fetchStarterMessage(options = {}: any) {
     try {
       return await this.messages.fetch({ message: this.id, force: options.force ?? true, cache: options.cache });
     } catch {
@@ -196,11 +196,11 @@ export class ThreadChannel extends BaseChannel {
   // These are here only for documentation purposes - they are implemented by TextBasedChannel
 
   /* eslint-disable getter-return */
-  get lastMessage() { return null; }
+  get lastMessage(): any { return null; }
 
-  get lastPinAt() { return null; }
+  get lastPinAt(): any { return null; }
 
-  send() { return null; }
+  send(): any { return null; }
 
   sendTyping() {}
 

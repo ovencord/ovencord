@@ -49,7 +49,7 @@ export class SubscriptionManager extends CachedManager {
    * @param {FetchSubscriptionOptions|FetchSubscriptionsOptions} [options={}] Options for fetching the subscriptions
    * @returns {Promise<Subscription|Collection<Snowflake, Subscription>>}
    */
-  async fetch(options: any = {}) {
+  async fetch(options = {}: any) {
     if (typeof options !== 'object') throw new DiscordjsTypeError(ErrorCodes.InvalidType, 'options', 'object', true);
 
     const { after, before, cache, limit, sku, subscriptionId, user } = options;
@@ -75,7 +75,7 @@ export class SubscriptionManager extends CachedManager {
     const subscriptions = await this.client.rest.get(Routes.skuSubscriptions(skuId), { query });
 
     return subscriptions.reduce(
-      (coll, subscription) => coll.set(subscription.id, this._add(subscription, cache)),
+      (coll: any, subscription: any) => coll.set(subscription.id, this._add(subscription, cache)),
       new Collection(),
     );
   }

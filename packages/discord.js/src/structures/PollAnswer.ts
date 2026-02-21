@@ -15,7 +15,7 @@ export class PollAnswer extends Base {
   public _emoji: any;
   public text: any;
   public poll: any;
-  constructor(client, data, poll) {
+  constructor(client: any, data: any, poll: any) {
     super(client);
 
     /**
@@ -53,7 +53,7 @@ export class PollAnswer extends Base {
     this._patch(data);
   }
 
-  _patch(data) {
+  _patch(data: any) {
     // This `count` field comes from `poll.results.answer_counts`
     if ('count' in data) {
       /**

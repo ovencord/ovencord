@@ -20,7 +20,7 @@ export class CommandInteraction extends BaseInteraction {
   public ephemeral: any;
   public webhook: any;
   public token: any;
-  constructor(client, data) {
+  constructor(client: any, data: any) {
     super(client, data);
 
     /**

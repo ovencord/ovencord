@@ -15,7 +15,7 @@ export class GroupDMInvite extends BaseInvite {
    * @type {?number}
    */
 
-  _patch(data) {
+  _patch(data: any) {
     super._patch(data);
 
     if ('channel' in data) {

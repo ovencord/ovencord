@@ -28,7 +28,7 @@ export class ReactionCollector extends Collector {
    * @param {Message} message The message upon which to collect reactions
    * @param {ReactionCollectorOptions} [options={}] The options to apply to this collector
    */
-  constructor(message, options = {}) {
+  constructor(message, options = {}: any) {
     super(message.client, options);
 
     /**
@@ -104,8 +104,8 @@ export class ReactionCollector extends Collector {
 
     this.on('remove', (_reaction, user) => {
       this.total--;
-      if (!this.collected.some((reaction: any) => reaction.users.cache.has(user.id))) this.users.delete(user.id);
-    });
+      if (!this.collected.some((reaction) => reaction.users.cache.has(user.id))) this.users.delete(user.id);
+    }: any);
   }
 
   /**
@@ -115,7 +115,7 @@ export class ReactionCollector extends Collector {
    * @returns {?(Snowflake|string)}
    * @private
    */
-  collect(reaction) {
+  collect(reaction: any) {
     /**
      * Emitted whenever a reaction is collected.
      *
@@ -135,7 +135,7 @@ export class ReactionCollector extends Collector {
    * @param {User} user The user that removed the reaction
    * @returns {?(Snowflake|string)}
    */
-  dispose(reaction, user) {
+  dispose(reaction: any, user: any) {
     /**
      * Emitted when the reaction had all the users removed and the `dispose` option is set to true.
      *
@@ -189,7 +189,7 @@ export class ReactionCollector extends Collector {
    * @param {Message} message The message that was deleted
    * @returns {void}
    */
-  _handleMessageDeletion(message) {
+  _handleMessageDeletion(message: any) {
     if (message.id === this.message.id) {
       this.stop('messageDelete');
     }
@@ -202,7 +202,7 @@ export class ReactionCollector extends Collector {
    * @param {GuildChannel} channel The channel that was deleted
    * @returns {void}
    */
-  _handleChannelDeletion(channel) {
+  _handleChannelDeletion(channel: any) {
     if (channel.id === this.message.channelId || channel.threads?.cache.has(this.message.channelId)) {
       this.stop('channelDelete');
     }
@@ -215,7 +215,7 @@ export class ReactionCollector extends Collector {
    * @param {ThreadChannel} thread The thread that was deleted
    * @returns {void}
    */
-  _handleThreadDeletion(thread) {
+  _handleThreadDeletion(thread: any) {
     if (thread.id === this.message.channelId) {
       this.stop('threadDelete');
     }
@@ -228,7 +228,7 @@ export class ReactionCollector extends Collector {
    * @param {Guild} guild The guild that was deleted
    * @returns {void}
    */
-  _handleGuildDeletion(guild) {
+  _handleGuildDeletion(guild: any) {
     if (guild.id === this.message.guild?.id) {
       this.stop('guildDelete');
     }
@@ -240,7 +240,7 @@ export class ReactionCollector extends Collector {
    * @param {MessageReaction} reaction The message reaction to get the key for
    * @returns {Snowflake|string}
    */
-  static key(reaction) {
+  static key(reaction: any) {
     return reaction.emoji.id ?? reaction.emoji.name;
   }
 }

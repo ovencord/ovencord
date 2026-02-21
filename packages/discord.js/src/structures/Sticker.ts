@@ -21,13 +21,13 @@ export class Sticker extends Base {
   public guildId: any;
   public user: any;
   public sortValue: any;
-  constructor(client, sticker) {
+  constructor(client: any, sticker: any) {
     super(client);
 
     this._patch(sticker);
   }
 
-  _patch(sticker) {
+  _patch(sticker: any) {
     /**
      * The sticker's id
      *
@@ -247,7 +247,7 @@ export class Sticker extends Base {
    *   .then(sticker => console.log(`Updated the name of the sticker to ${sticker.name}`))
    *   .catch(console.error);
    */
-  async edit(options) {
+  async edit(options: any) {
     return this.guild.stickers.edit(this, options);
   }
 
@@ -262,7 +262,7 @@ export class Sticker extends Base {
    *   .then(sticker => console.log(`Deleted sticker ${sticker.name}`))
    *   .catch(console.error);
    */
-  async delete(reason) {
+  async delete(reason: any) {
     await this.guild.stickers.delete(this, reason);
     return this;
   }
@@ -273,7 +273,7 @@ export class Sticker extends Base {
    * @param {Sticker|APISticker} other The sticker to compare it to
    * @returns {boolean}
    */
-  equals(other) {
+  equals(other: any) {
     if (other instanceof Sticker) {
       return (
         other.id === this.id &&

@@ -43,7 +43,7 @@ function _flatten(obj: any, seen: WeakSet<object>, depth: number, ...props: any[
 
   const mergedProps = objProps.length ? Object.assign(Object.assign({}, ...objProps), ...props) : Object.assign({}, ...props);
 
-  const out: any = {};
+  const out = {};
 
   // eslint-disable-next-line prefer-const
   for (let [prop, newProp] of Object.entries(mergedProps)) {
@@ -479,7 +479,7 @@ export function transformResolved(
   { client, guild, channel }: any,
   { members, users, channels, roles, messages, attachments }: any = {},
 ): any {
-  const result: any = {};
+  const result = {};
 
   if (members) {
     result.members = new Collection();

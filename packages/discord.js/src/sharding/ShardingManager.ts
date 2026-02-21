@@ -273,7 +273,7 @@ export class ShardingManager extends AsyncEventEmitter {
    * @param {*} message Message to be sent to the shards
    * @returns {Promise<Shard[]>}
    */
-  async broadcast(message) {
+  async broadcast(message: any) {
     const promises = [];
     for (const shard of this.shards.values()) promises.push(shard.send(message));
     return Promise.all(promises);
@@ -294,7 +294,7 @@ export class ShardingManager extends AsyncEventEmitter {
    * @param {BroadcastEvalOptions} [options={}] The options for the broadcast
    * @returns {Promise<*|Array<*>>} Results of the script execution
    */
-  async broadcastEval(script: any, options: any = {}): Promise<any> {
+  async broadcastEval(script, options = {}: any): Promise<any> {
     if (typeof script !== 'function') {
       throw new DiscordjsTypeError(ErrorCodes.ShardingInvalidEvalBroadcast);
     }
@@ -313,7 +313,7 @@ export class ShardingManager extends AsyncEventEmitter {
    *   .then(results => console.log(`${results.reduce((prev, val) => prev + val, 0)} total guilds`))
    *   .catch(console.error);
    */
-  async fetchClientValues(prop, shard) {
+  async fetchClientValues(prop: any, shard: any) {
     return this._performOnShards('fetchClientValue', [prop], shard);
   }
 
@@ -326,7 +326,7 @@ export class ShardingManager extends AsyncEventEmitter {
    * @returns {Promise<*|Array<*>>} Results of the method execution
    * @private
    */
-  async _performOnShards(method, args, shard) {
+  async _performOnShards(method: any, args: any, shard: any) {
     if (this.shards.size === 0) throw new DiscordjsError(ErrorCodes.ShardingNoShards);
 
     if (typeof shard === 'number') {

@@ -46,7 +46,7 @@ export class ClientApplication extends Application {
   public eventWebhooksStatus: any;
   public eventWebhooksTypes: any;
   public owner: any;
-  constructor(client, data) {
+  constructor(client: any, data: any) {
     super(client, data);
 
     // Initialize managers after super() to ensure this.client is set
@@ -79,7 +79,7 @@ export class ClientApplication extends Application {
     this.subscriptions = new SubscriptionManager(client, undefined);
   }
 
-  _patch(data) {
+  _patch(data: any) {
     super._patch(data);
 
     /**
@@ -443,7 +443,7 @@ export class ClientApplication extends Application {
    * @param {ApplicationRoleConnectionMetadataEditOptions[]} records The new role connection metadata records
    * @returns {Promise<ApplicationRoleConnectionMetadata[]>}
    */
-  async editRoleConnectionMetadataRecords(records) {
+  async editRoleConnectionMetadataRecords(records: any) {
     const newRecords = await this.client.rest.put(Routes.applicationRoleConnectionMetadata(this.client.user.id), {
       body: records.map(record => ({
         type: record.type,

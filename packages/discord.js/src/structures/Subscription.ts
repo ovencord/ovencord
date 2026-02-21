@@ -16,7 +16,7 @@ export class Subscription extends Base {
   public renewalSkuIds: any;
   public canceledTimestamp: any;
   public country: any;
-  constructor(client, data) {
+  constructor(client: any, data: any) {
     super(client);
 
     /**
@@ -36,7 +36,7 @@ export class Subscription extends Base {
     this._patch(data);
   }
 
-  _patch(data) {
+  _patch(data: any) {
     /**
      * The SKU ids subscribed to
      *

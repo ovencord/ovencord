@@ -26,7 +26,7 @@ export class GuildScheduledEvent extends Base {
   public entityMetadata: any;
   public image: any;
   public recurrenceRule: any;
-  constructor(client, data) {
+  constructor(client: any, data: any) {
     super(client);
 
     /**
@@ -46,7 +46,7 @@ export class GuildScheduledEvent extends Base {
     this._patch(data);
   }
 
-  _patch(data) {
+  _patch(data: any) {
     if ('channel_id' in data) {
       /**
        * The channel id in which the scheduled event will be hosted,
@@ -381,7 +381,7 @@ export class GuildScheduledEvent extends Base {
    * @param {GuildScheduledEventInviteURLCreateOptions} [options] The options to create the invite
    * @returns {Promise<string>}
    */
-  async createInviteURL(options) {
+  async createInviteURL(options: any) {
     let channelId = this.channelId;
     if (this.entityType === GuildScheduledEventEntityType.External) {
       if (!options?.channel) throw new DiscordjsError(ErrorCodes.InviteOptionsMissingChannel);
@@ -404,7 +404,7 @@ export class GuildScheduledEvent extends Base {
    *  .then(guildScheduledEvent => console.log(guildScheduledEvent))
    *  .catch(console.error);
    */
-  async edit(options) {
+  async edit(options: any) {
     return this.guild.scheduledEvents.edit(this.id, options);
   }
 
@@ -445,7 +445,7 @@ export class GuildScheduledEvent extends Base {
    *  .then(guildScheduledEvent => console.log(`Set the name to: ${guildScheduledEvent.name}`))
    *  .catch(console.error);
    */
-  async setName(name, reason) {
+  async setName(name: any, reason: any) {
     return this.edit({ name, reason });
   }
 
@@ -461,7 +461,7 @@ export class GuildScheduledEvent extends Base {
    *  .then(guildScheduledEvent => console.log(`Set the start time to: ${guildScheduledEvent.scheduledStartTime}`))
    *  .catch(console.error);
    */
-  async setScheduledStartTime(scheduledStartTime, reason) {
+  async setScheduledStartTime(scheduledStartTime: any, reason: any) {
     return this.edit({ scheduledStartTime, reason });
   }
 
@@ -478,7 +478,7 @@ export class GuildScheduledEvent extends Base {
    *  .then(guildScheduledEvent => console.log(`Set the end time to: ${guildScheduledEvent.scheduledEndTime}`))
    *  .catch(console.error);
    */
-  async setScheduledEndTime(scheduledEndTime, reason) {
+  async setScheduledEndTime(scheduledEndTime: any, reason: any) {
     return this.edit({ scheduledEndTime, reason });
   }
 
@@ -494,7 +494,7 @@ export class GuildScheduledEvent extends Base {
    *  .then(guildScheduledEvent => console.log(`Set the description to: ${guildScheduledEvent.description}`))
    *  .catch(console.error);
    */
-  async setDescription(description, reason) {
+  async setDescription(description: any, reason: any) {
     return this.edit({ description, reason });
   }
 
@@ -512,7 +512,7 @@ export class GuildScheduledEvent extends Base {
    *  .then(guildScheduledEvent => console.log(`Set the status to: ${guildScheduledEvent.status}`))
    *  .catch(console.error);
    */
-  async setStatus(status, reason) {
+  async setStatus(status: any, reason: any) {
     return this.edit({ status, reason });
   }
 
@@ -528,7 +528,7 @@ export class GuildScheduledEvent extends Base {
    *  .then(guildScheduledEvent => console.log(`Set the location to: ${guildScheduledEvent.entityMetadata.location}`))
    *  .catch(console.error);
    */
-  async setLocation(location, reason) {
+  async setLocation(location: any, reason: any) {
     return this.edit({ entityMetadata: { location }, reason });
   }
 
@@ -538,7 +538,7 @@ export class GuildScheduledEvent extends Base {
    * @param {FetchGuildScheduledEventSubscribersOptions} [options] Options for fetching the subscribers
    * @returns {Promise<Collection<Snowflake, GuildScheduledEventUser>>}
    */
-  async fetchSubscribers(options) {
+  async fetchSubscribers(options: any) {
     return this.guild.scheduledEvents.fetchSubscribers(this.id, options);
   }
 

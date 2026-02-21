@@ -17,12 +17,12 @@ export class Application extends Base {
   public rpcOrigins: any;
   public cover: any;
   public verifyKey: any;
-  constructor(client, data) {
+  constructor(client: any, data: any) {
     super(client);
     this._patch(data);
   }
 
-  _patch(data) {
+  _patch(data: any) {
     /**
      * The application's id
      *

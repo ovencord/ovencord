@@ -84,7 +84,7 @@ export class GuildSoundboardSoundManager extends CachedManager {
    * @param {any} [options={}] The new data for the soundboard sound
    * @returns {Promise<SoundboardSound>}
    */
-  async edit(soundboardSound: any, options: any = {}): Promise<any> {
+  async edit(soundboardSound, options = {}: any): Promise<any> {
     const soundId = this.resolveId(soundboardSound);
 
     if (!soundId) throw new DiscordjsTypeError(ErrorCodes.InvalidType, 'soundboardSound', 'SoundboardSoundResolvable');
@@ -152,6 +152,6 @@ export class GuildSoundboardSoundManager extends CachedManager {
   async _fetchMany({ cache }: any = {}): Promise<any> {
     const data = await (this as any).client.rest.get(Routes.guildSoundboardSounds(this.guild.id));
 
-    return (data as any).items.reduce((coll: any, sound: any) => coll.set(sound.sound_id, this._add(sound, cache)), new (this as any).client.options.makeCache());
+    return (data as any).items.reduce((coll, sound) => coll.set(sound.sound_id, this._add(sound, cache)), new (this as any).client.options.makeCache());
   }
 }

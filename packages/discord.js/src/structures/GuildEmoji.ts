@@ -11,7 +11,7 @@ import { BaseGuildEmoji  } from './BaseGuildEmoji.js';
 export class GuildEmoji extends BaseGuildEmoji {
   public author: any;
   public _roles: any;
-  constructor(client, data, guild) {
+  constructor(client: any, data: any, guild: any) {
     super(client, data, guild);
 
     /**
@@ -46,7 +46,7 @@ export class GuildEmoji extends BaseGuildEmoji {
     return clone;
   }
 
-  _patch(data) {
+  _patch(data: any) {
     super._patch(data);
 
     if (data.user) this.author = this.client.users._add(data.user);
@@ -103,7 +103,7 @@ export class GuildEmoji extends BaseGuildEmoji {
    *   .then(emoji => console.log(`Edited emoji ${emoji}`))
    *   .catch(console.error);
    */
-  async edit(options) {
+  async edit(options: any) {
     return this.guild.emojis.edit(this.id, options);
   }
 
@@ -114,7 +114,7 @@ export class GuildEmoji extends BaseGuildEmoji {
    * @param {string} [reason] Reason for changing the emoji's name
    * @returns {Promise<GuildEmoji>}
    */
-  async setName(name, reason) {
+  async setName(name: any, reason: any) {
     return this.edit({ name, reason });
   }
 
@@ -124,7 +124,7 @@ export class GuildEmoji extends BaseGuildEmoji {
    * @param {string} [reason] Reason for deleting the emoji
    * @returns {Promise<GuildEmoji>}
    */
-  async delete(reason) {
+  async delete(reason: any) {
     await this.guild.emojis.delete(this.id, reason);
     return this;
   }
@@ -144,14 +144,14 @@ export class GuildEmoji extends BaseGuildEmoji {
         other.available === this.available &&
         other.requiresColons === this.requiresColons &&
         other.roles.cache.size === this.roles.cache.size &&
-        other.roles.cache.every((role: any) => this.roles.cache.has(role.id))
+        other.roles.cache.every((role) => this.roles.cache.has(role.id))
       );
-    } else {
+    }: any else {
       return (
         other.id === this.id &&
         other.name === this.name &&
         other.roles.length === this.roles.cache.size &&
-        (other.roles as any[]).every((role: any) => this.roles.cache.has(role))
+        (other.roles as any[]).every((role) => this.roles.cache.has(role))
       );
     }
   }

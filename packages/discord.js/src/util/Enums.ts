@@ -1,4 +1,4 @@
-export function createEnum(keys) {
+export function createEnum(keys: any) {
   const obj = {};
   for (const [index, key] of keys.entries()) {
     if (key === null) continue;

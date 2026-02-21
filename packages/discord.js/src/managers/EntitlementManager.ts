@@ -69,7 +69,7 @@ export class EntitlementManager extends CachedManager {
    * Options for fetching the entitlements
    * @returns {Promise<Entitlement|Collection<Snowflake, Entitlement>>}
    */
-  async fetch(options) {
+  async fetch(options: any) {
     if (!options) return this._fetchMany(options);
     const { entitlement, cache, force } = options;
     const resolvedEntitlement = this.resolveId(entitlement ?? options);
@@ -81,7 +81,7 @@ export class EntitlementManager extends CachedManager {
     return this._fetchMany(options);
   }
 
-  async _fetchSingle({ entitlement, cache, force = false }) {
+  async _fetchSingle({ entitlement, cache, force = false }: any) {
     if (!force) {
       const existing = this.cache.get(entitlement);
 
@@ -109,7 +109,7 @@ export class EntitlementManager extends CachedManager {
     const entitlements = await this.client.rest.get(Routes.entitlements(this.client.application.id), { query });
 
     return entitlements.reduce(
-      (coll, entitlement) => coll.set(entitlement.id, this._add(entitlement, cache)),
+      (coll: any, entitlement: any) => coll.set(entitlement.id, this._add(entitlement, cache)),
       new Collection(),
     );
   }
@@ -130,7 +130,7 @@ export class EntitlementManager extends CachedManager {
    * @param {EntitlementCreateOptions} options Options for creating the test entitlement
    * @returns {Promise<Entitlement>}
    */
-  async createTest({ sku, guild, user }) {
+  async createTest({ sku, guild, user }: any) {
     const skuId = resolveSKUId(sku);
     if (!skuId) throw new DiscordjsTypeError(ErrorCodes.InvalidType, 'sku', 'SKUResolvable');
 
@@ -161,7 +161,7 @@ export class EntitlementManager extends CachedManager {
    * @param {EntitlementResolvable} entitlement The entitlement to delete
    * @returns {Promise<void>}
    */
-  async deleteTest(entitlement) {
+  async deleteTest(entitlement: any) {
     const resolved = this.resolveId(entitlement);
     if (!resolved) throw new DiscordjsTypeError(ErrorCodes.InvalidType, 'entitlement', 'EntitlementResolvable');
 
@@ -175,7 +175,7 @@ export class EntitlementManager extends CachedManager {
    * @param {Snowflake} entitlementId The id of the entitlement to consume
    * @returns {Promise<void>}
    */
-  async consume(entitlementId) {
+  async consume(entitlementId: any) {
     await this.client.rest.post(Routes.consumeEntitlement(this.client.application.id, entitlementId));
   }
 }

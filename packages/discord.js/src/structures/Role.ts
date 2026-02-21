@@ -26,7 +26,7 @@ export class Role extends Base {
   public mentionable: any;
   public flags: any;
   public tags: any;
-  constructor(client, data, guild) {
+  constructor(client: any, data: any, guild: any) {
     super(client);
 
     /**
@@ -53,7 +53,7 @@ export class Role extends Base {
     this._patch(data);
   }
 
-  _patch(data) {
+  _patch(data: any) {
     /**
      * The role's id (unique to the guild it is part of)
      *
@@ -274,7 +274,7 @@ export class Role extends Base {
    * const roleCompare = role.comparePositionTo(otherRole);
    * if (roleCompare >= 1) console.log(`${role.name} is higher than ${otherRole.name}`);
    */
-  comparePositionTo(role) {
+  comparePositionTo(role: any) {
     return this.guild.roles.comparePositions(this, role);
   }
 
@@ -305,7 +305,7 @@ export class Role extends Base {
    *   .then(updated => console.log(`Edited role name to ${updated.name}`))
    *   .catch(console.error);
    */
-  async edit(options) {
+  async edit(options: any) {
     return this.guild.roles.edit(this, options);
   }
 
@@ -318,7 +318,7 @@ export class Role extends Base {
    * will return all permissions
    * @returns {Readonly<PermissionsBitField>}
    */
-  permissionsIn(channel, checkAdmin = true) {
+  permissionsIn(channel: any, checkAdmin = true) {
     const resolvedChannel = this.guild.channels.resolve(channel);
     if (!resolvedChannel) throw new DiscordjsError(ErrorCodes.GuildChannelResolve);
     return resolvedChannel.rolePermissions(this, checkAdmin);
@@ -336,7 +336,7 @@ export class Role extends Base {
    *   .then(updated => console.log(`Updated role name to ${updated.name}`))
    *   .catch(console.error);
    */
-  async setName(name, reason) {
+  async setName(name: any, reason: any) {
     return this.edit({ name, reason });
   }
 
@@ -361,7 +361,7 @@ export class Role extends Base {
    *   .then(updated => console.log(`Set holographic colors for role ${updated.name}`))
    *   .catch(console.error);
    */
-  async setColors(colors, reason) {
+  async setColors(colors: any, reason: any) {
     return this.edit({ colors, reason });
   }
 
@@ -398,7 +398,7 @@ export class Role extends Base {
    *   .then(updated => console.log(`Updated permissions to ${updated.permissions.bitfield}`))
    *   .catch(console.error);
    */
-  async setPermissions(permissions, reason) {
+  async setPermissions(permissions: any, reason: any) {
     return this.edit({ permissions, reason });
   }
 
@@ -427,7 +427,7 @@ export class Role extends Base {
    * @param {string} [reason] Reason for changing the role's icon
    * @returns {Promise<Role>}
    */
-  async setIcon(icon, reason) {
+  async setIcon(icon: any, reason: any) {
     return this.edit({ icon, reason });
   }
 
@@ -443,7 +443,7 @@ export class Role extends Base {
    *   .then(updated => console.log(`Set unicode emoji for the role to ${updated.unicodeEmoji}`))
    *   .catch(console.error);
    */
-  async setUnicodeEmoji(unicodeEmoji, reason) {
+  async setUnicodeEmoji(unicodeEmoji: any, reason: any) {
     return this.edit({ unicodeEmoji, reason });
   }
 
@@ -467,7 +467,7 @@ export class Role extends Base {
    *   .then(updated => console.log(`Role position: ${updated.position}`))
    *   .catch(console.error);
    */
-  async setPosition(position, options = {}) {
+  async setPosition(position, options = {}: any) {
     return this.guild.roles.setPosition(this, position, options);
   }
 
@@ -482,7 +482,7 @@ export class Role extends Base {
    *   .then(deleted => console.log(`Deleted role ${deleted.name}`))
    *   .catch(console.error);
    */
-  async delete(reason) {
+  async delete(reason: any) {
     await this.guild.roles.delete(this.id, reason);
     return this;
   }
@@ -505,7 +505,7 @@ export class Role extends Base {
    * @param {Role} role Role to compare with
    * @returns {boolean}
    */
-  equals(role) {
+  equals(role: any) {
     return (
       role &&
       this.id === role.id &&

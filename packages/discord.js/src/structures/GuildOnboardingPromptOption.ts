@@ -15,7 +15,7 @@ export class GuildOnboardingPromptOption extends Base {
   public _emoji: any;
   public title: any;
   public description: any;
-  constructor(client, data, guildId) {
+  constructor(client: any, data: any, guildId: any) {
     super(client);
 
     /**
@@ -40,7 +40,7 @@ export class GuildOnboardingPromptOption extends Base {
      * @type {Collection<Snowflake, GuildChannel>}
      */
     this.channels = data.channel_ids.reduce(
-      (channels, channelId) => channels.set(channelId, guild.channels.cache.get(channelId)),
+      (channels: any, channelId: any) => channels.set(channelId, guild.channels.cache.get(channelId)),
       new Collection(),
     );
 
@@ -50,7 +50,7 @@ export class GuildOnboardingPromptOption extends Base {
      * @type {Collection<Snowflake, Role>}
      */
     this.roles = data.role_ids.reduce(
-      (roles, roleId) => roles.set(roleId, guild.roles.cache.get(roleId)),
+      (roles: any, roleId: any) => roles.set(roleId, guild.roles.cache.get(roleId)),
       new Collection(),
     );
 

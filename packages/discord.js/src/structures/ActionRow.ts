@@ -8,7 +8,7 @@ import { Component  } from './Component.js';
  */
 export class ActionRow extends Component {
   public components: any;
-  constructor({ components, ...data }) {
+  constructor({ components, ...data }: any) {
     super(data);
 
     /**

@@ -76,7 +76,7 @@ export class PermissionsBitField extends BitField {
    * @param {boolean} [checkAdmin=true] Whether to allow the administrator permission to override
    * @returns {string[]}
    */
-  missing(bits, checkAdmin = true) {
+  missing(bits: any, checkAdmin = true) {
     return checkAdmin && this.has(PermissionFlagsBits.Administrator) ? [] : super.missing(bits);
   }
 
@@ -87,7 +87,7 @@ export class PermissionsBitField extends BitField {
    * @param {boolean} [checkAdmin=true] Whether to allow the administrator permission to override
    * @returns {boolean}
    */
-  any(permission, checkAdmin = true) {
+  any(permission: any, checkAdmin = true) {
     return (checkAdmin && super.has(PermissionFlagsBits.Administrator)) || super.any(permission);
   }
 
@@ -98,7 +98,7 @@ export class PermissionsBitField extends BitField {
    * @param {boolean} [checkAdmin=true] Whether to allow the administrator permission to override
    * @returns {boolean}
    */
-  has(permission, checkAdmin = true) {
+  has(permission: any, checkAdmin = true) {
     return (checkAdmin && super.has(PermissionFlagsBits.Administrator)) || super.has(permission);
   }
 

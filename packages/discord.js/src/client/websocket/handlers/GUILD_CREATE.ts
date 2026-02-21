@@ -1,10 +1,9 @@
 import type { Client } from '../../Client.js';
-import type { GatewayDispatchPayload } from 'discord-api-types/v10';
-
+import type { GatewayGuildCreateDispatch } from 'discord-api-types/v10';
 import { Events  } from '../../../util/Events.js';
 import { Status  } from '../../../util/Status.js';
 
-export default (client: Client, { d: data }: GatewayDispatchPayload, shardId: number) => {
+export default (client: Client, { d: data }: GatewayGuildCreateDispatch, shardId: number) => {
   let guild = client.guilds.cache.get(data.id);
   if (guild) {
     if (!guild.available && !data.unavailable) {
@@ -21,7 +20,7 @@ export default (client: Client, { d: data }: GatewayDispatchPayload, shardId: nu
     }
   } else {
     // A new guild
-    data.shardId = shardId;
+    (data as any).shardId = shardId;
     guild = client.guilds._add(data);
     if (client.status === Status.Ready) {
       /**

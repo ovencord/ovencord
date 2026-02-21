@@ -7,7 +7,7 @@ import { ThreadOnlyChannel  } from './ThreadOnlyChannel.js';
  */
 export class ForumChannel extends ThreadOnlyChannel {
   public defaultForumLayout: any;
-  _patch(data) {
+  _patch(data: any) {
     super._patch(data);
 
     /**
@@ -25,7 +25,7 @@ export class ForumChannel extends ThreadOnlyChannel {
    * @param {string} [reason] Reason for changing the default forum layout
    * @returns {Promise<ForumChannel>}
    */
-  async setDefaultForumLayout(defaultForumLayout, reason) {
+  async setDefaultForumLayout(defaultForumLayout: any, reason: any) {
     return this.edit({ defaultForumLayout, reason });
   }
 }

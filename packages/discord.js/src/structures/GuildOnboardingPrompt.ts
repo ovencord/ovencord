@@ -16,7 +16,7 @@ export class GuildOnboardingPrompt extends Base {
   public required: any;
   public inOnboarding: any;
   public type: any;
-  constructor(client, data, guildId) {
+  constructor(client: any, data: any, guildId: any) {
     super(client);
 
     /**
@@ -39,7 +39,7 @@ export class GuildOnboardingPrompt extends Base {
      * @type {Collection<Snowflake, GuildOnboardingPromptOption>}
      */
     this.options = data.options.reduce(
-      (options, option) => options.set(option.id, new GuildOnboardingPromptOption(client, option, guildId)),
+      (options: any, option: any) => options.set(option.id, new GuildOnboardingPromptOption(client, option, guildId)),
       new Collection(),
     );
 

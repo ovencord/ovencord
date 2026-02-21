@@ -41,7 +41,7 @@ export class ThreadManager extends CachedManager {
    * @name ThreadManager#cache
    */
 
-  _add(thread) {
+  _add(thread: any) {
     const existing = this.cache.get(thread.id);
     if (existing) return existing;
     this.cache.set(thread.id, thread);
@@ -90,7 +90,7 @@ export class ThreadManager extends CachedManager {
    *   .then(channel => console.log(channel.name))
    *   .catch(console.error);
    */
-  async fetch(options: any, { cache, force }: any = {}) {
+  async fetch(options, { cache, force }: any = {}: any) {
     if (!options) return this.fetchActive(cache);
     const channel = this.client.channels.resolveId(options);
     if (channel) {
@@ -188,15 +188,15 @@ export class ThreadManager extends CachedManager {
     return (this.constructor as any)._mapThreads(data, this.client, { parent: this.channel, cache });
   }
 
-  static _mapThreads(rawThreads: any, client: any, { parent, guild, cache }: any) {
-    const threads = rawThreads.threads.reduce((coll, raw) => {
+  static _mapThreads(rawThreads, client, { parent, guild, cache }: any) {
+    const threads = rawThreads.threads.reduce((coll: any, raw: any) => {
       const thread = client.channels._add(raw, guild ?? parent?.guild, { cache });
       if (parent && thread.parentId !== parent.id) return coll;
       return coll.set(thread.id, thread);
     }, new Collection());
 
     // Discord sends the thread id as id in this object
-    const threadMembers = rawThreads.members.reduce((coll, raw) => {
+    const threadMembers = rawThreads.members.reduce((coll: any, raw: any) => {
       const thread = threads.get(raw.id);
       return thread ? coll.set(raw.user_id, thread.members._add(raw)) : coll;
     }, new Collection());

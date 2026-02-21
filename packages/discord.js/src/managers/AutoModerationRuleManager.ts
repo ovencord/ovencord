@@ -127,7 +127,7 @@ export class AutoModerationRuleManager extends CachedManager {
     exemptRoles,
     exemptChannels,
     reason,
-  }) {
+  }: any) {
     const data = await this.client.rest.post(Routes.guildAutoModerationRules(this.guild.id), {
       body: {
         name,
@@ -184,8 +184,8 @@ export class AutoModerationRuleManager extends CachedManager {
    * @returns {Promise<AutoModerationRule>}
    */
   async edit(
-    autoModerationRule,
-    { name, eventType, triggerMetadata, actions, enabled, exemptRoles, exemptChannels, reason },
+    autoModerationRule: any,
+    { name, eventType, triggerMetadata, actions, enabled, exemptRoles, exemptChannels, reason }: any,
   ) {
     const autoModerationRuleId = this.resolveId(autoModerationRule);
 
@@ -263,7 +263,7 @@ export class AutoModerationRuleManager extends CachedManager {
    *   .then(console.log)
    *   .catch(console.error)
    */
-  async fetch(options) {
+  async fetch(options: any) {
     if (!options) return this._fetchMany();
     const { autoModerationRule, cache, force } = options;
     const resolvedAutoModerationRule = this.resolveId(autoModerationRule ?? options);
@@ -274,7 +274,7 @@ export class AutoModerationRuleManager extends CachedManager {
     return this._fetchMany(options);
   }
 
-  async _fetchSingle({ autoModerationRule, cache, force = false }) {
+  async _fetchSingle({ autoModerationRule, cache, force = false }: any) {
     if (!force) {
       const existing = this.cache.get(autoModerationRule);
       if (existing) return existing;
@@ -284,7 +284,7 @@ export class AutoModerationRuleManager extends CachedManager {
     return this._add(data, cache);
   }
 
-  async _fetchMany(options: any = {}) {
+  async _fetchMany(options = {}: any) {
     const data = await this.client.rest.get(Routes.guildAutoModerationRules(this.guild.id));
 
     return data.reduce(
@@ -300,7 +300,7 @@ export class AutoModerationRuleManager extends CachedManager {
    * @param {string} [reason] The reason for deleting the auto moderation rule
    * @returns {Promise<void>}
    */
-  async delete(autoModerationRule, reason) {
+  async delete(autoModerationRule: any, reason: any) {
     const autoModerationRuleId = this.resolveId(autoModerationRule);
     await this.client.rest.delete(Routes.guildAutoModerationRule(this.guild.id, autoModerationRuleId), { reason });
   }

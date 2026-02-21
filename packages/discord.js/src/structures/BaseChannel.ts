@@ -16,7 +16,7 @@ export class BaseChannel extends Base {
   public flags: any;
   public id: any;
   public guildId: any;
-  constructor(client, data, immediatePatch = true) {
+  constructor(client: any, data: any, immediatePatch = true) {
     super(client);
 
     /**
@@ -29,7 +29,7 @@ export class BaseChannel extends Base {
     if (data && immediatePatch) this._patch(data);
   }
 
-  _patch(data) {
+  _patch(data: any) {
     if ('flags' in data) {
       /**
        * The flags that are applied to the channel.

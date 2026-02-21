@@ -3,7 +3,7 @@
  */
 export class UnfurledMediaItem {
   public data: any;
-  constructor(data) {
+  constructor(data: any) {
     /**
      * The API data associated with this media item
      *

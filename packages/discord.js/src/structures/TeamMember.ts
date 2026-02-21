@@ -10,7 +10,7 @@ export class TeamMember extends Base {
   public membershipState: any;
   public user: any;
   public role: any;
-  constructor(team, data) {
+  constructor(team: any, data: any) {
     super(team.client);
 
     /**
@@ -23,7 +23,7 @@ export class TeamMember extends Base {
     this._patch(data);
   }
 
-  _patch(data) {
+  _patch(data: any) {
     if ('membership_state' in data) {
       /**
        * The permissions this Team Member has with regard to the team

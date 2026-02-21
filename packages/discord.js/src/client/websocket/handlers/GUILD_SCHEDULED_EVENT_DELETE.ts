@@ -1,6 +1,5 @@
 import type { Client } from '../../Client.js';
-import type { GatewayDispatchPayload } from 'discord-api-types/v10';
-
-export default (client: Client, packet: GatewayDispatchPayload) => {
+import type { GatewayGuildScheduledEventDeleteDispatch } from 'discord-api-types/v10';
+export default (client: Client, packet: GatewayGuildScheduledEventDeleteDispatch) => {
   client.actions.GuildScheduledEventDelete.handle(packet.d);
 };

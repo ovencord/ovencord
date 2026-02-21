@@ -10,7 +10,7 @@ import { User  } from './User.js';
 export class ClientUser extends User {
   public verified: any;
   public mfaEnabled: any;
-  _patch(data) {
+  _patch(data: any) {
     super._patch(data);
 
     if ('verified' in data) {
@@ -87,7 +87,7 @@ export class ClientUser extends User {
    *   .then(user => console.log(`My new username is ${user.username}`))
    *   .catch(console.error);
    */
-  async setUsername(username) {
+  async setUsername(username: any) {
     return this.edit({ username });
   }
 
@@ -102,7 +102,7 @@ export class ClientUser extends User {
    *   .then(user => console.log(`New avatar set!`))
    *   .catch(console.error);
    */
-  async setAvatar(avatar) {
+  async setAvatar(avatar: any) {
     return this.edit({ avatar });
   }
 
@@ -117,7 +117,7 @@ export class ClientUser extends User {
    *   .then(user => console.log(`New banner set!`))
    *   .catch(console.error);
    */
-  async setBanner(banner) {
+  async setBanner(banner: any) {
     return this.edit({ banner });
   }
 
@@ -150,7 +150,7 @@ export class ClientUser extends User {
    * // Set the client user's presence
    * client.user.setPresence({ activities: [{ name: 'with discord.js' }], status: 'idle' });
    */
-  async setPresence(data) {
+  async setPresence(data: any) {
     return this.client.presence.set(data);
   }
 
@@ -174,7 +174,7 @@ export class ClientUser extends User {
    * // Set the client user's status
    * client.user.setStatus('idle');
    */
-  async setStatus(status, shardId) {
+  async setStatus(status: any, shardId: any) {
     return this.setPresence({ status, shardId });
   }
 
@@ -199,7 +199,7 @@ export class ClientUser extends User {
    * // Set the client user's activity
    * client.user.setActivity('discord.js', { type: ActivityType.Watching });
    */
-  async setActivity(name, options: any = {}) {
+  async setActivity(name, options = {}: any) {
     if (!name) return this.setPresence({ activities: [], shardId: options.shardId });
 
     const activity = { ...options, ...(typeof name === 'object' ? name : { name }) };

@@ -24,7 +24,7 @@ export class User extends Base {
   public primaryGuild: any;
   public avatar: any;
   public banner: any;
-  constructor(client, data) {
+  constructor(client: any, data: any) {
     super(client);
 
     /**
@@ -43,7 +43,7 @@ export class User extends Base {
     this._patch(data);
   }
 
-  _patch(data) {
+  _patch(data: any) {
     if ('username' in data) {
       /**
        * The username of the user
@@ -292,7 +292,7 @@ export class User extends Base {
    * @param {ImageURLOptions} [options={}] Options for the image URL
    * @returns {string}
    */
-  displayAvatarURL(options) {
+  displayAvatarURL(options: any) {
     return this.avatarURL(options) ?? this.defaultAvatarURL;
   }
 
@@ -396,7 +396,7 @@ export class User extends Base {
    *   .then(message => console.log(`Sent message: ${message.content} to ${user.tag}`))
    *   .catch(console.error);
    */
-  async send(options) {
+  async send(options: any) {
     const dmChannel = await this.createDM();
 
     return this.client.channels.createMessage(dmChannel, options);
@@ -410,7 +410,7 @@ export class User extends Base {
    * @param {User} user User to compare with
    * @returns {boolean}
    */
-  equals(user) {
+  equals(user: any) {
     return (
       user &&
       this.id === user.id &&
@@ -441,7 +441,7 @@ export class User extends Base {
    * @returns {boolean}
    * @private
    */
-  _equals(user) {
+  _equals(user: any) {
     return (
       user &&
       this.id === user.id &&

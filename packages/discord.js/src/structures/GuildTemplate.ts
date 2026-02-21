@@ -27,12 +27,12 @@ export class GuildTemplate extends Base {
    */
   static GuildTemplatesPattern = /discord(?:app)?\.(?:com\/template|new)\/(?<code>[\w-]{2,255})/i;
 
-  constructor(client, data) {
+  constructor(client: any, data: any) {
     super(client);
     this._patch(data);
   }
 
-  _patch(data) {
+  _patch(data: any) {
     if ('code' in data) {
       /**
        * The unique code of this template
