@@ -1,18 +1,16 @@
-<div align="center">
+# 𝗢 𝗩 𝗘 𝗡 𝗖 𝗢 𝗥 𝗗
 
-![Ovencord Logo](https://github.com/ovencord.png)
-
-# Ovencord
-
-**Cooking the future of Discord development.**
 
 [![Bun](https://img.shields.io/badge/Bun-1.0%2B-black?logo=bun)](https://bun.sh)
 [![CI](https://github.com/ovencord/ovencord/actions/workflows/ci.yml/badge.svg)](https://github.com/ovencord/ovencord/actions/workflows/ci.yml)
 [![License](https://img.shields.io/badge/license-Apache--2.0-blue)](https://github.com/ovencord/ovencord/blob/main/LICENSE)
 [![GitHub Stars](https://img.shields.io/github/stars/ovencord/ovencord?style=social)](https://github.com/ovencord/ovencord)
 
-Ovencord is a **technical collective** dedicated to building high-performance, Bun-native solutions for the Discord ecosystem.
+<div align="center">
+<img width="250" alt="Ovencord Logo" src="https://github.com/ovencord.png" />
 
+**Cooking the future of Discord development.**<br>
+Ovencord is a **technical collective** dedicated to building high-performance, Bun-native solutions for the Discord ecosystem.
 </div>
 
 ##
