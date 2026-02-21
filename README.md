@@ -4,7 +4,9 @@
 [![Bun](https://img.shields.io/badge/Bun-1.0%2B-black?logo=bun)](https://bun.sh)
 [![CI](https://github.com/ovencord/ovencord/actions/workflows/ci.yml/badge.svg)](https://github.com/ovencord/ovencord/actions/workflows/ci.yml)
 [![License](https://img.shields.io/badge/license-Apache--2.0-blue)](https://github.com/ovencord/ovencord/blob/main/LICENSE)
+<img src="https://img.shields.io/github/repo-size/ovencord/ovencord"> 
 [![GitHub Stars](https://img.shields.io/github/stars/ovencord/ovencord?style=social)](https://github.com/ovencord/ovencord)
+
 
 <div align="center">
 <img width="250" alt="Ovencord Logo" src="https://github.com/ovencord.png" />
