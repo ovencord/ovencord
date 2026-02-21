@@ -33,7 +33,8 @@ We believe that **emulation is the enemy of performance**. Our mission is to eli
 | [@ovencord/builders](./packages/builders) | Payload builders standardized for Zod 3 | ✅ **Stable** |
 | [@ovencord/util](./packages/util) | Shared utilities for Ovencord packages | ✅ **Stable** |
 | [@ovencord/collection](./packages/collection) | High-performance Collection class | ✅ **Stable** |
-| [@ovencord/discord.js](./packages/discord.js) | Full Bun-native Discord.js fork | 🚧 **In Progress** |
+| [@ovencord/discord.js](./packages/discord.js) | Full Bun-native Discord.js fork | ✅ **Stable** |
+| [@ovencord/brokers](./packages/brokers) | Cross-environment pub/sub message brokers | ✅ **Stable** |
 
 
 ## Our Philosophy
@@ -229,12 +230,13 @@ Ovencord stands on the shoulders of giants:
 - [x] Refactor `@ovencord/ws` for Bun-native stability
 - [x] Optimize `@ovencord/collection` for high-throughput
 - [x] Standardize `@ovencord/util` shared utilities
-- [/] Stabilize `@ovencord/core` high-level client
-- [/] Port `@ovencord/voice` to Bun-native Zig/FFmpeg
-- [ ] Comprehensive performance benchmarks vs discord.js
-- [ ] Achieve 100% monorepo test coverage
+- [x] Port `@ovencord/builders` and `@ovencord/brokers` to 100% Bun-native
+- [x] Stabilize `@ovencord/discord.js` heavy fork and resolve all typings conflicts
+- [ ] Port `@ovencord/voice` and `@ovencord/util` internal pipelines to Native zeroing `node:events` and `node:stream`
+- [ ] Comprehensive performance benchmarks vs original discord.js
+- [ ] Achieve 100% monorepo functional test coverage
 - [ ] Launch official documentation site (ovencord.dev)
-- [ ] Release discord.js to Ovencord migration guide
+- [ ] Release discord.js -> Ovencord migration guide
 
 
 <div align="center">
