@@ -431,7 +431,7 @@ export class TextBasedChannel {
       Object.defineProperty(
         structure.prototype,
         prop,
-        Object.getOwnPropertyDescriptor(TextBasedChannel.prototype, prop),
+        Object.getOwnPropertyDescriptor(TextBasedChannel.prototype, prop) as PropertyDescriptor,
       );
     }
   }

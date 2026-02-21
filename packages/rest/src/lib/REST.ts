@@ -385,7 +385,7 @@ export class REST extends AsyncEventEmitter<RestEvents> {
 			// eslint-disable-next-line no-eq-null, eqeqeq
 		} else if (request.body != null) {
 			if (request.passThroughBody) {
-				finalBody = request.body as BodyInit;
+				finalBody = request.body as any;
 			} else {
 				// Stringify the JSON data
 				finalBody = JSON.stringify(request.body, (_, value) =>

@@ -391,7 +391,7 @@ export class InteractionResponses {
       Object.defineProperty(
         structure.prototype,
         prop,
-        Object.getOwnPropertyDescriptor(InteractionResponses.prototype, prop),
+        Object.getOwnPropertyDescriptor(InteractionResponses.prototype, prop) as PropertyDescriptor,
       );
     }
   }

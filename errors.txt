@@ -1,0 +1,136 @@
+packages/api-extractor-model/src/model/Deserializer.ts(538,56): error TS7018: Object literal's property 'typeParameters' implicitly has an 'any[]' type.
+packages/api-extractor-model/src/model/Deserializer.ts(545,5): error TS7018: Object literal's property 'typeParameters' implicitly has an 'any[]' type.
+packages/api-extractor/src/collector/MessageRouter.ts(180,4): error TS2322: Type '"none" | ExtractorLogLevel' is not assignable to type 'ExtractorLogLevel'.
+  Type '"none"' is not assignable to type 'ExtractorLogLevel'.
+packages/api-extractor/src/generators/ApiModelGenerator.ts(491,10): error TS2352: Conversion of type 'FunctionTypeNode' to type 'FunctionDeclaration' may be a mistake because neither type sufficiently overlaps with the other. If this was intentional, convert the expression to 'unknown' first.
+  Type 'FunctionTypeNode' is missing the following properties from type 'FunctionDeclaration': _functionLikeDeclarationBrand, _statementBrand
+packages/rest/vitest.config.ts(1,44): error TS2307: Cannot find module 'vitest/config' or its corresponding type declarations.
+packages/rest/vitest.config.ts(2,26): error TS2307: Cannot find module '../../vitest.config.js' or its corresponding type declarations.
+packages/ui/src/lib/components/Alert.stories.tsx(2,23): error TS6142: Module './Alert.jsx' was resolved to 'C:/Users/luigi/Documents/GitHub/ovencord/packages/ui/src/lib/components/Alert.tsx', but '--jsx' is not set.
+packages/ui/src/lib/components/Alert.stories.tsx(13,37): error TS17004: Cannot use JSX unless the '--jsx' flag is provided.
+packages/ui/src/lib/components/Alert.tsx(17,11): error TS17004: Cannot use JSX unless the '--jsx' flag is provided.
+packages/ui/src/lib/components/Alert.tsx(25,11): error TS17004: Cannot use JSX unless the '--jsx' flag is provided.
+packages/ui/src/lib/components/Alert.tsx(33,11): error TS17004: Cannot use JSX unless the '--jsx' flag is provided.
+packages/ui/src/lib/components/Alert.tsx(41,11): error TS17004: Cannot use JSX unless the '--jsx' flag is provided.
+packages/ui/src/lib/components/Alert.tsx(51,3): error TS17004: Cannot use JSX unless the '--jsx' flag is provided.
+packages/ui/src/lib/components/Alert.tsx(52,4): error TS17004: Cannot use JSX unless the '--jsx' flag is provided.
+packages/ui/src/lib/components/Alert.tsx(53,5): error TS17004: Cannot use JSX unless the '--jsx' flag is provided.
+packages/ui/src/lib/components/Alert.tsx(54,5): error TS17004: Cannot use JSX unless the '--jsx' flag is provided.
+packages/ui/src/lib/components/Alert.tsx(55,6): error TS17004: Cannot use JSX unless the '--jsx' flag is provided.
+packages/ui/src/lib/components/Alert.tsx(56,6): error TS17004: Cannot use JSX unless the '--jsx' flag is provided.
+packages/ui/src/lib/components/Alert.tsx(57,7): error TS17004: Cannot use JSX unless the '--jsx' flag is provided.
+packages/ui/src/lib/components/Alert.tsx(59,17): error TS17004: Cannot use JSX unless the '--jsx' flag is provided.
+packages/ui/src/lib/components/Alert.tsx(62,6): error TS17004: Cannot use JSX unless the '--jsx' flag is provided.
+packages/ui/src/lib/components/discord/DiscordMessages.stories.tsx(2,32): error TS6142: Module './Message.jsx' was resolved to 'C:/Users/luigi/Documents/GitHub/ovencord/packages/ui/src/lib/components/discord/Message.tsx', but '--jsx' is not set.
+packages/ui/src/lib/components/discord/DiscordMessages.stories.tsx(3,37): error TS6142: Module './MessageEmbed.jsx' was resolved to 'C:/Users/luigi/Documents/GitHub/ovencord/packages/ui/src/lib/components/discord/MessageEmbed.tsx', but '--jsx' is not set.
+packages/ui/src/lib/components/discord/DiscordMessages.stories.tsx(4,33): error TS6142: Module './Messages.jsx' was resolved to 'C:/Users/luigi/Documents/GitHub/ovencord/packages/ui/src/lib/components/discord/Messages.tsx', but '--jsx' is not set.
+packages/ui/src/lib/components/discord/DiscordMessages.stories.tsx(16,3): error TS17004: Cannot use JSX unless the '--jsx' flag is provided.
+packages/ui/src/lib/components/discord/DiscordMessages.stories.tsx(17,4): error TS17004: Cannot use JSX unless the '--jsx' flag is provided.
+packages/ui/src/lib/components/discord/DiscordMessages.stories.tsx(27,4): error TS17004: Cannot use JSX unless the '--jsx' flag is provided.
+packages/ui/src/lib/components/discord/DiscordMessages.stories.tsx(46,4): error TS17004: Cannot use JSX unless the '--jsx' flag is provided.
+packages/ui/src/lib/components/discord/DiscordMessages.stories.tsx(55,5): error TS17004: Cannot use JSX unless the '--jsx' flag is provided.
+packages/ui/src/lib/components/discord/DiscordMessages.stories.tsx(56,6): error TS17004: Cannot use JSX unless the '--jsx' flag is provided.
+packages/ui/src/lib/components/discord/DiscordMessages.stories.tsx(71,6): error TS17004: Cannot use JSX unless the '--jsx' flag is provided.
+packages/ui/src/lib/components/discord/DiscordMessages.stories.tsx(85,6): error TS17004: Cannot use JSX unless the '--jsx' flag is provided.
+packages/ui/src/lib/components/discord/DiscordMessages.stories.tsx(126,4): error TS17004: Cannot use JSX unless the '--jsx' flag is provided.
+packages/ui/src/lib/components/discord/DiscordMessages.stories.tsx(144,4): error TS17004: Cannot use JSX unless the '--jsx' flag is provided.
+packages/ui/src/lib/components/discord/Message.tsx(2,66): error TS6142: Module './MessageAuthor.js' was resolved to 'C:/Users/luigi/Documents/GitHub/ovencord/packages/ui/src/lib/components/discord/MessageAuthor.tsx', but '--jsx' is not set.
+packages/ui/src/lib/components/discord/Message.tsx(3,76): error TS6142: Module './MessageInteraction.js' was resolved to 'C:/Users/luigi/Documents/GitHub/ovencord/packages/ui/src/lib/components/discord/MessageInteraction.tsx', but '--jsx' is not set.
+packages/ui/src/lib/components/discord/Message.tsx(4,64): error TS6142: Module './MessageReply.js' was resolved to 'C:/Users/luigi/Documents/GitHub/ovencord/packages/ui/src/lib/components/discord/MessageReply.tsx', but '--jsx' is not set.
+packages/ui/src/lib/components/discord/Message.tsx(29,3): error TS17004: Cannot use JSX unless the '--jsx' flag is provided.
+packages/ui/src/lib/components/discord/Message.tsx(30,4): error TS17004: Cannot use JSX unless the '--jsx' flag is provided.
+packages/ui/src/lib/components/discord/Message.tsx(34,50): error TS17004: Cannot use JSX unless the '--jsx' flag is provided.
+packages/ui/src/lib/components/discord/Message.tsx(37,7): error TS17004: Cannot use JSX unless the '--jsx' flag is provided.
+packages/ui/src/lib/components/discord/Message.tsx(42,5): error TS17004: Cannot use JSX unless the '--jsx' flag is provided.
+packages/ui/src/lib/components/discord/Message.tsx(44,7): error TS17004: Cannot use JSX unless the '--jsx' flag is provided.
+packages/ui/src/lib/components/discord/Message.tsx(51,7): error TS17004: Cannot use JSX unless the '--jsx' flag is provided.
+packages/ui/src/lib/components/discord/Message.tsx(55,6): error TS17004: Cannot use JSX unless the '--jsx' flag is provided.
+packages/ui/src/lib/components/discord/MessageAuthor.tsx(14,3): error TS17004: Cannot use JSX unless the '--jsx' flag is provided.
+packages/ui/src/lib/components/discord/MessageAuthor.tsx(15,4): error TS17004: Cannot use JSX unless the '--jsx' flag is provided.
+packages/ui/src/lib/components/discord/MessageAuthor.tsx(20,4): error TS17004: Cannot use JSX unless the '--jsx' flag is provided.
+packages/ui/src/lib/components/discord/MessageAuthor.tsx(21,5): error TS17004: Cannot use JSX unless the '--jsx' flag is provided.
+packages/ui/src/lib/components/discord/MessageAuthor.tsx(22,6): error TS17004: Cannot use JSX unless the '--jsx' flag is provided.
+packages/ui/src/lib/components/discord/MessageAuthor.tsx(26,7): error TS17004: Cannot use JSX unless the '--jsx' flag is provided.
+packages/ui/src/lib/components/discord/MessageAuthor.tsx(30,20): error TS17004: Cannot use JSX unless the '--jsx' flag is provided.
+packages/ui/src/lib/components/discord/MessageAuthor.tsx(34,5): error TS17004: Cannot use JSX unless the '--jsx' flag is provided.
+packages/ui/src/lib/components/discord/MessageAuthorReply.tsx(13,3): error TS17004: Cannot use JSX unless the '--jsx' flag is provided.
+packages/ui/src/lib/components/discord/MessageAuthorReply.tsx(14,4): error TS17004: Cannot use JSX unless the '--jsx' flag is provided.
+packages/ui/src/lib/components/discord/MessageAuthorReply.tsx(16,5): error TS17004: Cannot use JSX unless the '--jsx' flag is provided.
+packages/ui/src/lib/components/discord/MessageAuthorReply.tsx(20,18): error TS17004: Cannot use JSX unless the '--jsx' flag is provided.
+packages/ui/src/lib/components/discord/MessageAuthorReply.tsx(23,4): error TS17004: Cannot use JSX unless the '--jsx' flag is provided.
+packages/ui/src/lib/components/discord/MessageBaseReply.tsx(2,76): error TS6142: Module './MessageAuthorReply.js' was resolved to 'C:/Users/luigi/Documents/GitHub/ovencord/packages/ui/src/lib/components/discord/MessageAuthorReply.tsx', but '--jsx' is not set.
+packages/ui/src/lib/components/discord/MessageBaseReply.tsx(13,3): error TS17004: Cannot use JSX unless the '--jsx' flag is provided.
+packages/ui/src/lib/components/discord/MessageBaseReply.tsx(17,4): error TS17004: Cannot use JSX unless the '--jsx' flag is provided.
+packages/ui/src/lib/components/discord/MessageBaseReply.tsx(18,15): error TS17004: Cannot use JSX unless the '--jsx' flag is provided.
+packages/ui/src/lib/components/discord/MessageEmbed.tsx(2,76): error TS6142: Module './MessageEmbedAuthor.js' was resolved to 'C:/Users/luigi/Documents/GitHub/ovencord/packages/ui/src/lib/components/discord/MessageEmbedAuthor.tsx', but '--jsx' is not set.
+packages/ui/src/lib/components/discord/MessageEmbed.tsx(3,48): error TS6142: Module './MessageEmbedField.js' was resolved to 'C:/Users/luigi/Documents/GitHub/ovencord/packages/ui/src/lib/components/discord/MessageEmbedField.tsx', but '--jsx' is not set.
+packages/ui/src/lib/components/discord/MessageEmbed.tsx(4,43): error TS6142: Module './MessageEmbedFields.js' was resolved to 'C:/Users/luigi/Documents/GitHub/ovencord/packages/ui/src/lib/components/discord/MessageEmbedFields.tsx', but '--jsx' is not set.
+packages/ui/src/lib/components/discord/MessageEmbed.tsx(5,76): error TS6142: Module './MessageEmbedFooter.js' was resolved to 'C:/Users/luigi/Documents/GitHub/ovencord/packages/ui/src/lib/components/discord/MessageEmbedFooter.tsx', but '--jsx' is not set.
+packages/ui/src/lib/components/discord/MessageEmbed.tsx(6,74): error TS6142: Module './MessageEmbedImage.js' was resolved to 'C:/Users/luigi/Documents/GitHub/ovencord/packages/ui/src/lib/components/discord/MessageEmbedImage.tsx', but '--jsx' is not set.
+packages/ui/src/lib/components/discord/MessageEmbed.tsx(7,82): error TS6142: Module './MessageEmbedThumbnail.js' was resolved to 'C:/Users/luigi/Documents/GitHub/ovencord/packages/ui/src/lib/components/discord/MessageEmbedThumbnail.tsx', but '--jsx' is not set.
+packages/ui/src/lib/components/discord/MessageEmbed.tsx(8,74): error TS6142: Module './MessageEmbedTitle.js' was resolved to 'C:/Users/luigi/Documents/GitHub/ovencord/packages/ui/src/lib/components/discord/MessageEmbedTitle.tsx', but '--jsx' is not set.
+packages/ui/src/lib/components/discord/MessageEmbed.tsx(35,3): error TS17004: Cannot use JSX unless the '--jsx' flag is provided.
+packages/ui/src/lib/components/discord/MessageEmbed.tsx(36,4): error TS17004: Cannot use JSX unless the '--jsx' flag is provided.
+packages/ui/src/lib/components/discord/MessageEmbed.tsx(37,5): error TS17004: Cannot use JSX unless the '--jsx' flag is provided.
+packages/ui/src/lib/components/discord/MessageEmbed.tsx(38,6): error TS17004: Cannot use JSX unless the '--jsx' flag is provided.
+packages/ui/src/lib/components/discord/MessageEmbed.tsx(39,17): error TS17004: Cannot use JSX unless the '--jsx' flag is provided.
+packages/ui/src/lib/components/discord/MessageEmbed.tsx(40,16): error TS17004: Cannot use JSX unless the '--jsx' flag is provided.
+packages/ui/src/lib/components/discord/MessageEmbed.tsx(41,19): error TS17004: Cannot use JSX unless the '--jsx' flag is provided.
+packages/ui/src/lib/components/discord/MessageEmbed.tsx(42,17): error TS17004: Cannot use JSX unless the '--jsx' flag is provided.
+packages/ui/src/lib/components/discord/MessageEmbed.tsx(43,16): error TS17004: Cannot use JSX unless the '--jsx' flag is provided.
+packages/ui/src/lib/components/discord/MessageEmbed.tsx(44,17): error TS17004: Cannot use JSX unless the '--jsx' flag is provided.
+packages/ui/src/lib/components/discord/MessageEmbed.tsx(47,19): error TS17004: Cannot use JSX unless the '--jsx' flag is provided.
+packages/ui/src/lib/components/discord/MessageEmbedAuthor.tsx(9,3): error TS17004: Cannot use JSX unless the '--jsx' flag is provided.
+packages/ui/src/lib/components/discord/MessageEmbedAuthor.tsx(10,4): error TS17004: Cannot use JSX unless the '--jsx' flag is provided.
+packages/ui/src/lib/components/discord/MessageEmbedAuthor.tsx(12,5): error TS17004: Cannot use JSX unless the '--jsx' flag is provided.
+packages/ui/src/lib/components/discord/MessageEmbedAuthor.tsx(21,5): error TS17004: Cannot use JSX unless the '--jsx' flag is provided.
+packages/ui/src/lib/components/discord/MessageEmbedField.tsx(9,3): error TS17004: Cannot use JSX unless the '--jsx' flag is provided.
+packages/ui/src/lib/components/discord/MessageEmbedField.tsx(10,4): error TS17004: Cannot use JSX unless the '--jsx' flag is provided.
+packages/ui/src/lib/components/discord/MessageEmbedField.tsx(11,4): error TS17004: Cannot use JSX unless the '--jsx' flag is provided.
+packages/ui/src/lib/components/discord/MessageEmbedFields.tsx(1,74): error TS6142: Module './MessageEmbedField.js' was resolved to 'C:/Users/luigi/Documents/GitHub/ovencord/packages/ui/src/lib/components/discord/MessageEmbedField.tsx', but '--jsx' is not set.
+packages/ui/src/lib/components/discord/MessageEmbedFields.tsx(9,3): error TS17004: Cannot use JSX unless the '--jsx' flag is provided.
+packages/ui/src/lib/components/discord/MessageEmbedFields.tsx(11,5): error TS17004: Cannot use JSX unless the '--jsx' flag is provided.
+packages/ui/src/lib/components/discord/MessageEmbedFooter.tsx(9,3): error TS17004: Cannot use JSX unless the '--jsx' flag is provided.
+packages/ui/src/lib/components/discord/MessageEmbedFooter.tsx(10,12): error TS17004: Cannot use JSX unless the '--jsx' flag is provided.
+packages/ui/src/lib/components/discord/MessageEmbedFooter.tsx(13,28): error TS17004: Cannot use JSX unless the '--jsx' flag is provided.
+packages/ui/src/lib/components/discord/MessageEmbedImage.tsx(9,9): error TS17004: Cannot use JSX unless the '--jsx' flag is provided.
+packages/ui/src/lib/components/discord/MessageEmbedThumbnail.tsx(7,9): error TS17004: Cannot use JSX unless the '--jsx' flag is provided.
+packages/ui/src/lib/components/discord/MessageEmbedTitle.tsx(8,3): error TS17004: Cannot use JSX unless the '--jsx' flag is provided.
+packages/ui/src/lib/components/discord/MessageEmbedTitle.tsx(17,3): error TS17004: Cannot use JSX unless the '--jsx' flag is provided.
+packages/ui/src/lib/components/discord/MessageInteraction.tsx(2,49): error TS6142: Module './MessageAuthorReply.js' was resolved to 'C:/Users/luigi/Documents/GitHub/ovencord/packages/ui/src/lib/components/discord/MessageAuthorReply.tsx', but '--jsx' is not set.
+packages/ui/src/lib/components/discord/MessageInteraction.tsx(3,41): error TS6142: Module './MessageBaseReply.js' was resolved to 'C:/Users/luigi/Documents/GitHub/ovencord/packages/ui/src/lib/components/discord/MessageBaseReply.tsx', but '--jsx' is not set.
+packages/ui/src/lib/components/discord/MessageInteraction.tsx(13,3): error TS17004: Cannot use JSX unless the '--jsx' flag is provided.
+packages/ui/src/lib/components/discord/MessageInteraction.tsx(14,4): error TS17004: Cannot use JSX unless the '--jsx' flag is provided.
+packages/ui/src/lib/components/discord/MessageInteraction.tsx(15,4): error TS17004: Cannot use JSX unless the '--jsx' flag is provided.
+packages/ui/src/lib/components/discord/MessageReply.tsx(2,49): error TS6142: Module './MessageAuthorReply.js' was resolved to 'C:/Users/luigi/Documents/GitHub/ovencord/packages/ui/src/lib/components/discord/MessageAuthorReply.tsx', but '--jsx' is not set.
+packages/ui/src/lib/components/discord/MessageReply.tsx(3,41): error TS6142: Module './MessageBaseReply.js' was resolved to 'C:/Users/luigi/Documents/GitHub/ovencord/packages/ui/src/lib/components/discord/MessageBaseReply.tsx', but '--jsx' is not set.
+packages/ui/src/lib/components/discord/MessageReply.tsx(13,3): error TS17004: Cannot use JSX unless the '--jsx' flag is provided.
+packages/ui/src/lib/components/discord/MessageReply.tsx(14,4): error TS17004: Cannot use JSX unless the '--jsx' flag is provided.
+packages/ui/src/lib/components/discord/Messages.tsx(9,3): error TS17004: Cannot use JSX unless the '--jsx' flag is provided.
+packages/ui/src/lib/components/Section.stories.tsx(2,25): error TS6142: Module './Section.jsx' was resolved to 'C:/Users/luigi/Documents/GitHub/ovencord/packages/ui/src/lib/components/Section.tsx', but '--jsx' is not set.
+packages/ui/src/lib/components/Section.stories.tsx(13,37): error TS17004: Cannot use JSX unless the '--jsx' flag is provided.
+packages/ui/src/lib/components/Section.tsx(33,3): error TS17004: Cannot use JSX unless the '--jsx' flag is provided.
+packages/ui/src/lib/components/Section.tsx(34,4): error TS17004: Cannot use JSX unless the '--jsx' flag is provided.
+packages/ui/src/lib/components/Section.tsx(42,5): error TS17004: Cannot use JSX unless the '--jsx' flag is provided.
+packages/ui/src/lib/components/Section.tsx(43,6): error TS17004: Cannot use JSX unless the '--jsx' flag is provided.
+packages/ui/src/lib/components/Section.tsx(45,7): error TS17004: Cannot use JSX unless the '--jsx' flag is provided.
+packages/ui/src/lib/components/Section.tsx(47,6): error TS17004: Cannot use JSX unless the '--jsx' flag is provided.
+packages/ui/src/lib/components/Section.tsx(53,4): error TS17004: Cannot use JSX unless the '--jsx' flag is provided.
+packages/ui/src/lib/components/Section.tsx(57,15): error TS17004: Cannot use JSX unless the '--jsx' flag is provided.
+packages/ui/src/lib/index.ts(1,15): error TS6142: Module './components/Alert.js' was resolved to 'C:/Users/luigi/Documents/GitHub/ovencord/packages/ui/src/lib/components/Alert.tsx', but '--jsx' is not set.
+packages/ui/src/lib/index.ts(2,15): error TS6142: Module './components/Section.js' was resolved to 'C:/Users/luigi/Documents/GitHub/ovencord/packages/ui/src/lib/components/Section.tsx', but '--jsx' is not set.
+packages/ui/src/lib/index.ts(4,15): error TS6142: Module './components/discord/Message.js' was resolved to 'C:/Users/luigi/Documents/GitHub/ovencord/packages/ui/src/lib/components/discord/Message.tsx', but '--jsx' is not set.
+packages/ui/src/lib/index.ts(5,15): error TS6142: Module './components/discord/MessageAuthor.js' was resolved to 'C:/Users/luigi/Documents/GitHub/ovencord/packages/ui/src/lib/components/discord/MessageAuthor.tsx', but '--jsx' is not set.
+packages/ui/src/lib/index.ts(6,15): error TS6142: Module './components/discord/MessageAuthorReply.js' was resolved to 'C:/Users/luigi/Documents/GitHub/ovencord/packages/ui/src/lib/components/discord/MessageAuthorReply.tsx', but '--jsx' is not set.
+packages/ui/src/lib/index.ts(7,15): error TS6142: Module './components/discord/MessageBaseReply.js' was resolved to 'C:/Users/luigi/Documents/GitHub/ovencord/packages/ui/src/lib/components/discord/MessageBaseReply.tsx', but '--jsx' is not set.
+packages/ui/src/lib/index.ts(8,15): error TS6142: Module './components/discord/MessageEmbed.js' was resolved to 'C:/Users/luigi/Documents/GitHub/ovencord/packages/ui/src/lib/components/discord/MessageEmbed.tsx', but '--jsx' is not set.
+packages/ui/src/lib/index.ts(9,15): error TS6142: Module './components/discord/MessageEmbedAuthor.js' was resolved to 'C:/Users/luigi/Documents/GitHub/ovencord/packages/ui/src/lib/components/discord/MessageEmbedAuthor.tsx', but '--jsx' is not set.
+packages/ui/src/lib/index.ts(10,15): error TS6142: Module './components/discord/MessageEmbedFooter.js' was resolved to 'C:/Users/luigi/Documents/GitHub/ovencord/packages/ui/src/lib/components/discord/MessageEmbedFooter.tsx', but '--jsx' is not set.
+packages/ui/src/lib/index.ts(11,15): error TS6142: Module './components/discord/MessageEmbedTitle.js' was resolved to 'C:/Users/luigi/Documents/GitHub/ovencord/packages/ui/src/lib/components/discord/MessageEmbedTitle.tsx', but '--jsx' is not set.
+packages/ui/src/lib/index.ts(12,15): error TS6142: Module './components/discord/MessageInteraction.js' was resolved to 'C:/Users/luigi/Documents/GitHub/ovencord/packages/ui/src/lib/components/discord/MessageInteraction.tsx', but '--jsx' is not set.
+packages/ui/src/lib/index.ts(13,15): error TS6142: Module './components/discord/MessageReply.js' was resolved to 'C:/Users/luigi/Documents/GitHub/ovencord/packages/ui/src/lib/components/discord/MessageReply.tsx', but '--jsx' is not set.
+packages/ui/src/lib/index.ts(14,15): error TS6142: Module './components/discord/Messages.js' was resolved to 'C:/Users/luigi/Documents/GitHub/ovencord/packages/ui/src/lib/components/discord/Messages.tsx', but '--jsx' is not set.
+packages/ws/refactor-websocket.ts(13,17): error TS1375: 'await' expressions are only allowed at the top level of a file when that file is a module, but this file has no imports or exports. Consider adding an empty 'export {}' to make this file a module.
+packages/ws/refactor-websocket.ts(140,1): error TS1375: 'await' expressions are only allowed at the top level of a file when that file is a module, but this file has no imports or exports. Consider adding an empty 'export {}' to make this file a module.
+unocss.config.ts(1,33): error TS2307: Cannot find module 'unocss' or its corresponding type declarations.
+unocss.config.ts(2,59): error TS2307: Cannot find module 'unocss' or its corresponding type declarations.

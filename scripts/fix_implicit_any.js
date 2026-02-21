@@ -3,7 +3,7 @@ import { existsSync } from 'fs';
 import { join } from 'path';
 
 const PROJECT_ROOT = 'C:/Users/luigi/Documents/GitHub/ovencord';
-const ERROR_LOG = 'c:/Users/luigi/Documents/GitHub/brus-dev/final_tsc_report_djs.txt';
+const ERROR_LOG = 'c:/Users/luigi/Documents/GitHub/brus-dev/final_tsc_report_djs_v8.txt';
 
 async function run() {
     console.log('Reading error log...');

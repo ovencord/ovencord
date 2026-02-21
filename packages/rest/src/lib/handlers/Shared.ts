@@ -120,7 +120,7 @@ export async function makeNetworkRequest(
 				data: requestData,
 				retries,
 			},
-			res instanceof Response ? res.clone() : { ...res },
+			(res instanceof Response ? res.clone() : { ...res }) as any,
 		);
 	}
 
