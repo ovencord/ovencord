@@ -47,7 +47,6 @@
 	},
 	"devDependencies": {
 		"@ovencord/api-extractor": "workspace:*",
-		"@ovencord/docgen": "workspace:*",
 		"@ovencord/scripts": "workspace:*",
 		"@favware/cliff-jumper": "^6.0.0",
 		"@types/bun": "latest",

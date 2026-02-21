@@ -123,13 +123,5 @@ export async function releasePackage(
 			.then(() => {});
 	}
 
-	// Evil, but I can't think of a cleaner mechanism
-	if (release.name === 'create-discord-bot') {
-		await $`bun run rename-to-app`.cwd('packages/create-discord-bot');
-		// eslint-disable-next-line require-atomic-updates
-		release.name = 'create-discord-app';
-		await releasePackage(release, dry, versionMap, devTag, false);
-	}
-
 	return true;
 }
