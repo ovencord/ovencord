@@ -54,3 +54,4 @@ bun.lockb
 .eslintcache
 .vercel
 /.agent
+/opus-main
