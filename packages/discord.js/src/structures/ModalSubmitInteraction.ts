@@ -71,7 +71,6 @@ export class ModalSubmitInteraction extends BaseInteraction {
   public replied: any;
   public ephemeral: any;
   public webhook: any;
-  public token: any;
   constructor(client: any, data: any) {
     super(client, data);
     /**

@@ -15,7 +15,6 @@ export class AutocompleteInteraction extends BaseInteraction {
   public commandGuildId: any;
   public responded: any;
   public options: any;
-  public token: any;
   constructor(client: any, data: any) {
     super(client, data);
 

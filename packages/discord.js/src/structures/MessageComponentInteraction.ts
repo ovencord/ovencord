@@ -20,7 +20,6 @@ export class MessageComponentInteraction extends BaseInteraction {
   public ephemeral: any;
   public replied: any;
   public webhook: any;
-  public token: any;
   constructor(client: any, data: any) {
     super(client, data);
 

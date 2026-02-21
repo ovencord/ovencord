@@ -31,6 +31,7 @@ export class BaseInteraction extends Base {
   public attachmentSizeLimit: any;
   public commandType: any;
   public componentType: any;
+  public token: any;
   constructor(client: any, data: any) {
     super(client);
 
@@ -55,7 +56,7 @@ export class BaseInteraction extends Base {
      * @name BaseInteraction#token
      * @readonly
      */
-    Object.defineProperty(this, 'token', { value: data.token });
+    Object.defineProperty(this, 'token', { value: data.token, configurable: true, writable: true });
 
     /**
      * The application's id
