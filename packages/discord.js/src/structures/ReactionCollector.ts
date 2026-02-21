@@ -104,7 +104,7 @@ export class ReactionCollector extends Collector {
 
     this.on('remove', (_reaction, user) => {
       this.total--;
-      if (!this.collected.some(reaction => reaction.users.cache.has(user.id))) this.users.delete(user.id);
+      if (!this.collected.some((reaction: any) => reaction.users.cache.has(user.id))) this.users.delete(user.id);
     });
   }
 
@@ -176,9 +176,9 @@ export class ReactionCollector extends Collector {
    * @readonly
    */
   get endReason() {
-    if (this.options.max && this.total >= this.options.max) return 'limit';
-    if (this.options.maxEmojis && this.collected.size >= this.options.maxEmojis) return 'emojiLimit';
-    if (this.options.maxUsers && this.users.size >= this.options.maxUsers) return 'userLimit';
+    if ((this.options as any).max && this.total >= (this.options as any).max) return 'limit';
+    if ((this.options as any).maxEmojis && this.collected.size >= (this.options as any).maxEmojis) return 'emojiLimit';
+    if ((this.options as any).maxUsers && this.users.size >= (this.options as any).maxUsers) return 'userLimit';
     return super.endReason;
   }
 

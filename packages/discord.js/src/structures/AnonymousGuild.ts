@@ -12,6 +12,8 @@ export class AnonymousGuild extends BaseGuild {
   public verificationLevel: any;
   public vanityURLCode: any;
   public nsfwLevel: any;
+  public splash: any;
+  public banner: any;
   public premiumSubscriptionCount: any;
   constructor(client, data, immediatePatch = true) {
     super(client, data);

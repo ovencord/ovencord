@@ -21,6 +21,9 @@ export class Webhook {
   public applicationId: any;
   public sourceGuild: any;
   public sourceChannel: any;
+  public avatar: any;
+  public client: any;
+  public token: any;
   constructor(client, data) {
     /**
      * The client that instantiated the webhook
@@ -343,7 +346,7 @@ export class Webhook {
    * @param {WebhookFetchMessageOptions} [options={}] The options to provide to fetch the message.
    * @returns {Promise<Message>} Returns the message sent by this webhook
    */
-  async fetchMessage(message, { threadId } = {}) {
+  async fetchMessage(message, { threadId }: any = {}) {
     if (!this.token) throw new DiscordjsError(ErrorCodes.WebhookTokenUnavailable);
 
     const data = await this.client.rest.get(Routes.webhookMessage(this.id, this.token, message), {

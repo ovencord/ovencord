@@ -119,6 +119,8 @@ export class GuildAuditLogsEntry {
   public extra: any;
   public targetId: any;
   public target: any;
+  public targetType: any;
+  public actionType: any;
   /**
    * Key mirror of all available audit log targets.
    *
@@ -127,7 +129,7 @@ export class GuildAuditLogsEntry {
    */
   static Targets = Targets;
 
-  constructor(guild, data, logs) {
+  constructor(guild: any, data: any, logs?: any) {
     /**
      * The target type of this entry
      *

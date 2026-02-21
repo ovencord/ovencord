@@ -17,6 +17,8 @@ export class Poll extends Base {
   public layoutType: any;
   public expiresTimestamp: any;
   public question: any;
+  public channel: any;
+  public message: any;
   constructor(client, data, message, channel) {
     super(client);
 

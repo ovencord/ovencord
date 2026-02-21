@@ -10,6 +10,7 @@ import { MessageComponentInteraction  } from './MessageComponentInteraction.js';
 export class UserSelectMenuInteraction extends MessageComponentInteraction {
   public users: any;
   public members: any;
+  public values: any;
   constructor(client, data) {
     super(client, data);
     const { resolved, values } = data.data;
@@ -35,11 +36,11 @@ export class UserSelectMenuInteraction extends MessageComponentInteraction {
      */
     this.members = new Collection();
 
-    for (const user of Object.values(resolved?.users ?? {})) {
+    for (const user of Object.values((resolved?.users ?? {}) as any) as any[]) {
       this.users.set(user.id, this.client.users._add(user));
     }
 
-    for (const [id, member] of Object.entries(resolved?.members ?? {})) {
+    for (const [id, member] of Object.entries((resolved?.members ?? {}) as any) as any[]) {
       const user = resolved.users[id];
 
       if (!user) {
@@ -47,7 +48,7 @@ export class UserSelectMenuInteraction extends MessageComponentInteraction {
         continue;
       }
 
-      this.members.set(id, this.guild?.members._add({ user, ...member }) ?? { user, ...member });
+      this.members.set(id, this.guild?.members._add(Object.assign({ user }, member)) ?? Object.assign({ user }, member));
     }
   }
 }

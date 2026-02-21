@@ -26,6 +26,9 @@ export class Attachment {
   public duration: any;
   public waveform: any;
   public flags: any;
+  public attachment: any;
+  public name: any;
+  public description: any;
   public title: any;
   constructor(data) {
     this.attachment = data.url;

@@ -14,7 +14,7 @@ let cacheWarningEmitted = false;
  */
 export class PermissionOverwriteManager extends CachedManager {
   public channel: any;
-  constructor(channel, iterable) {
+  constructor(channel: any, iterable?: any) {
     super(channel.client, PermissionOverwrites);
     if (!cacheWarningEmitted && this._cache.constructor.name !== 'Collection') {
       cacheWarningEmitted = true;
@@ -33,7 +33,7 @@ export class PermissionOverwriteManager extends CachedManager {
 
     if (iterable) {
       for (const item of iterable) {
-        this._add(item);
+        this._add(item, true);
       }
     }
   }
@@ -96,7 +96,7 @@ export class PermissionOverwriteManager extends CachedManager {
    * @returns {Promise<GuildChannel>}
    * @private
    */
-  async upsert(userOrRole, options, { reason, type } = {}, existing = undefined) {
+  async upsert(userOrRole, options, { reason, type }: any = {}, existing = undefined) {
     const userOrRoleId = this.channel.guild.roles.resolveId(userOrRole) ?? this.client.users.resolveId(userOrRole);
 
     let resolvedType = type;

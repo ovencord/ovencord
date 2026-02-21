@@ -19,6 +19,7 @@ export class CommandInteraction extends BaseInteraction {
   public replied: any;
   public ephemeral: any;
   public webhook: any;
+  public token: any;
   constructor(client, data) {
     super(client, data);
 
@@ -139,8 +140,8 @@ export class CommandInteraction extends BaseInteraction {
    * @returns {CommandInteractionOption}
    * @private
    */
-  transformOption(option, resolved) {
-    const result = {
+  transformOption(option: any, resolved: any) {
+    const result: any = {
       name: option.name,
       type: option.type,
     };

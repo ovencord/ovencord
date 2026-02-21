@@ -10,6 +10,7 @@ import { BaseManager  } from './BaseManager.js';
  */
 export class ApplicationCommandPermissionsManager extends BaseManager {
   public manager: any;
+  public guild: any; // Add public guild
   public guildId: any;
   public commandId: any;
   constructor(manager) {
@@ -53,7 +54,7 @@ export class ApplicationCommandPermissionsManager extends BaseManager {
    * @returns {string}
    * @private
    */
-  permissionsPath(guildId, commandId) {
+  permissionsPath(guildId: any, commandId?: any) {
     if (commandId) {
       return Routes.applicationCommandPermissions(this.client.application.id, guildId, commandId);
     }
@@ -105,15 +106,15 @@ export class ApplicationCommandPermissionsManager extends BaseManager {
    *   .then(perms => console.log(`Fetched ${perms.length} guild level permissions`))
    *   .catch(console.error);
    */
-  async fetch({ guild, command } = {}) {
+  async fetch({ guild, command }: any = {}) {
     const { guildId, commandId } = this._validateOptions(guild, command);
     if (commandId) {
       const innerData = await this.client.rest.get(this.permissionsPath(guildId, commandId));
       return innerData.permissions;
     }
 
-    const data = await this.client.rest.get(this.permissionsPath(guildId));
-    return data.reduce((coll, perm) => coll.set(perm.id, perm.permissions), new Collection());
+    const data = (await this.client.rest.get(this.permissionsPath(guildId))) as any[];
+    return data.reduce((coll: any, perm: any) => coll.set(perm.id, perm.permissions), new Collection<any, any>());
   }
 
   /**
@@ -161,7 +162,7 @@ export class ApplicationCommandPermissionsManager extends BaseManager {
    *   .then(console.log)
    *   .catch(console.error);
    */
-  async set({ guild, command, permissions, token } = {}) {
+  async set({ guild, command, permissions, token }: any = {}) {
     if (!token) {
       throw new DiscordjsError(ErrorCodes.ApplicationCommandPermissionsTokenMissing);
     }
@@ -205,7 +206,7 @@ export class ApplicationCommandPermissionsManager extends BaseManager {
    *   .then(console.log)
    *   .catch(console.error);
    */
-  async add({ guild, command, permissions, token } = {}) {
+  async add({ guild, command, permissions, token }: any = {}) {
     if (!token) {
       throw new DiscordjsError(ErrorCodes.ApplicationCommandPermissionsTokenMissing);
     }
@@ -287,7 +288,7 @@ export class ApplicationCommandPermissionsManager extends BaseManager {
    *    .then(console.log)
    *    .catch(console.error);
    */
-  async remove({ guild, command, users, roles, channels, token } = {}) {
+  async remove({ guild, command, users, roles, channels, token }: any = {}) {
     if (!token) {
       throw new DiscordjsError(ErrorCodes.ApplicationCommandPermissionsTokenMissing);
     }
@@ -382,7 +383,7 @@ export class ApplicationCommandPermissionsManager extends BaseManager {
    *  .then(console.log)
    *  .catch(console.error);
    */
-  async has({ guild, command, permissionId, permissionType }) {
+  async has({ guild, command, permissionId, permissionType }: any) {
     const { guildId, commandId } = this._validateOptions(guild, command);
     if (!commandId) throw new DiscordjsTypeError(ErrorCodes.InvalidType, 'command', 'ApplicationCommandResolvable');
 

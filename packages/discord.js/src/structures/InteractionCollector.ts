@@ -37,7 +37,7 @@ export class InteractionCollector extends Collector {
    * @param {Client} client The client on which to collect interactions
    * @param {InteractionCollectorOptions} [options={}] The options to apply to this collector
    */
-  constructor(client, options = {}) {
+  constructor(client, options: any = {}) {
     super(client, options);
 
     /**
@@ -173,7 +173,7 @@ export class InteractionCollector extends Collector {
      * @event InteractionCollector#dispose
      * @param {BaseInteraction} interaction The interaction that was disposed of
      */
-    if (this.type && interaction.type !== this.type) return null;
+    if (this.interactionType && interaction.type !== this.interactionType) return null;
     if (this.componentType && interaction.componentType !== this.componentType) return null;
     if (this.messageId && interaction.message?.id !== this.messageId) return null;
     if (this.channelId && interaction.channelId !== this.channelId) return null;
@@ -199,9 +199,9 @@ export class InteractionCollector extends Collector {
    * @readonly
    */
   get endReason() {
-    if (this.options.max && this.total >= this.options.max) return 'limit';
-    if (this.options.maxComponents && this.collected.size >= this.options.maxComponents) return 'componentLimit';
-    if (this.options.maxUsers && this.users.size >= this.options.maxUsers) return 'userLimit';
+    if ((this.options as any).max && this.total >= (this.options as any).max) return 'limit';
+    if ((this.options as any).maxComponents && this.collected.size >= (this.options as any).maxComponents) return 'componentLimit';
+    if ((this.options as any).maxUsers && this.users.size >= (this.options as any).maxUsers) return 'userLimit';
     return super.endReason;
   }
 

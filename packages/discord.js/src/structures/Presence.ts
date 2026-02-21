@@ -43,7 +43,7 @@ export class Presence extends Base {
   public status: any;
   public activities: any;
   public clientStatus: any;
-  constructor(client, data = {}) {
+  constructor(client, data: any = {}) {
     super(client);
 
     /**
@@ -358,6 +358,7 @@ export class RichPresenceAssets {
   public smallText: any;
   public largeImage: any;
   public smallImage: any;
+  public activity: any;
   constructor(activity, assets) {
     /**
      * The activity of the RichPresenceAssets

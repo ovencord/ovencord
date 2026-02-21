@@ -12,7 +12,7 @@ import { CachedManager  } from './CachedManager.js';
  */
 export class GuildInviteManager extends CachedManager {
   public guild: any;
-  constructor(guild, iterable) {
+  constructor(guild: any, iterable?: any) {
     super(guild.client, GuildInvite, iterable);
 
     /**
@@ -140,7 +140,7 @@ export class GuildInviteManager extends CachedManager {
    *   .then(console.log)
    *   .catch(console.error);
    */
-  async fetch(options) {
+  async fetch(options?: any) {
     if (!options) return this._fetchMany();
     if (typeof options === 'string') {
       const code = resolveInviteCode(options);
@@ -177,7 +177,7 @@ export class GuildInviteManager extends CachedManager {
     return invite;
   }
 
-  async _fetchMany(cache) {
+  async _fetchMany(cache?: any) {
     const data = await this.client.rest.get(Routes.guildInvites(this.guild.id));
     return data.reduce((col, invite) => col.set(invite.code, this._add(invite, cache)), new Collection());
   }
@@ -201,7 +201,7 @@ export class GuildInviteManager extends CachedManager {
    */
   async create(
     channel,
-    { temporary, maxAge, maxUses, unique, targetUser, targetApplication, targetType, reason } = {},
+    { temporary, maxAge, maxUses, unique, targetUser, targetApplication, targetType, reason }: any = {},
   ) {
     const id = this.guild.channels.resolveId(channel);
     if (!id) throw new DiscordjsError(ErrorCodes.GuildChannelResolve);

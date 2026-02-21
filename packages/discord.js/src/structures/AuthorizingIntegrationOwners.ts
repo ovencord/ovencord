@@ -9,6 +9,7 @@ import { Base  } from './Base.js';
 export class AuthorizingIntegrationOwners extends Base {
   public guildId: any;
   public userId: any;
+  public data: any;
   constructor(client, data) {
     super(client);
 

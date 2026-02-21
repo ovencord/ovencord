@@ -15,7 +15,7 @@ import { CachedManager  } from './CachedManager.js';
  */
 export class GuildEmojiManager extends CachedManager {
   public guild: any;
-  constructor(guild, iterable) {
+  constructor(guild: any, iterable?: any) {
     super(guild.client, GuildEmoji, iterable);
 
     /**
@@ -26,7 +26,7 @@ export class GuildEmojiManager extends CachedManager {
     this.guild = guild;
   }
 
-  _add(data, cache) {
+  _add(data: any, cache?: any) {
     return super._add(data, cache, { extras: [this.guild] });
   }
 
@@ -135,7 +135,7 @@ export class GuildEmojiManager extends CachedManager {
     const image = await resolveImage(attachment);
     if (!image) throw new DiscordjsTypeError(ErrorCodes.ReqResourceType);
 
-    const body = { image, name };
+    const body: any = { image, name };
     if (roles) {
       if (!Array.isArray(roles) && !(roles instanceof Collection)) {
         throw new DiscordjsTypeError(

@@ -7,7 +7,7 @@ import { CachedManager  } from './CachedManager.js';
  * @extends {CachedManager}
  */
 export class PresenceManager extends CachedManager {
-  constructor(client, iterable) {
+  constructor(client: any, iterable?: any) {
     super(client, Presence, iterable);
   }
 

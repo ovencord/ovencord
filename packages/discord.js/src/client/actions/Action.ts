@@ -26,7 +26,7 @@ export class Action {
     return data[0];
   }
 
-  getPayload(data: any, manager: any, id: any, partialType: any, cache: any) {
+  getPayload(data: any, manager: any, id: any, partialType: any, cache?: any) {
     return this.client.options.partials.includes(partialType) ? manager._add(data, cache) : manager.cache.get(id);
   }
 
@@ -48,7 +48,7 @@ export class Action {
     );
   }
 
-  getMessage(data: any, channel: any, cache: any) {
+  getMessage(data: any, channel: any, cache?: any) {
     const id = data.message_id ?? data.id;
     return (
       data[this.client.actions.injectedMessage] ??
@@ -83,7 +83,7 @@ export class Action {
     return message.poll;
   }
 
-  getReaction(data: any, message: any, user: any) {
+  getReaction(data: any, message: any, user?: any) {
     const id = data.emoji.id ?? decodeURIComponent(data.emoji.name);
     return this.getPayload(
       {

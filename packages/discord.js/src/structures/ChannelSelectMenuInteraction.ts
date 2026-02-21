@@ -8,6 +8,7 @@ import { MessageComponentInteraction  } from './MessageComponentInteraction.js';
  */
 export class ChannelSelectMenuInteraction extends MessageComponentInteraction {
   public channels: any;
+  public values: any;
   constructor(client, data) {
     super(client, data);
     const { resolved, values } = data.data;
@@ -26,7 +27,7 @@ export class ChannelSelectMenuInteraction extends MessageComponentInteraction {
      */
     this.channels = new Collection();
 
-    for (const channel of Object.values(resolved?.channels ?? {})) {
+    for (const channel of Object.values(resolved?.channels ?? {}) as any[]) {
       this.channels.set(channel.id, this.client.channels._add(channel, this.guild) ?? channel);
     }
   }

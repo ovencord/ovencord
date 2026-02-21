@@ -12,7 +12,7 @@ import { CachedManager  } from './CachedManager.js';
  */
 export class GuildBanManager extends CachedManager {
   public guild: any;
-  constructor(guild, iterable) {
+  constructor(guild: any, iterable?: any) {
     super(guild.client, GuildBan, iterable);
 
     /**
@@ -123,7 +123,7 @@ export class GuildBanManager extends CachedManager {
     return this._add(data, cache);
   }
 
-  async _fetchMany({ cache, ...apiOptions } = {}) {
+  async _fetchMany({ cache, ...apiOptions }: any = {}) {
     const data = await this.client.rest.get(Routes.guildBans(this.guild.id), {
       query: makeURLSearchParams(apiOptions),
     });
@@ -150,7 +150,7 @@ export class GuildBanManager extends CachedManager {
    * // Ban a user by id (or with a user/guild member object)
    * await guild.bans.create('84484653687267328');
    */
-  async create(user, options = {}) {
+  async create(user: any, options: any = {}) {
     if (typeof options !== 'object') throw new DiscordjsTypeError(ErrorCodes.InvalidType, 'options', 'object', true);
     const id = this.client.users.resolveId(user);
     if (!id) throw new DiscordjsError(ErrorCodes.BanResolveId, true);
@@ -202,14 +202,14 @@ export class GuildBanManager extends CachedManager {
    *   })
    *   .catch(console.error);
    */
-  async bulkCreate(users, options = {}) {
+  async bulkCreate(users: any, options: any = {}) {
     if (!users || !(Array.isArray(users) || users instanceof Collection)) {
       throw new DiscordjsTypeError(ErrorCodes.InvalidType, 'users', 'Array or Collection of UserResolvable', true);
     }
 
     if (typeof options !== 'object') throw new DiscordjsTypeError(ErrorCodes.InvalidType, 'options', 'object', true);
 
-    const userIds = users.map(user => this.client.users.resolveId(user));
+    const userIds = (users as any).map((user: any) => this.client.users.resolveId(user));
     if (userIds.length === 0) throw new DiscordjsError(ErrorCodes.BulkBanUsersOptionEmpty);
 
     const result = await this.client.rest.post(Routes.guildBulkBan(this.guild.id), {

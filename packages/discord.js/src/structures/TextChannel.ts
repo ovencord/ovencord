@@ -27,7 +27,7 @@ export class TextChannel extends BaseGuildTextChannel {
    * @param {string} [reason] Reason for changing the channel's rate limit
    * @returns {Promise<TextChannel>}
    */
-  async setRateLimitPerUser(rateLimitPerUser, reason) {
-    return this.edit({ rateLimitPerUser, reason });
+  async setRateLimitPerUser(...args: any[]): Promise<any> {
+    return this.edit({ rateLimitPerUser: args[0], reason: args[1] });
   }
 }

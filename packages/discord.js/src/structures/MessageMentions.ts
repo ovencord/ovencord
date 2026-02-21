@@ -14,6 +14,9 @@ export class MessageMentions {
   public _parsedUsers: any;
   public crosspostedChannels: any;
   public repliedUser: any;
+  public client: any;
+  public guild: any;
+  public _content: any;
   /**
    * A regular expression that matches `@everyone` and `@here`.
    * The `mention` group property is present on the `exec` result of this expression.
@@ -243,7 +246,7 @@ export class MessageMentions {
     this._channels = new Collection();
     let matches;
 
-    while ((matches = this.constructor.GlobalChannelsPattern.exec(this._content)) !== null) {
+    while ((matches = (this.constructor as any).GlobalChannelsPattern.exec(this._content)) !== null) {
       const channel = this.client.channels.cache.get(matches.groups.id);
       if (channel) this._channels.set(channel.id, channel);
     }
@@ -262,7 +265,7 @@ export class MessageMentions {
     if (this._parsedUsers) return this._parsedUsers;
     this._parsedUsers = new Collection();
     let matches;
-    while ((matches = this.constructor.GlobalUsersPattern.exec(this._content)) !== null) {
+    while ((matches = (this.constructor as any).GlobalUsersPattern.exec(this._content)) !== null) {
       const user = this.client.users.cache.get(matches[1]);
       if (user) this._parsedUsers.set(user.id, user);
     }

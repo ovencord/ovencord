@@ -19,7 +19,7 @@ export class MessageManager extends CachedManager {
   public channel: any;
   static [MakeCacheOverrideSymbol] = MessageManager;
 
-  constructor(channel, iterable) {
+  constructor(channel: any, iterable?: any) {
     super(channel.client, Message, iterable);
 
     /**
@@ -115,7 +115,7 @@ export class MessageManager extends CachedManager {
     return this._add(data, cache);
   }
 
-  async _fetchMany({ cache, ...apiOptions } = {}) {
+  async _fetchMany({ cache, ...apiOptions }: any = {}) {
     const data = await this.client.rest.get(Routes.channelMessages(this.channel.id), {
       query: makeURLSearchParams(apiOptions),
     });
@@ -162,7 +162,7 @@ export class MessageManager extends CachedManager {
    *   .then(messages => console.log(`Received ${messages.items.length} messages`))
    *   .catch(console.error);
    */
-  async fetchPins({ cache, ...apiOptions } = {}) {
+  async fetchPins({ cache, ...apiOptions }: any = {}) {
     const data = await this.client.rest.get(Routes.channelMessagesPins(this.channel.id), {
       query: makeURLSearchParams({
         ...apiOptions,
@@ -252,7 +252,7 @@ export class MessageManager extends CachedManager {
       return clone;
     }
 
-    return this._add(data);
+    return this._add(data, true);
   }
 
   /**

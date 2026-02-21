@@ -22,7 +22,7 @@ let cacheWarningEmitted = false;
  * @extends {CachedManager}
  */
 export class GuildManager extends CachedManager {
-  constructor(client, iterable) {
+  constructor(client: any, iterable?: any) {
     super(client, Guild, iterable);
     if (!cacheWarningEmitted && this._cache.constructor.name !== 'Collection') {
       cacheWarningEmitted = true;
@@ -121,7 +121,7 @@ export class GuildManager extends CachedManager {
    * @param {GuildResolvable|FetchGuildOptions|FetchGuildsOptions} [options] The guild's id or options
    * @returns {Promise<Guild|Collection<Snowflake, OAuth2Guild>>}
    */
-  async fetch(options = {}) {
+  async fetch(options: any = {}) {
     const id = this.resolveId(options) ?? this.resolveId(options.guild);
 
     if (id) {
@@ -160,9 +160,9 @@ export class GuildManager extends CachedManager {
    *
    * console.log(soundboardSounds.get('123456789012345678'));
    */
-  async fetchSoundboardSounds({ guildIds, time = 10_000 }) {
+  async fetchSoundboardSounds({ guildIds, time = 10_000 }: any) {
     const shardCount = await this.client.ws.getShardCount();
-    const shardIds = Map.groupBy(guildIds, guildId => ShardClientUtil.shardIdForGuildId(guildId, shardCount));
+    const shardIds = Map.groupBy(guildIds, (guildId: any) => ShardClientUtil.shardIdForGuildId(guildId, shardCount));
 
     for (const [shardId, shardGuildIds] of shardIds) {
       this.client.ws.send(shardId, {

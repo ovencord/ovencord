@@ -22,7 +22,7 @@ export default (client, { d: data }) => {
     return coll.set(thread.id, thread);
   }, new Collection());
 
-  for (const rawMember of Object.values(data.members)) {
+  for (const rawMember of Object.values(data.members) as any[]) {
     // Discord sends the thread id as id in this object
     const thread = client.channels.cache.get(rawMember.id);
     if (thread) {

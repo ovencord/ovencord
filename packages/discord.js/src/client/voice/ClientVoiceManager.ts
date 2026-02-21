@@ -5,7 +5,8 @@ import { WebSocketShardEvents, CloseCodes  } from '@ovencord/ws';
  */
 export class ClientVoiceManager {
   public adapters: any;
-  constructor(client) {
+  public client: any;
+  constructor(client: any) {
     /**
      * The client that instantiated this voice manager
      *

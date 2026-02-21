@@ -687,7 +687,7 @@ export function email<Email extends string>(
 export function email<Email extends string>(email: Email, headers?: Record<string, string | readonly string[]>) {
 	if (headers) {
 		const searchParams = new URLSearchParams(
-			Object.fromEntries(Object.entries(headers).map(([key, value]) => [key.toLowerCase(), value])),
+			Object.fromEntries(Object.entries(headers).map(([key, value]) => [key.toLowerCase(), value])) as Record<string, string>,
 		);
 
 		return `<${email}?${searchParams.toString()}>` as const;

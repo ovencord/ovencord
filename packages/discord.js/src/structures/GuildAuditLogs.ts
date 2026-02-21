@@ -65,7 +65,7 @@ export class GuildAuditLogs {
     this.applicationCommands = new Collection();
     if (data.application_commands) {
       for (const command of data.application_commands) {
-        this.applicationCommands.set(command.id, new ApplicationCommand(guild.client, command, guild));
+        this.applicationCommands.set(command.id, new ApplicationCommand(guild.client, command, guild, guild.id));
       }
     }
 

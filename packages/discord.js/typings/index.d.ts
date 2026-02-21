@@ -1,7 +1,4 @@
-import { Buffer } from 'node:buffer';
-import { ChildProcess } from 'node:child_process';
-import { Stream } from 'node:stream';
-import { MessagePort, Worker } from 'node:worker_threads';
+import type { Subprocess } from 'bun';
 import { ApplicationCommandOptionAllowedChannelType, MessageActionRowComponentBuilder } from '@ovencord/builders';
 import { Collection, ReadonlyCollection } from '@ovencord/collection';
 import { BaseImageURLOptions, ImageURLOptions, RawFile, REST, RESTOptions, EmojiURLOptions } from '@ovencord/rest';
@@ -2282,7 +2279,7 @@ export class AuthorizingIntegrationOwners extends Base {
 
 export class Attachment {
   private constructor(data: APIAttachment);
-  private readonly attachment: BufferResolvable | Stream;
+  private readonly attachment: BufferResolvable | ReadableStream;
   public contentType: string | null;
   public description: string | null;
   public duration: number | null;
@@ -3145,14 +3142,14 @@ export class SeparatorComponent extends Component<APISeparatorComponent> {
 }
 
 export interface ShardEventTypes {
-  death: [process: ChildProcess | Worker];
+  death: [process: Subprocess | Worker];
   disconnect: [];
   error: [error: Error];
   message: [message: any];
   ready: [];
   reconnecting: [];
   resume: [];
-  spawn: [process: ChildProcess | Worker];
+  spawn: [process: Subprocess | Worker];
 }
 
 export class Shard extends AsyncEventEmitter<ShardEventTypes> {
@@ -3162,15 +3159,15 @@ export class Shard extends AsyncEventEmitter<ShardEventTypes> {
   private readonly _fetches: Map<string, Promise<unknown>>;
   private _handleExit(respawn?: boolean, timeout?: number): void;
   private _handleMessage(message: unknown): void;
-  private incrementMaxListeners(emitter: ChildProcess | Worker): void;
-  private decrementMaxListeners(emitter: ChildProcess | Worker): void;
+  private incrementMaxListeners(emitter: Subprocess | Worker): void;
+  private decrementMaxListeners(emitter: Subprocess | Worker): void;
 
   public args: string[];
   public execArgv: string[];
   public env: unknown;
   public id: number;
   public manager: ShardingManager;
-  public process: ChildProcess | null;
+  public process: Subprocess | null;
   public ready: boolean;
   public silent: boolean;
   public worker: Worker | null;
@@ -3182,17 +3179,17 @@ export class Shard extends AsyncEventEmitter<ShardEventTypes> {
   ): Promise<Result>;
   public fetchClientValue(prop: string): Promise<unknown>;
   public kill(): void;
-  public respawn(options?: { delay?: number; timeout?: number }): Promise<ChildProcess>;
+  public respawn(options?: { delay?: number; timeout?: number }): Promise<Subprocess>;
   public send(message: unknown): Promise<Shard>;
-  public spawn(timeout?: number): Promise<ChildProcess>;
+  public spawn(timeout?: number): Promise<Subprocess>;
 }
 
 export class ShardClientUtil {
   private constructor(client: Client<true>, mode: ShardingManagerMode);
   private _handleMessage(message: unknown): void;
   private _respond(type: string, message: unknown): void;
-  private incrementMaxListeners(emitter: ChildProcess | Worker): void;
-  private decrementMaxListeners(emitter: ChildProcess | Worker): void;
+  private incrementMaxListeners(emitter: Subprocess | Worker): void;
+  private decrementMaxListeners(emitter: Subprocess | Worker): void;
 
   public client: Client;
   public mode: ShardingManagerMode;
@@ -4551,7 +4548,7 @@ export interface GuildSoundboardSoundCreateOptions {
   contentType?: string;
   emojiId?: Snowflake;
   emojiName?: string;
-  file: BufferResolvable | Stream;
+  file: BufferResolvable | ReadableStream;
   name: string;
   reason?: string;
   volume?: number;
@@ -6014,7 +6011,7 @@ export interface FetchThreadsOptions {
 }
 
 export interface AttachmentPayload {
-  attachment: BufferResolvable | Stream;
+  attachment: BufferResolvable | ReadableStream;
   description?: string;
   duration?: number;
   name?: string;
@@ -6295,7 +6292,7 @@ export interface GuildEmojiEditOptions {
 
 export interface GuildStickerCreateOptions {
   description?: string | null;
-  file: AttachmentPayload | BufferResolvable | Stream;
+  file: AttachmentPayload | BufferResolvable | ReadableStream;
   name: string;
   reason?: string;
   tags: string;
@@ -6713,7 +6710,7 @@ export interface BaseMessageOptions {
   )[];
   content?: string;
   embeds?: readonly (APIEmbed | JSONEncodable<APIEmbed>)[];
-  files?: readonly (Attachment | AttachmentPayload | BufferResolvable | FileBodyEncodable<APIAttachment> | Stream)[];
+  files?: readonly (Attachment | AttachmentPayload | BufferResolvable | FileBodyEncodable<APIAttachment> | ReadableStream)[];
 }
 
 export interface MessageOptionsPoll {

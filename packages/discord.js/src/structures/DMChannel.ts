@@ -109,16 +109,17 @@ export class DMChannel extends BaseChannel {
    * // Logs: Hello from <@123456789012345678>!
    * console.log(`Hello from ${channel}!`);
    */
-  toString() {
+  // @ts-expect-error
+  toString(): string {
     return userMention(this.recipientId);
   }
 
   // These are here only for documentation purposes - they are implemented by TextBasedChannel
 
   /* eslint-disable getter-return */
-  get lastMessage() {}
+  get lastMessage() { return undefined as any; }
 
-  get lastPinAt() {}
+  get lastPinAt() { return undefined as any; }
 
   send() {}
 

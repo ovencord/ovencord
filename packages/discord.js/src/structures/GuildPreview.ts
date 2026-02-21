@@ -19,6 +19,9 @@ export class GuildPreview extends Base {
   public description: any;
   public emojis: any;
   public stickers: any;
+  public icon: any;
+  public splash: any;
+  public discoverySplash: any;
   constructor(client, data) {
     super(client);
 

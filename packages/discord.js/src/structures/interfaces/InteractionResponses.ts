@@ -84,7 +84,7 @@ export class InteractionResponses {
    *   .then(console.log)
    *   .catch(console.error);
    */
-  async deferReply(options = {}) {
+  async deferReply(options: any = {}) {
     if (this.deferred || this.replied) throw new DiscordjsError(ErrorCodes.InteractionAlreadyReplied);
 
     const resolvedFlags = new MessageFlagsBitField(options.flags);
@@ -234,7 +234,7 @@ export class InteractionResponses {
    *   .then(console.log)
    *   .catch(console.error);
    */
-  async deferUpdate(options = {}) {
+  async deferUpdate(options: any = {}) {
     if (this.deferred || this.replied) throw new DiscordjsError(ErrorCodes.InteractionAlreadyReplied);
     const response = await this.client.rest.post(Routes.interactionCallback(this.id, this.token), {
       body: {
@@ -262,7 +262,7 @@ export class InteractionResponses {
    *   .then(console.log)
    *   .catch(console.error);
    */
-  async update(options = {}) {
+  async update(options: any = {}) {
     if (this.deferred || this.replied) throw new DiscordjsError(ErrorCodes.InteractionAlreadyReplied);
 
     let messagePayload;
@@ -291,7 +291,7 @@ export class InteractionResponses {
    * @param {LaunchActivityOptions} [options={}] Options for launching the activity
    * @returns {Promise<InteractionCallbackResponse|undefined>}
    */
-  async launchActivity({ withResponse } = {}) {
+  async launchActivity({ withResponse }: any = {}) {
     if (this.deferred || this.replied) throw new DiscordjsError(ErrorCodes.InteractionAlreadyReplied);
     const response = await this.client.rest.post(Routes.interactionCallback(this.id, this.token), {
       query: makeURLSearchParams({ with_response: withResponse ?? false }),
@@ -312,7 +312,7 @@ export class InteractionResponses {
    * @param {ShowModalOptions} [options={}] The options for sending this interaction response
    * @returns {Promise<InteractionCallbackResponse|undefined>}
    */
-  async showModal(modal, options = {}) {
+  async showModal(modal: any, options: any = {}) {
     if (this.deferred || this.replied) throw new DiscordjsError(ErrorCodes.InteractionAlreadyReplied);
     const response = await this.client.rest.post(Routes.interactionCallback(this.id, this.token), {
       body: {

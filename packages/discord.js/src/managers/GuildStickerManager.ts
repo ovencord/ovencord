@@ -12,7 +12,7 @@ import { CachedManager  } from './CachedManager.js';
  */
 export class GuildStickerManager extends CachedManager {
   public guild: any;
-  constructor(guild, iterable) {
+  constructor(guild: any, iterable?: any) {
     super(guild.client, Sticker, iterable);
 
     /**
@@ -61,9 +61,9 @@ export class GuildStickerManager extends CachedManager {
    *   .then(sticker => console.log(`Created new sticker with name ${sticker.name}!`))
    *   .catch(console.error);
    */
-  async create({ file, name, tags, description, reason } = {}) {
+  async create({ file, name, tags, description, reason }: any = {}) {
     const resolvedFile = await MessagePayload.resolveFile(file);
-    resolvedFile.key = 'file';
+    (resolvedFile as any).key = 'file';
 
     const body = { name, tags, description: description ?? '' };
 
@@ -111,7 +111,7 @@ export class GuildStickerManager extends CachedManager {
    * @param {GuildStickerEditOptions} [options={}] The new data for the sticker
    * @returns {Promise<Sticker>}
    */
-  async edit(sticker, options = {}) {
+  async edit(sticker, options: any = {}) {
     const stickerId = this.resolveId(sticker);
     if (!stickerId) throw new DiscordjsTypeError(ErrorCodes.InvalidType, 'sticker', 'StickerResolvable');
 
@@ -127,7 +127,7 @@ export class GuildStickerManager extends CachedManager {
       return clone;
     }
 
-    return this._add(data);
+    return this._add(data, true);
   }
 
   /**

@@ -135,7 +135,7 @@ export class Collector extends AsyncEventEmitter {
    * @emits Collector#collect
    */
   async handleCollect(...args) {
-    const collectedId = await this.collect(...args);
+    const collectedId: any = await this.collect(...args);
 
     if (collectedId) {
       const filterResult = await this.filter(...args, this.collected);
@@ -179,7 +179,7 @@ export class Collector extends AsyncEventEmitter {
   async handleDispose(...args) {
     if (!this.options.dispose) return;
 
-    const dispose = this.dispose(...args);
+    const dispose: any = this.dispose(...args);
     if (!dispose || !(await this.filter(...args)) || !this.collected.has(dispose)) return;
     this.collected.delete(dispose);
 
@@ -274,7 +274,7 @@ export class Collector extends AsyncEventEmitter {
    *
    * @param {CollectorResetTimerOptions} [options] Options for resetting
    */
-  resetTimer({ time, idle } = {}) {
+  resetTimer({ time, idle }: any = {}) {
     if (this._timeout) {
       clearTimeout(this._timeout);
       this._timeout = setTimeout(() => this.stop('time'), time ?? this.options.time).unref();
@@ -355,7 +355,7 @@ export class Collector extends AsyncEventEmitter {
    * @abstract
    */
   // eslint-disable-next-line no-unused-vars
-  collect(...args) {}
+  collect(...args: any[]): any {}
 
   /**
    * Handles incoming events from the `handleDispose`. Returns null if the event should not
@@ -367,5 +367,5 @@ export class Collector extends AsyncEventEmitter {
    * @abstract
    */
   // eslint-disable-next-line no-unused-vars
-  dispose(...args) {}
+  dispose(...args: any[]): any {}
 }

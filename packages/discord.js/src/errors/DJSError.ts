@@ -35,11 +35,11 @@ export function makeDiscordjsError(Base) {
  * @returns {string} Formatted string
  * @ignore
  */
-export function message(code, args) {
+export function message(code: any, args: any[]) {
   if (!(code in ErrorCodes)) throw new Error('Error code must be a valid DiscordjsErrorCodes');
   const msg = Messages[code];
   if (!msg) throw new Error(`No message associated with error code: ${code}.`);
-  if (typeof msg === 'function') return msg(...args);
+  if (typeof msg === 'function') return (msg as any).apply(null, args);
   if (!args?.length) return msg;
   args.unshift(msg);
   return String(...args);

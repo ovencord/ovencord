@@ -12,7 +12,7 @@ import { CachedManager  } from './CachedManager.js';
  */
 export class ReactionUserManager extends CachedManager {
   public reaction: any;
-  constructor(reaction, iterable) {
+  constructor(reaction: any, iterable?: any) {
     super(reaction.client, User, iterable);
 
     /**
@@ -45,7 +45,7 @@ export class ReactionUserManager extends CachedManager {
    * @param {FetchReactionUsersOptions} [options] Options for fetching the users
    * @returns {Promise<Collection<Snowflake, User>>}
    */
-  async fetch({ type = ReactionType.Normal, limit = 100, after } = {}) {
+  async fetch({ type = ReactionType.Normal, limit = 100, after }: any = {}) {
     const message = this.reaction.message;
     const query = makeURLSearchParams({ limit, after, type });
     const data = await this.client.rest.get(

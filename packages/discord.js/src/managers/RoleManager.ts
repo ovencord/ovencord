@@ -16,7 +16,7 @@ let cacheWarningEmitted = false;
  */
 export class RoleManager extends CachedManager {
   public guild: any;
-  constructor(guild, iterable) {
+  constructor(guild: any, iterable?: any) {
     super(guild.client, Role, iterable);
     if (!cacheWarningEmitted && this._cache.constructor.name !== 'Collection') {
       cacheWarningEmitted = true;
@@ -181,7 +181,7 @@ export class RoleManager extends CachedManager {
    *   .then(console.log)
    *   .catch(console.error);
    */
-  async create(options = {}) {
+  async create(options: any = {}) {
     let { permissions, icon } = options;
     const { name, hoist, position, mentionable, reason, unicodeEmoji } = options;
     if (permissions !== undefined) permissions = new PermissionsBitField(permissions);
@@ -236,7 +236,7 @@ export class RoleManager extends CachedManager {
    *   .then(updated => console.log(`Edited role name to ${updated.name}`))
    *   .catch(console.error);
    */
-  async edit(role, options) {
+  async edit(role, options: any) {
     const resolvedRole = this.resolve(role);
     if (!resolvedRole) throw new DiscordjsTypeError(ErrorCodes.InvalidType, 'role', 'RoleResolvable');
 
@@ -308,7 +308,7 @@ export class RoleManager extends CachedManager {
    *   .then(updated => console.log(`Role position: ${updated.position}`))
    *   .catch(console.error);
    */
-  async setPosition(role, position, { relative, reason } = {}) {
+  async setPosition(role, position, { relative, reason }: any = {}) {
     const resolvedRole = this.resolve(role);
     if (!resolvedRole) throw new DiscordjsTypeError(ErrorCodes.InvalidType, 'role', 'RoleResolvable');
     const updatedRoles = await setPosition(

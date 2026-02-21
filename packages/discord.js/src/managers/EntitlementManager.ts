@@ -12,7 +12,7 @@ import { CachedManager  } from './CachedManager.js';
  * @extends {CachedManager}
  */
 export class EntitlementManager extends CachedManager {
-  constructor(client, iterable) {
+  constructor(client: any, iterable?: any) {
     super(client, Entitlement, iterable);
   }
 
@@ -94,7 +94,7 @@ export class EntitlementManager extends CachedManager {
     return this._add(data, cache);
   }
 
-  async _fetchMany({ limit, guild, user, skus, excludeEnded, excludeDeleted, cache, before, after } = {}) {
+  async _fetchMany({ limit, guild, user, skus, excludeEnded, excludeDeleted, cache, before, after }: any = {}) {
     const query = makeURLSearchParams({
       limit,
       guild_id: guild && this.client.guilds.resolveId(guild),

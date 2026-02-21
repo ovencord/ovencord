@@ -7,7 +7,8 @@ import { DataManager  } from './DataManager.js';
  * @extends {DataManager}
  */
 export class CategoryChannelChildManager extends DataManager {
-  constructor(channel) {
+  public channel: any;
+  constructor(channel: any) {
     super(channel.client, GuildChannel);
     /**
      * The category channel this manager belongs to

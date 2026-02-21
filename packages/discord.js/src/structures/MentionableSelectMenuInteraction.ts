@@ -11,6 +11,7 @@ export class MentionableSelectMenuInteraction extends MessageComponentInteractio
   public users: any;
   public members: any;
   public roles: any;
+  public values: any;
   constructor(client, data) {
     super(client, data);
     const { resolved, values } = data.data;
@@ -56,18 +57,18 @@ export class MentionableSelectMenuInteraction extends MessageComponentInteractio
           continue;
         }
 
-        this.members.set(id, this.guild?.members._add({ user, ...member }) ?? { user, ...member });
+        this.members.set(id, this.guild?.members._add(Object.assign({ user }, member)) ?? Object.assign({ user }, member));
       }
     }
 
     if (users) {
-      for (const user of Object.values(users)) {
+      for (const user of Object.values(users) as any[]) {
         this.users.set(user.id, this.client.users._add(user));
       }
     }
 
     if (roles) {
-      for (const role of Object.values(roles)) {
+      for (const role of Object.values(roles) as any[]) {
         this.roles.set(role.id, this.guild?.roles._add(role) ?? role);
       }
     }

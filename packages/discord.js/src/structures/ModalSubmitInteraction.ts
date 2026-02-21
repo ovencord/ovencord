@@ -71,6 +71,7 @@ export class ModalSubmitInteraction extends BaseInteraction {
   public replied: any;
   public ephemeral: any;
   public webhook: any;
+  public token: any;
   constructor(client, data) {
     super(client, data);
     /**
@@ -164,7 +165,7 @@ export class ModalSubmitInteraction extends BaseInteraction {
       };
     }
 
-    const data = {
+    const data: any = {
       type: rawComponent.type,
       id: rawComponent.id,
     };
@@ -206,7 +207,7 @@ export class ModalSubmitInteraction extends BaseInteraction {
           for (const [id, member] of Object.entries(members)) {
             if (valueSet.has(id)) {
               const user = users?.[id];
-              data.members.set(id, this.guild?.members._add({ user, ...member }) ?? member);
+              data.members.set(id, this.guild?.members._add(Object.assign({ user }, member)) ?? member);
             }
           }
         }
@@ -265,4 +266,4 @@ export class ModalSubmitInteraction extends BaseInteraction {
   launchActivity() {}
 }
 
-InteractionResponses.applyToClass(ModalSubmitInteraction, 'showModal');
+InteractionResponses.applyToClass(ModalSubmitInteraction, ['showModal']);

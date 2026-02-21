@@ -21,7 +21,7 @@ import { CachedManager  } from './CachedManager.js';
  */
 export class GuildMemberManager extends CachedManager {
   public guild: any;
-  constructor(guild, iterable) {
+  constructor(guild: any, iterable?: any) {
     super(guild.client, GuildMember, iterable);
 
     /**
@@ -104,7 +104,7 @@ export class GuildMemberManager extends CachedManager {
       if (cachedUser) return cachedUser;
     }
 
-    const resolvedOptions = {
+    const resolvedOptions: any = {
       access_token: options.accessToken,
       nick: options.nick,
       mute: options.mute,
@@ -240,7 +240,7 @@ export class GuildMemberManager extends CachedManager {
     query: initialQuery,
     time = 120e3,
     nonce = DiscordSnowflake.generate().toString(),
-  } = {}) {
+  }: any = {}) {
     if (nonce.length > 32) throw new DiscordjsRangeError(ErrorCodes.MemberFetchNonceLength);
 
     const query = initialQuery ?? (users ? undefined : '');
@@ -333,7 +333,7 @@ export class GuildMemberManager extends CachedManager {
    * @param {GuildSearchMembersOptions} options Options for searching members
    * @returns {Promise<Collection<Snowflake, GuildMember>>}
    */
-  async search({ query, limit, cache = true } = {}) {
+  async search({ query, limit, cache = true }: any = {}) {
     const data = await this.client.rest.get(Routes.guildMembersSearch(this.guild.id), {
       query: makeURLSearchParams({ query, limit }),
     });
@@ -355,7 +355,7 @@ export class GuildMemberManager extends CachedManager {
    * @param {GuildListMembersOptions} [options] Options for listing members
    * @returns {Promise<Collection<Snowflake, GuildMember>>}
    */
-  async list({ after, limit, cache = true } = {}) {
+  async list({ after, limit, cache = true }: any = {}) {
     const query = makeURLSearchParams({ limit, after });
     const data = await this.client.rest.get(Routes.guildMembers(this.guild.id), { query });
     return data.reduce((col, member) => col.set(member.user.id, this._add(member, cache)), new Collection());
@@ -401,7 +401,7 @@ export class GuildMemberManager extends CachedManager {
       options.channel = undefined;
     }
 
-    options.roles &&= options.roles.map(role => (role instanceof Role ? role.id : role));
+    options.roles &&= options.roles.map((role: any) => (role instanceof Role ? (role as any).id : role));
 
     if (options.communicationDisabledUntil !== undefined) {
       options.communication_disabled_until =
@@ -487,10 +487,10 @@ export class GuildMemberManager extends CachedManager {
    *    .then(pruned => console.log(`I just pruned ${pruned} people!`))
    *    .catch(console.error);
    */
-  async prune({ days, dry = false, count: compute_prune_count, roles = [], reason } = {}) {
+  async prune({ days, dry = false, count: compute_prune_count, roles = [], reason }: any = {}) {
     if (typeof days !== 'number') throw new DiscordjsTypeError(ErrorCodes.PruneDaysType);
 
-    const query = { days };
+    const query: any = { days };
     const resolvedRoles = [];
 
     for (const role of roles) {

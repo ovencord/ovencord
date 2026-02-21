@@ -199,9 +199,9 @@ export class BaseGuildTextChannel extends GuildChannel {
   // These are here only for documentation purposes - they are implemented by TextBasedChannel
 
   /* eslint-disable getter-return */
-  get lastMessage() {}
+  get lastMessage() { return undefined as any; }
 
-  get lastPinAt() {}
+  get lastPinAt() { return undefined as any; }
 
   send() {}
 

@@ -9,7 +9,7 @@ import { CachedManager  } from './CachedManager.js';
  */
 export class VoiceStateManager extends CachedManager {
   public guild: any;
-  constructor(guild, iterable) {
+  constructor(guild: any, iterable?: any) {
     super(guild.client, VoiceState, iterable);
 
     /**

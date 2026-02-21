@@ -15,6 +15,7 @@ export class BaseChannel extends Base {
   public type: any;
   public flags: any;
   public id: any;
+  public guildId: any;
   constructor(client, data, immediatePatch = true) {
     super(client);
 

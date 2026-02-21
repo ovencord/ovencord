@@ -13,6 +13,7 @@ import { Base  } from './Base.js';
  */
 export class Role extends Base {
   public guild: any;
+  public id: any;
 
   public icon: any;
   public unicodeEmoji: any;

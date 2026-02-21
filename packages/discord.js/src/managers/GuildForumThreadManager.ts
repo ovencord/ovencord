@@ -58,7 +58,7 @@ export class GuildForumThreadManager extends ThreadManager {
     reason,
     rateLimitPerUser,
     appliedTags,
-  } = {}) {
+  }: any = {}) {
     if (!message) {
       throw new DiscordjsTypeError(ErrorCodes.GuildForumMessageRequired);
     }

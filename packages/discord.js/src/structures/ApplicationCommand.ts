@@ -155,7 +155,7 @@ export class ApplicationCommand extends Base {
        *
        * @type {?ApplicationCommandOption[]}
        */
-      this.options = data.options.map(option => this.constructor.transformOption(option, true));
+      this.options = data.options.map((option: any) => (this.constructor as typeof ApplicationCommand).transformOption(option, true));
     } else {
       this.options ??= null;
     }
@@ -469,7 +469,7 @@ export class ApplicationCommand extends Base {
 
     // Don't need to check both because we already checked the lengths above
     if (command.options) {
-      return this.constructor.optionsEqual(this.options, command.options, enforceOptionOrder);
+      return (this.constructor as typeof ApplicationCommand).optionsEqual(this.options, command.options, enforceOptionOrder);
     }
 
     return true;
@@ -556,7 +556,7 @@ export class ApplicationCommand extends Base {
       }
 
       if (!enforceOptionOrder) {
-        const newChoices = new Map(option.choices.map(choice => [choice.name, choice]));
+        const newChoices = new Map<string, any>(option.choices.map((choice: any) => [choice.name, choice]));
         for (const choice of existing.choices) {
           const foundChoice = newChoices.get(choice.name);
           if (!foundChoice || foundChoice.value !== choice.value) return false;
@@ -625,7 +625,7 @@ export class ApplicationCommand extends Base {
    * @returns {APIApplicationCommandOption}
    * @private
    */
-  static transformOption(option, received) {
+  static transformOption(option: any, received?: boolean) {
     const channelTypesKey = received ? 'channelTypes' : 'channel_types';
     const minValueKey = received ? 'minValue' : 'min_value';
     const maxValueKey = received ? 'maxValue' : 'max_value';

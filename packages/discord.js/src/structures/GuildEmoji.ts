@@ -135,7 +135,7 @@ export class GuildEmoji extends BaseGuildEmoji {
    * @param {GuildEmoji|APIEmoji} other The emoji to compare it to
    * @returns {boolean}
    */
-  equals(other) {
+  equals(other: any) {
     if (other instanceof GuildEmoji) {
       return (
         other.id === this.id &&
@@ -144,14 +144,14 @@ export class GuildEmoji extends BaseGuildEmoji {
         other.available === this.available &&
         other.requiresColons === this.requiresColons &&
         other.roles.cache.size === this.roles.cache.size &&
-        other.roles.cache.every(role => this.roles.cache.has(role.id))
+        other.roles.cache.every((role: any) => this.roles.cache.has(role.id))
       );
     } else {
       return (
         other.id === this.id &&
         other.name === this.name &&
         other.roles.length === this.roles.cache.size &&
-        other.roles.every(role => this.roles.cache.has(role))
+        (other.roles as any[]).every((role: any) => this.roles.cache.has(role))
       );
     }
   }

@@ -14,6 +14,7 @@ export class PollAnswer extends Base {
   public voteCount: any;
   public _emoji: any;
   public text: any;
+  public poll: any;
   constructor(client, data, poll) {
     super(client);
 

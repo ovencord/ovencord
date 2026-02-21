@@ -9,7 +9,7 @@ import { ApplicationCommandPermissionsManager  } from './ApplicationCommandPermi
 export class GuildApplicationCommandManager extends ApplicationCommandManager {
   public guild: any;
   public permissions: any;
-  constructor(guild, iterable) {
+  constructor(guild: any, iterable?: any) {
     super(guild.client, iterable);
 
     /**

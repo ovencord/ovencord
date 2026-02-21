@@ -37,7 +37,7 @@ export class GuildMemberRoleManager extends DataManager {
    * @readonly
    */
   get cache() {
-    const cache = new Collection();
+    const cache = new Collection<string, any>();
     cache.set(this.guild.id, this.guild.roles.everyone);
 
     for (const roleId of this.member._roles) {
@@ -223,7 +223,7 @@ export class GuildMemberRoleManager extends DataManager {
   }
 
   clone() {
-    const clone = new this.constructor(this.member);
+    const clone = new (this.constructor as any)(this.member);
     clone.member._roles = [...this.cache.keys()];
     return clone;
   }

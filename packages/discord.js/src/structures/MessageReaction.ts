@@ -17,6 +17,7 @@ export class MessageReaction {
   public burstColors: any;
   public countDetails: any;
   public count: any;
+  public client: any;
   constructor(client, data, message) {
     /**
      * The client that instantiated this message reaction

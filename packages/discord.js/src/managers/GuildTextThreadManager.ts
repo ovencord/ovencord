@@ -64,7 +64,7 @@ export class GuildTextThreadManager extends ThreadManager {
     invitable,
     reason,
     rateLimitPerUser,
-  } = {}) {
+  }: any = {}) {
     let resolvedType =
       this.channel.type === ChannelType.GuildAnnouncement ? ChannelType.AnnouncementThread : ChannelType.PublicThread;
     let startMessageId;

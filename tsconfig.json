@@ -27,6 +27,7 @@
     "allowSyntheticDefaultImports": true,
     "forceConsistentCasingInFileNames": true,
     "isolatedModules": true,
+    "useDefineForClassFields": false,
     
     /* --- OPTIONAL: LIGHT GUARDRAILS --- */
     "noFallthroughCasesInSwitch": true,

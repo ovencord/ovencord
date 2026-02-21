@@ -117,7 +117,7 @@ export class PartialGroupDMChannel extends BaseChannel {
     return this.client.users.fetch(this.ownerId, options);
   }
 
-  async delete() {
+  delete(): any {
     throw new DiscordjsError(ErrorCodes.DeleteGroupDMChannel);
   }
 
@@ -128,9 +128,9 @@ export class PartialGroupDMChannel extends BaseChannel {
   // These are here only for documentation purposes - they are implemented by TextBasedChannel
 
   /* eslint-disable getter-return */
-  get lastMessage() {}
+  get lastMessage(): any { return undefined; }
 
-  get lastPinAt() {}
+  get lastPinAt(): any { return undefined; }
 
   createMessageComponentCollector() {}
 

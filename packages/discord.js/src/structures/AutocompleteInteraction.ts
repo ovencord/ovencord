@@ -15,6 +15,7 @@ export class AutocompleteInteraction extends BaseInteraction {
   public commandGuildId: any;
   public responded: any;
   public options: any;
+  public token: any;
   constructor(client, data) {
     super(client, data);
 
@@ -65,7 +66,7 @@ export class AutocompleteInteraction extends BaseInteraction {
      *
      * @type {CommandInteractionOptionResolver}
      */
-    this.options = new CommandInteractionOptionResolver(this.client, data.data.options ?? []);
+    this.options = new CommandInteractionOptionResolver(this.client, data.data.options ?? [], undefined as any);
   }
 
   /**

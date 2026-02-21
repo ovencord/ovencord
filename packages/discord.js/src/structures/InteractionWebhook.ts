@@ -58,7 +58,7 @@ export class InteractionWebhook {
   deleteMessage() {}
 
   // eslint-disable-next-line getter-return
-  get url() {}
+  get url(): any { return undefined; }
 }
 
 Webhook.applyToClass(InteractionWebhook, ['sendSlackMessage', 'edit', 'delete', 'createdTimestamp', 'createdAt']);

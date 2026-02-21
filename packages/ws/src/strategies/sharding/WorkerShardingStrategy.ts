@@ -22,6 +22,11 @@ export class WorkerShardingStrategy implements IShardingStrategy {
 		this.options = options;
 	}
 
+	public async getShards(): Promise<Collection<number, { ping?: number; status: WebSocketShardStatus; }>> {
+		const statuses = await this.fetchStatus();
+		return statuses.mapValues((status) => ({ status }));
+	}
+
 
 	public async spawn(shardIds: number[]) {
 		for (const shardId of shardIds) {

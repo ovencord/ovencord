@@ -10,7 +10,7 @@ import { CachedManager  } from './CachedManager.js';
  */
 export class AutoModerationRuleManager extends CachedManager {
   public guild: any;
-  constructor(guild, iterable) {
+  constructor(guild: any, iterable?: any) {
     super(guild.client, AutoModerationRule, iterable);
 
     /**
@@ -48,7 +48,7 @@ export class AutoModerationRuleManager extends CachedManager {
    * @returns {?Snowflake}
    */
 
-  _add(data, cache) {
+  _add(data: any, cache?: any) {
     return super._add(data, cache, { extras: [this.guild] });
   }
 
@@ -284,7 +284,7 @@ export class AutoModerationRuleManager extends CachedManager {
     return this._add(data, cache);
   }
 
-  async _fetchMany(options = {}) {
+  async _fetchMany(options: any = {}) {
     const data = await this.client.rest.get(Routes.guildAutoModerationRules(this.guild.id));
 
     return data.reduce(

@@ -147,7 +147,7 @@ export class GuildTemplate extends Base {
    * @param {GuildTemplateEditOptions} [options] Options for editing the template
    * @returns {Promise<GuildTemplate>}
    */
-  async edit({ name, description } = {}) {
+  async edit({ name, description }: any = {}) {
     const data = await this.client.rest.patch(Routes.guildTemplate(this.guildId, this.code), {
       body: { name, description },
     });

@@ -109,8 +109,8 @@ export class MessageCollector extends Collector {
    * @readonly
    */
   get endReason() {
-    if (this.options.max && this.collected.size >= this.options.max) return 'limit';
-    if (this.options.maxProcessed && this.received === this.options.maxProcessed) return 'processedLimit';
+    if ((this.options as any).max && this.collected.size >= (this.options as any).max) return 'limit';
+    if ((this.options as any).maxProcessed && this.received === (this.options as any).maxProcessed) return 'processedLimit';
     return super.endReason;
   }
 

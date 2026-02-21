@@ -83,6 +83,15 @@ bun add @ovencord/ws @ovencord/rest
 
 ### Example: Discord Bot
 
+You can quickly scaffold a new bot using your preferred package manager (Note: This uses the legacy scaffolding, but we recommend native Bun setup for new projects):
+
+```bash
+bun create discord-bot ./your/chosen/directory
+# or npm/yarn/pnpm
+```
+
+Alternatively, here is the manual setup for a basic bot:
+
 ```typescript
 import { Client } from '@ovencord/core'; // Coming soon!
 

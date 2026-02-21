@@ -21,7 +21,8 @@ let cacheWarningEmitted = false;
  * @extends {CachedManager}
  */
 export class GuildChannelManager extends CachedManager {
-  constructor(guild, iterable) {
+  public guild: any;
+  constructor(guild: any, iterable?: any) {
     super(guild.client, GuildChannel, iterable);
     const defaultCaching =
       this._cache.constructor.name === 'Collection' ||
@@ -194,7 +195,7 @@ export class GuildChannelManager extends CachedManager {
     defaultSortOrder,
     defaultForumLayout,
     reason,
-  }) {
+  }: any = {}) {
     const data = await this.client.rest.post(Routes.guildChannels(this.guild.id), {
       body: {
         name,
@@ -245,7 +246,7 @@ export class GuildChannelManager extends CachedManager {
    *   .then(console.log)
    *   .catch(console.error)
    */
-  async createWebhook({ channel, name, avatar, reason }) {
+  async createWebhook({ channel, name, avatar, reason }: any) {
     const channelId = this.resolveId(channel);
     if (!channelId) throw new DiscordjsTypeError(ErrorCodes.InvalidType, 'channel', 'GuildChannelResolvable');
 
@@ -375,7 +376,7 @@ export class GuildChannelManager extends CachedManager {
    *   .then(newChannel => console.log(`Channel's new position is ${newChannel.position}`))
    *   .catch(console.error);
    */
-  async setPosition(channel, position, { relative, reason } = {}) {
+  async setPosition(channel: any, position: any, { relative, reason }: any = {}) {
     const resolvedChannel = this.resolve(channel);
     if (!resolvedChannel) throw new DiscordjsTypeError(ErrorCodes.InvalidType, 'channel', 'GuildChannelResolvable');
 

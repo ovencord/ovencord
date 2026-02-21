@@ -41,7 +41,7 @@ function _flatten(obj: any, seen: WeakSet<object>, depth: number, ...props: any[
     .filter(key => !key.startsWith('_'))
     .map(key => ({ [key]: true }));
 
-  const mergedProps = objProps.length ? Object.assign(...objProps, ...props) : Object.assign({}, ...props);
+  const mergedProps = objProps.length ? Object.assign(Object.assign({}, ...objProps), ...props) : Object.assign({}, ...props);
 
   const out: any = {};
 
@@ -485,7 +485,7 @@ export function transformResolved(
     result.members = new Collection();
     for (const [id, member] of Object.entries(members)) {
       const user = (users as any)[id];
-      result.members.set(id, guild?.members._add({ user, ...member }) ?? member);
+      result.members.set(id, guild?.members._add(Object.assign({ user }, member)) ?? member);
     }
   }
 

@@ -15,6 +15,7 @@ import { Events  } from './Events.js';
 export class Sweepers {
   public options: any;
   public intervals: any;
+  public client: any;
   constructor(client, options) {
     /**
      * The client that instantiated this
@@ -49,13 +50,13 @@ export class Sweepers {
       if (!('filter' in clonedOptions)) {
         switch (key) {
           case 'invites':
-            clonedOptions.filter = this.constructor.expiredInviteSweepFilter(clonedOptions.lifetime);
+            clonedOptions.filter = (this.constructor as any).expiredInviteSweepFilter(clonedOptions.lifetime);
             break;
           case 'messages':
-            clonedOptions.filter = this.constructor.outdatedMessageSweepFilter(clonedOptions.lifetime);
+            clonedOptions.filter = (this.constructor as any).outdatedMessageSweepFilter(clonedOptions.lifetime);
             break;
           case 'threads':
-            clonedOptions.filter = this.constructor.archivedThreadSweepFilter(clonedOptions.lifetime);
+            clonedOptions.filter = (this.constructor as any).archivedThreadSweepFilter(clonedOptions.lifetime);
             break;
           default:
             break;
@@ -366,8 +367,8 @@ export class Sweepers {
    */
   static filterByLifetime({
     lifetime = 14_400,
-    getComparisonTimestamp = item => item?.createdTimestamp,
-    excludeFromSweep = () => false,
+    getComparisonTimestamp = (item: any, _key?: any, _coll?: any): number | null | undefined => item?.createdTimestamp,
+    excludeFromSweep = (_item?: any, _key?: any, _coll?: any): boolean => false,
   } = {}) {
     if (typeof lifetime !== 'number') {
       throw new DiscordjsTypeError(ErrorCodes.InvalidType, 'lifetime', 'number');
@@ -406,8 +407,8 @@ export class Sweepers {
   static archivedThreadSweepFilter(lifetime = 14_400) {
     return this.filterByLifetime({
       lifetime,
-      getComparisonTimestamp: thread => thread.archiveTimestamp,
-      excludeFromSweep: thread => !thread.archived,
+      getComparisonTimestamp: (thread: any) => thread.archiveTimestamp,
+      excludeFromSweep: (thread: any) => !thread.archived,
     });
   }
 
@@ -420,7 +421,7 @@ export class Sweepers {
   static expiredInviteSweepFilter(lifetime = 14_400) {
     return this.filterByLifetime({
       lifetime,
-      getComparisonTimestamp: invite => invite.expiresTimestamp,
+      getComparisonTimestamp: (invite: any) => invite.expiresTimestamp,
     });
   }
 
@@ -433,7 +434,7 @@ export class Sweepers {
   static outdatedMessageSweepFilter(lifetime = 3_600) {
     return this.filterByLifetime({
       lifetime,
-      getComparisonTimestamp: message => message.editedTimestamp ?? message.createdTimestamp,
+      getComparisonTimestamp: (message: any) => message.editedTimestamp ?? message.createdTimestamp,
     });
   }
 
@@ -455,7 +456,7 @@ export class Sweepers {
    * @returns {Object} Object containing the number of guilds swept and the number of items swept
    * @private
    */
-  _sweepGuildDirectProp(key, filter, { emit = true, outputName } = {}) {
+  _sweepGuildDirectProp(key, filter, { emit = true, outputName }: any = {}) {
     if (typeof filter !== 'function') {
       throw new DiscordjsTypeError(ErrorCodes.InvalidType, 'filter', 'function');
     }

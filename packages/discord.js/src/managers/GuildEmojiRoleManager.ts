@@ -113,7 +113,7 @@ export class GuildEmojiRoleManager extends DataManager {
   }
 
   clone() {
-    const clone = new this.constructor(this.emoji);
+    const clone = new (this.constructor as any)(this.emoji);
     clone._patch([...this.cache.keys()]);
     return clone;
   }

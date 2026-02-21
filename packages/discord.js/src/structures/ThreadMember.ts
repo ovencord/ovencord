@@ -12,7 +12,7 @@ export class ThreadMember extends Base {
   public flags: any;
   public id: any;
   public member: any;
-  constructor(thread, data, extra = {}) {
+  constructor(thread, data, extra: any = {}) {
     super(thread.client);
 
     /**
@@ -46,7 +46,7 @@ export class ThreadMember extends Base {
     this._patch(data, extra);
   }
 
-  _patch(data, extra = {}) {
+  _patch(data, extra: any = {}) {
     if ('join_timestamp' in data) this.joinedTimestamp = Date.parse(data.join_timestamp);
     if ('flags' in data) this.flags = new ThreadMemberFlagsBitField(data.flags).freeze();
 

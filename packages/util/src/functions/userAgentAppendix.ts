@@ -5,19 +5,17 @@
  */
 export function getUserAgentAppendix(): string {
 	// https://vercel.com/docs/concepts/functions/edge-functions/edge-runtime#check-if-you're-running-on-the-edge-runtime
-	// @ts-expect-error Vercel Edge functions
 	if (typeof globalThis.EdgeRuntime !== 'undefined') {
 		return 'Vercel-Edge-Functions';
 	}
 
-	// @ts-expect-error Cloudflare Workers
+	// Cloudflare Workers
 	if (typeof globalThis.R2 !== 'undefined' && typeof globalThis.WebSocketPair !== 'undefined') {
 		// https://developers.cloudflare.com/workers/runtime-apis/web-standards/#navigatoruseragent
 		return 'Cloudflare-Workers';
 	}
 
 	// https://docs.netlify.com/edge-functions/api/#netlify-global-object
-	// @ts-expect-error Netlify Edge functions
 	if (typeof globalThis.Netlify !== 'undefined') {
 		return 'Netlify-Edge-Functions';
 	}

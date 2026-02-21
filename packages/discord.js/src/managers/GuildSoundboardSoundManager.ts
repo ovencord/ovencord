@@ -63,7 +63,7 @@ export class GuildSoundboardSoundManager extends CachedManager {
   async create({ contentType, emojiId, emojiName, file, name, reason, volume }: any): Promise<any> {
     const resolvedFile = await resolveFile(file);
 
-    const resolvedContentType = contentType ?? resolvedFile.contentType ?? detectAudioMime(resolvedFile.data)[0];
+    const resolvedContentType = contentType ?? resolvedFile.contentType ?? detectAudioMime(resolvedFile.data as any)[0];
 
     const sound = resolveBase64(resolvedFile.data, resolvedContentType);
 

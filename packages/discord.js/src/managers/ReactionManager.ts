@@ -9,7 +9,7 @@ import { CachedManager  } from './CachedManager.js';
  */
 export class ReactionManager extends CachedManager {
   public message: any;
-  constructor(message, iterable) {
+  constructor(message: any, iterable?: any) {
     super(message.client, MessageReaction, iterable);
 
     /**

@@ -7,6 +7,7 @@ import { MessageComponentInteraction  } from './MessageComponentInteraction.js';
  * @extends {MessageComponentInteraction}
  */
 export class RoleSelectMenuInteraction extends MessageComponentInteraction {
+  public values: any;
   public roles: any;
   constructor(client, data) {
     super(client, data);
@@ -26,7 +27,7 @@ export class RoleSelectMenuInteraction extends MessageComponentInteraction {
      */
     this.roles = new Collection();
 
-    for (const role of Object.values(resolved?.roles ?? {})) {
+    for (const role of Object.values((resolved?.roles ?? {}) as any) as any[]) {
       this.roles.set(role.id, this.guild?.roles._add(role) ?? role);
     }
   }

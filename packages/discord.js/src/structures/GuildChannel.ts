@@ -247,7 +247,7 @@ export class GuildChannel extends BaseChannel {
       return new PermissionsBitField(PermissionsBitField.All).freeze();
     }
 
-    const overwrites = this.overwritesFor(member, true, roles);
+    const overwrites: any = this.overwritesFor(member, true, roles);
 
     return permissions
       .remove(overwrites.everyone?.deny ?? PermissionsBitField.DefaultBit)
@@ -366,7 +366,7 @@ export class GuildChannel extends BaseChannel {
    *   .then(channel => console.log(`Moved ${message.channel.name} to ${channel.parent.name}`))
    *   .catch(console.error);
    */
-  async setParent(channel, { lockPermissions = false, reason } = {}) {
+  async setParent(channel, { lockPermissions = false, reason }: any = {}) {
     return this.edit({
       parent: channel ?? null,
       lockPermissions,
@@ -411,17 +411,17 @@ export class GuildChannel extends BaseChannel {
    * @param {GuildChannelCloneOptions} [options] The options for cloning this channel
    * @returns {Promise<GuildChannel>}
    */
-  async clone(options = {}) {
+  async clone(options: any = {}) {
     return this.guild.channels.create({
       name: options.name ?? this.name,
       permissionOverwrites: this.permissionOverwrites.cache,
-      topic: this.topic,
+      topic: (this as any).topic,
       type: this.type,
-      nsfw: this.nsfw,
+      nsfw: (this as any).nsfw,
       parent: this.parent,
-      bitrate: this.bitrate,
-      userLimit: this.userLimit,
-      rateLimitPerUser: this.rateLimitPerUser,
+      bitrate: (this as any).bitrate,
+      userLimit: (this as any).userLimit,
+      rateLimitPerUser: (this as any).rateLimitPerUser,
       position: this.rawPosition,
       reason: null,
       ...options,
@@ -510,6 +510,7 @@ export class GuildChannel extends BaseChannel {
    *   .then(console.log)
    *   .catch(console.error);
    */
+  // @ts-expect-error
   async delete(reason) {
     await this.guild.channels.delete(this.id, reason);
     return this;

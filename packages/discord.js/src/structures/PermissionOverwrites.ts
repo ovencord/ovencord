@@ -14,6 +14,7 @@ export class PermissionOverwrites extends Base {
   public type: any;
   public deny: any;
   public allow: any;
+  public channel: any;
   constructor(client, data, channel) {
     super(client);
 
@@ -130,7 +131,7 @@ export class PermissionOverwrites extends Base {
    * @param {ResolvedOverwriteOptions} initialPermissions The initial permissions
    * @returns {ResolvedOverwriteOptions}
    */
-  static resolveOverwriteOptions(options, initialPermissions = {}) {
+  static resolveOverwriteOptions(options: any, initialPermissions: any = {}) {
     const allow = new PermissionsBitField(initialPermissions.allow);
     const deny = new PermissionsBitField(initialPermissions.deny);
 

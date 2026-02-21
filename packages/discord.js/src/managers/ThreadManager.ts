@@ -15,7 +15,7 @@ export class ThreadManager extends CachedManager {
   public channel: any;
   static [MakeCacheOverrideSymbol] = ThreadManager;
 
-  constructor(channel, iterable) {
+  constructor(channel: any, iterable?: any) {
     super(channel.client, ThreadChannel, iterable);
 
     /**
@@ -90,7 +90,7 @@ export class ThreadManager extends CachedManager {
    *   .then(channel => console.log(channel.name))
    *   .catch(console.error);
    */
-  async fetch(options, { cache, force } = {}) {
+  async fetch(options: any, { cache, force }: any = {}) {
     if (!options) return this.fetchActive(cache);
     const channel = this.client.channels.resolveId(options);
     if (channel) {
@@ -144,8 +144,8 @@ export class ThreadManager extends CachedManager {
    * @param {boolean} [cache=true] Whether to cache the new thread objects if they aren't already
    * @returns {Promise<FetchedThreadsMore>}
    */
-  async fetchArchived({ type = 'public', fetchAll = false, before, limit } = {}, cache = true) {
-    let path = Routes.channelThreads(this.channel.id, type);
+  async fetchArchived({ type = 'public', fetchAll = false, before, limit }: any = {}, cache = true) {
+    let path = Routes.channelThreads(this.channel.id, type as any);
     if (type === 'private' && !fetchAll) {
       path = Routes.channelJoinedArchivedThreads(this.channel.id);
     }
@@ -174,7 +174,7 @@ export class ThreadManager extends CachedManager {
     }
 
     const raw = await this.client.rest.get(path, { query });
-    return this.constructor._mapThreads(raw, this.client, { parent: this.channel, cache });
+    return (this.constructor as any)._mapThreads(raw, this.client, { parent: this.channel, cache });
   }
 
   /**
@@ -185,10 +185,10 @@ export class ThreadManager extends CachedManager {
    */
   async fetchActive(cache = true) {
     const data = await this.channel.guild.channels.rawFetchGuildActiveThreads();
-    return this.constructor._mapThreads(data, this.client, { parent: this.channel, cache });
+    return (this.constructor as any)._mapThreads(data, this.client, { parent: this.channel, cache });
   }
 
-  static _mapThreads(rawThreads, client, { parent, guild, cache }) {
+  static _mapThreads(rawThreads: any, client: any, { parent, guild, cache }: any) {
     const threads = rawThreads.threads.reduce((coll, raw) => {
       const thread = client.channels._add(raw, guild ?? parent?.guild, { cache });
       if (parent && thread.parentId !== parent.id) return coll;
@@ -204,7 +204,7 @@ export class ThreadManager extends CachedManager {
     const response = { threads, members: threadMembers };
 
     // The GET `/guilds/{guild.id}/threads/active` route does not return `has_more`.
-    if ('has_more' in rawThreads) response.hasMore = rawThreads.has_more;
+    if ('has_more' in rawThreads) (response as any).hasMore = rawThreads.has_more;
     return response;
   }
 }

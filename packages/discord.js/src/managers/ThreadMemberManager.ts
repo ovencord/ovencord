@@ -12,7 +12,7 @@ import { CachedManager  } from './CachedManager.js';
  */
 export class ThreadMemberManager extends CachedManager {
   public thread: any;
-  constructor(thread, iterable) {
+  constructor(thread: any, iterable?: any) {
     super(thread.client, ThreadMember, iterable);
 
     /**
@@ -184,7 +184,7 @@ export class ThreadMemberManager extends CachedManager {
     return this._add(data, cache);
   }
 
-  async _fetchMany({ withMember, after, limit, cache } = {}) {
+  async _fetchMany({ withMember, after, limit, cache }: any = {}) {
     const data = await this.client.rest.get(Routes.threadMembers(this.thread.id), {
       query: makeURLSearchParams({ with_member: withMember, after, limit }),
     });

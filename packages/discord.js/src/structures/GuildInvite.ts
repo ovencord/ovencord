@@ -218,6 +218,7 @@ export class GuildInvite extends BaseInvite {
   }
 
   toJSON() {
+    // @ts-expect-error
     return super.toJSON({
       url: true,
       expiresTimestamp: true,

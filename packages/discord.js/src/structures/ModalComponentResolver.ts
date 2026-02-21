@@ -106,8 +106,8 @@ export class ModalComponentResolver {
    * @param {string} customId The custom id of the text input component
    * @returns {string}
    */
-  getTextInputValue(customId) {
-    return this._getTypedComponent(customId, [ComponentType.TextInput]).value;
+  getTextInputValue(customId, required: boolean = false) {
+    return this._getTypedComponent(customId, [ComponentType.TextInput], ['value'], required).value;
   }
 
   /**
@@ -116,8 +116,8 @@ export class ModalComponentResolver {
    * @param {string} customId The custom id of the string select component
    * @returns {string[]}
    */
-  getStringSelectValues(customId) {
-    return this._getTypedComponent(customId, [ComponentType.StringSelect]).values;
+  getStringSelectValues(customId, required: boolean = false) {
+    return this._getTypedComponent(customId, [ComponentType.StringSelect], ['values'], required).values;
   }
 
   /**

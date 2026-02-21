@@ -139,7 +139,7 @@ export class ClientApplication extends Application {
        * @type {?IntegrationTypesConfiguration}
        */
       this.integrationTypesConfig = Object.fromEntries(
-        Object.entries(data.integration_types_config).map(([key, config]) => {
+        Object.entries(data.integration_types_config).map(([key, config]: any) => {
           let oauth2InstallParams = null;
           if (config.oauth2_install_params) {
             oauth2InstallParams = {
@@ -382,7 +382,7 @@ export class ClientApplication extends Application {
     eventWebhooksStatus,
     eventWebhooksTypes,
     tags,
-  } = {}) {
+  }: any = {}) {
     const data = await this.client.rest.patch(Routes.currentApplication(), {
       body: {
         custom_install_url: customInstallURL,

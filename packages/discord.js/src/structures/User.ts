@@ -22,6 +22,8 @@ export class User extends Base {
   public avatarDecorationData: any;
   public collectibles: any;
   public primaryGuild: any;
+  public avatar: any;
+  public banner: any;
   constructor(client, data) {
     super(client);
 
@@ -502,7 +504,7 @@ export class User extends Base {
       ...props,
     );
     json.avatarURL = this.avatarURL();
-    json.displayAvatarURL = this.displayAvatarURL();
+    json.displayAvatarURL = this.displayAvatarURL({});
     json.bannerURL = this.banner ? this.bannerURL() : this.banner;
     json.guildTagBadgeURL = this.guildTagBadgeURL();
     return json;

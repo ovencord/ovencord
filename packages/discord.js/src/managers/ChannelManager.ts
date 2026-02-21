@@ -17,7 +17,7 @@ let cacheWarningEmitted = false;
  * @extends {CachedManager}
  */
 export class ChannelManager extends CachedManager {
-  constructor(client, iterable) {
+  constructor(client: any, iterable?: any) {
     super(client, BaseChannel, iterable);
     const defaultCaching =
       this._cache.constructor.name === 'Collection' ||
@@ -39,7 +39,7 @@ export class ChannelManager extends CachedManager {
    * @name ChannelManager#cache
    */
 
-  _add(data, guild, { cache = true, allowUnknownGuild = false } = {}) {
+  _add(data: any, guild?: any, { cache = true, allowUnknownGuild = false }: any = {}) {
     const existing = this.cache.get(data.id);
     if (existing) {
       if (cache) existing._patch(data);

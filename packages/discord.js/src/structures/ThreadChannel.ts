@@ -37,6 +37,10 @@ export class ThreadChannel extends BaseChannel {
   public memberCount: any;
   public totalMessageSent: any;
   public appliedTags: any;
+  public joined: any;
+  get parent() {
+    return this.guild?.channels.resolve(this.parentId);
+  }
   constructor(guild, data, client) {
     super(guild?.client ?? client, data, false);
 

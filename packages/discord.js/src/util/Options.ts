@@ -85,6 +85,7 @@ export class Options extends null {
     return {
       closeTimeout: 5_000,
       waitGuildTimeout: 15_000,
+      presence: {},
       makeCache: this.cacheWithLimits(this.DefaultMakeCacheSettings),
       partials: [],
       failIfNotExists: true,

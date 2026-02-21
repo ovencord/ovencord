@@ -9,6 +9,7 @@ export class InteractionCallbackResource {
   public type: any;
   public activityInstance: any;
   public message: any;
+  public client: any;
   constructor(client, data) {
     /**
      * The client that instantiated this

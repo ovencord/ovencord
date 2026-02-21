@@ -592,24 +592,26 @@ export class GuildMember extends Base {
    * @param {GuildMember} member The member to compare with
    * @returns {boolean}
    */
-  equals(member) {
+  equals(member: any) {
+    const isMember = member && member instanceof this.constructor;
+    const m: any = member;
     return (
-      member instanceof this.constructor &&
-      this.id === member.id &&
-      this.partial === member.partial &&
-      this.guild.id === member.guild.id &&
-      this.joinedTimestamp === member.joinedTimestamp &&
-      this.nickname === member.nickname &&
-      this.avatar === member.avatar &&
-      this.banner === member.banner &&
-      this.pending === member.pending &&
-      this.communicationDisabledUntilTimestamp === member.communicationDisabledUntilTimestamp &&
-      this.flags.bitfield === member.flags.bitfield &&
-      (this._roles === member._roles ||
-        (this._roles.length === member._roles.length &&
-          this._roles.every((role, index) => role === member._roles[index]))) &&
-      this.avatarDecorationData?.asset === member.avatarDecorationData?.asset &&
-      this.avatarDecorationData?.skuId === member.avatarDecorationData?.skuId
+      isMember &&
+      this.id === m.id &&
+      this.partial === m.partial &&
+      this.guild.id === m.guild.id &&
+      this.joinedTimestamp === m.joinedTimestamp &&
+      this.nickname === m.nickname &&
+      this.avatar === m.avatar &&
+      this.banner === m.banner &&
+      this.pending === m.pending &&
+      this.communicationDisabledUntilTimestamp === m.communicationDisabledUntilTimestamp &&
+      this.flags.bitfield === m.flags.bitfield &&
+      (this._roles === m._roles ||
+        (this._roles.length === m._roles.length &&
+          this._roles.every((role: any, index: any) => role === m._roles[index]))) &&
+      this.avatarDecorationData?.asset === m.avatarDecorationData?.asset &&
+      this.avatarDecorationData?.skuId === m.avatarDecorationData?.skuId
     );
   }
 
@@ -632,10 +634,10 @@ export class GuildMember extends Base {
       displayName: true,
       roles: true,
     });
-    json.avatarURL = this.avatarURL();
-    json.bannerURL = this.bannerURL();
-    json.displayAvatarURL = this.displayAvatarURL();
-    json.displayBannerURL = this.displayBannerURL();
+    json.avatarURL = this.avatarURL({});
+    json.bannerURL = this.bannerURL({});
+    json.displayAvatarURL = this.displayAvatarURL({});
+    json.displayBannerURL = this.displayBannerURL({});
     json.avatarDecorationURL = this.avatarDecorationURL();
     return json;
   }

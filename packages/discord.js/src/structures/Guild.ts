@@ -87,6 +87,7 @@ export class Guild extends AnonymousGuild {
   public vanityURLCode: any;
   public vanityURLUses: any;
   public splash: any;
+  public discoverySplash: any;
   public verificationLevel: any;
   public features: any;
   constructor(client, data) {
@@ -174,7 +175,7 @@ export class Guild extends AnonymousGuild {
      *
      * @type {GuildSoundboardSoundManager}
      */
-    this.soundboardSounds = new GuildSoundboardSoundManager(this);
+    this.soundboardSounds = new GuildSoundboardSoundManager(this, undefined);
 
     if (!data) return;
     if (data.unavailable) {
@@ -914,7 +915,7 @@ export class Guild extends AnonymousGuild {
    *   .then(audit => console.log(audit.entries.first()))
    *   .catch(console.error);
    */
-  async fetchAuditLogs({ before, after, limit, user, type } = {}) {
+  async fetchAuditLogs({ before, after, limit, user, type }: any = {}) {
     const query = makeURLSearchParams({
       before: before?.id ?? before,
       after: after?.id ?? after,
@@ -1016,7 +1017,7 @@ export class Guild extends AnonymousGuild {
     premiumProgressBarEnabled,
     safetyAlertsChannel,
     ...options
-  }) {
+  }: any) {
     const data = await this.client.rest.patch(Routes.guild(this.id), {
       body: {
         ...options,
@@ -1518,23 +1519,24 @@ export class Guild extends AnonymousGuild {
    * @param {Guild} guild The guild to compare with
    * @returns {boolean}
    */
-  equals(guild) {
+  equals(guild: any) {
+    const isGuild = guild && guild instanceof this.constructor;
+    const g: any = guild;
     return (
-      guild &&
-      guild instanceof this.constructor &&
-      this.id === guild.id &&
-      this.available === guild.available &&
-      this.splash === guild.splash &&
-      this.discoverySplash === guild.discoverySplash &&
-      this.name === guild.name &&
-      this.memberCount === guild.memberCount &&
-      this.large === guild.large &&
-      this.icon === guild.icon &&
-      this.ownerId === guild.ownerId &&
-      this.verificationLevel === guild.verificationLevel &&
-      (this.features === guild.features ||
-        (this.features.length === guild.features.length &&
-          this.features.every((feat, index) => feat === guild.features[index])))
+      isGuild &&
+      this.id === g.id &&
+      this.available === g.available &&
+      this.splash === g.splash &&
+      this.discoverySplash === g.discoverySplash &&
+      this.name === g.name &&
+      this.memberCount === g.memberCount &&
+      this.large === g.large &&
+      this.icon === g.icon &&
+      this.ownerId === g.ownerId &&
+      this.verificationLevel === g.verificationLevel &&
+      (this.features === g.features ||
+        (this.features.length === g.features.length &&
+          this.features.every((feat: any, index: any) => feat === g.features[index])))
     );
   }
 

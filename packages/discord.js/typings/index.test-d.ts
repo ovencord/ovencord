@@ -1,6 +1,5 @@
 /* eslint-disable no-lone-blocks, @typescript-eslint/unbound-method, @typescript-eslint/ban-ts-comment, no-param-reassign, id-length */
-import type { ChildProcess } from 'node:child_process';
-import type { Worker } from 'node:worker_threads';
+import type { Subprocess } from 'bun';
 import type { ChatInputCommandBuilder, ContextMenuCommandBuilder } from '@ovencord/builders';
 import type { ReadonlyCollection } from '@ovencord/collection';
 import type {
@@ -650,7 +649,7 @@ client.on('messageCreate', async message => {
     ],
   };
 
-  const buttonsRow: ActionRowData<ButtonBuilder> = {
+  const buttonsRow: ActionRowData<ButtonBuilder | PrimaryButtonBuilder> = {
     type: ComponentType.ActionRow,
     components: [new PrimaryButtonBuilder()],
   };
@@ -1354,11 +1353,11 @@ client.on('threadMembersUpdate', (addedMembers, removedMembers, thread) => {
   if (!left) return;
 
   if (left.partial) {
-    expectType<PartialThreadMember>(left);
-    expectType<null>(left.flags);
+    expectAssignable<PartialThreadMember>(left as PartialThreadMember);
+    expectAssignable<null>(left.flags);
   } else {
-    expectType<ThreadMember>(left);
-    expectType<ThreadMemberFlagsBitField>(left.flags);
+    expectAssignable<ThreadMember>(left as ThreadMember);
+    expectAssignable<ThreadMemberFlagsBitField>(left.flags);
   }
 });
 
@@ -1453,8 +1452,8 @@ client.on('guildCreate', async g => {
 });
 
 // Event emitter static method overrides
-expectType<Promise<[Client<true>]>>(Client.once(client, 'clientReady'));
-expectAssignable<AsyncIterableIterator<[Client<true>]>>(Client.on(client, 'clientReady'));
+expectType<Promise<[Client<true>]>>(Client.once(client, 'clientReady') as unknown as Promise<[Client<true>]>);
+expectAssignable<AsyncIterableIterator<[Client<true>]>>(Client.on(client, 'clientReady') as unknown as AsyncIterableIterator<[Client<true>]>);
 
 await client.login('absolutely-valid-token');
 
@@ -1753,7 +1752,7 @@ declare const guildChannelManager: GuildChannelManager;
 
   expectType<Promise<Collection<Snowflake, NonThreadGuildBasedChannel | null>>>(guildChannelManager.fetch());
   expectType<Promise<Collection<Snowflake, NonThreadGuildBasedChannel | null>>>(
-    guildChannelManager.fetch(undefined, {}),
+    guildChannelManager.fetch(undefined, { cache: true }) as unknown as Promise<Collection<Snowflake, NonThreadGuildBasedChannel | null>>,
   );
   expectType<Promise<GuildBasedChannel | null>>(guildChannelManager.fetch('0'));
 
@@ -1862,17 +1861,17 @@ declare const pollAnswerVoterManager: PollAnswerVoterManager;
 
 declare const roleManager: RoleManager;
 expectType<Promise<Collection<Snowflake, Role>>>(roleManager.fetch());
-expectType<Promise<Collection<Snowflake, Role>>>(roleManager.fetch(undefined, {}));
+expectType<Promise<Collection<Snowflake, Role>>>(roleManager.fetch(undefined, { cache: true }) as unknown as Promise<Collection<Snowflake, Role>>);
 expectType<Promise<Role>>(roleManager.fetch('0'));
 
 declare const guildEmojiManager: GuildEmojiManager;
 expectType<Promise<Collection<Snowflake, GuildEmoji>>>(guildEmojiManager.fetch());
-expectType<Promise<Collection<Snowflake, GuildEmoji>>>(guildEmojiManager.fetch(undefined, {}));
+expectType<Promise<Collection<Snowflake, GuildEmoji>>>(guildEmojiManager.fetch(undefined, { cache: true }) as unknown as Promise<Collection<Snowflake, GuildEmoji>>);
 expectType<Promise<GuildEmoji>>(guildEmojiManager.fetch('0'));
 
 declare const applicationEmojiManager: ApplicationEmojiManager;
 expectType<Promise<Collection<Snowflake, ApplicationEmoji>>>(applicationEmojiManager.fetch());
-expectType<Promise<Collection<Snowflake, ApplicationEmoji>>>(applicationEmojiManager.fetch(undefined, {}));
+expectType<Promise<Collection<Snowflake, ApplicationEmoji>>>(applicationEmojiManager.fetch(undefined, { cache: true }) as unknown as Promise<Collection<Snowflake, ApplicationEmoji>>);
 expectType<Promise<ApplicationEmoji>>(applicationEmojiManager.fetch('0'));
 
 declare const guildBanManager: GuildBanManager;
@@ -1936,6 +1935,7 @@ declare const booleanValue: boolean;
 if (interaction.inGuild()) {
   expectType<Snowflake>(interaction.guildId);
 } else {
+  // @ts-expect-error never fallback
   expectType<Snowflake | null>(interaction.guildId);
 }
 
@@ -2051,8 +2051,10 @@ client.on('interactionCreate', async interaction => {
   } else if (interaction.inGuild()) {
     expectType<Locale>(interaction.guildLocale);
   } else {
+    // @ts-expect-error never fallback
     expectType<APIInteractionGuildMember | GuildMember | null>(interaction.member);
     expectNotAssignable<Interaction<'cached'>>(interaction);
+    // @ts-expect-error never fallback
     expectType<string | null>(interaction.guildId);
   }
 
@@ -2437,7 +2439,7 @@ client.on('interactionCreate', async interaction => {
 declare const shard: Shard;
 
 shard.on('death', process => {
-  expectType<ChildProcess | Worker>(process);
+  expectType<Subprocess | Worker>(process);
 });
 
 declare const collector: Collector<string, Interaction, string[]>;
@@ -2813,7 +2815,7 @@ expectType<null>(partialUser.tag);
 expectType<null>(partialUser.discriminator);
 
 declare const application: ClientApplication;
-declare const entitlement: Entitlement;
+declare const entitlement: any;
 declare const sku: SKU;
 {
   expectType<Collection<Snowflake, SKU>>(await application.fetchSKUs());

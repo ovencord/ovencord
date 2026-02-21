@@ -15,7 +15,8 @@ import { CachedManager  } from './CachedManager.js';
  */
 export class ApplicationCommandManager extends CachedManager {
   public permissions: any;
-  constructor(client, iterable) {
+  public guild: any; // Add guild property since subclasses use it
+  constructor(client: any, iterable?: any) {
     super(client, ApplicationCommand, iterable);
 
     /**
@@ -47,7 +48,7 @@ export class ApplicationCommandManager extends CachedManager {
    * @returns {string}
    * @private
    */
-  commandPath({ id, guildId } = {}) {
+  commandPath({ id, guildId }: any = {}) {
     if (this.guild ?? guildId) {
       if (id) {
         return Routes.applicationGuildCommand(this.client.application.id, this.guild?.id ?? guildId, id);
@@ -133,17 +134,17 @@ export class ApplicationCommandManager extends CachedManager {
     return this._fetchMany({ cache, guildId, locale, withLocalizations });
   }
 
-  async _fetchSingle({ cache, force = false, guildId, id }) {
+  async _fetchSingle({ cache, force = false, guildId, id }: any) {
     if (!force) {
       const existing = this.cache.get(id);
       if (existing) return existing;
     }
 
     const command = await this.client.rest.get(this.commandPath({ id, guildId }));
-    return this._add(command, cache);
+    return this._add(command, cache, guildId);
   }
 
-  async _fetchMany({ cache, guildId, locale, withLocalizations } = {}) {
+  async _fetchMany({ cache, guildId, locale, withLocalizations }: any = {}) {
     const data = await this.client.rest.get(this.commandPath({ guildId }), {
       headers: {
         'X-Discord-Locale': locale,
@@ -172,7 +173,7 @@ export class ApplicationCommandManager extends CachedManager {
    */
   async create(command, guildId) {
     const data = await this.client.rest.post(this.commandPath({ guildId }), {
-      body: this.constructor.transformCommand(command),
+      body: (this.constructor as typeof ApplicationCommandManager).transformCommand(command),
     });
     return this._add(data, true, guildId);
   }
@@ -202,7 +203,7 @@ export class ApplicationCommandManager extends CachedManager {
    */
   async set(commands, guildId) {
     const data = await this.client.rest.put(this.commandPath({ guildId }), {
-      body: commands.map(command => this.constructor.transformCommand(command)),
+      body: commands.map((command: any) => (this.constructor as typeof ApplicationCommandManager).transformCommand(command)),
     });
     return data.reduce(
       (collection, command) => collection.set(command.id, this._add(command, true, guildId)),
@@ -231,7 +232,7 @@ export class ApplicationCommandManager extends CachedManager {
     if (!id) throw new DiscordjsTypeError(ErrorCodes.InvalidType, 'command', 'ApplicationCommandResolvable');
 
     const patched = await this.client.rest.patch(this.commandPath({ id, guildId }), {
-      body: this.constructor.transformCommand(data),
+      body: (this.constructor as typeof ApplicationCommandManager).transformCommand(data),
     });
     return this._add(patched, true, guildId);
   }

@@ -12,7 +12,7 @@ import { CachedManager  } from './CachedManager.js';
  * @extends {CachedManager}
  */
 export class SubscriptionManager extends CachedManager {
-  constructor(client, iterable) {
+  constructor(client: any, iterable?: any) {
     super(client, Subscription, iterable);
   }
 
@@ -49,7 +49,7 @@ export class SubscriptionManager extends CachedManager {
    * @param {FetchSubscriptionOptions|FetchSubscriptionsOptions} [options={}] Options for fetching the subscriptions
    * @returns {Promise<Subscription|Collection<Snowflake, Subscription>>}
    */
-  async fetch(options = {}) {
+  async fetch(options: any = {}) {
     if (typeof options !== 'object') throw new DiscordjsTypeError(ErrorCodes.InvalidType, 'options', 'object', true);
 
     const { after, before, cache, limit, sku, subscriptionId, user } = options;

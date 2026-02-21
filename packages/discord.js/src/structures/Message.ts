@@ -507,7 +507,7 @@ export class Message extends Base {
 
         return coll.set(
           this.reference.messageId,
-          channel ? channel.messages._add(snapshotData) : new this.constructor(this.client, snapshotData),
+          channel ? channel.messages._add(snapshotData) : new (this.constructor as any)(this.client, snapshotData),
         );
       }, new Collection());
     } else {
