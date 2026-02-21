@@ -11,6 +11,8 @@ import type { APIMessageComponentEmoji } from 'discord-api-types/v10';
  */
 export function parseEmoji(text: string): APIMessageComponentEmoji {
 	const decodedText = text.includes('%') ? decodeURIComponent(text) : text;
+	// Plain snowflake ID (e.g. '1465147007831380128') — treat as custom emoji ID
+	if (/^\d{17,21}$/.test(decodedText)) return { id: decodedText, name: undefined, animated: false };
 	if (!decodedText.includes(':')) return { animated: false, name: decodedText.replace(/\uFE0F/g, ''), id: undefined };
 	const match = /<?(?:(?<animated>a):)?(?<name>\w{2,32}):(?<id>\d{17,19})?>?/.exec(decodedText);
 	
