@@ -41,8 +41,6 @@
 	"devDependencies": {
 		"@actions/core": "^3.0.0",
 		"@actions/github": "^9.0.0",
-		"@commitlint/cli": "^20.2.0",
-		"@commitlint/config-angular": "^20.2.0",
 		"@favware/cliff-jumper": "^6.0.0",
 		"@npm/types": "^2.1.0",
 		"@sapphire/snowflake": "^3.5.5",
