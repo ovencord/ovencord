@@ -3,7 +3,7 @@ import type { GatewayEntitlementCreateDispatch } from 'discord-api-types/v10';
 import { Events  } from '../../../util/Events.js';
 
 export default (client: Client, { d: data }: GatewayEntitlementCreateDispatch) => {
-  const entitlement = client.application.entitlements._add(data);
+  const entitlement = client.application!.entitlements._add(data);
 
   /**
    * Emitted whenever an entitlement is created.

@@ -3,9 +3,9 @@ import type { GatewayEntitlementDeleteDispatch } from 'discord-api-types/v10';
 import { Events  } from '../../../util/Events.js';
 
 export default (client: Client, { d: data }: GatewayEntitlementDeleteDispatch) => {
-  const entitlement = client.application.entitlements._add(data, false);
+  const entitlement = client.application!.entitlements._add(data, false);
 
-  client.application.entitlements.cache.delete(entitlement.id);
+  client.application!.entitlements.cache.delete(entitlement.id);
 
   /**
    * Emitted whenever an entitlement is deleted.

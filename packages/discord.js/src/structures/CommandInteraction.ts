@@ -172,23 +172,23 @@ export class CommandInteraction extends BaseInteraction {
 
   // These are here only for documentation purposes - they are implemented by InteractionResponses
 
-  deferReply() {}
+  deferReply(options?: any): any {}
 
-  reply() {}
+  reply(options?: any): any {}
 
-  fetchReply() {}
+  fetchReply(options?: any): any {}
 
-  editReply() {}
+  editReply(options?: any): any {}
 
-  deleteReply() {}
+  deleteReply(options?: any): any {}
 
-  followUp() {}
+  followUp(options?: any): any {}
 
-  launchActivity() {}
+  launchActivity(options?: any): any {}
 
-  showModal() {}
+  showModal(modal?: any, options?: any): any {}
 
-  awaitModalSubmit() {}
+  awaitModalSubmit(options?: any): any {}
 }
 
 InteractionResponses.applyToClass(CommandInteraction, ['deferUpdate', 'update']);

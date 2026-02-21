@@ -336,7 +336,7 @@ export class ActionRowBuilder<T extends AnyActionRowComponentBuilder = AnyAction
 	 * @param components - The replacing component objects
 	 */
 	public spliceComponents(index: number, deleteCount: number, ...components: AnyActionRowComponentBuilder[]): this {
-		this.data.components.splice(index, deleteCount, ...(components as unknown as T[]));
+		this.data.components.splice(index, deleteCount, ...(components as any));
 		return this;
 	}
 

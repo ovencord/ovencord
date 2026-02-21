@@ -40,7 +40,7 @@ export class MessageReactionAddAction extends Action {
     const reaction = message.reactions._add({
       emoji: data.emoji,
       count: message.partial ? null : 0,
-      me: user.id === this.client.user.id,
+      me: user.id === this.client.user?.id,
       burst_colors: data.burst_colors,
     });
     if (!reaction) return false;

@@ -5,7 +5,7 @@ export class UserUpdateAction extends Action {
   override handle(data: any) {
     const client = this.client;
 
-    const newUser = data.id === client.user.id ? client.user : client.users.cache.get(data.id);
+    const newUser = data.id === client.user?.id ? client.user : client.users.cache.get(data.id);
     const oldUser = newUser._update(data);
 
     if (!oldUser.equals(newUser)) {

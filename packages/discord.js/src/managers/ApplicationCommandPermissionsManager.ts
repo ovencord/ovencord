@@ -227,7 +227,7 @@ export class ApplicationCommandPermissionsManager extends BaseManager {
     let existingPermissions = [];
     try {
       existingPermissions = await this.fetch({ guild: options.guildId, command: commandId });
-    } catch (error) {
+    } catch (error: any) {
       if (error.code !== RESTJSONErrorCodes.UnknownApplicationCommandPermissions) throw error;
     }
 
@@ -346,7 +346,7 @@ export class ApplicationCommandPermissionsManager extends BaseManager {
     let existing = [];
     try {
       existing = await this.fetch({ guild: options.guildId, command: commandId });
-    } catch (error) {
+    } catch (error: any) {
       if (error.code !== RESTJSONErrorCodes.UnknownApplicationCommandPermissions) throw error;
     }
 
@@ -424,7 +424,7 @@ export class ApplicationCommandPermissionsManager extends BaseManager {
     let existing = [];
     try {
       existing = await this.fetch({ guild: guildId, command: commandId });
-    } catch (error) {
+    } catch (error: any) {
       if (error.code !== RESTJSONErrorCodes.UnknownApplicationCommandPermissions) throw error;
     }
 
