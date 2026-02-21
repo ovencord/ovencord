@@ -48,7 +48,7 @@ export class VoiceStateManager extends CachedManager {
    *    .then(console.log)
    *    .catch(console.error);
    */
-  async fetch(member, { cache = true, force = false } = {}: any) {
+  async fetch(member: any, { cache = true, force = false } = {}) {
     const id = member === '@me' ? member : this.guild.members.resolveId(member);
     if (!force) {
       const existing = this.cache.get(id === '@me' ? this.client.user.id : id);

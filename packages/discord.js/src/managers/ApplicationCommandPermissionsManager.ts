@@ -383,7 +383,7 @@ export class ApplicationCommandPermissionsManager extends BaseManager {
    *  .then(console.log)
    *  .catch(console.error);
    */
-  async has({ guild, command, permissionId, permissionType }: any) {
+  async has({ guild: any, command: any, permissionId: any, permissionType: any }) {
     const { guildId, commandId } = this._validateOptions(guild, command);
     if (!commandId) throw new DiscordjsTypeError(ErrorCodes.InvalidType, 'command', 'ApplicationCommandResolvable');
 

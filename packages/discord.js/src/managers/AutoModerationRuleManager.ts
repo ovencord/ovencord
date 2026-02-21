@@ -118,16 +118,16 @@ export class AutoModerationRuleManager extends CachedManager {
    * @returns {Promise<AutoModerationRule>}
    */
   async create({
-    name,
-    eventType,
-    triggerType,
-    triggerMetadata,
-    actions,
-    enabled,
-    exemptRoles,
-    exemptChannels,
-    reason,
-  }: any) {
+    name: any,
+    eventType: any,
+    triggerType: any,
+    triggerMetadata: any,
+    actions: any,
+    enabled: any,
+    exemptRoles: any,
+    exemptChannels: any,
+    reason: any,
+  }) {
     const data = await this.client.rest.post(Routes.guildAutoModerationRules(this.guild.id), {
       body: {
         name,
@@ -185,7 +185,7 @@ export class AutoModerationRuleManager extends CachedManager {
    */
   async edit(
     autoModerationRule: any,
-    { name, eventType, triggerMetadata, actions, enabled, exemptRoles, exemptChannels, reason }: any,
+    { name: any, eventType: any, triggerMetadata: any, actions: any, enabled: any, exemptRoles: any, exemptChannels: any, reason: any },
   ) {
     const autoModerationRuleId = this.resolveId(autoModerationRule);
 
@@ -274,7 +274,7 @@ export class AutoModerationRuleManager extends CachedManager {
     return this._fetchMany(options);
   }
 
-  async _fetchSingle({ autoModerationRule, cache, force = false }: any) {
+  async _fetchSingle({ autoModerationRule: any, cache: any, force = false }) {
     if (!force) {
       const existing = this.cache.get(autoModerationRule);
       if (existing) return existing;
@@ -284,11 +284,11 @@ export class AutoModerationRuleManager extends CachedManager {
     return this._add(data, cache);
   }
 
-  async _fetchMany(options = {}: any) {
+  async _fetchMany(options = {}) {
     const data = await this.client.rest.get(Routes.guildAutoModerationRules(this.guild.id));
 
     return data.reduce(
-      (col, autoModerationRule) => col.set(autoModerationRule.id, this._add(autoModerationRule, options.cache)),
+      (col: any, autoModerationRule: any) => col.set(autoModerationRule.id, this._add(autoModerationRule, options.cache)),
       new Collection(),
     );
   }

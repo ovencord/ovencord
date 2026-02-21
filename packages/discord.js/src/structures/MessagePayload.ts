@@ -319,7 +319,7 @@ export class MessagePayload {
    * @param {MessagePayloadOption} [extra={}] Extra options to add onto specified options
    * @returns {MessagePayload}
    */
-  static create(target, options, extra = {}: any) {
+  static create(target: any, options: any, extra = {}) {
     return new this(
       target,
       typeof options !== 'object' || options === null ? { content: options, ...extra } : { ...options, ...extra },

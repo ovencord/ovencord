@@ -311,7 +311,7 @@ export class Webhook {
    * @param {WebhookEditOptions} options Options for editing the webhook
    * @returns {Promise<Webhook>}
    */
-  async edit({ name = this.name, avatar: newAvatar, channel: newChannel, reason }: any) {
+  async edit({ name = this.name, avatar: newAvatar: any, channel: newChannel: any, reason: any }) {
     let avatar = newAvatar;
     if (avatar && !(typeof avatar === 'string' && avatar.startsWith('data:'))) {
       avatar = await resolveImage(avatar);
@@ -346,7 +346,7 @@ export class Webhook {
    * @param {WebhookFetchMessageOptions} [options={}] The options to provide to fetch the message.
    * @returns {Promise<Message>} Returns the message sent by this webhook
    */
-  async fetchMessage(message, { threadId }: any = {}: any) {
+  async fetchMessage(message: any, { threadId }: any = {}) {
     if (!this.token) throw new DiscordjsError(ErrorCodes.WebhookTokenUnavailable);
 
     const data = await this.client.rest.get(Routes.webhookMessage(this.id, this.token, message), {

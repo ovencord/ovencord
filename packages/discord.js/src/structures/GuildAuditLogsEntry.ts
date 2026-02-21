@@ -99,7 +99,7 @@ const Targets = {
  * @returns {Object}
  * @ignore
  */
-export function changesReduce(changes, initialData = {}: any) {
+export function changesReduce(changes: any, initialData = {}) {
   return changes.reduce((accumulator: any, change: any) => {
     accumulator[change.key] = change.new ?? change.old;
     return accumulator;
@@ -342,7 +342,7 @@ export class GuildAuditLogsEntry {
           }),
         );
     } else if (targetType === Targets.Invite) {
-      const inviteChange = this.changes.find(({ key }: any) => key === 'code');
+      const inviteChange = this.changes.find(({ key: any }) => key === 'code');
 
       this.target =
         guild.invites.cache.get(inviteChange.new ?? inviteChange.old) ??

@@ -31,7 +31,7 @@ const getMediaChannel = lazy(() => require('../structures/MediaChannel.js').Medi
  * @returns {BaseChannel} Any kind of channel.
  * @ignore
  */
-export function createChannel(client, data, guild, { allowUnknownGuild }: any = {}: any) {
+export function createChannel(client: any, data: any, guild: any, { allowUnknownGuild }: any = {}) {
   let channel;
   const resolvedGuild = guild ?? client.guilds.cache.get(data.guild_id);
 

@@ -10,7 +10,7 @@ import { Presence  } from './Presence.js';
  * @extends {Presence}
  */
 export class ClientPresence extends Presence {
-  constructor(client, data = {}: any) {
+  constructor(client: any, data = {}) {
     super(client, Object.assign(data, { status: data.status ?? 'online', user: { id: null } }));
   }
 
@@ -43,7 +43,7 @@ export class ClientPresence extends Presence {
    * @returns {GatewayPresenceUpdateData}
    * @private
    */
-  _parse({ status, since, afk, activities }: any) {
+  _parse({ status: any, since: any, afk: any, activities: any }) {
     const data = {
       activities: [],
       afk: typeof afk === 'boolean' ? afk : false,

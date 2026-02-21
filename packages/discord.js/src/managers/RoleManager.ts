@@ -62,7 +62,7 @@ export class RoleManager extends CachedManager {
    *   .then(role => console.log(`The role color is: ${role.colors.primaryColor}`))
    *   .catch(console.error);
    */
-  async fetch(id, { cache = true, force = false } = {}: any) {
+  async fetch(id: any, { cache = true, force = false } = {}) {
     if (!id) {
       const innerData = await this.client.rest.get(Routes.guildRoles(this.guild.id));
       const roles = new Collection();
@@ -181,7 +181,7 @@ export class RoleManager extends CachedManager {
    *   .then(console.log)
    *   .catch(console.error);
    */
-  async create(options = {}: any) {
+  async create(options = {}) {
     let { permissions, icon } = options;
     const { name, hoist, position, mentionable, reason, unicodeEmoji } = options;
     if (permissions !== undefined) permissions = new PermissionsBitField(permissions);
@@ -308,7 +308,7 @@ export class RoleManager extends CachedManager {
    *   .then(updated => console.log(`Role position: ${updated.position}`))
    *   .catch(console.error);
    */
-  async setPosition(role, position, { relative, reason }: any = {}: any) {
+  async setPosition(role: any, position: any, { relative, reason }: any = {}) {
     const resolvedRole = this.resolve(role);
     if (!resolvedRole) throw new DiscordjsTypeError(ErrorCodes.InvalidType, 'role', 'RoleResolvable');
     const updatedRoles = await setPosition(
@@ -426,6 +426,6 @@ export class RoleManager extends CachedManager {
    * @readonly
    */
   get highest() {
-    return this.cache.reduce((prev, role) => (role.comparePositionTo(prev) > 0 ? role : prev), this.cache.first());
+    return this.cache.reduce((prev: any, role: any) => (role.comparePositionTo(prev) > 0 ? role : prev), this.cache.first());
   }
 }

@@ -578,7 +578,7 @@ export class Client extends AsyncEventEmitter {
    *   .then(invite => console.log(`Obtained invite with code: ${invite.code}`))
    *   .catch(console.error);
    */
-  async fetchInvite(invite, { withCounts, guildScheduledEventId }: ClientFetchInviteOptions = {}: any) {
+  async fetchInvite(invite: any, { withCounts, guildScheduledEventId }: ClientFetchInviteOptions = {}) {
     const code = resolveInviteCode(invite);
 
     const query = makeURLSearchParams({
@@ -691,7 +691,7 @@ export class Client extends AsyncEventEmitter {
    */
   async fetchDefaultSoundboardSounds() {
     const data = await this.rest.get(Routes.soundboardDefaultSounds()) as any;
-    return new Collection(data.map((sound) => [sound.sound_id, new SoundboardSound(this, sound)]));
+    return new Collection(data.map((sound: any) => [sound.sound_id, new SoundboardSound(this, sound)]));
   }
 
   /**

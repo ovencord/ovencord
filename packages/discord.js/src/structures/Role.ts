@@ -254,7 +254,7 @@ export class Role extends Base {
    */
   get position() {
     return this.guild.roles.cache.reduce(
-      (acc, role) =>
+      (acc: any, role: any) =>
         acc +
         (this.rawPosition === role.rawPosition
           ? BigInt(this.id) < BigInt(role.id)
@@ -467,7 +467,7 @@ export class Role extends Base {
    *   .then(updated => console.log(`Role position: ${updated.position}`))
    *   .catch(console.error);
    */
-  async setPosition(position, options = {}: any) {
+  async setPosition(position: any, options = {}) {
     return this.guild.roles.setPosition(this, position, options);
   }
 

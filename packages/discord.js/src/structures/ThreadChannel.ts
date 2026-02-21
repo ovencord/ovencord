@@ -169,7 +169,7 @@ export class ThreadChannel extends BaseChannel {
    * @param {BaseFetchOptions} [options] Additional options for this fetch
    * @returns {Promise<Message<true>|null>}
    */
-  async fetchStarterMessage(options = {}: any) {
+  async fetchStarterMessage(options = {}) {
     try {
       return await this.messages.fetch({ message: this.id, force: options.force ?? true, cache: options.cache });
     } catch {

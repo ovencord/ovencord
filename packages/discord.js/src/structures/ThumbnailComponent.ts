@@ -8,7 +8,7 @@ import { UnfurledMediaItem  } from './UnfurledMediaItem.js';
  */
 export class ThumbnailComponent extends Component {
   public media: any;
-  constructor({ media, ...data }: any) {
+  constructor({ media: any, ...data }) {
     super(data);
 
     /**

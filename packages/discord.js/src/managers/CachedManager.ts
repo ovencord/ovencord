@@ -36,7 +36,7 @@ export abstract class CachedManager extends DataManager {
     return this._cache;
   }
 
-  _add(data, cache = true, { id, extras = [] as any[] }: { id?: string; extras?: any[] }: any = {}: any) {
+  _add(data: any, cache = true, { id, extras = [] }: any = {}) {
     const existing = (this.cache as any).get(id ?? data.id);
     if (existing) {
       if (cache) {

@@ -15,7 +15,7 @@ export function makeDiscordjsError(Base: any) {
       Object.defineProperty(this, 'name', { value: `Discordjs${Base.name}` });
     }
 
-    constructor(code: any, ...args) {
+    constructor(code: any, ...args: any[]) {
       super(message(code, args));
       this.code = code;
       Error.captureStackTrace(this, this.constructor);

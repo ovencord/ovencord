@@ -90,7 +90,7 @@ export class ThreadManager extends CachedManager {
    *   .then(channel => console.log(channel.name))
    *   .catch(console.error);
    */
-  async fetch(options, { cache, force }: any = {}: any) {
+  async fetch(options: any, { cache, force }: any = {}) {
     if (!options) return this.fetchActive(cache);
     const channel = this.client.channels.resolveId(options);
     if (channel) {
@@ -188,7 +188,7 @@ export class ThreadManager extends CachedManager {
     return (this.constructor as any)._mapThreads(data, this.client, { parent: this.channel, cache });
   }
 
-  static _mapThreads(rawThreads, client, { parent, guild, cache }: any) {
+  static _mapThreads(rawThreads: any, client: any, { parent: any, guild: any, cache: any }) {
     const threads = rawThreads.threads.reduce((coll: any, raw: any) => {
       const thread = client.channels._add(raw, guild ?? parent?.guild, { cache });
       if (parent && thread.parentId !== parent.id) return coll;

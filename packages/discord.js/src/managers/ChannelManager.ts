@@ -39,7 +39,7 @@ export class ChannelManager extends CachedManager {
    * @name ChannelManager#cache
    */
 
-  _add(data, guild?: any, { cache = true, allowUnknownGuild = false }: any = {}: any) {
+  _add(data: any, guild?: any, { cache = true, allowUnknownGuild = false }: any = {}) {
     const existing = this.cache.get(data.id);
     if (existing) {
       if (cache) existing._patch(data);
@@ -130,7 +130,7 @@ export class ChannelManager extends CachedManager {
    *   .then(channel => console.log(channel.name))
    *   .catch(console.error);
    */
-  async fetch(id, { allowUnknownGuild = false, cache = true, force = false } = {}: any) {
+  async fetch(id: any, { allowUnknownGuild = false, cache = true, force = false } = {}) {
     if (!force) {
       const existing = this.cache.get(id);
       if (existing && !existing.partial) return existing;

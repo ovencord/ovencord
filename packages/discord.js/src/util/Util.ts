@@ -476,7 +476,7 @@ export function parseWebhookURL(url: string): any {
  * @private
  */
 export function transformResolved(
-  { client, guild, channel }: any,
+  { client: any, guild: any, channel: any },
   { members, users, channels, roles, messages, attachments }: any = {},
 ): any {
   const result = {};

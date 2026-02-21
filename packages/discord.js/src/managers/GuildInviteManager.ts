@@ -165,7 +165,7 @@ export class GuildInviteManager extends CachedManager {
     });
   }
 
-  async _fetchSingle({ code, cache, force = false }: any) {
+  async _fetchSingle({ code: any, cache: any, force = false }) {
     if (!force) {
       const existing = this.cache.get(code);
       if (existing) return existing;
@@ -179,12 +179,12 @@ export class GuildInviteManager extends CachedManager {
 
   async _fetchMany(cache?: any) {
     const data = await this.client.rest.get(Routes.guildInvites(this.guild.id));
-    return data.reduce((col, invite) => col.set(invite.code, this._add(invite, cache)), new Collection());
+    return data.reduce((col: any, invite: any) => col.set(invite.code, this._add(invite, cache)), new Collection());
   }
 
   async _fetchChannelMany(channelId: any, cache: any) {
     const data = await this.client.rest.get(Routes.channelInvites(channelId));
-    return data.reduce((col, invite) => col.set(invite.code, this._add(invite, cache)), new Collection());
+    return data.reduce((col: any, invite: any) => col.set(invite.code, this._add(invite, cache)), new Collection());
   }
 
   /**

@@ -489,7 +489,7 @@ export class ApplicationCommand extends Base {
   static optionsEqual(existing: any, options: any, enforceOptionOrder = false) {
     if (existing.length !== options.length) return false;
     if (enforceOptionOrder) {
-      return existing.every((option, index) => this._optionEquals(option, options[index], enforceOptionOrder));
+      return existing.every((option: any, index: any) => this._optionEquals(option, options[index], enforceOptionOrder));
     }
 
     const newOptions = new Map(options.map(option => [option.name, option]));

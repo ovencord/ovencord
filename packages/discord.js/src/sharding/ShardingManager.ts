@@ -294,7 +294,7 @@ export class ShardingManager extends AsyncEventEmitter {
    * @param {BroadcastEvalOptions} [options={}] The options for the broadcast
    * @returns {Promise<*|Array<*>>} Results of the script execution
    */
-  async broadcastEval(script, options = {}: any): Promise<any> {
+  async broadcastEval(script: any, options = {}): Promise<any> {
     if (typeof script !== 'function') {
       throw new DiscordjsTypeError(ErrorCodes.ShardingInvalidEvalBroadcast);
     }

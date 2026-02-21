@@ -55,7 +55,7 @@ export class UserManager extends CachedManager {
    * @param {BaseFetchOptions} [options] Additional options for this fetch
    * @returns {Promise<DMChannel>}
    */
-  async createDM(user, { cache = true, force = false } = {}: any) {
+  async createDM(user: any, { cache = true, force = false } = {}) {
     const id = this.resolveId(user);
 
     if (!force) {
@@ -89,7 +89,7 @@ export class UserManager extends CachedManager {
    * @param {BaseFetchOptions} [options] Additional options for this fetch
    * @returns {Promise<User>}
    */
-  async fetch(user, { cache = true, force = false } = {}: any) {
+  async fetch(user: any, { cache = true, force = false } = {}) {
     const id = this.resolveId(user);
     if (!force) {
       const existing = this.cache.get(id);

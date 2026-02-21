@@ -20,7 +20,7 @@ import { DiscordjsTypeError, ErrorCodes  } from '../errors/index.js';
 export class LimitedCollection<K, V> extends Collection<K, V> {
   public maxSize: any;
   public keepOverLimit: any;
-  constructor(options = {}: any, iterable = undefined) {
+  constructor(options = {}, iterable = undefined) {
     if (typeof options !== 'object' || options === null) {
       throw new DiscordjsTypeError(ErrorCodes.InvalidType, 'options', 'object', true);
     }

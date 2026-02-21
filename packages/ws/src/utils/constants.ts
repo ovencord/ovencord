@@ -1,9 +1,9 @@
 import { Collection } from '@ovencord/collection';
 import { lazy } from '@ovencord/util';
-import { APIVersion, GatewayOpcodes } from 'discord-api-types/v10';
+import { APIVersion, GatewayOpcodes, type GatewayPresenceUpdateData } from 'discord-api-types/v10';
 import { SimpleShardingStrategy } from '../strategies/sharding/SimpleShardingStrategy.js';
 import { SimpleIdentifyThrottler } from '../throttling/SimpleIdentifyThrottler.js';
-import type { SessionInfo, OptionalWebSocketManagerOptions, WebSocketManager } from '../ws/WebSocketManager.js';
+import type { SessionInfo, OptionalWebSocketManagerOptions, WebSocketManager, ShardRange } from '../ws/WebSocketManager.js';
 import type { SendRateLimitState } from '../ws/WebSocketShard.js';
 
 /**
@@ -40,11 +40,11 @@ export const DefaultWebSocketManagerOptions = {
 		const info = await manager.fetchGatewayInformation();
 		return new SimpleIdentifyThrottler(info.session_start_limit.max_concurrency);
 	},
-	buildStrategy: (manager) => new SimpleShardingStrategy(manager),
-	shardCount: null,
-	shardIds: null,
-	largeThreshold: null,
-	initialPresence: null,
+	buildStrategy: (manager: WebSocketManager) => new SimpleShardingStrategy(manager),
+	shardCount: null as number | null,
+	shardIds: null as number[] | ShardRange | null,
+	largeThreshold: null as number | null,
+	initialPresence: null as GatewayPresenceUpdateData | null,
 	identifyProperties: {
 		browser: DefaultDeviceProperty,
 		device: DefaultDeviceProperty,
@@ -52,9 +52,9 @@ export const DefaultWebSocketManagerOptions = {
 	},
 	version: APIVersion,
 	encoding: Encoding.JSON,
-	compression: null,
+	compression: null as CompressionMethod | null,
 	useIdentifyCompression: false,
-	retrieveSessionInfo(shardId) {
+	retrieveSessionInfo(shardId: number) {
 		const store = getDefaultSessionStore();
 		return store.get(shardId) ?? null;
 	},

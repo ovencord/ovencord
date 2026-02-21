@@ -111,7 +111,7 @@ export class GuildStickerManager extends CachedManager {
    * @param {GuildStickerEditOptions} [options={}] The new data for the sticker
    * @returns {Promise<Sticker>}
    */
-  async edit(sticker, options = {}: any) {
+  async edit(sticker: any, options = {}) {
     const stickerId = this.resolveId(sticker);
     if (!stickerId) throw new DiscordjsTypeError(ErrorCodes.InvalidType, 'sticker', 'StickerResolvable');
 
@@ -161,7 +161,7 @@ export class GuildStickerManager extends CachedManager {
    *   .then(sticker => console.log(`The sticker name is: ${sticker.name}`))
    *   .catch(console.error);
    */
-  async fetch(id, { cache = true, force = false } = {}: any) {
+  async fetch(id: any, { cache = true, force = false } = {}) {
     if (id) {
       if (!force) {
         const existing = this.cache.get(id);

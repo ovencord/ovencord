@@ -25,7 +25,7 @@ export class Emoji extends Base {
     return encodeURIComponent(this.name!);
   }
 
-  imageURL(options = {}: any): string | null {
+  imageURL(options = {}): string | null {
     if (!this.id) return null;
 
     const resolvedOptions = { extension: options.extension, size: options.size, animated: undefined as boolean | undefined };

@@ -366,7 +366,7 @@ export class GuildChannel extends BaseChannel {
    *   .then(channel => console.log(`Moved ${message.channel.name} to ${channel.parent.name}`))
    *   .catch(console.error);
    */
-  async setParent(channel, { lockPermissions = false, reason }: any = {}: any) {
+  async setParent(channel: any, { lockPermissions = false, reason }: any = {}) {
     return this.edit({
       parent: channel ?? null,
       lockPermissions,
@@ -394,7 +394,7 @@ export class GuildChannel extends BaseChannel {
    *   .then(newChannel => console.log(`Channel's new position is ${newChannel.position}`))
    *   .catch(console.error);
    */
-  async setPosition(position, options = {}: any) {
+  async setPosition(position: any, options = {}) {
     return this.guild.channels.setPosition(this, position, options);
   }
 
@@ -411,7 +411,7 @@ export class GuildChannel extends BaseChannel {
    * @param {GuildChannelCloneOptions} [options] The options for cloning this channel
    * @returns {Promise<GuildChannel>}
    */
-  async clone(options = {}: any) {
+  async clone(options = {}) {
     return this.guild.channels.create({
       name: options.name ?? this.name,
       permissionOverwrites: this.permissionOverwrites.cache,

@@ -61,7 +61,7 @@ export class ClientUser extends User {
    * @param {ClientUserEditOptions} options The options to provide
    * @returns {Promise<ClientUser>}
    */
-  async edit({ username, avatar, banner }: any) {
+  async edit({ username: any, avatar: any, banner: any }) {
     const data = await this.client.rest.patch(Routes.user(), {
       body: {
         username,
@@ -199,7 +199,7 @@ export class ClientUser extends User {
    * // Set the client user's activity
    * client.user.setActivity('discord.js', { type: ActivityType.Watching });
    */
-  async setActivity(name, options = {}: any) {
+  async setActivity(name: any, options = {}) {
     if (!name) return this.setPresence({ activities: [], shardId: options.shardId });
 
     const activity = { ...options, ...(typeof name === 'object' ? name : { name }) };

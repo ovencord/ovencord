@@ -84,7 +84,7 @@ export class InteractionResponses {
    *   .then(console.log)
    *   .catch(console.error);
    */
-  async deferReply(options = {}: any) {
+  async deferReply(options = {}) {
     if (this.deferred || this.replied) throw new DiscordjsError(ErrorCodes.InteractionAlreadyReplied);
 
     const resolvedFlags = new MessageFlagsBitField(options.flags);
@@ -234,7 +234,7 @@ export class InteractionResponses {
    *   .then(console.log)
    *   .catch(console.error);
    */
-  async deferUpdate(options = {}: any) {
+  async deferUpdate(options = {}) {
     if (this.deferred || this.replied) throw new DiscordjsError(ErrorCodes.InteractionAlreadyReplied);
     const response = await this.client.rest.post(Routes.interactionCallback(this.id, this.token), {
       body: {
@@ -262,7 +262,7 @@ export class InteractionResponses {
    *   .then(console.log)
    *   .catch(console.error);
    */
-  async update(options = {}: any) {
+  async update(options = {}) {
     if (this.deferred || this.replied) throw new DiscordjsError(ErrorCodes.InteractionAlreadyReplied);
 
     let messagePayload;
@@ -312,7 +312,7 @@ export class InteractionResponses {
    * @param {ShowModalOptions} [options={}] The options for sending this interaction response
    * @returns {Promise<InteractionCallbackResponse|undefined>}
    */
-  async showModal(modal, options = {}: any) {
+  async showModal(modal: any, options = {}) {
     if (this.deferred || this.replied) throw new DiscordjsError(ErrorCodes.InteractionAlreadyReplied);
     const response = await this.client.rest.post(Routes.interactionCallback(this.id, this.token), {
       body: {

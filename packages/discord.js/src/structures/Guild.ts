@@ -737,7 +737,7 @@ export class Guild extends AnonymousGuild {
   async fetchIntegrations() {
     const data = await this.client.rest.get(Routes.guildIntegrations(this.id));
     return data.reduce(
-      (collection, integration) => collection.set(integration.id, new Integration(this.client, integration, this)),
+      (collection: any, integration: any) => collection.set(integration.id, new Integration(this.client, integration, this)),
       new Collection(),
     );
   }
@@ -750,7 +750,7 @@ export class Guild extends AnonymousGuild {
    */
   async fetchTemplates() {
     const templates = await this.client.rest.get(Routes.guildTemplates(this.id));
-    return templates.reduce((col, data) => col.set(data.code, new GuildTemplate(this.client, data)), new Collection());
+    return templates.reduce((col: any, data: any) => col.set(data.code, new GuildTemplate(this.client, data)), new Collection());
   }
 
   /**
@@ -1000,24 +1000,24 @@ export class Guild extends AnonymousGuild {
    *   .catch(console.error);
    */
   async edit({
-    verificationLevel,
-    defaultMessageNotifications,
-    explicitContentFilter,
-    afkChannel,
-    afkTimeout,
-    icon,
-    splash,
-    discoverySplash,
-    banner,
-    systemChannel,
-    systemChannelFlags,
-    rulesChannel,
-    publicUpdatesChannel,
-    preferredLocale,
-    premiumProgressBarEnabled,
-    safetyAlertsChannel,
+    verificationLevel: any,
+    defaultMessageNotifications: any,
+    explicitContentFilter: any,
+    afkChannel: any,
+    afkTimeout: any,
+    icon: any,
+    splash: any,
+    discoverySplash: any,
+    banner: any,
+    systemChannel: any,
+    systemChannelFlags: any,
+    rulesChannel: any,
+    publicUpdatesChannel: any,
+    preferredLocale: any,
+    premiumProgressBarEnabled: any,
+    safetyAlertsChannel: any,
     ...options
-  }: any) {
+  }) {
     const data = await this.client.rest.patch(Routes.guild(this.id), {
       body: {
         ...options,
@@ -1536,7 +1536,7 @@ export class Guild extends AnonymousGuild {
       this.verificationLevel === g.verificationLevel &&
       (this.features === g.features ||
         (this.features.length === g.features.length &&
-          this.features.every((feat, index) => feat === g.features[index])))
+          this.features.every((feat: any, index: any) => feat === g.features[index])))
     );
   }
 
@@ -1599,7 +1599,7 @@ export class Guild extends AnonymousGuild {
     const types = getSortableGroupTypes(channel.type);
     return discordSort(
       this.channels.cache.filter(
-        ({ parentId, type }: any) => types.includes(type) && (channelIsCategory || parentId === channel.parentId),
+        ({ parentId: any, type: any }) => types.includes(type) && (channelIsCategory || parentId === channel.parentId),
       ),
     );
   }

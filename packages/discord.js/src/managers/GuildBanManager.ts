@@ -113,7 +113,7 @@ export class GuildBanManager extends CachedManager {
     return this._fetchMany(options);
   }
 
-  async _fetchSingle({ user, cache, force = false }: any) {
+  async _fetchSingle({ user: any, cache: any, force = false }) {
     if (!force) {
       const existing = this.cache.get(user);
       if (existing && !existing.partial) return existing;
@@ -150,7 +150,7 @@ export class GuildBanManager extends CachedManager {
    * // Ban a user by id (or with a user/guild member object)
    * await guild.bans.create('84484653687267328');
    */
-  async create(user, options = {}: any) {
+  async create(user: any, options = {}) {
     if (typeof options !== 'object') throw new DiscordjsTypeError(ErrorCodes.InvalidType, 'options', 'object', true);
     const id = this.client.users.resolveId(user);
     if (!id) throw new DiscordjsError(ErrorCodes.BanResolveId, true);
@@ -202,7 +202,7 @@ export class GuildBanManager extends CachedManager {
    *   })
    *   .catch(console.error);
    */
-  async bulkCreate(users, options = {}: any) {
+  async bulkCreate(users: any, options = {}) {
     if (!users || !(Array.isArray(users) || users instanceof Collection)) {
       throw new DiscordjsTypeError(ErrorCodes.InvalidType, 'users', 'Array or Collection of UserResolvable', true);
     }

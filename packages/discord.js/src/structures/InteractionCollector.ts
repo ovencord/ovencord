@@ -37,7 +37,7 @@ export class InteractionCollector extends Collector {
    * @param {Client} client The client on which to collect interactions
    * @param {InteractionCollectorOptions} [options={}] The options to apply to this collector
    */
-  constructor(client, options = {}: any) {
+  constructor(client: any, options = {}) {
     super(client, options);
 
     /**

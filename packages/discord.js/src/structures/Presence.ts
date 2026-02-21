@@ -43,7 +43,7 @@ export class Presence extends Base {
   public status: any;
   public activities: any;
   public clientStatus: any;
-  constructor(client, data = {}: any) {
+  constructor(client: any, data = {}) {
     super(client);
 
     /**
@@ -148,7 +148,7 @@ export class Presence extends Base {
         this.clientStatus?.mobile === presence.clientStatus?.mobile &&
         this.clientStatus?.desktop === presence.clientStatus?.desktop &&
         this.activities.length === presence.activities.length &&
-        this.activities.every((activity, index) => activity.equals(presence.activities[index])))
+        this.activities.every((activity: any, index: any) => activity.equals(presence.activities[index])))
     );
   }
 

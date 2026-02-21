@@ -49,7 +49,7 @@ export class SubscriptionManager extends CachedManager {
    * @param {FetchSubscriptionOptions|FetchSubscriptionsOptions} [options={}] Options for fetching the subscriptions
    * @returns {Promise<Subscription|Collection<Snowflake, Subscription>>}
    */
-  async fetch(options = {}: any) {
+  async fetch(options = {}) {
     if (typeof options !== 'object') throw new DiscordjsTypeError(ErrorCodes.InvalidType, 'options', 'object', true);
 
     const { after, before, cache, limit, sku, subscriptionId, user } = options;

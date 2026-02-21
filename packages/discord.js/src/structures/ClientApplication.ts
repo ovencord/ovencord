@@ -465,6 +465,6 @@ export class ClientApplication extends Application {
    */
   async fetchSKUs() {
     const skus = await this.client.rest.get(Routes.skus(this.id));
-    return skus.reduce((coll, sku) => coll.set(sku.id, new SKU(this.client, sku)), new Collection());
+    return skus.reduce((coll: any, sku: any) => coll.set(sku.id, new SKU(this.client, sku)), new Collection());
   }
 }

@@ -367,7 +367,7 @@ export class Sweepers {
    */
   static filterByLifetime({
     lifetime = 14_400,
-    getComparisonTimestamp = (item, _key?: any, _coll?: any): number | null | undefined => item?.createdTimestamp,
+    getComparisonTimestamp = (item: any, _key?: any, _coll?: any): number | null | undefined => item?.createdTimestamp,
     excludeFromSweep = (_item?: any, _key?: any, _coll?: any): boolean => false,
   }: any = {}) {
     if (typeof lifetime !== 'number') {
@@ -407,9 +407,9 @@ export class Sweepers {
   static archivedThreadSweepFilter(lifetime = 14_400) {
     return this.filterByLifetime({
       lifetime,
-      getComparisonTimestamp: (thread) => thread.archiveTimestamp,
-      excludeFromSweep: (thread) => !thread.archived,
-    }: any);
+      getComparisonTimestamp: (thread: any) => thread.archiveTimestamp,
+      excludeFromSweep: (thread: any) => !thread.archived,
+    });
   }
 
   /**
@@ -421,8 +421,8 @@ export class Sweepers {
   static expiredInviteSweepFilter(lifetime = 14_400) {
     return this.filterByLifetime({
       lifetime,
-      getComparisonTimestamp: (invite) => invite.expiresTimestamp,
-    }: any);
+      getComparisonTimestamp: (invite: any) => invite.expiresTimestamp,
+    });
   }
 
   /**
@@ -434,8 +434,8 @@ export class Sweepers {
   static outdatedMessageSweepFilter(lifetime = 3_600) {
     return this.filterByLifetime({
       lifetime,
-      getComparisonTimestamp: (message) => message.editedTimestamp ?? message.createdTimestamp,
-    }: any);
+      getComparisonTimestamp: (message: any) => message.editedTimestamp ?? message.createdTimestamp,
+    });
   }
 
   /**
@@ -456,7 +456,7 @@ export class Sweepers {
    * @returns {Object} Object containing the number of guilds swept and the number of items swept
    * @private
    */
-  _sweepGuildDirectProp(key, filter, { emit = true, outputName }: any = {}: any) {
+  _sweepGuildDirectProp(key: any, filter: any, { emit = true, outputName }: any = {}) {
     if (typeof filter !== 'function') {
       throw new DiscordjsTypeError(ErrorCodes.InvalidType, 'filter', 'function');
     }

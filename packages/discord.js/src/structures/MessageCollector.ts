@@ -23,7 +23,7 @@ export class MessageCollector extends Collector {
    * @param {MessageCollectorOptions} options The options to be applied to this collector
    * @emits MessageCollector#message
    */
-  constructor(channel, options = {}: any) {
+  constructor(channel: any, options = {}) {
     super(channel.client, options);
 
     /**

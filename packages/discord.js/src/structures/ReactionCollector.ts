@@ -28,7 +28,7 @@ export class ReactionCollector extends Collector {
    * @param {Message} message The message upon which to collect reactions
    * @param {ReactionCollectorOptions} [options={}] The options to apply to this collector
    */
-  constructor(message, options = {}: any) {
+  constructor(message: any, options = {}) {
     super(message.client, options);
 
     /**
@@ -105,7 +105,7 @@ export class ReactionCollector extends Collector {
     this.on('remove', (_reaction, user) => {
       this.total--;
       if (!this.collected.some((reaction) => reaction.users.cache.has(user.id))) this.users.delete(user.id);
-    }: any);
+    });
   }
 
   /**

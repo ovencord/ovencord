@@ -609,7 +609,7 @@ export class GuildMember extends Base {
       this.flags.bitfield === m.flags.bitfield &&
       (this._roles === m._roles ||
         (this._roles.length === m._roles.length &&
-          this._roles.every((role, index) => role === m._roles[index]))) &&
+          this._roles.every((role: any, index: any) => role === m._roles[index]))) &&
       this.avatarDecorationData?.asset === m.avatarDecorationData?.asset &&
       this.avatarDecorationData?.skuId === m.avatarDecorationData?.skuId
     );

@@ -81,7 +81,7 @@ export class EntitlementManager extends CachedManager {
     return this._fetchMany(options);
   }
 
-  async _fetchSingle({ entitlement, cache, force = false }: any) {
+  async _fetchSingle({ entitlement: any, cache: any, force = false }) {
     if (!force) {
       const existing = this.cache.get(entitlement);
 
@@ -130,7 +130,7 @@ export class EntitlementManager extends CachedManager {
    * @param {EntitlementCreateOptions} options Options for creating the test entitlement
    * @returns {Promise<Entitlement>}
    */
-  async createTest({ sku, guild, user }: any) {
+  async createTest({ sku: any, guild: any, user: any }) {
     const skuId = resolveSKUId(sku);
     if (!skuId) throw new DiscordjsTypeError(ErrorCodes.InvalidType, 'sku', 'SKUResolvable');
 

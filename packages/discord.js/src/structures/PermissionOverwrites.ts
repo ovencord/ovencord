@@ -131,7 +131,7 @@ export class PermissionOverwrites extends Base {
    * @param {ResolvedOverwriteOptions} initialPermissions The initial permissions
    * @returns {ResolvedOverwriteOptions}
    */
-  static resolveOverwriteOptions(options, initialPermissions = {}: any) {
+  static resolveOverwriteOptions(options: any, initialPermissions = {}) {
     const allow = new PermissionsBitField(initialPermissions.allow);
     const deny = new PermissionsBitField(initialPermissions.deny);
 

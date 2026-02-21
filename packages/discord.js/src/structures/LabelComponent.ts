@@ -8,7 +8,7 @@ import { Component  } from './Component.js';
  */
 export class LabelComponent extends Component {
   public component: any;
-  constructor({ component, ...data }: any) {
+  constructor({ component: any, ...data }) {
     super(data);
 
     /**

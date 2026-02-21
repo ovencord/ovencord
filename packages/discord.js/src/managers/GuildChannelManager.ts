@@ -246,7 +246,7 @@ export class GuildChannelManager extends CachedManager {
    *   .then(console.log)
    *   .catch(console.error)
    */
-  async createWebhook({ channel, name, avatar, reason }: any) {
+  async createWebhook({ channel: any, name: any, avatar: any, reason: any }) {
     const channelId = this.resolveId(channel);
     if (!channelId) throw new DiscordjsTypeError(ErrorCodes.InvalidType, 'channel', 'GuildChannelResolvable');
 
@@ -376,7 +376,7 @@ export class GuildChannelManager extends CachedManager {
    *   .then(newChannel => console.log(`Channel's new position is ${newChannel.position}`))
    *   .catch(console.error);
    */
-  async setPosition(channel, position, { relative, reason }: any = {}: any) {
+  async setPosition(channel: any, position: any, { relative, reason }: any = {}) {
     const resolvedChannel = this.resolve(channel);
     if (!resolvedChannel) throw new DiscordjsTypeError(ErrorCodes.InvalidType, 'channel', 'GuildChannelResolvable');
 
@@ -415,7 +415,7 @@ export class GuildChannelManager extends CachedManager {
    *   .then(channel => console.log(`The channel name is: ${channel.name}`))
    *   .catch(console.error);
    */
-  async fetch(id, { cache = true, force = false } = {}: any) {
+  async fetch(id: any, { cache = true, force = false } = {}) {
     if (id && !force) {
       const existing = this.cache.get(id);
       if (existing) return existing;
@@ -449,7 +449,7 @@ export class GuildChannelManager extends CachedManager {
     const id = this.resolveId(channel);
     if (!id) throw new DiscordjsTypeError(ErrorCodes.InvalidType, 'channel', 'GuildChannelResolvable');
     const data = await this.client.rest.get(Routes.channelWebhooks(id));
-    return data.reduce((hooks, hook) => hooks.set(hook.id, new Webhook(this.client, hook)), new Collection());
+    return data.reduce((hooks: any, hook: any) => hooks.set(hook.id, new Webhook(this.client, hook)), new Collection());
   }
 
   /**

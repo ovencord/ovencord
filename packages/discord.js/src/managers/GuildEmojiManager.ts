@@ -131,7 +131,7 @@ export class GuildEmojiManager extends CachedManager {
    *   .then(emoji => console.log(`Created new emoji with name ${emoji.name}!`))
    *   .catch(console.error);
    */
-  async create({ attachment, name, roles, reason }: any) {
+  async create({ attachment: any, name: any, roles: any, reason: any }) {
     const image = await resolveImage(attachment);
     if (!image) throw new DiscordjsTypeError(ErrorCodes.ReqResourceType);
 
@@ -178,7 +178,7 @@ export class GuildEmojiManager extends CachedManager {
    *   .then(emoji => console.log(`The emoji name is: ${emoji.name}`))
    *   .catch(console.error);
    */
-  async fetch(id, { cache = true, force = false } = {}: any) {
+  async fetch(id: any, { cache = true, force = false } = {}) {
     if (id) {
       if (!force) {
         const existing = this.cache.get(id);

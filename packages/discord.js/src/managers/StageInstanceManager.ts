@@ -95,7 +95,7 @@ export class StageInstanceManager extends CachedManager {
    *  .then(stageInstance => console.log(stageInstance))
    *  .catch(console.error);
    */
-  async fetch(channel, { cache = true, force = false } = {}: any) {
+  async fetch(channel: any, { cache = true, force = false } = {}) {
     const channelId = this.guild.channels.resolveId(channel);
     if (!channelId) throw new DiscordjsError(ErrorCodes.StageChannelResolve);
 

@@ -223,7 +223,7 @@ export class GuildMemberManager extends CachedManager {
     return this._fetchMany({ ...options, users: resolvedUsers });
   }
 
-  async _fetchSingle({ user, cache, force = false }: any) {
+  async _fetchSingle({ user: any, cache: any, force = false }) {
     if (!force) {
       const existing = this.cache.get(user);
       if (existing && !existing.partial) return existing;
@@ -384,7 +384,7 @@ export class GuildMemberManager extends CachedManager {
    * @param {GuildMemberEditOptions} options The options to provide
    * @returns {Promise<GuildMember>}
    */
-  async edit(user, { reason, ...options }: any) {
+  async edit(user: any, { reason: any, ...options }) {
     const id = this.client.users.resolveId(user);
     if (!id) throw new DiscordjsTypeError(ErrorCodes.InvalidType, 'user', 'UserResolvable');
 
@@ -438,7 +438,7 @@ export class GuildMemberManager extends CachedManager {
    * @param {GuildMemberEditMeOptions} options The options to provide
    * @returns {Promise<GuildMember>}
    */
-  async editMe({ reason, ...options }: any) {
+  async editMe({ reason: any, ...options }) {
     const data = await this.client.rest.patch(Routes.guildMember(this.guild.id, '@me'), {
       body: {
         ...options,
@@ -577,7 +577,7 @@ export class GuildMemberManager extends CachedManager {
    *   })
    *   .catch(console.error);
    */
-  async bulkBan(users, options = {}: any) {
+  async bulkBan(users: any, options = {}) {
     return this.guild.bans.bulkCreate(users, options);
   }
 

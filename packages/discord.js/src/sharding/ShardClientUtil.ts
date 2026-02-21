@@ -145,7 +145,7 @@ export class ShardClientUtil {
    *   .catch(console.error);
    * @see {@link ShardingManager#broadcastEval}
    */
-  async broadcastEval(script, options = {}: any): Promise<any> {
+  async broadcastEval(script: any, options = {}): Promise<any> {
     return new Promise((resolve, reject) => {
       if (typeof script !== 'function') {
         reject(new DiscordjsTypeError(ErrorCodes.ShardingInvalidEvalBroadcast));

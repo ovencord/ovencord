@@ -146,7 +146,7 @@ export class GuildEmoji extends BaseGuildEmoji {
         other.roles.cache.size === this.roles.cache.size &&
         other.roles.cache.every((role) => this.roles.cache.has(role.id))
       );
-    }: any else {
+    }  else {
       return (
         other.id === this.id &&
         other.name === this.name &&
