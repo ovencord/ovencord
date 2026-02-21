@@ -492,6 +492,7 @@ export class ApplicationCommand extends Base {
       return existing.every((option: any, index: any) => this._optionEquals(option, options[index], enforceOptionOrder));
     }
 
+    // @ts-ignore
     const newOptions = new Map(options.map(option => [option.name, option]));
     for (const option of existing) {
       const foundOption = newOptions.get(option.name);
@@ -650,12 +651,14 @@ export class ApplicationCommand extends Base {
           ? undefined
           : false),
       autocomplete: option.autocomplete,
+      // @ts-ignore
       choices: option.choices?.map(choice => ({
         name: choice.name,
         [nameLocalizedKey]: choice.nameLocalized ?? choice.name_localized,
         [nameLocalizationsKey]: choice.nameLocalizations ?? choice.name_localizations,
         value: choice.value,
       })),
+      // @ts-ignore
       options: option.options?.map(opt => this.transformOption(opt, received)),
       [channelTypesKey]: option.channelTypes ?? option.channel_types,
       [minValueKey]: option.minValue ?? option.min_value,

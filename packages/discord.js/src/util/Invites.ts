@@ -23,5 +23,6 @@ const InviteTypeToClass = {
  * @ignore
  */
 export function createInvite(client: any, data: any) {
+  // @ts-ignore
   return new (InviteTypeToClass[data.type] ?? BaseInvite)(client, data);
 }

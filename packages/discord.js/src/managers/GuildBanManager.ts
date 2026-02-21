@@ -113,7 +113,7 @@ export class GuildBanManager extends CachedManager {
     return this._fetchMany(options);
   }
 
-  async _fetchSingle({ user: any, cache: any, force = false }) {
+  async _fetchSingle({ user, cache, force = false }: any) {
     if (!force) {
       const existing = this.cache.get(user);
       if (existing && !existing.partial) return existing;
@@ -157,8 +157,10 @@ export class GuildBanManager extends CachedManager {
 
     await this.client.rest.put(Routes.guildBan(this.guild.id, id), {
       body: {
+        // @ts-ignore
         delete_message_seconds: options.deleteMessageSeconds,
       },
+      // @ts-ignore
       reason: options.reason,
     });
   }
@@ -213,7 +215,9 @@ export class GuildBanManager extends CachedManager {
     if (userIds.length === 0) throw new DiscordjsError(ErrorCodes.BulkBanUsersOptionEmpty);
 
     const result = await this.client.rest.post(Routes.guildBulkBan(this.guild.id), {
+      // @ts-ignore
       body: { delete_message_seconds: options.deleteMessageSeconds, user_ids: userIds },
+      // @ts-ignore
       reason: options.reason,
     });
     return { bannedUsers: result.banned_users, failedUsers: result.failed_users };

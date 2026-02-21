@@ -182,7 +182,9 @@ export class RoleManager extends CachedManager {
    *   .catch(console.error);
    */
   async create(options = {}) {
+    // @ts-ignore
     let { permissions, icon } = options;
+    // @ts-ignore
     const { name, hoist, position, mentionable, reason, unicodeEmoji } = options;
     if (permissions !== undefined) permissions = new PermissionsBitField(permissions);
     if (icon) {
@@ -191,9 +193,13 @@ export class RoleManager extends CachedManager {
       if (typeof icon !== 'string') icon = undefined;
     }
 
+    // @ts-ignore
     const colors = options.colors && {
+      // @ts-ignore
       primary_color: resolveColor(options.colors.primaryColor),
+      // @ts-ignore
       secondary_color: options.colors.secondaryColor && resolveColor(options.colors.secondaryColor),
+      // @ts-ignore
       tertiary_color: options.colors.tertiaryColor && resolveColor(options.colors.tertiaryColor),
     };
 
@@ -348,6 +354,7 @@ export class RoleManager extends CachedManager {
    */
   async setPositions(rolePositions: any) {
     // Make sure rolePositions are prepared for API
+    // @ts-ignore
     const resolvedRolePositions = rolePositions.map(rolePosition => ({
       id: this.resolveId(rolePosition.role),
       position: rolePosition.position,
@@ -396,6 +403,7 @@ export class RoleManager extends CachedManager {
   botRoleFor(user: any) {
     const userId = this.client.users.resolveId(user);
     if (!userId) return null;
+    // @ts-ignore
     return this.cache.find(role => role.tags?.botId === userId) ?? null;
   }
 
@@ -416,6 +424,7 @@ export class RoleManager extends CachedManager {
    * @readonly
    */
   get premiumSubscriberRole() {
+    // @ts-ignore
     return this.cache.find(role => role.tags?.premiumSubscriberRole) ?? null;
   }
 

@@ -132,7 +132,9 @@ export class PermissionOverwrites extends Base {
    * @returns {ResolvedOverwriteOptions}
    */
   static resolveOverwriteOptions(options: any, initialPermissions = {}) {
+    // @ts-ignore
     const allow = new PermissionsBitField(initialPermissions.allow);
+    // @ts-ignore
     const deny = new PermissionsBitField(initialPermissions.deny);
 
     for (const [perm, value] of Object.entries(options)) {

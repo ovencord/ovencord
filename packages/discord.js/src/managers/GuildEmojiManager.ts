@@ -131,7 +131,7 @@ export class GuildEmojiManager extends CachedManager {
    *   .then(emoji => console.log(`Created new emoji with name ${emoji.name}!`))
    *   .catch(console.error);
    */
-  async create({ attachment: any, name: any, roles: any, reason: any }) {
+  async create({ attachment, name, roles, reason }: any) {
     const image = await resolveImage(attachment);
     if (!image) throw new DiscordjsTypeError(ErrorCodes.ReqResourceType);
 
@@ -146,6 +146,7 @@ export class GuildEmojiManager extends CachedManager {
         );
       }
 
+      // @ts-ignore
       body.roles = [];
       for (const role of roles.values()) {
         const resolvedRole = this.guild.roles.resolveId(role);
@@ -153,6 +154,7 @@ export class GuildEmojiManager extends CachedManager {
           throw new DiscordjsTypeError(ErrorCodes.InvalidElement, 'Array or Collection', 'options.roles', role);
         }
 
+        // @ts-ignore
         body.roles.push(resolvedRole);
       }
     }
@@ -218,6 +220,7 @@ export class GuildEmojiManager extends CachedManager {
   async edit(emoji: any, options: any) {
     const id = this.resolveId(emoji);
     if (!id) throw new DiscordjsTypeError(ErrorCodes.InvalidType, 'emoji', 'EmojiResolvable', true);
+    // @ts-ignore
     const roles = options.roles?.map(role => this.guild.roles.resolveId(role));
     const newData = await this.client.rest.patch(Routes.guildEmoji(this.guild.id, id), {
       body: {

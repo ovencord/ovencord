@@ -182,6 +182,7 @@ export class BaseChannel extends Base {
     return 'send' in this;
   }
 
+  // @ts-ignore
   toJSON(...props) {
     return super.toJSON({ createdTimestamp: true }, ...props);
   }

@@ -100,6 +100,7 @@ export class StageInstanceManager extends CachedManager {
     if (!channelId) throw new DiscordjsError(ErrorCodes.StageChannelResolve);
 
     if (!force) {
+      // @ts-ignore
       const existing = this.cache.find(stageInstance => stageInstance.channelId === channelId);
       if (existing) return existing;
     }

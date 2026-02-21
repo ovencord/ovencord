@@ -105,7 +105,7 @@ export class MessageManager extends CachedManager {
     return this._fetchMany(options);
   }
 
-  async _fetchSingle({ message: any, cache: any, force = false }) {
+  async _fetchSingle({ message, cache, force = false }: any) {
     if (!force) {
       const existing = this.cache.get(message);
       if (existing && !existing.partial) return existing;
@@ -171,6 +171,7 @@ export class MessageManager extends CachedManager {
     });
 
     return {
+      // @ts-ignore
       items: data.items.map(item => ({
         pinnedTimestamp: Date.parse(item.pinned_at),
         get pinnedAt() {
@@ -342,7 +343,7 @@ export class MessageManager extends CachedManager {
    * @param {FetchPollAnswerVotersOptions} options The options for fetching the poll answer voters
    * @returns {Promise<Collection<Snowflake, User>>}
    */
-  async fetchPollAnswerVoters({ messageId: any, answerId: any, after: any, limit: any }) {
+  async fetchPollAnswerVoters({ messageId, answerId, after, limit }: any) {
     const voters = await this.client.rest.get(Routes.pollAnswerVoters(this.channel.id, messageId, answerId), {
       query: makeURLSearchParams({ limit, after }),
     });

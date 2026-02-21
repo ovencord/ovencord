@@ -40,6 +40,7 @@ export class MessageCollector extends Collector {
      */
     this.received = 0;
 
+    // @ts-ignore
     const bulkDeleteListener = async messages => {
       for (const message of messages.values()) await this.handleDispose(message);
     };

@@ -206,6 +206,7 @@ export class GuildChannelManager extends CachedManager {
         user_limit: userLimit,
         parent_id: parent && this.client.channels.resolveId(parent),
         position,
+        // @ts-ignore
         permission_overwrites: permissionOverwrites?.map(overwrite =>
           PermissionOverwrites.resolve(overwrite, this.guild),
         ),
@@ -213,6 +214,7 @@ export class GuildChannelManager extends CachedManager {
         rtc_region: rtcRegion,
         video_quality_mode: videoQualityMode,
         default_thread_rate_limit_per_user: defaultThreadRateLimitPerUser,
+        // @ts-ignore
         available_tags: availableTags?.map(availableTag => transformGuildForumTag(availableTag)),
         default_reaction_emoji: defaultReactionEmoji && transformGuildDefaultReaction(defaultReactionEmoji),
         default_auto_archive_duration: defaultAutoArchiveDuration,
@@ -246,7 +248,7 @@ export class GuildChannelManager extends CachedManager {
    *   .then(console.log)
    *   .catch(console.error)
    */
-  async createWebhook({ channel: any, name: any, avatar: any, reason: any }) {
+  async createWebhook({ channel, name, avatar, reason }: any) {
     const channelId = this.resolveId(channel);
     if (!channelId) throw new DiscordjsTypeError(ErrorCodes.InvalidType, 'channel', 'GuildChannelResolvable');
 
@@ -315,6 +317,7 @@ export class GuildChannelManager extends CachedManager {
       await this.setPosition(resolvedChannel, options.position, { position: options.position, reason: options.reason });
     }
 
+    // @ts-ignore
     let permission_overwrites = options.permissionOverwrites?.map(overwrite =>
       PermissionOverwrites.resolve(overwrite, this.guild),
     );
@@ -323,11 +326,13 @@ export class GuildChannelManager extends CachedManager {
       if (parentId) {
         const newParent = this.cache.get(parentId);
         if (newParent?.type === ChannelType.GuildCategory) {
+          // @ts-ignore
           permission_overwrites = newParent.permissionOverwrites.cache.map(overwrite =>
             PermissionOverwrites.resolve(overwrite, this.guild),
           );
         }
       } else if (resolvedChannel.parent) {
+        // @ts-ignore
         permission_overwrites = resolvedChannel.parent.permissionOverwrites.cache.map(overwrite =>
           PermissionOverwrites.resolve(overwrite, this.guild),
         );
@@ -349,6 +354,7 @@ export class GuildChannelManager extends CachedManager {
         rate_limit_per_user: options.rateLimitPerUser,
         default_auto_archive_duration: options.defaultAutoArchiveDuration,
         permission_overwrites,
+        // @ts-ignore
         available_tags: options.availableTags?.map(availableTag => transformGuildForumTag(availableTag)),
         default_reaction_emoji:
           options.defaultReactionEmoji && transformGuildDefaultReaction(options.defaultReactionEmoji),
@@ -482,6 +488,7 @@ export class GuildChannelManager extends CachedManager {
    *   .catch(console.error);
    */
   async setPositions(channelPositions: any) {
+    // @ts-ignore
     const resolvedChannelPositions = channelPositions.map(channelPosition => ({
       id: this.client.channels.resolveId(channelPosition.channel),
       position: channelPosition.position,

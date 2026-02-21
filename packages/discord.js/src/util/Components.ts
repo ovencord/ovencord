@@ -245,6 +245,7 @@ const ComponentTypeToClass = {
  * @ignore
  */
 export function createComponent(data: any) {
+  // @ts-ignore
   return data instanceof getComponent() ? data : new (ComponentTypeToClass[data.type]?.() ?? getComponent())(data);
 }
 
@@ -280,6 +281,7 @@ export function findComponentByCustomId(components: any, customId: any) {
   return (
     components
       .flatMap(extractInteractiveComponents)
+      // @ts-ignore
       .find(component => (component.customId ?? component.custom_id) === customId) ?? null
   );
 }

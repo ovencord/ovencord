@@ -301,6 +301,7 @@ export class ApplicationCommandPermissionsManager extends BaseManager {
       throw new DiscordjsTypeError(ErrorCodes.InvalidType, 'users OR roles OR channels', 'Array or Resolvable', true);
     }
 
+    // @ts-ignore
     const resolvedUserIds = [];
     if (Array.isArray(users)) {
       for (const user of users) {
@@ -310,6 +311,7 @@ export class ApplicationCommandPermissionsManager extends BaseManager {
       }
     }
 
+    // @ts-ignore
     const resolvedRoleIds = [];
     if (Array.isArray(roles)) {
       for (const role of roles) {
@@ -325,6 +327,7 @@ export class ApplicationCommandPermissionsManager extends BaseManager {
       }
     }
 
+    // @ts-ignore
     const resolvedChannelIds = [];
     if (Array.isArray(channels)) {
       for (const channel of channels) {
@@ -347,13 +350,17 @@ export class ApplicationCommandPermissionsManager extends BaseManager {
       if (error.code !== RESTJSONErrorCodes.UnknownApplicationCommandPermissions) throw error;
     }
 
+    // @ts-ignore
     const permissions = existing.filter(perm => {
       switch (perm.type) {
         case ApplicationCommandPermissionType.Role:
+          // @ts-ignore
           return !resolvedRoleIds.includes(perm.id);
         case ApplicationCommandPermissionType.User:
+          // @ts-ignore
           return !resolvedUserIds.includes(perm.id);
         case ApplicationCommandPermissionType.Channel:
+          // @ts-ignore
           return !resolvedChannelIds.includes(perm.id);
         default:
           return true;
@@ -383,7 +390,7 @@ export class ApplicationCommandPermissionsManager extends BaseManager {
    *  .then(console.log)
    *  .catch(console.error);
    */
-  async has({ guild: any, command: any, permissionId: any, permissionType: any }) {
+  async has({ guild, command, permissionId, permissionType }: any) {
     const { guildId, commandId } = this._validateOptions(guild, command);
     if (!commandId) throw new DiscordjsTypeError(ErrorCodes.InvalidType, 'command', 'ApplicationCommandResolvable');
 
@@ -422,6 +429,7 @@ export class ApplicationCommandPermissionsManager extends BaseManager {
     }
 
     // Check permission type if provided for the single edge case where a channel id is the same as the everyone role id
+    // @ts-ignore
     return existing.some(perm => perm.id === resolvedId && (permissionType ?? perm.type) === perm.type);
   }
 

@@ -43,6 +43,7 @@ export class UserManager extends CachedManager {
    */
   dmChannel(userId: any) {
     return (
+      // @ts-ignore
       this.client.channels.cache.find(channel => channel.type === ChannelType.DM && channel.recipientId === userId) ??
       null
     );

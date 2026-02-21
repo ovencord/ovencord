@@ -58,6 +58,7 @@ export class ReactionCollector extends Collector {
     this._handleGuildDeletion = this._handleGuildDeletion.bind(this);
     this._handleMessageDeletion = this._handleMessageDeletion.bind(this);
 
+    // @ts-ignore
     const bulkDeleteListener = messages => {
       if (messages.has(this.message.id)) this.stop('messageDelete');
     };
@@ -104,6 +105,7 @@ export class ReactionCollector extends Collector {
 
     this.on('remove', (_reaction, user) => {
       this.total--;
+      // @ts-ignore
       if (!this.collected.some((reaction) => reaction.users.cache.has(user.id))) this.users.delete(user.id);
     });
   }

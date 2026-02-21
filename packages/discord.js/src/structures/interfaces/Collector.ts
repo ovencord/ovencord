@@ -134,6 +134,7 @@ export class Collector extends AsyncEventEmitter {
    * @returns {Promise<void>}
    * @emits Collector#collect
    */
+  // @ts-ignore
   async handleCollect(...args) {
     const collectedId: any = await this.collect(...args);
 
@@ -176,6 +177,7 @@ export class Collector extends AsyncEventEmitter {
    * @returns {Promise<void>}
    * @emits Collector#dispose
    */
+  // @ts-ignore
   async handleDispose(...args) {
     if (!this.options.dispose) return;
 
@@ -214,6 +216,7 @@ export class Collector extends AsyncEventEmitter {
         this.off('end', onEnd);
       };
 
+      // @ts-ignore
       const onCollect = item => {
         cleanup();
         resolve(item);

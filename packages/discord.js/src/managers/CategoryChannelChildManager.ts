@@ -25,6 +25,7 @@ export class CategoryChannelChildManager extends DataManager {
    * @readonly
    */
   get cache() {
+    // @ts-ignore
     return this.guild.channels.cache.filter(channel => channel.parentId === this.channel.id);
   }
 

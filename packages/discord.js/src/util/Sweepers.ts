@@ -37,6 +37,7 @@ export class Sweepers {
      *
      * @type {Object<SweeperKey, ?Timeout>}
      */
+    // @ts-ignore
     this.intervals = Object.fromEntries(SweeperKeys.map(key => [key, null]));
 
     for (const key of SweeperKeys) {
@@ -525,6 +526,7 @@ export class Sweepers {
       const sweepFn = opts.filter();
       if (sweepFn === null) return;
       if (typeof sweepFn !== 'function') throw new DiscordjsTypeError(ErrorCodes.SweepFilterReturn);
+      // @ts-ignore
       this[sweepKey](sweepFn);
     }, opts.interval * 1_000).unref();
   }

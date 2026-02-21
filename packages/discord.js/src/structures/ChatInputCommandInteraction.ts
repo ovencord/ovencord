@@ -19,6 +19,7 @@ export class ChatInputCommandInteraction extends CommandInteraction {
      */
     this.options = new CommandInteractionOptionResolver(
       this.client,
+      // @ts-ignore
       data.data.options?.map(option => this.transformOption(option, data.data.resolved)) ?? [],
       transformResolved({ client: this.client, guild: this.guild, channel: this.channel }, data.data.resolved),
     );
@@ -35,6 +36,7 @@ export class ChatInputCommandInteraction extends CommandInteraction {
       this.commandName,
       this.options._group,
       this.options._subcommand,
+      // @ts-ignore
       ...this.options._hoistedOptions.map(option => `${option.name}:${option.value}`),
     ];
     return `/${properties.filter(Boolean).join(' ')}`;

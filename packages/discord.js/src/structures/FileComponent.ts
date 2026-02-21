@@ -8,7 +8,7 @@ import { UnfurledMediaItem  } from './UnfurledMediaItem.js';
  */
 export class FileComponent extends Component {
   public file: any;
-  constructor({ file: any, ...data }) {
+  constructor({ file, ...data }: any) {
     super(data);
 
     /**

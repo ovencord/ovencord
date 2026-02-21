@@ -134,7 +134,7 @@ export class ApplicationCommandManager extends CachedManager {
     return this._fetchMany({ cache, guildId, locale, withLocalizations });
   }
 
-  async _fetchSingle({ cache: any, force = false, guildId: any, id: any }) {
+  async _fetchSingle({ cache, force = false, guildId, id }: any) {
     if (!force) {
       const existing = this.cache.get(id);
       if (existing) return existing;
@@ -203,7 +203,8 @@ export class ApplicationCommandManager extends CachedManager {
    */
   async set(commands: any, guildId: any) {
     const data = await this.client.rest.put(this.commandPath({ guildId }), {
-      body: commands.map((command: any) => (this.constructor as typeof ApplicationCommandManager).transformCommand(command)),
+      // @ts-ignore
+      body: commands.map((command) => (this.constructor as typeof ApplicationCommandManager).transformCommand(command)),
     });
     return data.reduce(
       (collection: any, command: any) => collection.set(command.id, this._add(command, true, guildId)),
@@ -293,6 +294,7 @@ export class ApplicationCommandManager extends CachedManager {
       nsfw: command.nsfw,
       description_localizations: command.descriptionLocalizations ?? command.description_localizations,
       type: command.type,
+      // @ts-ignore
       options: command.options?.map(option => ApplicationCommand.transformOption(option)),
       default_member_permissions,
       integration_types: command.integrationTypes ?? command.integration_types,

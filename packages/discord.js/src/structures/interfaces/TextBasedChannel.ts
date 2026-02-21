@@ -244,6 +244,7 @@ export class TextBasedChannel {
     return new Promise((resolve, reject) => {
       const collector = this.createMessageCollector(options);
       collector.once('end', (collection, reason) => {
+        // @ts-ignore
         if (options.errors?.includes(reason)) {
           reject(collection);
         } else {
@@ -311,6 +312,7 @@ export class TextBasedChannel {
    *   .then(messages => console.log(`Bulk deleted ${messages.length} messages`))
    *   .catch(console.error);
    */
+  // @ts-ignore
   async bulkDelete(messages: any, filterOld = false) {
     if (Array.isArray(messages) || messages instanceof Collection) {
       let messageIds =
@@ -401,10 +403,12 @@ export class TextBasedChannel {
    * @param {string} [reason] Reason for changing the channel's NSFW flag
    * @returns {Promise<this>}
    */
+  // @ts-ignore
   async setNSFW(nsfw = true, reason = undefined) {
     return this.edit({ nsfw, reason });
   }
 
+  // @ts-ignore
   static applyToClass(structure: any, ignore = []) {
     const props = [
       'lastMessage',

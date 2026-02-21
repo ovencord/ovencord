@@ -8,7 +8,7 @@ import { MediaGalleryItem  } from './MediaGalleryItem.js';
  */
 export class MediaGalleryComponent extends Component {
   public items: any;
-  constructor({ items: any, ...data }) {
+  constructor({ items, ...data }: any) {
     super(data);
 
     /**
@@ -17,6 +17,7 @@ export class MediaGalleryComponent extends Component {
      * @type {MediaGalleryItem[]}
      * @readonly
      */
+    // @ts-ignore
     this.items = items.map(item => new MediaGalleryItem(item));
   }
 
@@ -26,6 +27,7 @@ export class MediaGalleryComponent extends Component {
    * @returns {APIMediaGalleryComponent}
    */
   toJSON() {
+    // @ts-ignore
     return { ...this.data, items: this.items.map(item => item.toJSON()) };
   }
 }

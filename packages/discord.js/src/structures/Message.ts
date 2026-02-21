@@ -197,6 +197,7 @@ export class Message extends Base {
        *
        * @type {Embed[]}
        */
+      // @ts-ignore
       this.embeds = data.embeds.map(embed => new Embed(embed));
     } else {
       this.embeds = this.embeds?.slice() ?? [];
@@ -210,6 +211,7 @@ export class Message extends Base {
        *
        * @type {Component[]}
        */
+      // @ts-ignore
       this.components = data.components.map(component => createComponent(component));
     } else {
       this.components = this.components?.slice() ?? [];
@@ -240,6 +242,7 @@ export class Message extends Base {
        * @type {Collection<Snowflake, Sticker>}
        */
       this.stickers = new Collection(
+        // @ts-ignore
         (data.sticker_items ?? data.stickers)?.map(sticker => [sticker.id, new Sticker(this.client, sticker)]),
       );
     } else {
@@ -1132,6 +1135,7 @@ export class Message extends Base {
       this.tts === message.tts &&
       this.attachments.size === message.attachments.size &&
       this.embeds.length === message.embeds.length &&
+      // @ts-ignore
       this.attachments.every(attachment => message.attachments.has(attachment.id)) &&
       this.embeds.every((embed: any, index: any) => embed.equals(message.embeds[index]));
 

@@ -45,6 +45,7 @@ export class InteractionCollector extends Collector {
      *
      * @type {?Snowflake}
      */
+    // @ts-ignore
     this.messageId = options.message?.id ?? null;
 
     /**
@@ -53,6 +54,7 @@ export class InteractionCollector extends Collector {
      * @type {?Snowflake}
      */
     this.channelId =
+      // @ts-ignore
       options.message?.channelId ?? options.message?.channel_id ?? this.client.channels.resolveId(options.channel);
 
     /**
@@ -61,9 +63,13 @@ export class InteractionCollector extends Collector {
      * @type {?Snowflake}
      */
     this.guildId =
+      // @ts-ignore
       options.message?.guildId ??
+      // @ts-ignore
       options.message?.guild_id ??
+      // @ts-ignore
       this.client.guilds.resolveId(options.channel?.guild) ??
+      // @ts-ignore
       this.client.guilds.resolveId(options.guild);
 
     /**
@@ -71,6 +77,7 @@ export class InteractionCollector extends Collector {
      *
      * @type {?InteractionType}
      */
+    // @ts-ignore
     this.interactionType = options.interactionType ?? null;
 
     /**
@@ -78,6 +85,7 @@ export class InteractionCollector extends Collector {
      *
      * @type {?ComponentType}
      */
+    // @ts-ignore
     this.componentType = options.componentType ?? null;
 
     /**
@@ -96,6 +104,7 @@ export class InteractionCollector extends Collector {
 
     this.client.incrementMaxListeners();
 
+    // @ts-ignore
     const bulkDeleteListener = messages => {
       if (messages.has(this.messageId)) this.stop('messageDelete');
     };

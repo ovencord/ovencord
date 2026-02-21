@@ -422,6 +422,7 @@ export class ClientApplication extends Application {
    */
   async fetchRoleConnectionMetadataRecords() {
     const metadata = await this.client.rest.get(Routes.applicationRoleConnectionMetadata(this.client.user.id));
+    // @ts-ignore
     return metadata.map(data => new ApplicationRoleConnectionMetadata(data));
   }
 
@@ -445,6 +446,7 @@ export class ClientApplication extends Application {
    */
   async editRoleConnectionMetadataRecords(records: any) {
     const newRecords = await this.client.rest.put(Routes.applicationRoleConnectionMetadata(this.client.user.id), {
+      // @ts-ignore
       body: records.map(record => ({
         type: record.type,
         key: record.key,
@@ -455,6 +457,7 @@ export class ClientApplication extends Application {
       })),
     });
 
+    // @ts-ignore
     return newRecords.map(data => new ApplicationRoleConnectionMetadata(data));
   }
 

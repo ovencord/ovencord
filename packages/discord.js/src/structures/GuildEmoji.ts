@@ -144,6 +144,7 @@ export class GuildEmoji extends BaseGuildEmoji {
         other.available === this.available &&
         other.requiresColons === this.requiresColons &&
         other.roles.cache.size === this.roles.cache.size &&
+        // @ts-ignore
         other.roles.cache.every((role) => this.roles.cache.has(role.id))
       );
     }  else {

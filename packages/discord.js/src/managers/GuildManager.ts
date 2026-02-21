@@ -122,18 +122,22 @@ export class GuildManager extends CachedManager {
    * @returns {Promise<Guild|Collection<Snowflake, OAuth2Guild>>}
    */
   async fetch(options = {}) {
+    // @ts-ignore
     const id = this.resolveId(options) ?? this.resolveId(options.guild);
 
     if (id) {
+      // @ts-ignore
       if (!options.force) {
         const existing = this.cache.get(id);
         if (existing) return existing;
       }
 
       const innerData = await this.client.rest.get(Routes.guild(id), {
+        // @ts-ignore
         query: makeURLSearchParams({ with_counts: options.withCounts ?? true }),
       });
       innerData.shardId = ShardClientUtil.shardIdForGuildId(id, await this.client.ws.fetchShardCount());
+      // @ts-ignore
       return this._add(innerData, options.cache);
     }
 
@@ -160,7 +164,7 @@ export class GuildManager extends CachedManager {
    *
    * console.log(soundboardSounds.get('123456789012345678'));
    */
-  async fetchSoundboardSounds({ guildIds: any, time = 10_000 }) {
+  async fetchSoundboardSounds({ guildIds, time = 10_000 }: any) {
     const shardCount = await this.client.ws.getShardCount();
     const shardIds = Map.groupBy(guildIds, (guildId: any) => ShardClientUtil.shardIdForGuildId(guildId, shardCount));
 
@@ -225,7 +229,7 @@ export class GuildManager extends CachedManager {
    * @param {IncidentActionsEditOptions} incidentActions The incident actions to set
    * @returns {Promise<IncidentActions>}
    */
-  async setIncidentActions(guild: any, { invitesDisabledUntil: any, dmsDisabledUntil: any }) {
+  async setIncidentActions(guild: any, { invitesDisabledUntil, dmsDisabledUntil }: any) {
     const guildId = this.resolveId(guild);
 
     const data = await this.client.rest.put(Routes.guildIncidentActions(guildId), {

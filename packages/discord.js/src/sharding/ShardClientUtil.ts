@@ -152,12 +152,14 @@ export class ShardClientUtil {
         return;
       }
 
+      // @ts-ignore
       const evalScript = `(${script})(this, ${JSON.stringify(options.context)})`;
 
       if (this.mode === 'worker') {
         const originalOnMessage = self.onmessage;
         self.onmessage = (event: MessageEvent) => {
           const message = event.data;
+          // @ts-ignore
           if (message?._sEval === evalScript && message._sEvalShard === options.shard) {
             self.onmessage = originalOnMessage;
             if (message._error) reject(makeError(message._error));
@@ -168,6 +170,7 @@ export class ShardClientUtil {
         };
       } else {
         const listener = (message: any) => {
+          // @ts-ignore
           if (message?._sEval !== evalScript || message._sEvalShard !== options.shard) return;
           process.removeListener('message', listener);
           if (message._error) reject(makeError(message._error));
@@ -176,6 +179,7 @@ export class ShardClientUtil {
         process.on('message', listener);
       }
 
+      // @ts-ignore
       this.send({ _sEval: evalScript, _sEvalShard: options.shard }).catch(error => {
         reject(error);
       });

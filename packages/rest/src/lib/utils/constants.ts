@@ -15,6 +15,7 @@ export const DefaultUserAgent =
 export const DefaultUserAgentAppendix = getUserAgentAppendix();
 
 export const DefaultRestOptions = {
+	// @ts-ignore
 	agent: null,
 	api: 'https://discord.com/api',
 	authPrefix: 'Bot',
@@ -23,6 +24,7 @@ export const DefaultRestOptions = {
 	invalidRequestWarningInterval: 0,
 	globalRequestsPerSecond: 50,
 	offset: 50,
+	// @ts-ignore
 	rejectOnRateLimit: null,
 	retries: 3,
 	retryBackoff: 0,

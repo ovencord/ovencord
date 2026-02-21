@@ -188,7 +188,7 @@ export class ThreadManager extends CachedManager {
     return (this.constructor as any)._mapThreads(data, this.client, { parent: this.channel, cache });
   }
 
-  static _mapThreads(rawThreads: any, client: any, { parent: any, guild: any, cache: any }) {
+  static _mapThreads(rawThreads: any, client: any, { parent, guild, cache }: any) {
     const threads = rawThreads.threads.reduce((coll: any, raw: any) => {
       const thread = client.channels._add(raw, guild ?? parent?.guild, { cache });
       if (parent && thread.parentId !== parent.id) return coll;

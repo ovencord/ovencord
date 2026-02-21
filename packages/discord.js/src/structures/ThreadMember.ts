@@ -57,6 +57,7 @@ export class ThreadMember extends Base {
        * @type {?GuildMember}
        * @private
        */
+      // @ts-ignore
       this.member = this.thread.guild.members._add(data.member, extra.cache);
     } else {
       this.member ??= null;

@@ -392,7 +392,9 @@ export class Shard extends AsyncEventEmitter {
       if (message._sFetchProp) {
         const resp = { _sFetchProp: message._sFetchProp, _sFetchPropShard: message._sFetchPropShard };
         this.manager.fetchClientValues(message._sFetchProp, message._sFetchPropShard).then(
+          // @ts-ignore
           async results => this.send({ ...resp, _result: results }),
+          // @ts-ignore
           async error => this.send({ ...resp, _error: makePlainError(error) }),
         );
         return;
@@ -402,7 +404,9 @@ export class Shard extends AsyncEventEmitter {
       if (message._sEval) {
         const resp = { _sEval: message._sEval, _sEvalShard: message._sEvalShard };
         this.manager._performOnShards('eval', [message._sEval], message._sEvalShard).then(
+          // @ts-ignore
           async results => this.send({ ...resp, _result: results }),
+          // @ts-ignore
           async error => this.send({ ...resp, _error: makePlainError(error) }),
         );
         return;
@@ -453,6 +457,7 @@ export class Shard extends AsyncEventEmitter {
    * has become ready (`-1` or `Infinity` for no wait)
    * @private
    */
+  // @ts-ignore
   _handleExit(respawn = this.manager.respawn, timeout = undefined) {
     /**
      * Emitted upon the shard's child process/worker exiting.

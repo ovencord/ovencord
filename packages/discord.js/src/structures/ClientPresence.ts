@@ -11,6 +11,7 @@ import { Presence  } from './Presence.js';
  */
 export class ClientPresence extends Presence {
   constructor(client: any, data = {}) {
+    // @ts-ignore
     super(client, Object.assign(data, { status: data.status ?? 'online', user: { id: null } }));
   }
 
@@ -27,6 +28,7 @@ export class ClientPresence extends Presence {
       await this.client._broadcast({ op: GatewayOpcodes.PresenceUpdate, d: packet });
     } else if (Array.isArray(presence.shardId)) {
       await Promise.all(
+        // @ts-ignore
         presence.shardId.map(shardId => this.client.ws.send(shardId, { op: GatewayOpcodes.PresenceUpdate, d: packet })),
       );
     } else {
@@ -43,8 +45,9 @@ export class ClientPresence extends Presence {
    * @returns {GatewayPresenceUpdateData}
    * @private
    */
-  _parse({ status: any, since: any, afk: any, activities: any }) {
+  _parse({ status, since, afk, activities }: any) {
     const data = {
+      // @ts-ignore
       activities: [],
       afk: typeof afk === 'boolean' ? afk : false,
       since: typeof since === 'number' && !Number.isNaN(since) ? since : null,
@@ -72,6 +75,7 @@ export class ClientPresence extends Presence {
       }
     } else if (!activities && (status || afk || since) && this.activities.length) {
       data.activities.push(
+        // @ts-ignore
         ...this.activities.map(activity => ({
           name: activity.name,
           state: activity.state ?? undefined,

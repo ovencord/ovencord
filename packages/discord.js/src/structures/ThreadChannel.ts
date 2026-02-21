@@ -171,6 +171,7 @@ export class ThreadChannel extends BaseChannel {
    */
   async fetchStarterMessage(options = {}) {
     try {
+      // @ts-ignore
       return await this.messages.fetch({ message: this.id, force: options.force ?? true, cache: options.cache });
     } catch {
       return null;

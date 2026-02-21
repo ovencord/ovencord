@@ -87,6 +87,7 @@ export class InteractionResponses {
   async deferReply(options = {}) {
     if (this.deferred || this.replied) throw new DiscordjsError(ErrorCodes.InteractionAlreadyReplied);
 
+    // @ts-ignore
     const resolvedFlags = new MessageFlagsBitField(options.flags);
 
     const response = await this.client.rest.post(Routes.interactionCallback(this.id, this.token), {
@@ -97,12 +98,14 @@ export class InteractionResponses {
         },
       },
       auth: false,
+      // @ts-ignore
       query: makeURLSearchParams({ with_response: options.withResponse ?? false }),
     });
 
     this.deferred = true;
     this.ephemeral = resolvedFlags.has(MessageFlags.Ephemeral);
 
+    // @ts-ignore
     return options.withResponse ? new InteractionCallbackResponse(this.client, response) : undefined;
   }
 
@@ -241,10 +244,12 @@ export class InteractionResponses {
         type: InteractionResponseType.DeferredMessageUpdate,
       },
       auth: false,
+      // @ts-ignore
       query: makeURLSearchParams({ with_response: options.withResponse ?? false }),
     });
     this.deferred = true;
 
+    // @ts-ignore
     return options.withResponse ? new InteractionCallbackResponse(this.client, response) : undefined;
   }
 
@@ -278,10 +283,12 @@ export class InteractionResponses {
       },
       files,
       auth: false,
+      // @ts-ignore
       query: makeURLSearchParams({ with_response: options.withResponse ?? false }),
     });
     this.replied = true;
 
+    // @ts-ignore
     return options.withResponse ? new InteractionCallbackResponse(this.client, response) : undefined;
   }
 
@@ -320,10 +327,12 @@ export class InteractionResponses {
         data: isJSONEncodable(modal) ? modal.toJSON() : this.client.options.jsonTransformer(modal),
       },
       auth: false,
+      // @ts-ignore
       query: makeURLSearchParams({ with_response: options.withResponse ?? false }),
     });
     this.replied = true;
 
+    // @ts-ignore
     return options.withResponse ? new InteractionCallbackResponse(this.client, response) : undefined;
   }
 
@@ -361,6 +370,7 @@ export class InteractionResponses {
     });
   }
 
+  // @ts-ignore
   static applyToClass(structure: any, ignore = []) {
     const props = [
       'deferReply',

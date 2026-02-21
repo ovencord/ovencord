@@ -161,26 +161,32 @@ export class GuildScheduledEventManager extends CachedManager {
    * @returns {Promise<GuildScheduledEvent|Collection<Snowflake, GuildScheduledEvent>>}
    */
   async fetch(options = {}) {
+    // @ts-ignore
     const id = this.resolveId(options.guildScheduledEvent ?? options);
 
     if (id) {
+      // @ts-ignore
       if (!options.force) {
         const existing = this.cache.get(id);
         if (existing) return existing;
       }
 
       const innerData = await this.client.rest.get(Routes.guildScheduledEvent(this.guild.id, id), {
+        // @ts-ignore
         query: makeURLSearchParams({ with_user_count: options.withUserCount ?? true }),
       });
+      // @ts-ignore
       return this._add(innerData, options.cache);
     }
 
     const data = await this.client.rest.get(Routes.guildScheduledEvents(this.guild.id), {
+      // @ts-ignore
       query: makeURLSearchParams({ with_user_count: options.withUserCount ?? true }),
     });
 
     return data.reduce(
       (coll: any, rawGuildScheduledEventData: any) =>
+        // @ts-ignore
         coll.set(rawGuildScheduledEventData.id, this._add(rawGuildScheduledEventData, options.cache)),
       new Collection(),
     );
@@ -307,9 +313,13 @@ export class GuildScheduledEventManager extends CachedManager {
     if (!guildScheduledEventId) throw new DiscordjsError(ErrorCodes.GuildScheduledEventResolve);
 
     const query = makeURLSearchParams({
+      // @ts-ignore
       limit: options.limit,
+      // @ts-ignore
       with_member: options.withMember,
+      // @ts-ignore
       before: options.before,
+      // @ts-ignore
       after: options.after,
     });
 

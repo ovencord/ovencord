@@ -171,7 +171,7 @@ export class ThreadMemberManager extends CachedManager {
     return this._fetchMany(options);
   }
 
-  async _fetchSingle({ member: any, withMember: any, cache: any, force = false }) {
+  async _fetchSingle({ member, withMember, cache, force = false }: any) {
     if (!force) {
       const existing = this.cache.get(member);
       if (existing) return existing;

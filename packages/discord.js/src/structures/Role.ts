@@ -230,6 +230,7 @@ export class Role extends Base {
   get members() {
     return this.id === this.guild.id
       ? this.guild.members.cache.clone()
+      // @ts-ignore
       : this.guild.members.cache.filter(member => member._roles.includes(this.id));
   }
 
@@ -377,6 +378,7 @@ export class Role extends Base {
    *   .then(updated => console.log(`Role hoisted: ${updated.hoist}`))
    *   .catch(console.error);
    */
+  // @ts-ignore
   async setHoist(hoist = true, reason = undefined) {
     return this.edit({ hoist, reason });
   }
@@ -414,6 +416,7 @@ export class Role extends Base {
    *   .then(updated => console.log(`Role updated ${updated.name}`))
    *   .catch(console.error);
    */
+  // @ts-ignore
   async setMentionable(mentionable = true, reason = undefined) {
     return this.edit({ mentionable, reason });
   }

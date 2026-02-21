@@ -128,6 +128,7 @@ export class AutoModerationRule extends Base {
        *
        * @type {AutoModerationAction[]}
        */
+      // @ts-ignore
       this.actions = data.actions.map(action => _transformAPIAutoModerationAction(action));
     }
 
@@ -147,6 +148,7 @@ export class AutoModerationRule extends Base {
        * @type {Collection<Snowflake, Role>}
        */
       this.exemptRoles = new Collection(
+        // @ts-ignore
         data.exempt_roles.map(exemptRole => [exemptRole, this.guild.roles.cache.get(exemptRole)]),
       );
     }
@@ -158,6 +160,7 @@ export class AutoModerationRule extends Base {
        * @type {Collection<Snowflake, GuildChannel|ThreadChannel>}
        */
       this.exemptChannels = new Collection(
+        // @ts-ignore
         data.exempt_channels.map(exemptChannel => [exemptChannel, this.guild.channels.cache.get(exemptChannel)]),
       );
     }
@@ -294,6 +297,7 @@ export class AutoModerationRule extends Base {
    * @param {string} [reason] The reason for enabling or disabling this auto moderation rule
    * @returns {Promise<AutoModerationRule>}
    */
+  // @ts-ignore
   async setEnabled(enabled = true, reason = undefined) {
     return this.edit({ enabled, reason });
   }

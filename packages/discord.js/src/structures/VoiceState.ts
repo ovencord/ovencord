@@ -200,6 +200,7 @@ export class VoiceState extends Base {
    * @param {string} [reason] Reason for muting or unmuting
    * @returns {Promise<GuildMember>}
    */
+  // @ts-ignore
   async setMute(mute = true, reason = undefined) {
     return this.guild.members.edit(this.id, { mute, reason });
   }
@@ -211,6 +212,7 @@ export class VoiceState extends Base {
    * @param {string} [reason] Reason for deafening or undeafening
    * @returns {Promise<GuildMember>}
    */
+  // @ts-ignore
   async setDeaf(deaf = true, reason = undefined) {
     return this.guild.members.edit(this.id, { deaf, reason });
   }

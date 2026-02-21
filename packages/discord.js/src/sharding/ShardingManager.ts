@@ -97,6 +97,7 @@ export class ShardingManager extends AsyncEventEmitter {
 
       if (
         this.shardList.some(
+          // @ts-ignore
           shardId => typeof shardId !== 'number' || Number.isNaN(shardId) || !Number.isInteger(shardId) || shardId < 0,
         )
       ) {
@@ -247,6 +248,7 @@ export class ShardingManager extends AsyncEventEmitter {
       this.totalShards = shardAmount;
     }
 
+    // @ts-ignore
     if (this.shardList.some(shardId => shardId >= shardAmount)) {
       throw new DiscordjsRangeError(
         ErrorCodes.ClientInvalidOption,
@@ -299,6 +301,7 @@ export class ShardingManager extends AsyncEventEmitter {
       throw new DiscordjsTypeError(ErrorCodes.ShardingInvalidEvalBroadcast);
     }
 
+    // @ts-ignore
     return this._performOnShards('eval', [`(${script})(this, ${JSON.stringify(options.context)})`], options.shard);
   }
 

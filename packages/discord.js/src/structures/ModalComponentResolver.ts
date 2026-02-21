@@ -93,6 +93,7 @@ export class ModalComponentResolver {
         component.type,
         allowedTypes.join(', '),
       );
+    // @ts-ignore
     } else if (required && properties.every(prop => component[prop] === null || component[prop] === undefined)) {
       throw new DiscordjsTypeError(ErrorCodes.ModalSubmitInteractionComponentEmpty, customId, component.type);
     }
@@ -162,6 +163,7 @@ export class ModalComponentResolver {
    * @param {ChannelType[]} [channelTypes=[]] The allowed types of channels. If empty, all channel types are allowed.
    * @returns {?Collection<Snowflake, GuildChannel|ThreadChannel|APIChannel>} The selected channels, or null if none were selected and not required
    */
+  // @ts-ignore
   getSelectedChannels(customId: any, required = false, channelTypes = []) {
     const component = this._getTypedComponent(customId, [ComponentType.ChannelSelect], ['channels'], required);
     const channels = component.channels;

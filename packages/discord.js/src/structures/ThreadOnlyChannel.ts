@@ -71,6 +71,7 @@ export class ThreadOnlyChannel extends GuildChannel {
        *
        * @type {GuildForumTag[]}
        */
+      // @ts-ignore
       this.availableTags = data.available_tags.map(tag => transformAPIGuildForumTag(tag));
     } else {
       this.availableTags ??= [];

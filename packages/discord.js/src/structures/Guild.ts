@@ -1000,24 +1000,24 @@ export class Guild extends AnonymousGuild {
    *   .catch(console.error);
    */
   async edit({
-    verificationLevel: any,
-    defaultMessageNotifications: any,
-    explicitContentFilter: any,
-    afkChannel: any,
-    afkTimeout: any,
-    icon: any,
-    splash: any,
-    discoverySplash: any,
-    banner: any,
-    systemChannel: any,
-    systemChannelFlags: any,
-    rulesChannel: any,
-    publicUpdatesChannel: any,
-    preferredLocale: any,
-    premiumProgressBarEnabled: any,
-    safetyAlertsChannel: any,
+    verificationLevel,
+    defaultMessageNotifications,
+    explicitContentFilter,
+    afkChannel,
+    afkTimeout,
+    icon,
+    splash,
+    discoverySplash,
+    banner,
+    systemChannel,
+    systemChannelFlags,
+    rulesChannel,
+    publicUpdatesChannel,
+    preferredLocale,
+    premiumProgressBarEnabled,
+    safetyAlertsChannel,
     ...options
-  }) {
+  }: any) {
     const data = await this.client.rest.patch(Routes.guild(this.id), {
       body: {
         ...options,
@@ -1095,6 +1095,7 @@ export class Guild extends AnonymousGuild {
   async editOnboarding(options: any) {
     const newData = await this.client.rest.put(Routes.guildOnboarding(this.id), {
       body: {
+        // @ts-ignore
         prompts: options.prompts?.map(prompt => ({
           // Currently, the prompt ids are required even for new ones (which won't be used)
           id: prompt.id ?? DiscordSnowflake.generate().toString(),
@@ -1103,12 +1104,15 @@ export class Guild extends AnonymousGuild {
           required: prompt.required,
           in_onboarding: prompt.inOnboarding,
           type: prompt.type,
+          // @ts-ignore
           options: prompt.options.map(option => {
             const emoji = resolvePartialEmoji(option.emoji);
 
             return {
               id: option.id,
+              // @ts-ignore
               channel_ids: option.channels?.map(channel => this.channels.resolveId(channel)),
+              // @ts-ignore
               role_ids: option.roles?.map(role => this.roles.resolveId(role)),
               title: option.title,
               description: option.description,
@@ -1118,6 +1122,7 @@ export class Guild extends AnonymousGuild {
             };
           }),
         })),
+        // @ts-ignore
         default_channel_ids: options.defaultChannels?.map(channel => this.channels.resolveId(channel)),
         enabled: options.enabled,
         mode: options.mode,
@@ -1184,6 +1189,7 @@ export class Guild extends AnonymousGuild {
    */
   async editWelcomeScreen(options: any) {
     const { enabled, description, welcomeChannels } = options;
+    // @ts-ignore
     const welcome_channels = welcomeChannels?.map(welcomeChannelData => {
       const emoji = this.emojis.resolve(welcomeChannelData.emoji);
       return {
@@ -1436,6 +1442,7 @@ export class Guild extends AnonymousGuild {
    * @param {string} [reason] Reason for changing the state of the guild's premium progress bar
    * @returns {Promise<Guild>}
    */
+  // @ts-ignore
   async setPremiumProgressBarEnabled(enabled = true, reason = undefined) {
     return this.edit({ premiumProgressBarEnabled: enabled, reason });
   }
@@ -1496,6 +1503,7 @@ export class Guild extends AnonymousGuild {
    * @returns {Promise<Guild>}
    */
   async disableInvites(disabled = true) {
+    // @ts-ignore
     const features = this.features.filter(feature => feature !== GuildFeature.InvitesDisabled);
     if (disabled) features.push(GuildFeature.InvitesDisabled);
     return this.edit({ features });
@@ -1563,9 +1571,11 @@ export class Guild extends AnonymousGuild {
    * @readonly
    */
   get voiceAdapterCreator() {
+    // @ts-ignore
     return methods => {
       this.client.voice.adapters.set(this.id, methods);
       return {
+        // @ts-ignore
         sendPayload: data => {
           this.client.ws.send(this.shardId, data);
           return true;
@@ -1599,7 +1609,7 @@ export class Guild extends AnonymousGuild {
     const types = getSortableGroupTypes(channel.type);
     return discordSort(
       this.channels.cache.filter(
-        ({ parentId: any, type: any }) => types.includes(type) && (channelIsCategory || parentId === channel.parentId),
+        ({ parentId, type }: any) => types.includes(type) && (channelIsCategory || parentId === channel.parentId),
       ),
     );
   }

@@ -81,6 +81,7 @@ export class CommandInteractionOptionResolver {
    * @returns {?CommandInteractionOption} The option, if found.
    */
   get(name: any, required = false) {
+    // @ts-ignore
     const option = this._hoistedOptions.find(opt => opt.name === name);
     if (!option) {
       if (required) {
@@ -109,6 +110,7 @@ export class CommandInteractionOptionResolver {
       return null;
     } else if (!allowedTypes.includes(option.type)) {
       throw new DiscordjsTypeError(ErrorCodes.CommandInteractionOptionType, name, option.type, allowedTypes.join(', '));
+    // @ts-ignore
     } else if (required && properties.every(prop => option[prop] === null || option[prop] === undefined)) {
       throw new DiscordjsTypeError(ErrorCodes.CommandInteractionOptionEmpty, name, option.type);
     }
@@ -165,6 +167,7 @@ export class CommandInteractionOptionResolver {
    * @returns {?(GuildChannel|ThreadChannel|APIChannel)}
    * The value of the option, or null if not set and not required.
    */
+  // @ts-ignore
   getChannel(name: any, required = false, channelTypes = []) {
     const option = this._getTypedOption(name, [ApplicationCommandOptionType.Channel], ['channel'], required);
     const channel = option?.channel ?? null;
@@ -328,6 +331,7 @@ export class CommandInteractionOptionResolver {
    * The whole object of the option that is focused
    */
   getFocused() {
+    // @ts-ignore
     const focusedOption = this._hoistedOptions.find(option => option.focused);
     if (!focusedOption) throw new DiscordjsTypeError(ErrorCodes.AutocompleteInteractionOptionNoFocusedOption);
     return focusedOption;

@@ -194,6 +194,7 @@ export class GuildAuditLogsEntry {
      * @type {AuditLogChange[]}
      */
     this.changes =
+      // @ts-ignore
       data.changes?.map(change => ({
         key: change.key,
         ...('old_value' in change ? { old: change.old_value } : {}),
@@ -342,7 +343,7 @@ export class GuildAuditLogsEntry {
           }),
         );
     } else if (targetType === Targets.Invite) {
-      const inviteChange = this.changes.find(({ key: any }) => key === 'code');
+      const inviteChange = this.changes.find(({ key }: any) => key === 'code');
 
       this.target =
         guild.invites.cache.get(inviteChange.new ?? inviteChange.old) ??

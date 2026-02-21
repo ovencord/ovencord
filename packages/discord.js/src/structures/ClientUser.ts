@@ -61,7 +61,7 @@ export class ClientUser extends User {
    * @param {ClientUserEditOptions} options The options to provide
    * @returns {Promise<ClientUser>}
    */
-  async edit({ username: any, avatar: any, banner: any }) {
+  async edit({ username, avatar, banner }: any) {
     const data = await this.client.rest.patch(Routes.user(), {
       body: {
         username,
@@ -200,6 +200,7 @@ export class ClientUser extends User {
    * client.user.setActivity('discord.js', { type: ActivityType.Watching });
    */
   async setActivity(name: any, options = {}) {
+    // @ts-ignore
     if (!name) return this.setPresence({ activities: [], shardId: options.shardId });
 
     const activity = { ...options, ...(typeof name === 'object' ? name : { name }) };
@@ -213,6 +214,7 @@ export class ClientUser extends User {
    * @param {number|number[]} [shardId] Shard Id(s) to have the AFK flag set on
    * @returns {Promise<ClientPresence>}
    */
+  // @ts-ignore
   async setAFK(afk = true, shardId = undefined) {
     return this.setPresence({ afk, shardId });
   }

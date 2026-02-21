@@ -170,6 +170,7 @@ export class GuildMemberRoleManager extends DataManager {
    */
   async remove(roleOrRoles: any, reason: any) {
     if (roleOrRoles instanceof Collection || Array.isArray(roleOrRoles)) {
+      // @ts-ignore
       const resolvedRoles = [];
       for (const role of roleOrRoles.values()) {
         const resolvedRole = this.guild.roles.resolveId(role);
@@ -180,6 +181,7 @@ export class GuildMemberRoleManager extends DataManager {
         resolvedRoles.push(resolvedRole);
       }
 
+      // @ts-ignore
       const newRoles = this.cache.filter(role => !resolvedRoles.includes(role.id));
       return this.set(newRoles, reason);
     } else {

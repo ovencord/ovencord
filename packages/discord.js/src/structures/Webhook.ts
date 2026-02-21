@@ -311,7 +311,7 @@ export class Webhook {
    * @param {WebhookEditOptions} options Options for editing the webhook
    * @returns {Promise<Webhook>}
    */
-  async edit({ name = this.name, avatar: newAvatar: any, channel: newChannel: any, reason: any }) {
+  async edit({ name = this.name, avatar: newAvatar, channel: newChannel, reason }: any) {
     let avatar = newAvatar;
     if (avatar && !(typeof avatar === 'string' && avatar.startsWith('data:'))) {
       avatar = await resolveImage(avatar);

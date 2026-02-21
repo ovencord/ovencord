@@ -118,16 +118,16 @@ export class AutoModerationRuleManager extends CachedManager {
    * @returns {Promise<AutoModerationRule>}
    */
   async create({
-    name: any,
-    eventType: any,
-    triggerType: any,
-    triggerMetadata: any,
-    actions: any,
-    enabled: any,
-    exemptRoles: any,
-    exemptChannels: any,
-    reason: any,
-  }) {
+    name,
+    eventType,
+    triggerType,
+    triggerMetadata,
+    actions,
+    enabled,
+    exemptRoles,
+    exemptChannels,
+    reason,
+  }: any) {
     const data = await this.client.rest.post(Routes.guildAutoModerationRules(this.guild.id), {
       body: {
         name,
@@ -141,6 +141,7 @@ export class AutoModerationRuleManager extends CachedManager {
           mention_total_limit: triggerMetadata.mentionTotalLimit,
           mention_raid_protection_enabled: triggerMetadata.mentionRaidProtectionEnabled,
         },
+        // @ts-ignore
         actions: actions.map(action => ({
           type: action.type,
           metadata: {
@@ -150,7 +151,9 @@ export class AutoModerationRuleManager extends CachedManager {
           },
         })),
         enabled,
+        // @ts-ignore
         exempt_roles: exemptRoles?.map(exemptRole => this.guild.roles.resolveId(exemptRole)),
+        // @ts-ignore
         exempt_channels: exemptChannels?.map(exemptChannel => this.guild.channels.resolveId(exemptChannel)),
       },
       reason,
@@ -185,7 +188,7 @@ export class AutoModerationRuleManager extends CachedManager {
    */
   async edit(
     autoModerationRule: any,
-    { name: any, eventType: any, triggerMetadata: any, actions: any, enabled: any, exemptRoles: any, exemptChannels: any, reason: any },
+    { name, eventType, triggerMetadata, actions, enabled, exemptRoles, exemptChannels, reason }: any,
   ) {
     const autoModerationRuleId = this.resolveId(autoModerationRule);
 
@@ -201,6 +204,7 @@ export class AutoModerationRuleManager extends CachedManager {
           mention_total_limit: triggerMetadata.mentionTotalLimit,
           mention_raid_protection_enabled: triggerMetadata.mentionRaidProtectionEnabled,
         },
+        // @ts-ignore
         actions: actions?.map(action => ({
           type: action.type,
           metadata: {
@@ -210,7 +214,9 @@ export class AutoModerationRuleManager extends CachedManager {
           },
         })),
         enabled,
+        // @ts-ignore
         exempt_roles: exemptRoles?.map(exemptRole => this.guild.roles.resolveId(exemptRole)),
+        // @ts-ignore
         exempt_channels: exemptChannels?.map(exemptChannel => this.guild.channels.resolveId(exemptChannel)),
       },
       reason,
@@ -274,7 +280,7 @@ export class AutoModerationRuleManager extends CachedManager {
     return this._fetchMany(options);
   }
 
-  async _fetchSingle({ autoModerationRule: any, cache: any, force = false }) {
+  async _fetchSingle({ autoModerationRule, cache, force = false }: any) {
     if (!force) {
       const existing = this.cache.get(autoModerationRule);
       if (existing) return existing;
@@ -288,6 +294,7 @@ export class AutoModerationRuleManager extends CachedManager {
     const data = await this.client.rest.get(Routes.guildAutoModerationRules(this.guild.id));
 
     return data.reduce(
+      // @ts-ignore
       (col: any, autoModerationRule: any) => col.set(autoModerationRule.id, this._add(autoModerationRule, options.cache)),
       new Collection(),
     );

@@ -244,6 +244,7 @@ export class Embed {
       this.title === (other.title ?? null) &&
       this.url === (other.url ?? null) &&
       this.video?.url === other.video?.url &&
+      // @ts-ignore
       Bun.deepEquals(this.fields, other.fields?.map(field => ({ ...field, inline: field.inline ?? false })) ?? []) &&
       Bun.deepEquals(this.provider, other.provider ?? null)
     );

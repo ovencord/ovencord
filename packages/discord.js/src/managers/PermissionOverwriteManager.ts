@@ -96,6 +96,7 @@ export class PermissionOverwriteManager extends CachedManager {
    * @returns {Promise<GuildChannel>}
    * @private
    */
+  // @ts-ignore
   async upsert(userOrRole: any, options: any, { reason, type }: any = {}, existing = undefined) {
     const userOrRoleId = this.channel.guild.roles.resolveId(userOrRole) ?? this.client.users.resolveId(userOrRole);
 

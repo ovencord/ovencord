@@ -42,7 +42,7 @@ export class ContextMenuCommandInteraction extends CommandInteraction {
    * @returns {CommandInteractionOption[]}
    * @private
    */
-  resolveContextMenuOptions({ target_id: any, resolved: any }) {
+  resolveContextMenuOptions({ target_id, resolved }: any) {
     const result = [];
 
     if (resolved.users?.[target_id]) {

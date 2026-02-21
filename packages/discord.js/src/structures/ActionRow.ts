@@ -8,7 +8,7 @@ import { Component  } from './Component.js';
  */
 export class ActionRow extends Component {
   public components: any;
-  constructor({ components: any, ...data }) {
+  constructor({ components, ...data }: any) {
     super(data);
 
     /**
@@ -17,6 +17,7 @@ export class ActionRow extends Component {
      * @type {Component[]}
      * @readonly
      */
+    // @ts-ignore
     this.components = components.map(component => createComponent(component));
   }
 
@@ -26,6 +27,7 @@ export class ActionRow extends Component {
    * @returns {APIActionRowComponent}
    */
   toJSON() {
+    // @ts-ignore
     return { ...this.data, components: this.components.map(component => component.toJSON()) };
   }
 }

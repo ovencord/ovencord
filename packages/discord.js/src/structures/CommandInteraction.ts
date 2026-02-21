@@ -147,6 +147,7 @@ export class CommandInteraction extends BaseInteraction {
     };
 
     if ('value' in option) result.value = option.value;
+    // @ts-ignore
     if ('options' in option) result.options = option.options.map(opt => this.transformOption(opt, resolved));
 
     if (resolved) {

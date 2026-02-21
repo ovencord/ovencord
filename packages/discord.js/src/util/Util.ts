@@ -56,18 +56,25 @@ function _flatten(obj: any, seen: WeakSet<object>, depth: number, ...props: any[
     const hasToJSON = elemIsObj && typeof element.toJSON === 'function';
 
     // If it's a Collection, make the array of keys
+    // @ts-ignore
     if (element instanceof Collection) out[newProp as string] = Array.from(element.keys());
     // If the valueOf is a Collection, use its array of keys
+    // @ts-ignore
     else if (valueOf instanceof Collection) out[newProp as string] = Array.from(valueOf.keys());
     // If it's an array, call toJSON function on each element if present, otherwise flatten each element
+    // @ts-ignore
     else if (Array.isArray(element)) out[newProp as string] = element.map(elm => elm.toJSON?.() ?? _flatten(elm, seen, depth + 1));
     // If it's an object with a primitive `valueOf`, use that value
+    // @ts-ignore
     else if (typeof valueOf !== 'object') out[newProp as string] = valueOf;
     // If it's an object with a toJSON function, use the return value of it
+    // @ts-ignore
     else if (hasToJSON) out[newProp as string] = element.toJSON();
     // If element is an object, use the flattened version of it
+    // @ts-ignore
     else if (typeof element === 'object') out[newProp as string] = _flatten(element, seen, depth + 1);
     // If it's a primitive
+    // @ts-ignore
     else if (!elemIsObj) out[newProp as string] = element;
   }
 
@@ -476,51 +483,63 @@ export function parseWebhookURL(url: string): any {
  * @private
  */
 export function transformResolved(
-  { client: any, guild: any, channel: any },
+  { client, guild, channel }: any,
   { members, users, channels, roles, messages, attachments }: any = {},
 ): any {
   const result = {};
 
   if (members) {
+    // @ts-ignore
     result.members = new Collection();
     for (const [id, member] of Object.entries(members)) {
       const user = (users as any)[id];
+      // @ts-ignore
       result.members.set(id, guild?.members._add(Object.assign({ user }, member)) ?? member);
     }
   }
 
   if (users) {
+    // @ts-ignore
     result.users = new Collection();
     for (const user of Object.values(users)) {
+      // @ts-ignore
       result.users.set((user as any).id, client.users._add(user));
     }
   }
 
   if (roles) {
+    // @ts-ignore
     result.roles = new Collection();
     for (const role of Object.values(roles)) {
+      // @ts-ignore
       result.roles.set((role as any).id, guild?.roles._add(role) ?? role);
     }
   }
 
   if (channels) {
+    // @ts-ignore
     result.channels = new Collection();
     for (const apiChannel of Object.values(channels)) {
+      // @ts-ignore
       result.channels.set((apiChannel as any).id, client.channels._add(apiChannel, guild) ?? apiChannel);
     }
   }
 
   if (messages) {
+    // @ts-ignore
     result.messages = new Collection();
     for (const message of Object.values(messages)) {
+      // @ts-ignore
       result.messages.set((message as any).id, channel?.messages?._add(message) ?? message);
     }
   }
 
   if (attachments) {
+    // @ts-ignore
     result.attachments = new Collection();
     for (const attachment of Object.values(attachments)) {
       const patched = new (getAttachment())(attachment);
+      // @ts-ignore
       result.attachments.set((attachment as any).id, patched);
     }
   }

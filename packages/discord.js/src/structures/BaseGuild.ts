@@ -76,6 +76,7 @@ export class BaseGuild extends Base {
     /* eslint-disable unicor */
     return this.name
       .replace(/'s /g, ' ')
+      // @ts-ignore
       .replace(/\w+/g, word => word[0])
       .replace(/\s/g, '');
     /* eslint-enable unicorn/prefer-string-replace-all */

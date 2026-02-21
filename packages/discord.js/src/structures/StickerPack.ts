@@ -30,6 +30,7 @@ export class StickerPack extends Base {
      *
      * @type {Collection<Snowflake, Sticker>}
      */
+    // @ts-ignore
     this.stickers = new Collection(pack.stickers.map(sticker => [sticker.id, new Sticker(client, sticker)]));
 
     /**

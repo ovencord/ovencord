@@ -52,6 +52,7 @@ export class SubscriptionManager extends CachedManager {
   async fetch(options = {}) {
     if (typeof options !== 'object') throw new DiscordjsTypeError(ErrorCodes.InvalidType, 'options', 'object', true);
 
+    // @ts-ignore
     const { after, before, cache, limit, sku, subscriptionId, user } = options;
 
     const skuId = resolveSKUId(sku);

@@ -28,9 +28,12 @@ export class Emoji extends Base {
   imageURL(options = {}): string | null {
     if (!this.id) return null;
 
+    // @ts-ignore
     const resolvedOptions = { extension: options.extension, size: options.size, animated: undefined as boolean | undefined };
 
+    // @ts-ignore
     if (!options.extension || options.extension === 'webp') {
+      // @ts-ignore
       resolvedOptions.animated = options.animated ?? (this.animated || undefined);
     }
 

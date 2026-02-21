@@ -8,7 +8,7 @@ import { Component  } from './Component.js';
  */
 export class ContainerComponent extends Component {
   public components: any;
-  constructor({ components: any, ...data }) {
+  constructor({ components, ...data }: any) {
     super(data);
 
     /**
@@ -17,6 +17,7 @@ export class ContainerComponent extends Component {
      * @type {Component[]}
      * @readonly
      */
+    // @ts-ignore
     this.components = components.map(component => createComponent(component));
   }
 
@@ -58,6 +59,7 @@ export class ContainerComponent extends Component {
    * @returns {APIContainerComponent}
    */
   toJSON() {
+    // @ts-ignore
     return { ...this.data, components: this.components.map(component => component.toJSON()) };
   }
 }

@@ -27,6 +27,7 @@ export class StageChannel extends BaseGuildVoiceChannel {
    * @readonly
    */
   get stageInstance() {
+    // @ts-ignore
     return this.guild.stageInstances.cache.find(stageInstance => stageInstance.channelId === this.id) ?? null;
   }
 

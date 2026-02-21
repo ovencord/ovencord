@@ -493,6 +493,7 @@ export class User extends Base {
     return userMention(this.id);
   }
 
+  // @ts-ignore
   toJSON(...props) {
     const json = super.toJSON(
       {

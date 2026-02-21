@@ -143,6 +143,7 @@ export class MessagePayload {
       }
     }
 
+    // @ts-ignore
     const components = this.options.components?.map(component =>
       isJSONEncodable(component) ? component.toJSON() : this.target.client.options.jsonTransformer(component),
     );
@@ -211,6 +212,7 @@ export class MessagePayload {
     if (Array.isArray(this.options.attachments)) {
       attachments.push(
         // Note how we don't check for file body encodable, since we aren't expecting file data here
+        // @ts-ignore
         ...this.options.attachments.map(attachment => (isJSONEncodable(attachment) ? attachment.toJSON() : attachment)),
       );
     }
@@ -223,6 +225,7 @@ export class MessagePayload {
             question: {
               text: this.options.poll.question.text,
             },
+            // @ts-ignore
             answers: this.options.poll.answers.map(answer => ({
               poll_media: { text: answer.text, emoji: resolvePartialEmoji(answer.emoji) },
             })),
@@ -237,6 +240,7 @@ export class MessagePayload {
       tts,
       nonce,
       enforce_nonce,
+      // @ts-ignore
       embeds: this.options.embeds?.map(embed =>
         isJSONEncodable(embed) ? embed.toJSON() : this.target.client.options.jsonTransformer(embed),
       ),
@@ -250,6 +254,7 @@ export class MessagePayload {
       flags,
       message_reference,
       attachments,
+      // @ts-ignore
       sticker_ids: this.options.stickers?.map(sticker => sticker.id ?? sticker),
       thread_name: threadName,
       applied_tags: appliedTags,
@@ -266,6 +271,7 @@ export class MessagePayload {
   async resolveFiles() {
     if (this.files) return this;
 
+    // @ts-ignore
     this.files = await Promise.all(this.options.files?.map(file => (this.constructor as typeof MessagePayload).resolveFile(file)) ?? []);
     return this;
   }

@@ -200,6 +200,7 @@ export class GuildChannel extends BaseChannel {
     return role && this.rolePermissions(role, checkAdmin);
   }
 
+  // @ts-ignore
   overwritesFor(member: any, verified = false, roles = null) {
     const resolvedMember = verified ? member : this.guild.members.resolve(member);
     if (!resolvedMember) return [];
@@ -241,6 +242,7 @@ export class GuildChannel extends BaseChannel {
     }
 
     const roles = member.roles.cache;
+    // @ts-ignore
     const permissions = new PermissionsBitField(roles.map(role => role.permissions));
 
     if (checkAdmin && permissions.has(PermissionFlagsBits.Administrator)) {
@@ -252,7 +254,9 @@ export class GuildChannel extends BaseChannel {
     return permissions
       .remove(overwrites.everyone?.deny ?? PermissionsBitField.DefaultBit)
       .add(overwrites.everyone?.allow ?? PermissionsBitField.DefaultBit)
+      // @ts-ignore
       .remove(overwrites.roles.length > 0 ? overwrites.roles.map(role => role.deny) : PermissionsBitField.DefaultBit)
+      // @ts-ignore
       .add(overwrites.roles.length > 0 ? overwrites.roles.map(role => role.allow) : PermissionsBitField.DefaultBit)
       .remove(overwrites.member?.deny ?? PermissionsBitField.DefaultBit)
       .add(overwrites.member?.allow ?? PermissionsBitField.DefaultBit)
@@ -292,6 +296,7 @@ export class GuildChannel extends BaseChannel {
    */
   async lockPermissions() {
     if (!this.parent) throw new DiscordjsError(ErrorCodes.GuildChannelOrphan);
+    // @ts-ignore
     const permissionOverwrites = this.parent.permissionOverwrites.cache.map(overwrite => overwrite.toJSON());
     return this.edit({ permissionOverwrites });
   }
@@ -305,6 +310,7 @@ export class GuildChannel extends BaseChannel {
    * @readonly
    */
   get members() {
+    // @ts-ignore
     return this.guild.members.cache.filter(member =>
       this.permissionsFor(member).has(PermissionFlagsBits.ViewChannel, false),
     );
@@ -413,6 +419,7 @@ export class GuildChannel extends BaseChannel {
    */
   async clone(options = {}) {
     return this.guild.channels.create({
+      // @ts-ignore
       name: options.name ?? this.name,
       permissionOverwrites: this.permissionOverwrites.cache,
       topic: (this as any).topic,

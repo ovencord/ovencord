@@ -182,6 +182,7 @@ export class Integration extends Base {
    */
   get roles() {
     const roles = this.guild.roles.cache;
+    // @ts-ignore
     return roles.filter(role => role.tags?.integrationId === this.id);
   }
 

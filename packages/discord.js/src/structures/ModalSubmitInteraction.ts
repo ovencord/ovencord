@@ -99,6 +99,7 @@ export class ModalSubmitInteraction extends BaseInteraction {
      */
     this.components = new ModalComponentResolver(
       this.client,
+      // @ts-ignore
       data.data.components?.map(component => this.transformComponent(component, data.data.resolved)),
       transformResolved({ client: this.client, guild: this.guild, channel: this.channel }, data.data.resolved),
     );
@@ -148,11 +149,13 @@ export class ModalSubmitInteraction extends BaseInteraction {
    * @returns {ModalData[]}
    * @private
    */
+  // @ts-ignore
   transformComponent(rawComponent: any, resolved: any) {
     if ('components' in rawComponent) {
       return {
         type: rawComponent.type,
         id: rawComponent.id,
+        // @ts-ignore
         components: rawComponent.components.map(component => this.transformComponent(component, resolved)),
       };
     }

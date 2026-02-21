@@ -219,11 +219,12 @@ export class GuildMemberManager extends CachedManager {
     const { user: users, limit, withPresences, cache, force } = options;
     const resolvedUser = this.client.users.resolveId(users ?? options);
     if (resolvedUser && !limit && !withPresences) return this._fetchSingle({ user: resolvedUser, cache, force });
+    // @ts-ignore
     const resolvedUsers = users?.map?.(user => this.client.users.resolveId(user)) ?? resolvedUser ?? undefined;
     return this._fetchMany({ ...options, users: resolvedUsers });
   }
 
-  async _fetchSingle({ user: any, cache: any, force = false }) {
+  async _fetchSingle({ user, cache, force = false }: any) {
     if (!force) {
       const existing = this.cache.get(user);
       if (existing && !existing.partial) return existing;
@@ -288,6 +289,7 @@ export class GuildMemberManager extends CachedManager {
         limit,
       };
 
+      // @ts-ignore
       const rateLimitHandler = payload => {
         if (payload.t === GatewayDispatchEvents.RateLimited && payload.d.meta.nonce === nonce) {
           cleanup();
@@ -384,7 +386,7 @@ export class GuildMemberManager extends CachedManager {
    * @param {GuildMemberEditOptions} options The options to provide
    * @returns {Promise<GuildMember>}
    */
-  async edit(user: any, { reason: any, ...options }) {
+  async edit(user: any, { reason, ...options }: any) {
     const id = this.client.users.resolveId(user);
     if (!id) throw new DiscordjsTypeError(ErrorCodes.InvalidType, 'user', 'UserResolvable');
 
@@ -438,7 +440,7 @@ export class GuildMemberManager extends CachedManager {
    * @param {GuildMemberEditMeOptions} options The options to provide
    * @returns {Promise<GuildMember>}
    */
-  async editMe({ reason: any, ...options }) {
+  async editMe({ reason, ...options }: any) {
     const data = await this.client.rest.patch(Routes.guildMember(this.guild.id, '@me'), {
       body: {
         ...options,
@@ -503,6 +505,7 @@ export class GuildMemberManager extends CachedManager {
     }
 
     if (resolvedRoles.length) {
+      // @ts-ignore
       query.include_roles = dry ? resolvedRoles.join(',') : resolvedRoles;
     }
 

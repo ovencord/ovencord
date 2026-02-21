@@ -9,7 +9,7 @@ import { Component  } from './Component.js';
 export class SectionComponent extends Component {
   public components: any;
   public accessory: any;
-  constructor({ accessory: any, components: any, ...data }) {
+  constructor({ accessory, components, ...data }: any) {
     super(data);
 
     /**
@@ -18,6 +18,7 @@ export class SectionComponent extends Component {
      * @type {Component[]}
      * @readonly
      */
+    // @ts-ignore
     this.components = components.map(component => createComponent(component));
 
     /**
@@ -38,6 +39,7 @@ export class SectionComponent extends Component {
     return {
       ...this.data,
       accessory: this.accessory.toJSON(),
+      // @ts-ignore
       components: this.components.map(component => component.toJSON()),
     };
   }

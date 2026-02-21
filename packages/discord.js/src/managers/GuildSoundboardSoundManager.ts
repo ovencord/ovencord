@@ -60,7 +60,7 @@ export class GuildSoundboardSoundManager extends CachedManager {
    * @param {any} options Options for creating a guild soundboard sound
    * @returns {Promise<SoundboardSound>} The created soundboard sound
    */
-  async create({ contentType: any, emojiId: any, emojiName: any, file: any, name: any, reason: any, volume: any }): Promise<any> {
+  async create({ contentType, emojiId, emojiName, file, name, reason, volume }: any): Promise<any> {
     const resolvedFile = await resolveFile(file);
 
     const resolvedContentType = contentType ?? resolvedFile.contentType ?? detectAudioMime(resolvedFile.data as any)[0];
@@ -89,6 +89,7 @@ export class GuildSoundboardSoundManager extends CachedManager {
 
     if (!soundId) throw new DiscordjsTypeError(ErrorCodes.InvalidType, 'soundboardSound', 'SoundboardSoundResolvable');
 
+    // @ts-ignore
     const { emojiId, emojiName, name, reason, volume } = options;
 
     const body = { emoji_id: emojiId, emoji_name: emojiName, name, volume };

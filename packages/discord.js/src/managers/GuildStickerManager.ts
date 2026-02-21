@@ -117,6 +117,7 @@ export class GuildStickerManager extends CachedManager {
 
     const data = await this.client.rest.patch(Routes.guildSticker(this.guild.id, stickerId), {
       body: options,
+      // @ts-ignore
       reason: options.reason,
     });
 
@@ -173,6 +174,7 @@ export class GuildStickerManager extends CachedManager {
     }
 
     const data = await this.client.rest.get(Routes.guildStickers(this.guild.id));
+    // @ts-ignore
     return new Collection(data.map(sticker => [sticker.id, this._add(sticker, cache)]));
   }
 

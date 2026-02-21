@@ -20,11 +20,13 @@ import { DiscordjsTypeError, ErrorCodes  } from '../errors/index.js';
 export class LimitedCollection<K, V> extends Collection<K, V> {
   public maxSize: any;
   public keepOverLimit: any;
+  // @ts-ignore
   constructor(options = {}, iterable = undefined) {
     if (typeof options !== 'object' || options === null) {
       throw new DiscordjsTypeError(ErrorCodes.InvalidType, 'options', 'object', true);
     }
 
+    // @ts-ignore
     const { maxSize = Infinity, keepOverLimit = null } = options;
 
     if (typeof maxSize !== 'number') {

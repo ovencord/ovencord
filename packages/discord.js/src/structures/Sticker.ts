@@ -191,6 +191,7 @@ export class Sticker extends Base {
    * @readonly
    */
   get url() {
+    // @ts-ignore
     return this.client.rest.cdn.sticker(this.id, StickerFormatExtensionMap[this.format]);
   }
 

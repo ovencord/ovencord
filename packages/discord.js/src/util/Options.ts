@@ -87,6 +87,7 @@ export class Options extends null {
       waitGuildTimeout: 15_000,
       presence: {},
       makeCache: this.cacheWithLimits(this.DefaultMakeCacheSettings),
+      // @ts-ignore
       partials: [],
       failIfNotExists: true,
       enforceNonce: false,
@@ -123,7 +124,8 @@ export class Options extends null {
    *  });
    */
   static cacheWithLimits(settings = {}) {
-    return ({ managerType: any, manager: any }) => {
+    return ({ managerType, manager }: any) => {
+      // @ts-ignore
       const setting = settings[manager.name] ?? settings[managerType.name];
       /* eslint-disable-next-line eqeqeq */
       if (setting == null) {

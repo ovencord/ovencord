@@ -6,7 +6,7 @@ import { UnfurledMediaItem  } from './UnfurledMediaItem.js';
 export class MediaGalleryItem {
   public data: any;
   public media: any;
-  constructor({ media: any, ...data }) {
+  constructor({ media, ...data }: any) {
     /**
      * The API data associated with this component
      *

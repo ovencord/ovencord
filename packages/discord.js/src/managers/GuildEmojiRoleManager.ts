@@ -78,6 +78,7 @@ export class GuildEmojiRoleManager extends DataManager {
   async remove(roleOrRoles: any) {
     const roles = Array.isArray(roleOrRoles) || roleOrRoles instanceof Collection ? roleOrRoles : [roleOrRoles];
 
+    // @ts-ignore
     const resolvedRoleIds = [];
     for (const role of roles.values()) {
       const roleId = this.guild.roles.resolveId(role);
@@ -88,6 +89,7 @@ export class GuildEmojiRoleManager extends DataManager {
       resolvedRoleIds.push(roleId);
     }
 
+    // @ts-ignore
     const newRoles = [...this.cache.keys()].filter(id => !resolvedRoleIds.includes(id));
     return this.set(newRoles);
   }

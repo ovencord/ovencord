@@ -51,6 +51,7 @@ export class Presence extends Base {
      *
      * @type {Snowflake}
      */
+    // @ts-ignore
     this.userId = data.user.id;
 
     /**
@@ -58,6 +59,7 @@ export class Presence extends Base {
      *
      * @type {?Guild}
      */
+    // @ts-ignore
     this.guild = data.guild ?? null;
 
     this._patch(data);
@@ -101,6 +103,7 @@ export class Presence extends Base {
        *
        * @type {Activity[]}
        */
+      // @ts-ignore
       this.activities = data.activities.map(activity => new Activity(this, activity));
     } else {
       this.activities ??= [];
@@ -129,6 +132,7 @@ export class Presence extends Base {
 
   _clone() {
     const clone = Object.assign(Object.create(this), this);
+    // @ts-ignore
     clone.activities = this.activities.map(activity => activity._clone());
     return clone;
   }
