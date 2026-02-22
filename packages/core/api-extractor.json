@@ -1,7 +1,0 @@
-{
-	"extends": "../../api-extractor.json",
-	"bundledPackages": ["discord-api-types"],
-	"docModel": {
-		"projectFolderUrl": "https://github.com/ovencord/ovencord/tree/main/packages/core"
-	}
-}

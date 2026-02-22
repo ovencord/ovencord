@@ -46,8 +46,6 @@
 		"@ovencord/ws": "^2.0.2"
 	},
 	"devDependencies": {
-		"@ovencord/api-extractor": "workspace:*",
-		"@ovencord/scripts": "workspace:*",
 		"@favware/cliff-jumper": "^6.0.0",
 		"@types/bun": "latest",
 		"cross-env": "^10.1.0",

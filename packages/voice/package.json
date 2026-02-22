@@ -45,8 +45,6 @@
 		"ws": "^8.18.3"
 	},
 	"devDependencies": {
-		"@ovencord/api-extractor": "workspace:*",
-		"@ovencord/scripts": "workspace:*",
 		"@favware/cliff-jumper": "^6.0.0",
 		"@noble/ciphers": "^2.1.1",
 		"@vitest/coverage-v8": "^4.0.15",

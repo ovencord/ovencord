@@ -27,12 +27,12 @@ const S3READMEFiles = new S3Client({
 
 const promises = [];
 
-// Find all packages with an api-extractor.json file.
-const globber = await create('packages/*/api-extractor.json');
+// Find all packages with a package.json file.
+const globber = await create('packages/*/package.json');
 
-for await (const apiExtractorFile of globber.globGenerator()) {
-	const readmePath = apiExtractorFile.replace('/api-extractor.json', '/README.md');
-	const packageName = apiExtractorFile.split('/').at(-2)!;
+for await (const packageFile of globber.globGenerator()) {
+	const readmePath = packageFile.replace('/package.json', '/README.md');
+	const packageName = packageFile.split('/').at(-2)!;
 	const readmeKey = `${packageName}/home-README.md`;
 	info(`Uploading ${readmePath}...`);
 
