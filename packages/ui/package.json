@@ -52,19 +52,11 @@
 		"@unocss/reset": "^66.5.10",
 		"@vitejs/plugin-react": "^5.1.2",
 		"chromatic": "^13.3.4",
-		"cross-env": "^10.1.0",
-		"eslint": "^9.39.2",
-		"eslint-formatter-compact": "^9.0.1",
-		"eslint-formatter-pretty": "^7.0.0",
-		"prettier": "^3.7.4",
 		"prop-types": "^15.8.1",
 		"storybook": "^10.1.6",
-		"typescript": "^5.9.3",
 		"unocss": "^66.5.10",
 		"vite": "^7.2.7",
-		"vite-plugin-dts": "^4.5.4",
-		"@types/bun": "latest",
-		"typescript-eslint": "^8.54.0"
+		"vite-plugin-dts": "^4.5.4"
 	},
 	"engines": {
 		"bun": ">=1.0.0"

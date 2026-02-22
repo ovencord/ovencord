@@ -43,16 +43,8 @@
 	"devDependencies": {
 		"@favware/cliff-jumper": "^6.0.0",
 		"@vitest/coverage-v8": "^4.0.15",
-		"cross-env": "^10.1.0",
 		"esbuild-plugin-version-injector": "^1.2.1",
-		"eslint": "^9.39.2",
-		"eslint-formatter-compact": "^9.0.1",
-		"eslint-formatter-pretty": "^7.0.0",
-		"prettier": "^3.7.4",
-		"typescript": "^5.9.3",
-		"vitest": "^4.0.15",
-		"@types/bun": "latest",
-		"typescript-eslint": "^8.54.0"
+		"vitest": "^4.0.15"
 	},
 	"engines": {
 		"bun": ">=1.0.0"

@@ -11,11 +11,9 @@
 		"build": "bun run --recursive build",
 		"test": "bun run --recursive test",
 		"lint": "bun run --recursive lint",
-		"format": "bun run --recursive format",
 		"update": "bun --recursive update --interactive",
 		"update:latest": "bun --recursive update --interactive --latest",
-		"typecheck": "bun run --recursive typecheck",
-		"release": "bun ./packages/actions/src/releasePackages/index.ts"
+		"typecheck": "bun run --recursive typecheck"
 	},
 	"type": "module",
 	"contributors": [
