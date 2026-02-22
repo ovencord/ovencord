@@ -98,6 +98,8 @@ export class WebSocketShard extends AsyncEventEmitter<WebSocketShardEventsMap> {
 
 	private lastHeartbeatAt = -1;
 
+	public lastPingTimestamp = -1;
+
 	/**
 	 * The latency of the last heartbeat in milliseconds
 	 */
@@ -515,6 +517,8 @@ export class WebSocketShard extends AsyncEventEmitter<WebSocketShardEventsMap> {
 
 		const session = await this.strategy.retrieveSessionInfo(this.id);
 
+		this.lastPingTimestamp = Number(Bun.nanoseconds());
+
 		await this.send({
 			op: GatewayOpcodes.Heartbeat,
 			 
@@ -694,7 +698,7 @@ export class WebSocketShard extends AsyncEventEmitter<WebSocketShardEventsMap> {
 				this.isAck = true;
 
 				const ackAt = Date.now();
-				const latency = ackAt - this.lastHeartbeatAt;
+				const latency = Math.round((Number(Bun.nanoseconds()) - this.lastPingTimestamp) / 1_000_000);
 				this.ping = latency;
 				
 				this.emit(WebSocketShardEvents.HeartbeatComplete, {

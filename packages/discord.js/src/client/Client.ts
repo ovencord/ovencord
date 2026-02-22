@@ -240,6 +240,9 @@ export class Client extends AsyncEventEmitter {
      * @type {WebSocketManager}
      */
     this.ws = new WebSocketManager(wsOptions);
+    Object.defineProperty(this.ws, 'ping', {
+      get: () => this.ping ?? -1,
+    });
 
     /**
      * Shard helpers for the client (only if the process was spawned from a {@link ShardingManager})
