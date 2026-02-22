@@ -44,10 +44,7 @@
 		"ioredis": "^5.8.2"
 	},
 	"devDependencies": {
-		"@favware/cliff-jumper": "^6.0.0",
-		"@vitest/coverage-v8": "^4.0.15",
-		"esbuild-plugin-version-injector": "^1.2.1",
-		"vitest": "^4.0.15"
+		"@favware/cliff-jumper": "^6.0.0"
 	},
 	"engines": {
 		"bun": ">=1.0.0"

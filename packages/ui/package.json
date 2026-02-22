@@ -44,19 +44,14 @@
 		"@storybook/addon-docs": "^10.1.6",
 		"@storybook/addon-links": "^10.1.6",
 		"@storybook/addon-themes": "^10.1.6",
-		"@storybook/builder-vite": "^10.1.6",
 		"@storybook/react": "^10.1.6",
-		"@storybook/react-vite": "^10.1.6",
 		"@types/react": "^19.2.7",
 		"@types/react-dom": "^19.2.3",
 		"@unocss/reset": "^66.5.10",
-		"@vitejs/plugin-react": "^5.1.2",
 		"chromatic": "^13.3.4",
 		"prop-types": "^15.8.1",
 		"storybook": "^10.1.6",
-		"unocss": "^66.5.10",
-		"vite": "^7.2.7",
-		"vite-plugin-dts": "^4.5.4"
+		"unocss": "^66.5.10"
 	},
 	"engines": {
 		"bun": ">=1.0.0"
