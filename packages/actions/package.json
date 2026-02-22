@@ -1,7 +1,7 @@
 {
 	"$schema": "https://json.schemastore.org/package.json",
 	"name": "@ovencord/actions",
-	"version": "0.1.0",
+	"version": "0.1.1",
 	"description": "A set of actions that we use for our workflows",
 	"private": true,
 	"scripts": {
@@ -45,7 +45,7 @@
 		"p-limit": "^7.2.0",
 		"p-queue": "^9.0.1",
 		"tslib": "^2.8.1",
-		"undici": "7.16.0",
+		"undici": "7.16.0"
 	},
 	"devDependencies": {
 		"@npm/types": "^2.1.0",

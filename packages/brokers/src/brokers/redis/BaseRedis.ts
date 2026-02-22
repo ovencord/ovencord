@@ -1,10 +1,10 @@
-import { readFileSync } from 'node:fs';
-import { resolve } from 'node:path';
 import { AsyncEventEmitter } from '@vladfrangu/async_event_emitter';
 import type { Redis } from 'ioredis';
 import { ReplyError } from 'ioredis';
 import type { BaseBrokerOptions, IBaseBroker, ToEventMap } from '../Broker.js';
 import { DefaultBrokerOptions } from '../Broker.js';
+
+const xCleanGroupLuaScript = await Bun.file(import.meta.dir + '/../../../scripts/xcleangroup.lua').text();
 
 type RedisReadGroupData = [Uint8Array, [Uint8Array, Uint8Array[]][]][];
 
@@ -127,7 +127,7 @@ export abstract class BaseRedisBroker<
 		this.group = this.options.group === kUseRandomGroupName ? crypto.randomUUID().replace(/-/g, '') : this.options.group;
 		redisClient.defineCommand('xcleangroup', {
 			numberOfKeys: 1,
-			lua: readFileSync(resolve(__dirname, '..', 'scripts', 'xcleangroup.lua'), 'utf8'),
+			lua: xCleanGroupLuaScript,
 		});
 		this.streamReadClient = redisClient.duplicate();
 	}
