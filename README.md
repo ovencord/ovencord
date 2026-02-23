@@ -48,18 +48,19 @@ We believe that **emulation is the enemy of performance**. Our mission is to eli
 ## Our Philosophy
 
 ### Native-First
+> We don't just _support_ Bun; we **build FOR Bun**.
 
-We don't just _support_ Bun; we **build FOR Bun**.
-
-- ❌ `ws` library → ✅ Bun native WebSocket
-- ❌ `node:zlib` → ✅ `Bun.inflateSync`
-- ❌ `node:buffer` → ✅ Web Standard `Uint8Array`
-- ❌ `node:fetch` → ✅ Bun global `fetch`
-- ❌ `node:events` → ✅ Pure Async Event Emitter
+| Before | After | 
+|---------|-------------|
+| `ws` library | Bun-native WebSocket |
+| `node:zlib` | `Bun.inflateSync` |
+| `node:buffer` | Web Standard `Uint8Array` |
+| `node:fetch` | Bun global `fetch` |
+| `node:events` | Pure Async Event Emitter |
 
 ### Zero-Bloat
-
-If it's legacy and slow, it's gone.
+> If it's legacy and slow, it's gone.          
+<br>
 
 **Before (discord.js ecosystem)**:
 - 50+ dependencies
@@ -198,25 +199,22 @@ ovencord/
 └── package.json     # Workspace root
 ```
 
+## Contributing
 
-
-## 🤝 Contributing
-
+```diff
 We accept PRs that:
-- ✅ Remove more legacy code
-- ✅ Improve performance
-- ✅ Add Bun-native features
-- ✅ Fix bugs
-- ✅ Improve documentation
++ Remove more legacy code
++ Improve performance
++ Add Bun-native features
++ Fix bugs
++ Improve documentation
 
 We reject PRs that:
-- ❌ Add Node.js dependencies
-- ❌ Add build tools
-- ❌ Break API compatibility
-- ❌ Reduce performance
-
-See [CONTRIBUTING.md](./CONTRIBUTING.md) for details.
-
+- Add Node.js dependencies
+- Add build tools
+- Break API compatibility
+- Reduce performance
+```
 
 ## License
 
