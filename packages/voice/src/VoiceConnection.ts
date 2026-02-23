@@ -1,6 +1,6 @@
 /* eslint-disable @typescript-eslint/unbound-method */
 import type { Buffer } from 'node:buffer';
-import { EventEmitter } from 'node:events';
+import { AsyncEventEmitter } from '@ovencord/util';
 import type { GatewayVoiceServerUpdateDispatchData, GatewayVoiceStateUpdateDispatchData } from 'discord-api-types/v10';
 import type { JoinConfig } from './DataStore';
 import {
@@ -163,7 +163,7 @@ export type VoiceConnectionState =
 	| VoiceConnectionReadyState
 	| VoiceConnectionSignallingState;
 
-export interface VoiceConnection extends EventEmitter {
+export interface VoiceConnection extends AsyncEventEmitter {
 	/**
 	 * Emitted when there is an error emitted from the voice connection
 	 *
@@ -202,7 +202,7 @@ export interface VoiceConnection extends EventEmitter {
 /**
  * A connection to the voice server of a Guild, can be used to play audio in voice channels.
  */
-export class VoiceConnection extends EventEmitter {
+export class VoiceConnection extends AsyncEventEmitter {
 	/**
 	 * The number of consecutive rejoin attempts. Initially 0, and increments for each rejoin.
 	 * When a connection is successfully established, it resets to 0.
@@ -304,11 +304,11 @@ export class VoiceConnection extends EventEmitter {
 		if (oldNetworking !== newNetworking) {
 			if (oldNetworking) {
 				oldNetworking.on('error', noop);
-				oldNetworking.off('debug', this.onNetworkingDebug);
-				oldNetworking.off('error', this.onNetworkingError);
-				oldNetworking.off('close', this.onNetworkingClose);
-				oldNetworking.off('stateChange', this.onNetworkingStateChange);
-				oldNetworking.off('transitioned', this.onNetworkingTransitioned);
+				oldNetworking.removeListener('debug', this.onNetworkingDebug);
+				oldNetworking.removeListener('error', this.onNetworkingError);
+				oldNetworking.removeListener('close', this.onNetworkingClose);
+				oldNetworking.removeListener('stateChange', this.onNetworkingStateChange);
+				oldNetworking.removeListener('transitioned', this.onNetworkingTransitioned);
 				oldNetworking.destroy();
 			}
 
@@ -392,12 +392,12 @@ export class VoiceConnection extends EventEmitter {
 		const newUdp = Reflect.get(newState, 'udp') as VoiceUDPSocket | undefined;
 
 		if (oldWs !== newWs) {
-			oldWs?.off('packet', this.receiver.onWsPacket);
+			oldWs?.removeListener('packet', this.receiver.onWsPacket);
 			newWs?.on('packet', this.receiver.onWsPacket);
 		}
 
 		if (oldUdp !== newUdp) {
-			oldUdp?.off('message', this.receiver.onUdpMessage);
+			oldUdp?.removeListener('message', this.receiver.onUdpMessage);
 			newUdp?.on('message', this.receiver.onUdpMessage);
 		}
 

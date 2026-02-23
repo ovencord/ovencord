@@ -1,4 +1,4 @@
-import { EventEmitter } from 'node:events';
+import { AsyncEventEmitter } from '@ovencord/util';
 
 /**
  * The known data for a user in a Discord voice connection.
@@ -21,7 +21,7 @@ export interface VoiceUserData {
 	videoSSRC?: number;
 }
 
-export interface SSRCMap extends EventEmitter {
+export interface SSRCMap extends AsyncEventEmitter {
 	on(event: 'create', listener: (newData: VoiceUserData) => void): this;
 	on(event: 'update', listener: (oldData: VoiceUserData | undefined, newData: VoiceUserData) => void): this;
 	on(event: 'delete', listener: (deletedData: VoiceUserData) => void): this;
@@ -30,7 +30,7 @@ export interface SSRCMap extends EventEmitter {
 /**
  * Maps audio SSRCs to data of users in voice connections.
  */
-export class SSRCMap extends EventEmitter {
+export class SSRCMap extends AsyncEventEmitter {
 	/**
 	 * The underlying map.
 	 */

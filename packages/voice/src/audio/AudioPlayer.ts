@@ -1,6 +1,6 @@
 /* eslint-disable @typescript-eslint/prefer-ts-expect-error, @typescript-eslint/method-signature-style */
 import { Buffer } from 'node:buffer';
-import { EventEmitter } from 'node:events';
+import { AsyncEventEmitter } from '@ovencord/util';
 import { addAudioPlayer, deleteAudioPlayer } from '../DataStore';
 import { VoiceConnectionStatus, type VoiceConnection } from '../VoiceConnection';
 import { noop } from '../util/util';
@@ -152,7 +152,7 @@ export type AudioPlayerState =
 	| AudioPlayerPausedState
 	| AudioPlayerPlayingState;
 
-export interface AudioPlayer extends EventEmitter {
+export interface AudioPlayer extends AsyncEventEmitter {
 	/**
 	 * Emitted when there is an error emitted from the audio resource played by the audio player
 	 *
@@ -211,7 +211,7 @@ function stringifyState(state: AudioPlayerState) {
  * The AudioPlayer drives the timing of playback, and therefore is unaffected by voice connections
  * becoming unavailable. Its behavior in these scenarios can be configured.
  */
-export class AudioPlayer extends EventEmitter {
+export class AudioPlayer extends AsyncEventEmitter {
 	/**
 	 * The state that the AudioPlayer is in.
 	 */

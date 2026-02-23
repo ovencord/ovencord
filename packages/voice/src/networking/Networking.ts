@@ -3,7 +3,7 @@
 /* eslint-disable @typescript-eslint/unbound-method */
 import { Buffer } from 'node:buffer';
 import crypto from 'node:crypto';
-import { EventEmitter } from 'node:events';
+import { AsyncEventEmitter } from '@ovencord/util';
 import type { VoiceReceivePayload, VoiceSpeakingFlags } from 'discord-api-types/voice/v8';
 import { VoiceEncryptionMode, VoiceOpcodes } from 'discord-api-types/voice/v8';
 import type { CloseEvent } from 'ws';
@@ -176,7 +176,7 @@ export interface NetworkingOptions {
  */
 const nonce = Buffer.alloc(24);
 
-export interface Networking extends EventEmitter {
+export interface Networking extends AsyncEventEmitter {
 	/**
 	 * Debug event for Networking.
 	 *
@@ -229,7 +229,7 @@ function randomNBit(numberOfBits: number) {
 /**
  * Manages the networking required to maintain a voice connection and dispatch audio packets
  */
-export class Networking extends EventEmitter {
+export class Networking extends AsyncEventEmitter {
 	private _state: NetworkingState;
 
 	/**
@@ -294,13 +294,13 @@ export class Networking extends EventEmitter {
 		const newWs = Reflect.get(newState, 'ws') as VoiceWebSocket | undefined;
 		if (oldWs && oldWs !== newWs) {
 			// The old WebSocket is being freed - remove all handlers from it
-			oldWs.off('debug', this.onWsDebug);
+			oldWs.removeListener('debug', this.onWsDebug);
 			oldWs.on('error', noop);
-			oldWs.off('error', this.onChildError);
-			oldWs.off('open', this.onWsOpen);
-			oldWs.off('packet', this.onWsPacket);
-			oldWs.off('binary', this.onWsBinary);
-			oldWs.off('close', this.onWsClose);
+			oldWs.removeListener('error', this.onChildError);
+			oldWs.removeListener('open', this.onWsOpen);
+			oldWs.removeListener('packet', this.onWsPacket);
+			oldWs.removeListener('binary', this.onWsBinary);
+			oldWs.removeListener('close', this.onWsClose);
 			oldWs.destroy();
 		}
 
@@ -309,9 +309,9 @@ export class Networking extends EventEmitter {
 
 		if (oldUdp && oldUdp !== newUdp) {
 			oldUdp.on('error', noop);
-			oldUdp.off('error', this.onChildError);
-			oldUdp.off('close', this.onUdpClose);
-			oldUdp.off('debug', this.onUdpDebug);
+			oldUdp.removeListener('error', this.onChildError);
+			oldUdp.removeListener('close', this.onUdpClose);
+			oldUdp.removeListener('debug', this.onUdpDebug);
 			oldUdp.destroy();
 		}
 
@@ -319,10 +319,10 @@ export class Networking extends EventEmitter {
 		const newDave = Reflect.get(newState, 'dave') as DAVESession | undefined;
 
 		if (oldDave && oldDave !== newDave) {
-			oldDave.off('error', this.onChildError);
-			oldDave.off('debug', this.onDaveDebug);
-			oldDave.off('keyPackage', this.onDaveKeyPackage);
-			oldDave.off('invalidateTransition', this.onDaveInvalidateTransition);
+			oldDave.removeListener('error', this.onChildError);
+			oldDave.removeListener('debug', this.onDaveDebug);
+			oldDave.removeListener('keyPackage', this.onDaveKeyPackage);
+			oldDave.removeListener('invalidateTransition', this.onDaveInvalidateTransition);
 			oldDave.destroy();
 		}
 

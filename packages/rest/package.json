@@ -34,8 +34,8 @@
 	"homepage": "https://ovencord.dev",
 	"funding": "https://github.com/ovencord/ovencord?sponsor",
 	"dependencies": {
-		"@ovencord/collection": "^2.1.1",
-		"@ovencord/util": "^1.1.1",
+		"@ovencord/collection": "^2.1.2",
+		"@ovencord/util": "^1.1.4",
 		"discord-api-types": "^0.38.36"
 	},
 	"devDependencies": {},

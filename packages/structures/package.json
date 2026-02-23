@@ -35,9 +35,9 @@
 	},
 	"homepage": "https://ovencord.dev",
 	"dependencies": {
-		"@ovencord/util": "^1.1.1",
+		"@ovencord/util": "^1.1.4",
 		"discord-api-types": "^0.38.36",
-		"@ovencord/formatters": "^0.6.1"
+		"@ovencord/formatters": "^0.6.2"
 	},
 	"devDependencies": {
 		"@favware/cliff-jumper": "^6.0.0",

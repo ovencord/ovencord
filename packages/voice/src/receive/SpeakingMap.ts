@@ -1,7 +1,7 @@
 /* eslint-disable @typescript-eslint/unified-signatures */
-import { EventEmitter } from 'node:events';
+import { AsyncEventEmitter } from '@ovencord/util';
 
-export interface SpeakingMap extends EventEmitter {
+export interface SpeakingMap extends AsyncEventEmitter {
 	/**
 	 * Emitted when a user starts speaking.
 	 *
@@ -20,7 +20,7 @@ export interface SpeakingMap extends EventEmitter {
 /**
  * Tracks the speaking states of users in a voice channel.
  */
-export class SpeakingMap extends EventEmitter {
+export class SpeakingMap extends AsyncEventEmitter {
 	/**
 	 * The delay after a packet is received from a user until they're marked as not speaking anymore.
 	 */

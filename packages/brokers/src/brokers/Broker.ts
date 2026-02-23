@@ -1,5 +1,5 @@
 import { encode, decode } from '@msgpack/msgpack';
-import type { AsyncEventEmitter } from '@vladfrangu/async_event_emitter';
+import type { AsyncEventEmitter } from '@ovencord/util';
 
 /**
  * Base options for a broker implementation

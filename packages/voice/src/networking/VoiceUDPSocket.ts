@@ -1,6 +1,6 @@
 import { Buffer } from 'node:buffer';
 import { createSocket, type Socket } from 'node:dgram';
-import { EventEmitter } from 'node:events';
+import { AsyncEventEmitter } from '@ovencord/util';
 import { isIPv4 } from 'node:net';
 
 /**
@@ -41,7 +41,7 @@ const KEEP_ALIVE_INTERVAL = 5e3;
  */
 const MAX_COUNTER_VALUE = 2 ** 32 - 1;
 
-export interface VoiceUDPSocket extends EventEmitter {
+export interface VoiceUDPSocket extends AsyncEventEmitter {
 	on(event: 'error', listener: (error: Error) => void): this;
 	on(event: 'close', listener: () => void): this;
 	on(event: 'debug', listener: (message: string) => void): this;
@@ -51,7 +51,7 @@ export interface VoiceUDPSocket extends EventEmitter {
 /**
  * Manages the UDP networking for a voice connection.
  */
-export class VoiceUDPSocket extends EventEmitter {
+export class VoiceUDPSocket extends AsyncEventEmitter {
 	/**
 	 * The underlying network Socket for the VoiceUDPSocket.
 	 */

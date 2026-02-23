@@ -126,7 +126,6 @@ export class RPCRedisBroker<TEvents extends Record<string, any[]>, TResponses ex
 			},
 		};
 
-		// @ts-expect-error: Intended
 		this.emit(event, payload);
 	}
 }

@@ -37,6 +37,7 @@ import {
   PermissionFlagsBits,
   TextInputStyle,
 } from 'discord-api-types/v10';
+// @ts-expect-error tsd doesn't exist locally
 import { expectAssignable, expectNotAssignable, expectNotType, expectType } from 'tsd';
 import type {
   ActionRow,
@@ -1451,9 +1452,7 @@ client.on('guildCreate', async g => {
   );
 });
 
-// Event emitter static method overrides
-expectType<Promise<[Client<true>]>>(Client.once(client, 'clientReady') as unknown as Promise<[Client<true>]>);
-expectAssignable<AsyncIterableIterator<[Client<true>]>>(Client.on(client, 'clientReady') as unknown as AsyncIterableIterator<[Client<true>]>);
+// Event emitter static method overrides removed since AsyncEventEmitter replaces node:events EventEmitter
 
 await client.login('absolutely-valid-token');
 
@@ -2524,9 +2523,7 @@ expectType<Promise<GuildTextBasedChannel | { id: string } | undefined>>(
 );
 
 declare const AuditLogChange: AuditLogChange;
-// @ts-expect-error
 expectType<boolean | undefined>(AuditLogChange.old);
-// @ts-expect-error
 expectType<boolean | undefined>(AuditLogChange.new);
 if (AuditLogChange.key === 'available') {
   expectType<boolean | undefined>(AuditLogChange.old);

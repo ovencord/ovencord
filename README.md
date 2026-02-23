@@ -37,6 +37,12 @@ We believe that **emulation is the enemy of performance**. Our mission is to eli
 | [@ovencord/collection](./packages/collection) | High-performance Collection class | ✅ **Stable** |
 | [@ovencord/discord.js](./packages/discord.js) | Full Bun-native Discord.js fork | ✅ **Stable** |
 | [@ovencord/brokers](./packages/brokers) | Cross-environment pub/sub message brokers | ✅ **Stable** |
+| [@ovencord/core](./packages/core) | High-level client abstraction | ✅ **Stable** |
+| [@ovencord/formatters](./packages/formatters) | Message formatting utilities | ✅ **Stable** |
+| [@ovencord/structures](./packages/structures) | Discord data structures | ✅ **Stable** |
+| [@ovencord/voice](./packages/voice) | Implementation of the Discord Voice API | ✅ **Stable** |
+| [@ovencord/next](./packages/next) | Next-generation components | 🚧 **WIP** |
+| [@ovencord/ui](./packages/ui) | JSX-based UI framework for Discord | 🚧 **WIP** |
 
 
 ## Our Philosophy
@@ -49,6 +55,7 @@ We don't just _support_ Bun; we **build FOR Bun**.
 - ❌ `node:zlib` → ✅ `Bun.inflateSync`
 - ❌ `node:buffer` → ✅ Web Standard `Uint8Array`
 - ❌ `node:fetch` → ✅ Bun global `fetch`
+- ❌ `node:events` → ✅ Pure Async Event Emitter
 
 ### Zero-Bloat
 
@@ -56,6 +63,7 @@ If it's legacy and slow, it's gone.
 
 **Before (discord.js ecosystem)**:
 - 50+ dependencies
+- Heavy polyfills for `lodash`, `p-queue`, etc.
 - ~100MB `node_modules`
 - tsup/esbuild build step required
 
@@ -165,7 +173,6 @@ bun install
 | `bun run test` | Run tests across the monorepo |
 | `bun run lint` | Run ESLint (Gold Standard, zero-warning) |
 | `bun run typecheck` | Perform recursive TypeScript type checking |
-| `bun run format` | Auto-format codebase with Prettier |
 
 
 ### Project Structure
@@ -173,13 +180,16 @@ bun install
 ```
 ovencord/
 ├── packages/
+│   ├── brokers/     # Cross-environment pub/sub message brokers
 │   ├── builders/    # Discord payload builders (Zod 3)
 │   ├── collection/  # Performance-optimized Map
 │   ├── core/        # High-level client abstraction
 │   ├── discord.js/  # Full Bun-native Discord.js fork
 │   ├── formatters/  # Message formatting utilities
+│   ├── next/        # Next-generation library paradigms
 │   ├── rest/        # Discord REST API client
 │   ├── structures/  # Discord data structures
+│   ├── ui/          # JSX-based Discord UI framework
 │   ├── util/        # Shared utilities
 │   ├── voice/       # Voice connection support
 │   └── ws/          # WebSocket gateway client
@@ -234,7 +244,7 @@ Ovencord stands on the shoulders of giants:
 - [x] Standardize `@ovencord/util` shared utilities
 - [x] Port `@ovencord/builders` and `@ovencord/brokers` to 100% Bun-native
 - [x] Stabilize `@ovencord/discord.js` heavy fork and resolve all typings conflicts
-- [ ] Port `@ovencord/voice` and `@ovencord/util` internal pipelines to Native zeroing `node:events` and `node:stream`
+- [x] Port `@ovencord/voice` and `@ovencord/util` internal pipelines to Native zeroing `node:events` and external emitters
 - [ ] Comprehensive performance benchmarks vs original discord.js
 - [ ] Achieve 100% monorepo functional test coverage
 - [ ] Launch official documentation site (ovencord.dev)

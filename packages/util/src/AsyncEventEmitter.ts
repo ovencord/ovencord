@@ -1,6 +1,8 @@
+import { AsyncQueue } from './AsyncQueue.js';
+
 export type EventMap = Record<string | symbol, any[]>;
 
-export class AsyncEventEmitter<Events extends EventMap = EventMap> {
+export class AsyncEventEmitter<Events extends Record<keyof Events, any[]> = EventMap> {
   private _listeners = new Map<keyof Events | string | symbol, Set<Function>>();
   private _maxListeners = 10;
 
@@ -158,5 +160,45 @@ export class AsyncEventEmitter<Events extends EventMap = EventMap> {
         }, timeout);
       }
     });
+  }
+
+  public static async *on<T extends AsyncEventEmitter<any>, K extends keyof (T extends AsyncEventEmitter<infer U> ? U : never)>(
+    emitter: T,
+    eventName: K,
+    options?: { signal?: AbortSignal }
+  ): AsyncIterableIterator<(T extends AsyncEventEmitter<infer U> ? U : never)[K]> {
+    const signal = options?.signal;
+    if (signal?.aborted) throw new Error('AbortError');
+
+    const queue = new AsyncQueue();
+    const items: any[][] = [];
+
+    const listener = (...args: any[]) => {
+      items.push(args);
+      queue.shift();
+    };
+
+    const abortHandler = () => {
+      emitter.off(eventName as any, listener);
+      queue.shift();
+    };
+
+    emitter.on(eventName as any, listener);
+    signal?.addEventListener('abort', abortHandler, { once: true });
+
+    try {
+      while (true) {
+        if (signal?.aborted && items.length === 0) break;
+        if (items.length === 0) {
+          await queue.wait(options);
+        }
+        if (signal?.aborted && items.length === 0) break;
+
+        yield items.shift()! as any;
+      }
+    } finally {
+      emitter.off(eventName as any, listener);
+      signal?.removeEventListener('abort', abortHandler);
+    }
   }
 }

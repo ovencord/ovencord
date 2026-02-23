@@ -1,4 +1,11 @@
-import { type EventEmitter, once } from 'node:events';
+import type { AsyncEventEmitter } from '@ovencord/util';
+
+export class AbortError extends Error {
+	public constructor(message = 'The operation was aborted') {
+		super(message);
+		this.name = 'AbortError';
+	}
+}
 import type { VoiceConnection, VoiceConnectionStatus } from '../VoiceConnection';
 import type { AudioPlayer, AudioPlayerStatus } from '../audio/AudioPlayer';
 import { abortAfter } from './abortAfter';
@@ -45,7 +52,24 @@ export async function entersState<Target extends AudioPlayer | VoiceConnection>(
 		const [ac, signal] =
 			typeof timeoutOrSignal === 'number' ? abortAfter(timeoutOrSignal) : [undefined, timeoutOrSignal];
 		try {
-			await once(target as EventEmitter, status, { signal });
+			await new Promise<void>((resolve, reject) => {
+				const onEvent = () => {
+					signal.removeEventListener('abort', onAbort);
+					resolve();
+				};
+				const onAbort = () => {
+					(target as unknown as AsyncEventEmitter<any>).removeListener(status as string, onEvent as any);
+					reject(new AbortError());
+				};
+
+				if (signal.aborted) {
+					onAbort();
+					return;
+				}
+
+				(target as unknown as AsyncEventEmitter<any>).once(status as string, onEvent as any);
+				signal.addEventListener('abort', onAbort, { once: true });
+			});
 		} finally {
 			ac?.abort();
 		}

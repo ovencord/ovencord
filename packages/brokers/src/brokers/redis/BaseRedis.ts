@@ -1,4 +1,4 @@
-import { AsyncEventEmitter } from '@vladfrangu/async_event_emitter';
+import { AsyncEventEmitter } from '@ovencord/util';
 import type { Redis } from 'ioredis';
 import { ReplyError } from 'ioredis';
 import type { BaseBrokerOptions, IBaseBroker, ToEventMap } from '../Broker.js';
@@ -184,7 +184,6 @@ export abstract class BaseRedisBroker<
 			try {
 				await this.claimAndEmitDeadEvents();
 			} catch (error) {
-				// @ts-expect-error: Intended
 				this.emit('error', error);
 				// We don't break here to keep the loop running even if dead event processing fails
 			}
@@ -198,7 +197,6 @@ export abstract class BaseRedisBroker<
 
 				await this.processMessages(data);
 			} catch (error) {
-				// @ts-expect-error: Intended
 				this.emit('error', error);
 				break;
 			}

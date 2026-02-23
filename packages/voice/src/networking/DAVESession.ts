@@ -1,5 +1,5 @@
 import { Buffer } from 'node:buffer';
-import { EventEmitter } from 'node:events';
+import { AsyncEventEmitter } from '@ovencord/util';
 import Davey from '@snazzah/davey';
 import type { VoiceDavePrepareEpochData, VoiceDavePrepareTransitionData } from 'discord-api-types/voice/v8';
 import { SILENCE_FRAME } from '../audio/AudioPlayer';
@@ -62,7 +62,7 @@ export function getMaxProtocolVersion(): number {
 	return Davey.DAVE_PROTOCOL_VERSION;
 }
 
-export interface DAVESession extends EventEmitter {
+export interface DAVESession extends AsyncEventEmitter {
 	on(event: 'error', listener: (error: Error) => void): this;
 	on(event: 'debug', listener: (message: string) => void): this;
 	on(event: 'keyPackage', listener: (message: Buffer) => void): this;
@@ -72,7 +72,7 @@ export interface DAVESession extends EventEmitter {
 /**
  * Manages the DAVE protocol group session.
  */
-export class DAVESession extends EventEmitter {
+export class DAVESession extends AsyncEventEmitter {
 	/**
 	 * The channel id represented by this session.
 	 */

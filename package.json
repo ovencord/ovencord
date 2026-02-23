@@ -4,6 +4,8 @@
 	"version": "0.0.0",
 	"description": "Cooking the future of Discord development. A high-performance, Bun-native monorepo for the Discord ecosystem.",
 	"private": true,
+	"author": "Luigi Colantuono",
+	"license": "MIT",
 	"workspaces": [
 		"packages/*"
 	],
@@ -29,34 +31,29 @@
 	],
 	"repository": {
 		"type": "git",
-		"url": "https://github.com/ovencord/ovencord.git"
+		"url": "git+https://github.com/ovencord/ovencord.git"
 	},
 	"bugs": {
 		"url": "https://github.com/ovencord/ovencord/issues"
 	},
 	"homepage": "https://ovencord.dev",
-	"funding": "https://github.com/ovencord/ovencord?sponsor",
+	"funding": {
+		"type": "individual",
+		"url": "https://paypal.me/l0g4n7"
+	},
 	"devDependencies": {
-		"@actions/core": "^3.0.0",
-		"@actions/github": "^9.0.0",
 		"@favware/cliff-jumper": "^6.0.0",
-		"@npm/types": "^2.1.0",
 		"@types/bun": "latest",
-		"@types/lodash.merge": "^4.6.9",
-		"commander": "^14.0.3",
-		"discord-api-types": "^0.38.38",
+		"discord-api-types": "^0.38.40",
 		"eslint": "^9.39.2",
 		"eslint-import-resolver-typescript": "^4.4.4",
-		"lodash.merge": "^4.6.2",
-		"p-limit": "^7.3.0",
-		"p-queue": "^9.1.0",
 		"typescript": "^5.9.3",
-		"typescript-eslint": "^8.54.0"
+		"typescript-eslint": "^8.56.0"
 	},
 	"engines": {
 		"bun": ">=1.0.0"
 	},
-	"packageManager": "bun@1.0.0",
+	"packageManager": "bun@1.3.9",
 	"dependencies": {
 		"ts-mixer": "^6.0.4"
 	}

@@ -1,5 +1,5 @@
 import { Buffer } from 'node:buffer';
-import { EventEmitter } from 'node:events';
+import { AsyncEventEmitter } from '@ovencord/util';
 import type { VoiceSendPayload } from 'discord-api-types/voice/v8';
 import { VoiceOpcodes } from 'discord-api-types/voice/v8';
 import WebSocket, { type MessageEvent } from 'ws';
@@ -13,7 +13,7 @@ export interface BinaryWebSocketMessage {
 	seq: number;
 }
 
-export interface VoiceWebSocket extends EventEmitter {
+export interface VoiceWebSocket extends AsyncEventEmitter {
 	on(event: 'error', listener: (error: Error) => void): this;
 	on(event: 'open', listener: (event: WebSocket.Event) => void): this;
 	on(event: 'close', listener: (event: WebSocket.CloseEvent) => void): this;
@@ -41,7 +41,7 @@ export interface VoiceWebSocket extends EventEmitter {
  * An extension of the WebSocket class to provide helper functionality when interacting
  * with the Discord Voice gateway.
  */
-export class VoiceWebSocket extends EventEmitter {
+export class VoiceWebSocket extends AsyncEventEmitter {
 	/**
 	 * The current heartbeat interval, if any.
 	 */

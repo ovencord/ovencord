@@ -29,7 +29,7 @@ export class SimpleShardingStrategy implements IShardingStrategy {
 			const shard = new WebSocketShard(strategy, shardId);
 
 			for (const event of Object.values(WebSocketShardEvents)) {
-				shard.on(event, (...args) => this.manager.emit(event, ...args, shardId));
+				shard.on(event, (...args) => { void this.manager.emit(event, ...args, shardId); });
 			}
 
 			this.shards.set(shardId, shard);
