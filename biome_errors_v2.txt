@@ -1,0 +1,2761 @@
+packages\brokers\src\brokers\redis\BaseRedis.ts:291:29 lint/style/noNonNullAssertion ━━━━━━━━━━━━━━━
+
+  ! Forbidden non-null assertion.
+  
+    289 │ 				}
+    290 │ 
+  > 291 │ 				const [msgId, fields] = entries[0]!;
+        │ 				                        ^^^^^^^^^^^
+    292 │ 				const decoder = new TextDecoder('utf-8');
+    293 │ 				const idx = fields.findIndex((value, idx) => decoder.decode(value) === 'data' && idx % 2 === 0);
+  
+
+packages\builders\src\components\ActionRow.ts:352:60 lint/suspicious/noExplicitAny ━━━━━━━━━━━━━━━━━
+
+  ! Unexpected any. Specify a different type.
+  
+    350 │ 		const data = {
+    351 │ 			...structuredClone(rest),
+  > 352 │ 			components: components.map((component) => (component as any).toJSON(validationOverride)),
+        │ 			                                                        ^^^
+    353 │ 		};
+    354 │ 
+  
+  i any disables many type checking rules. Its use should be avoided.
+  
+
+packages\builders\src\components\Components.ts:199:18 lint/suspicious/noExplicitAny ━━━━━━━━━━━━━━━━
+
+  ! Unexpected any. Specify a different type.
+  
+    197 │ ): ComponentBuilder<APIBaseComponent<ComponentType>> {
+    198 │ 	if (data instanceof ComponentBuilder || (typeof data === 'object' && data !== null && 'toJSON' in data)) {
+  > 199 │ 		return data as any;
+        │ 		               ^^^
+    200 │ 	}
+    201 │ 
+  
+  i any disables many type checking rules. Its use should be avoided.
+  
+
+packages\builders\src\components\Components.ts:205:43 lint/suspicious/noExplicitAny ━━━━━━━━━━━━━━━━
+
+  ! Unexpected any. Specify a different type.
+  
+    203 │ 	switch (rawData.type) {
+    204 │ 		case ComponentType.ActionRow:
+  > 205 │ 			return new ActionRowBuilder(rawData as any);
+        │ 			                                       ^^^
+    206 │ 		case ComponentType.Button:
+    207 │ 			return createButtonBuilder(rawData as any) as any;
+  
+  i any disables many type checking rules. Its use should be avoided.
+  
+
+packages\builders\src\components\Components.ts:207:42 lint/suspicious/noExplicitAny ━━━━━━━━━━━━━━━━
+
+  ! Unexpected any. Specify a different type.
+  
+    205 │ 			return new ActionRowBuilder(rawData as any);
+    206 │ 		case ComponentType.Button:
+  > 207 │ 			return createButtonBuilder(rawData as any) as any;
+        │ 			                                      ^^^
+    208 │ 		case ComponentType.StringSelect:
+    209 │ 			return new StringSelectMenuBuilder(rawData as any);
+  
+  i any disables many type checking rules. Its use should be avoided.
+  
+
+packages\builders\src\components\Components.ts:207:50 lint/suspicious/noExplicitAny ━━━━━━━━━━━━━━━━
+
+  ! Unexpected any. Specify a different type.
+  
+    205 │ 			return new ActionRowBuilder(rawData as any);
+    206 │ 		case ComponentType.Button:
+  > 207 │ 			return createButtonBuilder(rawData as any) as any;
+        │ 			                                              ^^^
+    208 │ 		case ComponentType.StringSelect:
+    209 │ 			return new StringSelectMenuBuilder(rawData as any);
+  
+  i any disables many type checking rules. Its use should be avoided.
+  
+
+packages\builders\src\components\Components.ts:209:50 lint/suspicious/noExplicitAny ━━━━━━━━━━━━━━━━
+
+  ! Unexpected any. Specify a different type.
+  
+    207 │ 			return createButtonBuilder(rawData as any) as any;
+    208 │ 		case ComponentType.StringSelect:
+  > 209 │ 			return new StringSelectMenuBuilder(rawData as any);
+        │ 			                                              ^^^
+    210 │ 		case ComponentType.TextInput:
+    211 │ 			return new TextInputBuilder(rawData as any);
+  
+  i any disables many type checking rules. Its use should be avoided.
+  
+
+packages\builders\src\components\Components.ts:211:43 lint/suspicious/noExplicitAny ━━━━━━━━━━━━━━━━
+
+  ! Unexpected any. Specify a different type.
+  
+    209 │ 			return new StringSelectMenuBuilder(rawData as any);
+    210 │ 		case ComponentType.TextInput:
+  > 211 │ 			return new TextInputBuilder(rawData as any);
+        │ 			                                       ^^^
+    212 │ 		case ComponentType.UserSelect:
+    213 │ 			return new UserSelectMenuBuilder(rawData as any);
+  
+  i any disables many type checking rules. Its use should be avoided.
+  
+
+packages\builders\src\components\Components.ts:213:48 lint/suspicious/noExplicitAny ━━━━━━━━━━━━━━━━
+
+  ! Unexpected any. Specify a different type.
+  
+    211 │ 			return new TextInputBuilder(rawData as any);
+    212 │ 		case ComponentType.UserSelect:
+  > 213 │ 			return new UserSelectMenuBuilder(rawData as any);
+        │ 			                                            ^^^
+    214 │ 		case ComponentType.RoleSelect:
+    215 │ 			return new RoleSelectMenuBuilder(rawData as any);
+  
+  i any disables many type checking rules. Its use should be avoided.
+  
+
+packages\builders\src\components\Components.ts:215:48 lint/suspicious/noExplicitAny ━━━━━━━━━━━━━━━━
+
+  ! Unexpected any. Specify a different type.
+  
+    213 │ 			return new UserSelectMenuBuilder(rawData as any);
+    214 │ 		case ComponentType.RoleSelect:
+  > 215 │ 			return new RoleSelectMenuBuilder(rawData as any);
+        │ 			                                            ^^^
+    216 │ 		case ComponentType.MentionableSelect:
+    217 │ 			return new MentionableSelectMenuBuilder(rawData as any);
+  
+  i any disables many type checking rules. Its use should be avoided.
+  
+
+packages\builders\src\components\Components.ts:217:55 lint/suspicious/noExplicitAny ━━━━━━━━━━━━━━━━
+
+  ! Unexpected any. Specify a different type.
+  
+    215 │ 			return new RoleSelectMenuBuilder(rawData as any);
+    216 │ 		case ComponentType.MentionableSelect:
+  > 217 │ 			return new MentionableSelectMenuBuilder(rawData as any);
+        │ 			                                                   ^^^
+    218 │ 		case ComponentType.ChannelSelect:
+    219 │ 			return new ChannelSelectMenuBuilder(rawData as any);
+  
+  i any disables many type checking rules. Its use should be avoided.
+  
+
+packages\builders\src\components\Components.ts:219:51 lint/suspicious/noExplicitAny ━━━━━━━━━━━━━━━━
+
+  ! Unexpected any. Specify a different type.
+  
+    217 │ 			return new MentionableSelectMenuBuilder(rawData as any);
+    218 │ 		case ComponentType.ChannelSelect:
+  > 219 │ 			return new ChannelSelectMenuBuilder(rawData as any);
+        │ 			                                               ^^^
+    220 │ 		case ComponentType.Thumbnail:
+    221 │ 			return new ThumbnailBuilder(rawData as any);
+  
+  i any disables many type checking rules. Its use should be avoided.
+  
+
+packages\builders\src\components\Components.ts:221:43 lint/suspicious/noExplicitAny ━━━━━━━━━━━━━━━━
+
+  ! Unexpected any. Specify a different type.
+  
+    219 │ 			return new ChannelSelectMenuBuilder(rawData as any);
+    220 │ 		case ComponentType.Thumbnail:
+  > 221 │ 			return new ThumbnailBuilder(rawData as any);
+        │ 			                                       ^^^
+    222 │ 		case ComponentType.File:
+    223 │ 			return new FileBuilder(rawData as any);
+  
+  i any disables many type checking rules. Its use should be avoided.
+  
+
+packages\builders\src\components\Components.ts:223:38 lint/suspicious/noExplicitAny ━━━━━━━━━━━━━━━━
+
+  ! Unexpected any. Specify a different type.
+  
+    221 │ 			return new ThumbnailBuilder(rawData as any);
+    222 │ 		case ComponentType.File:
+  > 223 │ 			return new FileBuilder(rawData as any);
+        │ 			                                  ^^^
+    224 │ 		case ComponentType.Separator:
+    225 │ 			return new SeparatorBuilder(rawData as any);
+  
+  i any disables many type checking rules. Its use should be avoided.
+  
+
+packages\builders\src\components\Components.ts:225:43 lint/suspicious/noExplicitAny ━━━━━━━━━━━━━━━━
+
+  ! Unexpected any. Specify a different type.
+  
+    223 │ 			return new FileBuilder(rawData as any);
+    224 │ 		case ComponentType.Separator:
+  > 225 │ 			return new SeparatorBuilder(rawData as any);
+        │ 			                                       ^^^
+    226 │ 		case ComponentType.TextDisplay:
+    227 │ 			return new TextDisplayBuilder(rawData as any);
+  
+  i any disables many type checking rules. Its use should be avoided.
+  
+
+packages\builders\src\components\Components.ts:227:45 lint/suspicious/noExplicitAny ━━━━━━━━━━━━━━━━
+
+  ! Unexpected any. Specify a different type.
+  
+    225 │ 			return new SeparatorBuilder(rawData as any);
+    226 │ 		case ComponentType.TextDisplay:
+  > 227 │ 			return new TextDisplayBuilder(rawData as any);
+        │ 			                                         ^^^
+    228 │ 		case ComponentType.MediaGallery:
+    229 │ 			return new MediaGalleryBuilder(rawData as any);
+  
+  i any disables many type checking rules. Its use should be avoided.
+  
+
+packages\builders\src\components\Components.ts:229:46 lint/suspicious/noExplicitAny ━━━━━━━━━━━━━━━━
+
+  ! Unexpected any. Specify a different type.
+  
+    227 │ 			return new TextDisplayBuilder(rawData as any);
+    228 │ 		case ComponentType.MediaGallery:
+  > 229 │ 			return new MediaGalleryBuilder(rawData as any);
+        │ 			                                          ^^^
+    230 │ 		case ComponentType.Section:
+    231 │ 			return new SectionBuilder(rawData as any);
+  
+  i any disables many type checking rules. Its use should be avoided.
+  
+
+packages\builders\src\components\Components.ts:231:41 lint/suspicious/noExplicitAny ━━━━━━━━━━━━━━━━
+
+  ! Unexpected any. Specify a different type.
+  
+    229 │ 			return new MediaGalleryBuilder(rawData as any);
+    230 │ 		case ComponentType.Section:
+  > 231 │ 			return new SectionBuilder(rawData as any);
+        │ 			                                     ^^^
+    232 │ 		case ComponentType.Container:
+    233 │ 			return new ContainerBuilder(rawData as any);
+  
+  i any disables many type checking rules. Its use should be avoided.
+  
+
+packages\builders\src\components\Components.ts:233:43 lint/suspicious/noExplicitAny ━━━━━━━━━━━━━━━━
+
+  ! Unexpected any. Specify a different type.
+  
+    231 │ 			return new SectionBuilder(rawData as any);
+    232 │ 		case ComponentType.Container:
+  > 233 │ 			return new ContainerBuilder(rawData as any);
+        │ 			                                       ^^^
+    234 │ 		case ComponentType.Label:
+    235 │ 			return new LabelBuilder(rawData as any);
+  
+  i any disables many type checking rules. Its use should be avoided.
+  
+
+packages\builders\src\components\Components.ts:235:39 lint/suspicious/noExplicitAny ━━━━━━━━━━━━━━━━
+
+  ! Unexpected any. Specify a different type.
+  
+    233 │ 			return new ContainerBuilder(rawData as any);
+    234 │ 		case ComponentType.Label:
+  > 235 │ 			return new LabelBuilder(rawData as any);
+        │ 			                                   ^^^
+    236 │ 		case ComponentType.FileUpload:
+    237 │ 			return new FileUploadBuilder(rawData as any);
+  
+  i any disables many type checking rules. Its use should be avoided.
+  
+
+packages\builders\src\components\Components.ts:237:44 lint/suspicious/noExplicitAny ━━━━━━━━━━━━━━━━
+
+  ! Unexpected any. Specify a different type.
+  
+    235 │ 			return new LabelBuilder(rawData as any);
+    236 │ 		case ComponentType.FileUpload:
+  > 237 │ 			return new FileUploadBuilder(rawData as any);
+        │ 			                                        ^^^
+    238 │ 		default:
+    239 │ 			// This case can still occur if we get a newer unsupported component type
+  
+  i any disables many type checking rules. Its use should be avoided.
+  
+
+packages\builders\src\components\Components.ts:247:45 lint/suspicious/noExplicitAny ━━━━━━━━━━━━━━━━
+
+  ! Unexpected any. Specify a different type.
+  
+    245 │ 	switch (data.style) {
+    246 │ 		case ButtonStyle.Primary:
+  > 247 │ 			return new PrimaryButtonBuilder(data) as any;
+        │ 			                                         ^^^
+    248 │ 		case ButtonStyle.Secondary:
+    249 │ 			return new SecondaryButtonBuilder(data) as any;
+  
+  i any disables many type checking rules. Its use should be avoided.
+  
+
+packages\builders\src\components\Components.ts:249:47 lint/suspicious/noExplicitAny ━━━━━━━━━━━━━━━━
+
+  ! Unexpected any. Specify a different type.
+  
+    247 │ 			return new PrimaryButtonBuilder(data) as any;
+    248 │ 		case ButtonStyle.Secondary:
+  > 249 │ 			return new SecondaryButtonBuilder(data) as any;
+        │ 			                                           ^^^
+    250 │ 		case ButtonStyle.Success:
+    251 │ 			return new SuccessButtonBuilder(data) as any;
+  
+  i any disables many type checking rules. Its use should be avoided.
+  
+
+packages\builders\src\components\Components.ts:251:45 lint/suspicious/noExplicitAny ━━━━━━━━━━━━━━━━
+
+  ! Unexpected any. Specify a different type.
+  
+    249 │ 			return new SecondaryButtonBuilder(data) as any;
+    250 │ 		case ButtonStyle.Success:
+  > 251 │ 			return new SuccessButtonBuilder(data) as any;
+        │ 			                                         ^^^
+    252 │ 		case ButtonStyle.Danger:
+    253 │ 			return new DangerButtonBuilder(data) as any;
+  
+  i any disables many type checking rules. Its use should be avoided.
+  
+
+packages\builders\src\components\Components.ts:253:44 lint/suspicious/noExplicitAny ━━━━━━━━━━━━━━━━
+
+  ! Unexpected any. Specify a different type.
+  
+    251 │ 			return new SuccessButtonBuilder(data) as any;
+    252 │ 		case ButtonStyle.Danger:
+  > 253 │ 			return new DangerButtonBuilder(data) as any;
+        │ 			                                        ^^^
+    254 │ 		case ButtonStyle.Link:
+    255 │ 			return new LinkButtonBuilder(data) as any;
+  
+  i any disables many type checking rules. Its use should be avoided.
+  
+
+packages\builders\src\components\Components.ts:255:42 lint/suspicious/noExplicitAny ━━━━━━━━━━━━━━━━
+
+  ! Unexpected any. Specify a different type.
+  
+    253 │ 			return new DangerButtonBuilder(data) as any;
+    254 │ 		case ButtonStyle.Link:
+  > 255 │ 			return new LinkButtonBuilder(data) as any;
+        │ 			                                      ^^^
+    256 │ 		case ButtonStyle.Premium:
+    257 │ 			return new PremiumButtonBuilder(data) as any;
+  
+  i any disables many type checking rules. Its use should be avoided.
+  
+
+packages\builders\src\components\Components.ts:257:45 lint/suspicious/noExplicitAny ━━━━━━━━━━━━━━━━
+
+  ! Unexpected any. Specify a different type.
+  
+    255 │ 			return new LinkButtonBuilder(data) as any;
+    256 │ 		case ButtonStyle.Premium:
+  > 257 │ 			return new PremiumButtonBuilder(data) as any;
+        │ 			                                         ^^^
+    258 │ 		default:
+    259 │ 			// @ts-expect-error This case can still occur if we get a newer unsupported button style
+  
+  i any disables many type checking rules. Its use should be avoided.
+  
+
+packages\builders\src\components\button\ButtonBuilder.ts:37:17 lint/suspicious/noExplicitAny ━━━━━━━━━━
+
+  ! Unexpected any. Specify a different type.
+  
+    35 │ 	 */
+    36 │ 	public setCustomId(customId: string) {
+  > 37 │ 		(this.data as any).custom_id = customId;
+       │ 		              ^^^
+    38 │ 		return this;
+    39 │ 	}
+  
+  i any disables many type checking rules. Its use should be avoided.
+  
+
+packages\builders\src\components\button\ButtonBuilder.ts:47:17 lint/suspicious/noExplicitAny ━━━━━━━━━━
+
+  ! Unexpected any. Specify a different type.
+  
+    45 │ 	 */
+    46 │ 	public setStyle(style: ButtonStyle) {
+  > 47 │ 		(this.data as any).style = style;
+       │ 		              ^^^
+    48 │ 		return this;
+    49 │ 	}
+  
+  i any disables many type checking rules. Its use should be avoided.
+  
+
+packages\builders\src\components\button\ButtonBuilder.ts:67:17 lint/suspicious/noExplicitAny ━━━━━━━━━━
+
+  ! Unexpected any. Specify a different type.
+  
+    65 │ 	 */
+    66 │ 	public setSKUId(skuId: string) {
+  > 67 │ 		(this.data as any).sku_id = skuId;
+       │ 		              ^^^
+    68 │ 		return this;
+    69 │ 	}
+  
+  i any disables many type checking rules. Its use should be avoided.
+  
+
+packages\builders\src\components\button\ButtonBuilder.ts:57:17 lint/suspicious/noExplicitAny ━━━━━━━━━━
+
+  ! Unexpected any. Specify a different type.
+  
+    55 │ 	 */
+    56 │ 	public setURL(url: string) {
+  > 57 │ 		(this.data as any).url = url;
+       │ 		              ^^^
+    58 │ 		return this;
+    59 │ 	}
+  
+  i any disables many type checking rules. Its use should be avoided.
+  
+
+packages\builders\src\components\label\Label.ts:73:64 lint/suspicious/noExplicitAny ━━━━━━━━━━━━━━━━
+
+  ! Unexpected any. Specify a different type.
+  
+    71 │ 		this.data = {
+    72 │ 			...structuredClone(rest),
+  > 73 │ 			component: component ? (createComponentBuilder(component as any) as any) : undefined,
+       │ 			                                                            ^^^
+    74 │ 			type: ComponentType.Label,
+    75 │ 		};
+  
+  i any disables many type checking rules. Its use should be avoided.
+  
+
+packages\builders\src\components\label\Label.ts:73:72 lint/suspicious/noExplicitAny ━━━━━━━━━━━━━━━━
+
+  ! Unexpected any. Specify a different type.
+  
+    71 │ 		this.data = {
+    72 │ 			...structuredClone(rest),
+  > 73 │ 			component: component ? (createComponentBuilder(component as any) as any) : undefined,
+       │ 			                                                                    ^^^
+    74 │ 			type: ComponentType.Label,
+    75 │ 		};
+  
+  i any disables many type checking rules. Its use should be avoided.
+  
+
+packages\builders\src\components\v2\Section.ts:270:53 lint/suspicious/noExplicitAny ━━━━━━━━━━━━━━━━
+
+  ! Unexpected any. Specify a different type.
+  
+    268 │ 		if (accessory) {
+    269 │ 			console.log('DEBUG: Section.toJSON accessory:', accessory);
+  > 270 │ 			console.log('DEBUG: Constructor:', (accessory as any).constructor.name);
+        │ 			                                                 ^^^
+    271 │ 			console.log('DEBUG: Has toJSON?', 'toJSON' in accessory);
+    272 │ 			if ('toJSON' in accessory) {
+  
+  i any disables many type checking rules. Its use should be avoided.
+  
+
+packages\builders\src\components\v2\Section.ts:273:64 lint/suspicious/noExplicitAny ━━━━━━━━━━━━━━━━
+
+  ! Unexpected any. Specify a different type.
+  
+    271 │ 			console.log('DEBUG: Has toJSON?', 'toJSON' in accessory);
+    272 │ 			if ('toJSON' in accessory) {
+  > 273 │ 				console.log('DEBUG: calling toJSON result:', (accessory as any).toJSON(validationOverride));
+        │ 				                                                           ^^^
+    274 │ 			}
+    275 │ 		}
+  
+  i any disables many type checking rules. Its use should be avoided.
+  
+
+packages\builders\src\components\v2\Section.ts:278:20 lint/suspicious/noExplicitAny ━━━━━━━━━━━━━━━━
+
+  ! Unexpected any. Specify a different type.
+  
+    277 │ 		const accessoryData = accessory
+  > 278 │ 			? (accessory as any).toJSON
+        │ 			                ^^^
+    279 │ 				? (accessory as any).toJSON(validationOverride)
+    280 │ 				: accessory
+  
+  i any disables many type checking rules. Its use should be avoided.
+  
+
+packages\builders\src\components\v2\Section.ts:279:21 lint/suspicious/noExplicitAny ━━━━━━━━━━━━━━━━
+
+  ! Unexpected any. Specify a different type.
+  
+    277 │ 		const accessoryData = accessory
+    278 │ 			? (accessory as any).toJSON
+  > 279 │ 				? (accessory as any).toJSON(validationOverride)
+        │ 				                ^^^
+    280 │ 				: accessory
+    281 │ 			: undefined;
+  
+  i any disables many type checking rules. Its use should be avoided.
+  
+
+packages\builders\src\components\v2\TextDisplay.ts:63:13 lint/style/noNonNullAssertion ━━━━━━━━━━━━━
+
+  ! Forbidden non-null assertion.
+  
+    61 │ 		const data: APITextDisplayComponent = {
+    62 │ 			type: ComponentType.TextDisplay,
+  > 63 │ 			content: clone.content!,
+       │ 			         ^^^^^^^^^^^^^^
+    64 │ 		};
+    65 │ 
+  
+
+packages\builders\src\interactions\commands\chatInput\Assertions.ts:38:88 lint/suspicious/noExplicitAny ━━━━━━━━━━
+
+  ! Unexpected any. Specify a different type.
+  
+    36 │ const channelMixinOptionPredicate = z.object({
+    37 │ 	channel_types: z
+  > 38 │ 		.union(ApplicationCommandOptionAllowedChannelTypes.map((type) => z.literal(type)) as any)
+       │ 		                                                                                     ^^^
+    39 │ 		.array()
+    40 │ 		.optional(),
+  
+  i any disables many type checking rules. Its use should be avoided.
+  
+
+packages\builders\src\interactions\commands\chatInput\Assertions.ts:162:43 lint/suspicious/noExplicitAny ━━━━━━━━━━
+
+  ! Unexpected any. Specify a different type.
+  
+    160 │ 	type: z.literal(ApplicationCommandOptionType.Subcommand),
+    161 │ 	options: z
+  > 162 │ 		.array(z.union(basicOptionPredicates as any))
+        │ 		                                        ^^^
+    163 │ 		.max(25)
+    164 │ 		.optional(),
+  
+  i any disables many type checking rules. Its use should be avoided.
+  
+
+packages\builders\src\interactions\commands\chatInput\Assertions.ts:181:45 lint/suspicious/noExplicitAny ━━━━━━━━━━
+
+  ! Unexpected any. Specify a different type.
+  
+    179 │ 	options: z
+    180 │ 		.union([
+  > 181 │ 			z.array(z.union(basicOptionPredicates as any)).max(25),
+        │ 			                                         ^^^
+    182 │ 			z.array(z.union([chatInputCommandSubcommandPredicate, chatInputCommandSubcommandGroupPredicate])).max(25),
+    183 │ 		])
+  
+  i any disables many type checking rules. Its use should be avoided.
+  
+
+packages\builders\src\messages\Attachment.ts:112:32 lint/suspicious/noExplicitAny ━━━━━━━━━━━━━━━━━━
+
+  ! Unexpected any. Specify a different type.
+  
+    110 │ 	 */
+    111 │ 	public setFileData(data: Uint8Array | string): this {
+  > 112 │ 		this.fileData.data = data as any;
+        │ 		                             ^^^
+    113 │ 		return this;
+    114 │ 	}
+  
+  i any disables many type checking rules. Its use should be avoided.
+  
+
+packages\builders\src\messages\embed\Assertions.ts:63:42 lint/suspicious/noExplicitAny ━━━━━━━━━━━━━
+
+  ! Unexpected any. Specify a different type.
+  
+    61 │ 		},
+    62 │ 	)
+  > 63 │ 	.refine((embed) => embedLength(embed as any) <= 6_000, {
+       │ 	                                        ^^^
+    64 │ 		message: 'Embeds must not exceed 6000 characters in total.',
+    65 │ 	});
+  
+  i any disables many type checking rules. Its use should be avoided.
+  
+
+packages\builders\src\util\resolveBuilder.ts:9:50 lint/suspicious/noExplicitAny ━━━━━━━━━━━━━━━━━━━━
+
+  ! Unexpected any. Specify a different type.
+  
+     7 │  * @internal
+     8 │  */
+   > 9 │ function isBuilder<Builder extends JSONEncodable<any>>(
+       │                                                  ^^^
+    10 │ 	builder: unknown,
+    11 │ 	Constructor: new () => Builder,
+  
+  i any disables many type checking rules. Its use should be avoided.
+  
+
+packages\builders\src\util\resolveBuilder.ts:27:62 lint/suspicious/noExplicitAny ━━━━━━━━━━━━━━━━━━━
+
+  ! Unexpected any. Specify a different type.
+  
+    25 │  * @param Constructor - The constructor of the builder
+    26 │  */
+  > 27 │ export function resolveBuilder<Builder extends JSONEncodable<any>, BuilderData extends Record<PropertyKey, any>>(
+       │                                                              ^^^
+    28 │ 	builder: Builder | BuilderData | ((builder: Builder) => Builder),
+    29 │ 	Constructor: new (data?: BuilderData) => Builder,
+  
+  i any disables many type checking rules. Its use should be avoided.
+  
+
+packages\builders\src\util\resolveBuilder.ts:27:108 lint/suspicious/noExplicitAny ━━━━━━━━━━━━━━━━━━
+
+  ! Unexpected any. Specify a different type.
+  
+    25 │  * @param Constructor - The constructor of the builder
+    26 │  */
+  > 27 │ export function resolveBuilder<Builder extends JSONEncodable<any>, BuilderData extends Record<PropertyKey, any>>(
+       │                                                                                                            ^^^
+    28 │ 	builder: Builder | BuilderData | ((builder: Builder) => Builder),
+    29 │ 	Constructor: new (data?: BuilderData) => Builder,
+  
+  i any disables many type checking rules. Its use should be avoided.
+  
+
+packages\collection\src\collection.ts:39:29 lint/style/noNonNullAssertion ━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+  ! Forbidden non-null assertion.
+  
+    37 │ 	 */
+    38 │ 	public ensure(key: Key, defaultValueGenerator: (key: Key, collection: this) => Value): Value {
+  > 39 │ 		if (this.has(key)) return this.get(key)!;
+       │ 		                          ^^^^^^^^^^^^^^
+    40 │ 		if (typeof defaultValueGenerator !== 'function') throw new TypeError(`${defaultValueGenerator} is not a function`);
+    41 │ 		const defaultValue = defaultValueGenerator(key, this);
+  
+
+packages\collection\src\collection.ts:82:21 lint/style/noNonNullAssertion ━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+  ! Forbidden non-null assertion.
+  
+    80 │ 		const results: Value[] = new Array(amount);
+    81 │ 		for (let index = 0; index < amount; index++) {
+  > 82 │ 			results[index] = iter.next().value!;
+       │ 			                 ^^^^^^^^^^^^^^^^^^
+    83 │ 		}
+    84 │ 
+  
+
+packages\collection\src\collection.ts:105:21 lint/style/noNonNullAssertion ━━━━━━━━━━━━━━━━━━━━━━━━━
+
+  ! Forbidden non-null assertion.
+  
+    103 │ 		const results: Key[] = new Array(amount);
+    104 │ 		for (let index = 0; index < amount; index++) {
+  > 105 │ 			results[index] = iter.next().value!;
+        │ 			                 ^^^^^^^^^^^^^^^^^^
+    106 │ 		}
+    107 │ 
+  
+
+packages\core\scripts\check-routes.mts:23:18 lint/style/noNonNullAssertion ━━━━━━━━━━━━━━━━━━━━━━━━━
+
+  ! Forbidden non-null assertion.
+  
+    21 │ 	const routes = content.matchAll(/Routes\.([\w\d_]+)/g);
+    22 │ 	for (const route of routes) {
+  > 23 │ 		usedRoutes.add(route[1]!);
+       │ 		               ^^^^^^^^^
+    24 │ 	}
+    25 │ }
+  
+
+packages\core\scripts\find-returns-not-return-type.mts:11:22 lint/style/noNonNullAssertion ━━━━━━━━━━
+
+  ! Forbidden non-null assertion.
+  
+    10 │ 	for (const match of matches) {
+  > 11 │ 		const returnType = match.groups?.returnType!;
+       │ 		                   ^^^^^^^^^^^^^^^^^^^^^^^^^
+    12 │ 
+    13 │ 		if (!returnType.startsWith('REST') || !returnType.includes('Result')) {
+  
+
+packages\discord.js\src\client\Client.ts:185:76 lint/suspicious/noExplicitAny ━━━━━━━━━━━━━━━━━━━━━━
+
+  ! Unexpected any. Specify a different type.
+  
+    183 │ 			!process.env.SHARDING_MANAGER && !process.env.DISCORD_HYBRID_SHARDING
+    184 │ 				? null
+  > 185 │ 				: ShardClientUtil.singleton(this, process.env.SHARDING_MANAGER_MODE as any);
+        │ 				                                                                       ^^^
+    186 │ 		this.users = new UserManager(this, undefined as any);
+    187 │ 		this.guilds = new GuildManager(this, undefined as any);
+  
+  i any disables many type checking rules. Its use should be avoided.
+  
+
+packages\discord.js\src\client\Client.ts:720:69 lint/suspicious/noExplicitAny ━━━━━━━━━━━━━━━━━━━━━━
+
+  ! Unexpected any. Specify a different type.
+  
+    718 │ 		const id = this.guilds.resolveId(guild);
+    719 │ 		if (!id) throw new DiscordjsTypeError(ErrorCodes.InvalidType, 'guild', 'GuildResolvable');
+  > 720 │ 		const data = (await this.rest.get(Routes.guildWidgetJSON(id))) as any;
+        │ 		                                                                  ^^^
+    721 │ 		return new Widget(this, data);
+    722 │ 	}
+  
+  i any disables many type checking rules. Its use should be avoided.
+  
+
+packages\discord.js\src\client\Client.ts:745:52 lint/suspicious/noExplicitAny ━━━━━━━━━━━━━━━━━━━━━━
+
+  ! Unexpected any. Specify a different type.
+  
+    743 │ 	 * console.log(`Generated bot invite link: ${link}`);
+    744 │ 	 */
+  > 745 │ 	generateInvite(options: InviteGenerationOptions | any = {}) {
+        │ 	                                                  ^^^
+    746 │ 		if (typeof options !== 'object') throw new DiscordjsTypeError(ErrorCodes.InvalidType, 'options', 'object', true);
+    747 │ 		if (!this.application) throw new DiscordjsError(ErrorCodes.ClientNotReady, 'generate an invite link');
+  
+  i any disables many type checking rules. Its use should be avoided.
+  
+
+packages\discord.js\src\client\Client.ts:46:31 lint/suspicious/noExplicitAny ━━━━━━━━━━━━━━━━━━━━━━━
+
+  ! Unexpected any. Specify a different type.
+  
+    44 │ ];
+    45 │ 
+  > 46 │ export type GuildResolvable = any;
+       │                               ^^^
+    47 │ export type PermissionResolvable = any;
+    48 │ 
+  
+  i any disables many type checking rules. Its use should be avoided.
+  
+
+packages\discord.js\src\client\Client.ts:47:36 lint/suspicious/noExplicitAny ━━━━━━━━━━━━━━━━━━━━━━━
+
+  ! Unexpected any. Specify a different type.
+  
+    46 │ export type GuildResolvable = any;
+  > 47 │ export type PermissionResolvable = any;
+       │                                    ^^^
+    48 │ 
+    49 │ /**
+  
+  i any disables many type checking rules. Its use should be avoided.
+  
+
+packages\discord.js\src\client\Client.ts:85:17 lint/suspicious/noExplicitAny ━━━━━━━━━━━━━━━━━━━━━━━
+
+  ! Unexpected any. Specify a different type.
+  
+    84 │ export class Client extends AsyncEventEmitter {
+  > 85 │ 	public status: any;
+       │ 	               ^^^
+    86 │ 	public readyTimeout: any;
+    87 │ 	public options: any;
+  
+  i any disables many type checking rules. Its use should be avoided.
+  
+
+packages\discord.js\src\client\Client.ts:86:23 lint/suspicious/noExplicitAny ━━━━━━━━━━━━━━━━━━━━━━━
+
+  ! Unexpected any. Specify a different type.
+  
+    84 │ export class Client extends AsyncEventEmitter {
+    85 │ 	public status: any;
+  > 86 │ 	public readyTimeout: any;
+       │ 	                     ^^^
+    87 │ 	public options: any;
+    88 │ 	public rest: REST;
+  
+  i any disables many type checking rules. Its use should be avoided.
+  
+
+packages\discord.js\src\client\Client.ts:87:18 lint/suspicious/noExplicitAny ━━━━━━━━━━━━━━━━━━━━━━━
+
+  ! Unexpected any. Specify a different type.
+  
+    85 │ 	public status: any;
+    86 │ 	public readyTimeout: any;
+  > 87 │ 	public options: any;
+       │ 	                ^^^
+    88 │ 	public rest: REST;
+    89 │ 	public presence: ClientPresence;
+  
+  i any disables many type checking rules. Its use should be avoided.
+  
+
+packages\discord.js\src\client\Client.ts:105:30 lint/suspicious/noExplicitAny ━━━━━━━━━━━━━━━━━━━━━━
+
+  ! Unexpected any. Specify a different type.
+  
+    103 │ 	public token: string | null;
+    104 │ 	public expectedGuilds: Set<string>;
+  > 105 │ 	public incomingPacketQueue: any[];
+        │ 	                            ^^^
+    106 │ 
+    107 │ 	/**
+  
+  i any disables many type checking rules. Its use should be avoided.
+  
+
+packages\discord.js\src\client\Client.ts:110:23 lint/suspicious/noExplicitAny ━━━━━━━━━━━━━━━━━━━━━━
+
+  ! Unexpected any. Specify a different type.
+  
+    108 │ 	 * @param {any} options Options for the client
+    109 │ 	 */
+  > 110 │ 	constructor(options: any) {
+        │ 	                     ^^^
+    111 │ 		super();
+    112 │ 		this.token = null;
+  
+  i any disables many type checking rules. Its use should be avoided.
+  
+
+packages\discord.js\src\client\Client.ts:179:42 lint/suspicious/noExplicitAny ━━━━━━━━━━━━━━━━━━━━━━
+
+  ! Unexpected any. Specify a different type.
+  
+    177 │ 		this.presence = new ClientPresence(this, this.options.ws.initialPresence ?? this.options.presence);
+    178 │ 
+  > 179 │ 		this.ws = new WebSocketManager(this as any);
+        │ 		                                       ^^^
+    180 │ 		this.actions = new ActionsManager(this);
+    181 │ 		this.voice = new ClientVoiceManager(this);
+  
+  i any disables many type checking rules. Its use should be avoided.
+  
+
+packages\discord.js\src\client\Client.ts:186:51 lint/suspicious/noExplicitAny ━━━━━━━━━━━━━━━━━━━━━━
+
+  ! Unexpected any. Specify a different type.
+  
+    184 │ 				? null
+    185 │ 				: ShardClientUtil.singleton(this, process.env.SHARDING_MANAGER_MODE as any);
+  > 186 │ 		this.users = new UserManager(this, undefined as any);
+        │ 		                                                ^^^
+    187 │ 		this.guilds = new GuildManager(this, undefined as any);
+    188 │ 		this.channels = new ChannelManager(this, undefined as any);
+  
+  i any disables many type checking rules. Its use should be avoided.
+  
+
+packages\discord.js\src\client\Client.ts:187:53 lint/suspicious/noExplicitAny ━━━━━━━━━━━━━━━━━━━━━━
+
+  ! Unexpected any. Specify a different type.
+  
+    185 │ 				: ShardClientUtil.singleton(this, process.env.SHARDING_MANAGER_MODE as any);
+    186 │ 		this.users = new UserManager(this, undefined as any);
+  > 187 │ 		this.guilds = new GuildManager(this, undefined as any);
+        │ 		                                                  ^^^
+    188 │ 		this.channels = new ChannelManager(this, undefined as any);
+    189 │ 		this.sweepers = new Sweepers(this, this.options.sweepers);
+  
+  i any disables many type checking rules. Its use should be avoided.
+  
+
+packages\discord.js\src\client\Client.ts:188:57 lint/suspicious/noExplicitAny ━━━━━━━━━━━━━━━━━━━━━━
+
+  ! Unexpected any. Specify a different type.
+  
+    186 │ 		this.users = new UserManager(this, undefined as any);
+    187 │ 		this.guilds = new GuildManager(this, undefined as any);
+  > 188 │ 		this.channels = new ChannelManager(this, undefined as any);
+        │ 		                                                      ^^^
+    189 │ 		this.sweepers = new Sweepers(this, this.options.sweepers);
+    190 │ 
+  
+  i any disables many type checking rules. Its use should be avoided.
+  
+
+packages\discord.js\src\client\Client.ts:435:30 lint/suspicious/noExplicitAny ━━━━━━━━━━━━━━━━━━━━━━
+
+  ! Unexpected any. Specify a different type.
+  
+    433 │ 	 * @private
+    434 │ 	 */
+  > 435 │ 	async _handlePacket(packet: any, shardId: number) {
+        │ 	                            ^^^
+    436 │ 		// Emit raw packet for connectors (Bunraku/Shoukaku) that need VOICE_SERVER_UPDATE / VOICE_STATE_UPDATE
+    437 │ 		this.emit('raw', packet);
+  
+  i any disables many type checking rules. Its use should be avoided.
+  
+
+packages\discord.js\src\client\Client.ts:477:27 lint/suspicious/noExplicitAny ━━━━━━━━━━━━━━━━━━━━━━
+
+  ! Unexpected any. Specify a different type.
+  
+    475 │ 	 * @private
+    476 │ 	 */
+  > 477 │ 	async _broadcast(packet: any) {
+        │ 	                         ^^^
+    478 │ 		const shardIds = await this.ws.getShardIds();
+    479 │ 		return Promise.all(shardIds.map((shardId) => this.ws.send(shardId, packet)));
+  
+  i any disables many type checking rules. Its use should be avoided.
+  
+
+packages\discord.js\src\client\Client.ts:568:30 lint/suspicious/noExplicitAny ━━━━━━━━━━━━━━━━━━━━━━
+
+  ! Unexpected any. Specify a different type.
+  
+    566 │ 		await this.ws.destroy();
+    567 │ 		this.token = null;
+  > 568 │ 		this.rest.setToken(null as any);
+        │ 		                           ^^^
+    569 │ 	}
+    570 │ 
+  
+  i any disables many type checking rules. Its use should be avoided.
+  
+
+packages\discord.js\src\client\Client.ts:582:28 lint/suspicious/noExplicitAny ━━━━━━━━━━━━━━━━━━━━━━
+
+  ! Unexpected any. Specify a different type.
+  
+    580 │ 	 *   .catch(console.error);
+    581 │ 	 */
+  > 582 │ 	async fetchInvite(invite: any, { withCounts, guildScheduledEventId }: ClientFetchInviteOptions = {}) {
+        │ 	                          ^^^
+    583 │ 		const code = resolveInviteCode(invite);
+    584 │ 
+  
+  i any disables many type checking rules. Its use should be avoided.
+  
+
+packages\discord.js\src\client\Client.ts:622:99 lint/suspicious/noExplicitAny ━━━━━━━━━━━━━━━━━━━━━━
+
+  ! Unexpected any. Specify a different type.
+  
+    620 │ 	 */
+    621 │ 	async fetchWebhook(id: string, token?: string) {
+  > 622 │ 		const data = (await this.rest.get(Routes.webhook(id, token), { auth: token === undefined })) as any;
+        │ 		                                                                                                ^^^
+    623 │ 		return new Webhook(this, { token, ...data });
+    624 │ 	}
+  
+  i any disables many type checking rules. Its use should be avoided.
+  
+
+packages\discord.js\src\client\Client.ts:636:70 lint/suspicious/noExplicitAny ━━━━━━━━━━━━━━━━━━━━━━
+
+  ! Unexpected any. Specify a different type.
+  
+    634 │ 	 */
+    635 │ 	async fetchVoiceRegions() {
+  > 636 │ 		const apiRegions = (await this.rest.get(Routes.voiceRegions())) as any[];
+        │ 		                                                                   ^^^
+    637 │ 		const regions = new Collection();
+    638 │ 		for (const region of apiRegions) regions.set(region.id, new VoiceRegion(region));
+  
+  i any disables many type checking rules. Its use should be avoided.
+  
+
+packages\discord.js\src\client\Client.ts:674:75 lint/suspicious/noExplicitAny ━━━━━━━━━━━━━━━━━━━━━━
+
+  ! Unexpected any. Specify a different type.
+  
+    672 │ 	async fetchStickerPacks({ packId }: StickerPackFetchOptions = {}) {
+    673 │ 		if (packId) {
+  > 674 │ 			const innerData = (await this.rest.get(Routes.stickerPack(packId))) as any;
+        │ 			                                                                       ^^^
+    675 │ 			return new StickerPack(this, innerData);
+    676 │ 		}
+  
+  i any disables many type checking rules. Its use should be avoided.
+  
+
+packages\discord.js\src\client\Client.ts:678:64 lint/suspicious/noExplicitAny ━━━━━━━━━━━━━━━━━━━━━━
+
+  ! Unexpected any. Specify a different type.
+  
+    676 │ 		}
+    677 │ 
+  > 678 │ 		const data = (await this.rest.get(Routes.stickerPacks())) as any;
+        │ 		                                                             ^^^
+    679 │ 		return new Collection(
+    680 │ 			data.sticker_packs.map((stickerPack: any) => [stickerPack.id, new StickerPack(this, stickerPack)]),
+  
+  i any disables many type checking rules. Its use should be avoided.
+  
+
+packages\discord.js\src\client\Client.ts:680:41 lint/suspicious/noExplicitAny ━━━━━━━━━━━━━━━━━━━━━━
+
+  ! Unexpected any. Specify a different type.
+  
+    678 │ 		const data = (await this.rest.get(Routes.stickerPacks())) as any;
+    679 │ 		return new Collection(
+  > 680 │ 			data.sticker_packs.map((stickerPack: any) => [stickerPack.id, new StickerPack(this, stickerPack)]),
+        │ 			                                     ^^^
+    681 │ 		);
+    682 │ 	}
+  
+  i any disables many type checking rules. Its use should be avoided.
+  
+
+packages\discord.js\src\client\Client.ts:694:75 lint/suspicious/noExplicitAny ━━━━━━━━━━━━━━━━━━━━━━
+
+  ! Unexpected any. Specify a different type.
+  
+    692 │ 	 */
+    693 │ 	async fetchDefaultSoundboardSounds() {
+  > 694 │ 		const data = (await this.rest.get(Routes.soundboardDefaultSounds())) as any;
+        │ 		                                                                        ^^^
+    695 │ 		return new Collection(data.map((sound: any) => [sound.sound_id, new SoundboardSound(this, sound)]));
+    696 │ 	}
+  
+  i any disables many type checking rules. Its use should be avoided.
+  
+
+packages\discord.js\src\client\Client.ts:695:42 lint/suspicious/noExplicitAny ━━━━━━━━━━━━━━━━━━━━━━
+
+  ! Unexpected any. Specify a different type.
+  
+    693 │ 	async fetchDefaultSoundboardSounds() {
+    694 │ 		const data = (await this.rest.get(Routes.soundboardDefaultSounds())) as any;
+  > 695 │ 		return new Collection(data.map((sound: any) => [sound.sound_id, new SoundboardSound(this, sound)]));
+        │ 		                                       ^^^
+    696 │ 	}
+    697 │ 
+  
+  i any disables many type checking rules. Its use should be avoided.
+  
+
+packages\discord.js\src\client\Client.ts:704:33 lint/suspicious/noExplicitAny ━━━━━━━━━━━━━━━━━━━━━━
+
+  ! Unexpected any. Specify a different type.
+  
+    702 │ 	 * @returns {Promise<GuildPreview>}
+    703 │ 	 */
+  > 704 │ 	async fetchGuildPreview(guild: any) {
+        │ 	                               ^^^
+    705 │ 		const id = this.guilds.resolveId(guild);
+    706 │ 		if (!id) throw new DiscordjsTypeError(ErrorCodes.InvalidType, 'guild', 'GuildResolvable');
+  
+  i any disables many type checking rules. Its use should be avoided.
+  
+
+packages\discord.js\src\client\Client.ts:707:66 lint/suspicious/noExplicitAny ━━━━━━━━━━━━━━━━━━━━━━
+
+  ! Unexpected any. Specify a different type.
+  
+    705 │ 		const id = this.guilds.resolveId(guild);
+    706 │ 		if (!id) throw new DiscordjsTypeError(ErrorCodes.InvalidType, 'guild', 'GuildResolvable');
+  > 707 │ 		const data = (await this.rest.get(Routes.guildPreview(id))) as any;
+        │ 		                                                               ^^^
+    708 │ 		return new GuildPreview(this, data);
+    709 │ 	}
+  
+  i any disables many type checking rules. Its use should be avoided.
+  
+
+packages\discord.js\src\client\Client.ts:717:32 lint/suspicious/noExplicitAny ━━━━━━━━━━━━━━━━━━━━━━
+
+  ! Unexpected any. Specify a different type.
+  
+    715 │ 	 * @returns {Promise<Widget>}
+    716 │ 	 */
+  > 717 │ 	async fetchGuildWidget(guild: any) {
+        │ 	                              ^^^
+    718 │ 		const id = this.guilds.resolveId(guild);
+    719 │ 		if (!id) throw new DiscordjsTypeError(ErrorCodes.InvalidType, 'guild', 'GuildResolvable');
+  
+  i any disables many type checking rules. Its use should be avoided.
+  
+
+packages\discord.js\src\client\actions\Action.ts:136:22 lint/suspicious/noExplicitAny ━━━━━━━━━━━━━━
+
+  ! Unexpected any. Specify a different type.
+  
+    134 │ 	}
+    135 │ 
+  > 136 │ 	getThreadMember(id: any, manager: any) {
+        │ 	                    ^^^
+    137 │ 		return this.getPayload({ user_id: id }, manager, id, Partials.ThreadMember, false);
+    138 │ 	}
+  
+  i any disables many type checking rules. Its use should be avoided.
+  
+
+packages\discord.js\src\client\actions\Action.ts:86:46 lint/suspicious/noExplicitAny ━━━━━━━━━━━━━━━
+
+  ! Unexpected any. Specify a different type.
+  
+    84 │ 	}
+    85 │ 
+  > 86 │ 	getReaction(data: any, message: any, user?: any) {
+       │ 	                                            ^^^
+    87 │ 		const id = data.emoji.id ?? decodeURIComponent(data.emoji.name);
+    88 │ 		return this.getPayload(
+  
+  i any disables many type checking rules. Its use should be avoided.
+  
+
+packages\discord.js\src\client\actions\Action.ts:101:18 lint/suspicious/noExplicitAny ━━━━━━━━━━━━━━
+
+  ! Unexpected any. Specify a different type.
+  
+     99 │ 	}
+    100 │ 
+  > 101 │ 	getMember(data: any, guild: any) {
+        │ 	                ^^^
+    102 │ 		return this.getPayload(data, guild.members, data.user.id, Partials.GuildMember, undefined);
+    103 │ 	}
+  
+  i any disables many type checking rules. Its use should be avoided.
+  
+
+packages\discord.js\src\client\actions\Action.ts:101:30 lint/suspicious/noExplicitAny ━━━━━━━━━━━━━━
+
+  ! Unexpected any. Specify a different type.
+  
+     99 │ 	}
+    100 │ 
+  > 101 │ 	getMember(data: any, guild: any) {
+        │ 	                            ^^^
+    102 │ 		return this.getPayload(data, guild.members, data.user.id, Partials.GuildMember, undefined);
+    103 │ 	}
+  
+  i any disables many type checking rules. Its use should be avoided.
+  
+
+packages\discord.js\src\client\actions\Action.ts:105:16 lint/suspicious/noExplicitAny ━━━━━━━━━━━━━━
+
+  ! Unexpected any. Specify a different type.
+  
+    103 │ 	}
+    104 │ 
+  > 105 │ 	getUser(data: any) {
+        │ 	              ^^^
+    106 │ 		const id = data.user_id;
+    107 │ 		return (
+  
+  i any disables many type checking rules. Its use should be avoided.
+  
+
+packages\discord.js\src\client\actions\Action.ts:112:26 lint/suspicious/noExplicitAny ━━━━━━━━━━━━━━
+
+  ! Unexpected any. Specify a different type.
+  
+    110 │ 	}
+    111 │ 
+  > 112 │ 	getUserFromMember(data: any) {
+        │ 	                        ^^^
+    113 │ 		if (data.guild_id && data.member?.user) {
+    114 │ 			const guild = this.client.guilds.cache.get(data.guild_id);
+  
+  i any disables many type checking rules. Its use should be avoided.
+  
+
+packages\discord.js\src\client\actions\Action.ts:125:26 lint/suspicious/noExplicitAny ━━━━━━━━━━━━━━
+
+  ! Unexpected any. Specify a different type.
+  
+    123 │ 	}
+    124 │ 
+  > 125 │ 	getScheduledEvent(data: any, guild: any) {
+        │ 	                        ^^^
+    126 │ 		const id = data.guild_scheduled_event_id ?? data.id;
+    127 │ 		return this.getPayload(
+  
+  i any disables many type checking rules. Its use should be avoided.
+  
+
+packages\discord.js\src\client\actions\Action.ts:125:38 lint/suspicious/noExplicitAny ━━━━━━━━━━━━━━
+
+  ! Unexpected any. Specify a different type.
+  
+    123 │ 	}
+    124 │ 
+  > 125 │ 	getScheduledEvent(data: any, guild: any) {
+        │ 	                                    ^^^
+    126 │ 		const id = data.guild_scheduled_event_id ?? data.id;
+    127 │ 		return this.getPayload(
+  
+  i any disables many type checking rules. Its use should be avoided.
+  
+
+packages\discord.js\src\client\actions\Action.ts:136:36 lint/suspicious/noExplicitAny ━━━━━━━━━━━━━━
+
+  ! Unexpected any. Specify a different type.
+  
+    134 │ 	}
+    135 │ 
+  > 136 │ 	getThreadMember(id: any, manager: any) {
+        │ 	                                  ^^^
+    137 │ 		return this.getPayload({ user_id: id }, manager, id, Partials.ThreadMember, false);
+    138 │ 	}
+  
+  i any disables many type checking rules. Its use should be avoided.
+  
+
+packages\discord.js\src\client\actions\Action.ts:140:27 lint/suspicious/noExplicitAny ━━━━━━━━━━━━━━
+
+  ! Unexpected any. Specify a different type.
+  
+    138 │ 	}
+    139 │ 
+  > 140 │ 	getSoundboardSound(data: any, guild: any) {
+        │ 	                         ^^^
+    141 │ 		return this.getPayload(data, guild.soundboardSounds, data.sound_id, Partials.SoundboardSound, undefined);
+    142 │ 	}
+  
+  i any disables many type checking rules. Its use should be avoided.
+  
+
+packages\discord.js\src\client\actions\Action.ts:140:39 lint/suspicious/noExplicitAny ━━━━━━━━━━━━━━
+
+  ! Unexpected any. Specify a different type.
+  
+    138 │ 	}
+    139 │ 
+  > 140 │ 	getSoundboardSound(data: any, guild: any) {
+        │ 	                                     ^^^
+    141 │ 		return this.getPayload(data, guild.soundboardSounds, data.sound_id, Partials.SoundboardSound, undefined);
+    142 │ 	}
+  
+  i any disables many type checking rules. Its use should be avoided.
+  
+
+packages\discord.js\src\client\actions\Action.ts:144:27 lint/suspicious/noExplicitAny ━━━━━━━━━━━━━━
+
+  ! Unexpected any. Specify a different type.
+  
+    142 │ 	}
+    143 │ 
+  > 144 │ 	spreadInjectedData(data: any) {
+        │ 	                         ^^^
+    145 │ 		return Object.fromEntries(Object.getOwnPropertySymbols(data).map((symbol) => [symbol, data[symbol]]));
+    146 │ 	}
+  
+  i any disables many type checking rules. Its use should be avoided.
+  
+
+packages\discord.js\src\client\actions\Action.ts:25:18 lint/suspicious/noExplicitAny ━━━━━━━━━━━━━━━
+
+  ! Unexpected any. Specify a different type.
+  
+    23 │ 	}
+    24 │ 
+  > 25 │ 	handle(...data: any[]) {
+       │ 	                ^^^
+    26 │ 		return data[0];
+    27 │ 	}
+  
+  i any disables many type checking rules. Its use should be avoided.
+  
+
+packages\discord.js\src\client\actions\Action.ts:29:19 lint/suspicious/noExplicitAny ━━━━━━━━━━━━━━━
+
+  ! Unexpected any. Specify a different type.
+  
+    27 │ 	}
+    28 │ 
+  > 29 │ 	getPayload(data: any, manager: any, id: any, partialType: any, cache?: any) {
+       │ 	                 ^^^
+    30 │ 		return this.client.options.partials.includes(partialType) ? manager._add(data, cache) : manager.cache.get(id);
+    31 │ 	}
+  
+  i any disables many type checking rules. Its use should be avoided.
+  
+
+packages\discord.js\src\client\actions\Action.ts:29:33 lint/suspicious/noExplicitAny ━━━━━━━━━━━━━━━
+
+  ! Unexpected any. Specify a different type.
+  
+    27 │ 	}
+    28 │ 
+  > 29 │ 	getPayload(data: any, manager: any, id: any, partialType: any, cache?: any) {
+       │ 	                               ^^^
+    30 │ 		return this.client.options.partials.includes(partialType) ? manager._add(data, cache) : manager.cache.get(id);
+    31 │ 	}
+  
+  i any disables many type checking rules. Its use should be avoided.
+  
+
+packages\discord.js\src\client\actions\Action.ts:29:42 lint/suspicious/noExplicitAny ━━━━━━━━━━━━━━━
+
+  ! Unexpected any. Specify a different type.
+  
+    27 │ 	}
+    28 │ 
+  > 29 │ 	getPayload(data: any, manager: any, id: any, partialType: any, cache?: any) {
+       │ 	                                        ^^^
+    30 │ 		return this.client.options.partials.includes(partialType) ? manager._add(data, cache) : manager.cache.get(id);
+    31 │ 	}
+  
+  i any disables many type checking rules. Its use should be avoided.
+  
+
+packages\discord.js\src\client\actions\Action.ts:29:60 lint/suspicious/noExplicitAny ━━━━━━━━━━━━━━━
+
+  ! Unexpected any. Specify a different type.
+  
+    27 │ 	}
+    28 │ 
+  > 29 │ 	getPayload(data: any, manager: any, id: any, partialType: any, cache?: any) {
+       │ 	                                                          ^^^
+    30 │ 		return this.client.options.partials.includes(partialType) ? manager._add(data, cache) : manager.cache.get(id);
+    31 │ 	}
+  
+  i any disables many type checking rules. Its use should be avoided.
+  
+
+packages\discord.js\src\client\actions\Action.ts:29:73 lint/suspicious/noExplicitAny ━━━━━━━━━━━━━━━
+
+  ! Unexpected any. Specify a different type.
+  
+    27 │ 	}
+    28 │ 
+  > 29 │ 	getPayload(data: any, manager: any, id: any, partialType: any, cache?: any) {
+       │ 	                                                                       ^^^
+    30 │ 		return this.client.options.partials.includes(partialType) ? manager._add(data, cache) : manager.cache.get(id);
+    31 │ 	}
+  
+  i any disables many type checking rules. Its use should be avoided.
+  
+
+packages\discord.js\src\client\actions\Action.ts:33:19 lint/suspicious/noExplicitAny ━━━━━━━━━━━━━━━
+
+  ! Unexpected any. Specify a different type.
+  
+    31 │ 	}
+    32 │ 
+  > 33 │ 	getChannel(data: any) {
+       │ 	                 ^^^
+    34 │ 		const payloadData: Record<string, any> = {};
+    35 │ 		const id = data.channel_id ?? data.id;
+  
+  i any disables many type checking rules. Its use should be avoided.
+  
+
+packages\discord.js\src\client\actions\Action.ts:34:37 lint/suspicious/noExplicitAny ━━━━━━━━━━━━━━━
+
+  ! Unexpected any. Specify a different type.
+  
+    33 │ 	getChannel(data: any) {
+  > 34 │ 		const payloadData: Record<string, any> = {};
+       │ 		                                  ^^^
+    35 │ 		const id = data.channel_id ?? data.id;
+    36 │ 
+  
+  i any disables many type checking rules. Its use should be avoided.
+  
+
+packages\discord.js\src\client\actions\Action.ts:51:19 lint/suspicious/noExplicitAny ━━━━━━━━━━━━━━━
+
+  ! Unexpected any. Specify a different type.
+  
+    49 │ 	}
+    50 │ 
+  > 51 │ 	getMessage(data: any, channel: any, cache?: any) {
+       │ 	                 ^^^
+    52 │ 		const id = data.message_id ?? data.id;
+    53 │ 		return (
+  
+  i any disables many type checking rules. Its use should be avoided.
+  
+
+packages\discord.js\src\client\actions\Action.ts:51:33 lint/suspicious/noExplicitAny ━━━━━━━━━━━━━━━
+
+  ! Unexpected any. Specify a different type.
+  
+    49 │ 	}
+    50 │ 
+  > 51 │ 	getMessage(data: any, channel: any, cache?: any) {
+       │ 	                               ^^^
+    52 │ 		const id = data.message_id ?? data.id;
+    53 │ 		return (
+  
+  i any disables many type checking rules. Its use should be avoided.
+  
+
+packages\discord.js\src\client\actions\Action.ts:51:46 lint/suspicious/noExplicitAny ━━━━━━━━━━━━━━━
+
+  ! Unexpected any. Specify a different type.
+  
+    49 │ 	}
+    50 │ 
+  > 51 │ 	getMessage(data: any, channel: any, cache?: any) {
+       │ 	                                            ^^^
+    52 │ 		const id = data.message_id ?? data.id;
+    53 │ 		return (
+  
+  i any disables many type checking rules. Its use should be avoided.
+  
+
+packages\discord.js\src\client\actions\Action.ts:69:16 lint/suspicious/noExplicitAny ━━━━━━━━━━━━━━━
+
+  ! Unexpected any. Specify a different type.
+  
+    67 │ 	}
+    68 │ 
+  > 69 │ 	getPoll(data: any, message: any, channel: any) {
+       │ 	              ^^^
+    70 │ 		const includePollPartial = this.client.options.partials.includes(Partials.Poll);
+    71 │ 		const includePollAnswerPartial = this.client.options.partials.includes(Partials.PollAnswer);
+  
+  i any disables many type checking rules. Its use should be avoided.
+  
+
+packages\discord.js\src\client\actions\Action.ts:69:30 lint/suspicious/noExplicitAny ━━━━━━━━━━━━━━━
+
+  ! Unexpected any. Specify a different type.
+  
+    67 │ 	}
+    68 │ 
+  > 69 │ 	getPoll(data: any, message: any, channel: any) {
+       │ 	                            ^^^
+    70 │ 		const includePollPartial = this.client.options.partials.includes(Partials.Poll);
+    71 │ 		const includePollAnswerPartial = this.client.options.partials.includes(Partials.PollAnswer);
+  
+  i any disables many type checking rules. Its use should be avoided.
+  
+
+packages\discord.js\src\client\actions\Action.ts:69:44 lint/suspicious/noExplicitAny ━━━━━━━━━━━━━━━
+
+  ! Unexpected any. Specify a different type.
+  
+    67 │ 	}
+    68 │ 
+  > 69 │ 	getPoll(data: any, message: any, channel: any) {
+       │ 	                                          ^^^
+    70 │ 		const includePollPartial = this.client.options.partials.includes(Partials.Poll);
+    71 │ 		const includePollAnswerPartial = this.client.options.partials.includes(Partials.PollAnswer);
+  
+  i any disables many type checking rules. Its use should be avoided.
+  
+
+packages\discord.js\src\client\actions\Action.ts:86:20 lint/suspicious/noExplicitAny ━━━━━━━━━━━━━━━
+
+  ! Unexpected any. Specify a different type.
+  
+    84 │ 	}
+    85 │ 
+  > 86 │ 	getReaction(data: any, message: any, user?: any) {
+       │ 	                  ^^^
+    87 │ 		const id = data.emoji.id ?? decodeURIComponent(data.emoji.name);
+    88 │ 		return this.getPayload(
+  
+  i any disables many type checking rules. Its use should be avoided.
+  
+
+packages\discord.js\src\client\actions\Action.ts:86:34 lint/suspicious/noExplicitAny ━━━━━━━━━━━━━━━
+
+  ! Unexpected any. Specify a different type.
+  
+    84 │ 	}
+    85 │ 
+  > 86 │ 	getReaction(data: any, message: any, user?: any) {
+       │ 	                                ^^^
+    87 │ 		const id = data.emoji.id ?? decodeURIComponent(data.emoji.name);
+    88 │ 		return this.getPayload(
+  
+  i any disables many type checking rules. Its use should be avoided.
+  
+
+packages\discord.js\src\client\actions\ActionsManager.ts:43:17 lint/suspicious/noExplicitAny ━━━━━━━━━━
+
+  ! Unexpected any. Specify a different type.
+  
+    42 │ export class ActionsManager {
+  > 43 │ 	public client: any;
+       │ 	               ^^^
+    44 │ 	public ChannelCreate: ChannelCreateAction;
+    45 │ 
+  
+  i any disables many type checking rules. Its use should be avoided.
+  
+
+packages\discord.js\src\client\actions\ActionsManager.ts:94:22 lint/suspicious/noExplicitAny ━━━━━━━━━━
+
+  ! Unexpected any. Specify a different type.
+  
+    92 │ 	injectedMessage = Symbol('djs.actions.injectedMessage');
+    93 │ 
+  > 94 │ 	constructor(client: any) {
+       │ 	                    ^^^
+    95 │ 		this.client = client;
+    96 │ 
+  
+  i any disables many type checking rules. Its use should be avoided.
+  
+
+packages\discord.js\src\client\actions\ChannelCreate.ts:5:24 lint/suspicious/noExplicitAny ━━━━━━━━━━
+
+  ! Unexpected any. Specify a different type.
+  
+    4 │ export class ChannelCreateAction extends Action {
+  > 5 │ 	override handle(data: any) {
+      │ 	                      ^^^
+    6 │ 		const client = this.client;
+    7 │ 		const existing = client.channels.cache.has(data.id);
+  
+  i any disables many type checking rules. Its use should be avoided.
+  
+
+packages\discord.js\src\client\actions\ChannelDelete.ts:5:24 lint/suspicious/noExplicitAny ━━━━━━━━━━
+
+  ! Unexpected any. Specify a different type.
+  
+    4 │ export class ChannelDeleteAction extends Action {
+  > 5 │ 	override handle(data: any) {
+      │ 	                      ^^^
+    6 │ 		const client = this.client;
+    7 │ 		const channel = client.channels.cache.get(data.id);
+  
+  i any disables many type checking rules. Its use should be avoided.
+  
+
+packages\discord.js\src\client\actions\ChannelUpdate.ts:5:24 lint/suspicious/noExplicitAny ━━━━━━━━━━
+
+  ! Unexpected any. Specify a different type.
+  
+    4 │ export class ChannelUpdateAction extends Action {
+  > 5 │ 	override handle(data: any) {
+      │ 	                      ^^^
+    6 │ 		const client = this.client;
+    7 │ 		let channel = client.channels.cache.get(data.id);
+  
+  i any disables many type checking rules. Its use should be avoided.
+  
+
+packages\discord.js\src\client\actions\GuildChannelsPositionUpdate.ts:4:24 lint/suspicious/noExplicitAny ━━━━━━━━━━
+
+  ! Unexpected any. Specify a different type.
+  
+    3 │ export class GuildChannelsPositionUpdateAction extends Action {
+  > 4 │ 	override handle(data: any) {
+      │ 	                      ^^^
+    5 │ 		const client = this.client;
+    6 │ 
+  
+  i any disables many type checking rules. Its use should be avoided.
+  
+
+packages\discord.js\src\client\actions\GuildEmojiCreate.ts:5:25 lint/suspicious/noExplicitAny ━━━━━━━━━━
+
+  ! Unexpected any. Specify a different type.
+  
+    4 │ export class GuildEmojiCreateAction extends Action {
+  > 5 │ 	override handle(guild: any, createdEmoji: any) {
+      │ 	                       ^^^
+    6 │ 		const already = guild.emojis.cache.has(createdEmoji.id);
+    7 │ 		const emoji = guild.emojis._add(createdEmoji);
+  
+  i any disables many type checking rules. Its use should be avoided.
+  
+
+packages\discord.js\src\client\actions\GuildEmojiCreate.ts:5:44 lint/suspicious/noExplicitAny ━━━━━━━━━━
+
+  ! Unexpected any. Specify a different type.
+  
+    4 │ export class GuildEmojiCreateAction extends Action {
+  > 5 │ 	override handle(guild: any, createdEmoji: any) {
+      │ 	                                          ^^^
+    6 │ 		const already = guild.emojis.cache.has(createdEmoji.id);
+    7 │ 		const emoji = guild.emojis._add(createdEmoji);
+  
+  i any disables many type checking rules. Its use should be avoided.
+  
+
+packages\discord.js\src\client\actions\GuildEmojiDelete.ts:5:25 lint/suspicious/noExplicitAny ━━━━━━━━━━
+
+  ! Unexpected any. Specify a different type.
+  
+    4 │ export class GuildEmojiDeleteAction extends Action {
+  > 5 │ 	override handle(emoji: any) {
+      │ 	                       ^^^
+    6 │ 		emoji.guild.emojis.cache.delete(emoji.id);
+    7 │ 		/**
+  
+  i any disables many type checking rules. Its use should be avoided.
+  
+
+packages\discord.js\src\client\actions\GuildEmojiUpdate.ts:5:27 lint/suspicious/noExplicitAny ━━━━━━━━━━
+
+  ! Unexpected any. Specify a different type.
+  
+    4 │ export class GuildEmojiUpdateAction extends Action {
+  > 5 │ 	override handle(current: any, data: any) {
+      │ 	                         ^^^
+    6 │ 		const old = current._update(data);
+    7 │ 		/**
+  
+  i any disables many type checking rules. Its use should be avoided.
+  
+
+packages\discord.js\src\client\actions\GuildEmojiUpdate.ts:5:38 lint/suspicious/noExplicitAny ━━━━━━━━━━
+
+  ! Unexpected any. Specify a different type.
+  
+    4 │ export class GuildEmojiUpdateAction extends Action {
+  > 5 │ 	override handle(current: any, data: any) {
+      │ 	                                    ^^^
+    6 │ 		const old = current._update(data);
+    7 │ 		/**
+  
+  i any disables many type checking rules. Its use should be avoided.
+  
+
+packages\discord.js\src\client\actions\GuildEmojisUpdate.ts:4:24 lint/suspicious/noExplicitAny ━━━━━━━━━━
+
+  ! Unexpected any. Specify a different type.
+  
+    3 │ export class GuildEmojisUpdateAction extends Action {
+  > 4 │ 	override handle(data: any) {
+      │ 	                      ^^^
+    5 │ 		const guild = this.client.guilds.cache.get(data.guild_id);
+    6 │ 		if (!guild?.emojis) return;
+  
+  i any disables many type checking rules. Its use should be avoided.
+  
+
+packages\discord.js\src\client\actions\GuildMemberRemove.ts:5:24 lint/suspicious/noExplicitAny ━━━━━━━━━━
+
+  ! Unexpected any. Specify a different type.
+  
+    4 │ export class GuildMemberRemoveAction extends Action {
+  > 5 │ 	override handle(data: any) {
+      │ 	                      ^^^
+    6 │ 		const client = this.client;
+    7 │ 		const guild = client.guilds.cache.get(data.guild_id);
+  
+  i any disables many type checking rules. Its use should be avoided.
+  
+
+packages\discord.js\src\client\actions\GuildMemberUpdate.ts:5:24 lint/suspicious/noExplicitAny ━━━━━━━━━━
+
+  ! Unexpected any. Specify a different type.
+  
+    4 │ export class GuildMemberUpdateAction extends Action {
+  > 5 │ 	override handle(data: any) {
+      │ 	                      ^^^
+    6 │ 		const { client } = this;
+    7 │ 		if (data.user.username) {
+  
+  i any disables many type checking rules. Its use should be avoided.
+  
+
+packages\discord.js\src\client\actions\GuildRoleCreate.ts:5:24 lint/suspicious/noExplicitAny ━━━━━━━━━━
+
+  ! Unexpected any. Specify a different type.
+  
+    4 │ export class GuildRoleCreateAction extends Action {
+  > 5 │ 	override handle(data: any) {
+      │ 	                      ^^^
+    6 │ 		const client = this.client;
+    7 │ 		const guild = client.guilds.cache.get(data.guild_id);
+  
+  i any disables many type checking rules. Its use should be avoided.
+  
+
+packages\discord.js\src\client\actions\GuildRoleDelete.ts:5:24 lint/suspicious/noExplicitAny ━━━━━━━━━━
+
+  ! Unexpected any. Specify a different type.
+  
+    4 │ export class GuildRoleDeleteAction extends Action {
+  > 5 │ 	override handle(data: any) {
+      │ 	                      ^^^
+    6 │ 		const client = this.client;
+    7 │ 		const guild = client.guilds.cache.get(data.guild_id);
+  
+  i any disables many type checking rules. Its use should be avoided.
+  
+
+packages\discord.js\src\client\actions\GuildRolesPositionUpdate.ts:4:24 lint/suspicious/noExplicitAny ━━━━━━━━━━
+
+  ! Unexpected any. Specify a different type.
+  
+    3 │ export class GuildRolesPositionUpdateAction extends Action {
+  > 4 │ 	override handle(data: any) {
+      │ 	                      ^^^
+    5 │ 		const client = this.client;
+    6 │ 
+  
+  i any disables many type checking rules. Its use should be avoided.
+  
+
+packages\discord.js\src\client\actions\GuildScheduledEventDelete.ts:5:24 lint/suspicious/noExplicitAny ━━━━━━━━━━
+
+  ! Unexpected any. Specify a different type.
+  
+    4 │ export class GuildScheduledEventDeleteAction extends Action {
+  > 5 │ 	override handle(data: any) {
+      │ 	                      ^^^
+    6 │ 		const client = this.client;
+    7 │ 		const guild = client.guilds.cache.get(data.guild_id);
+  
+  i any disables many type checking rules. Its use should be avoided.
+  
+
+packages\discord.js\src\client\actions\GuildScheduledEventUserAdd.ts:5:24 lint/suspicious/noExplicitAny ━━━━━━━━━━
+
+  ! Unexpected any. Specify a different type.
+  
+    4 │ export class GuildScheduledEventUserAddAction extends Action {
+  > 5 │ 	override handle(data: any) {
+      │ 	                      ^^^
+    6 │ 		const client = this.client;
+    7 │ 		const guild = client.guilds.cache.get(data.guild_id);
+  
+  i any disables many type checking rules. Its use should be avoided.
+  
+
+packages\discord.js\src\client\actions\GuildScheduledEventUserRemove.ts:5:24 lint/suspicious/noExplicitAny ━━━━━━━━━━
+
+  ! Unexpected any. Specify a different type.
+  
+    4 │ export class GuildScheduledEventUserRemoveAction extends Action {
+  > 5 │ 	override handle(data: any) {
+      │ 	                      ^^^
+    6 │ 		const client = this.client;
+    7 │ 		const guild = client.guilds.cache.get(data.guild_id);
+  
+  i any disables many type checking rules. Its use should be avoided.
+  
+
+packages\discord.js\src\client\actions\GuildSoundboardSoundDelete.ts:5:24 lint/suspicious/noExplicitAny ━━━━━━━━━━
+
+  ! Unexpected any. Specify a different type.
+  
+    4 │ export class GuildSoundboardSoundDeleteAction extends Action {
+  > 5 │ 	override handle(data: any) {
+      │ 	                      ^^^
+    6 │ 		const guild = this.client.guilds.cache.get(data.guild_id);
+    7 │ 
+  
+  i any disables many type checking rules. Its use should be avoided.
+  
+
+packages\discord.js\src\client\actions\GuildStickerCreate.ts:5:25 lint/suspicious/noExplicitAny ━━━━━━━━━━
+
+  ! Unexpected any. Specify a different type.
+  
+    4 │ export class GuildStickerCreateAction extends Action {
+  > 5 │ 	override handle(guild: any, createdSticker: any) {
+      │ 	                       ^^^
+    6 │ 		const already = guild.stickers.cache.has(createdSticker.id);
+    7 │ 		const sticker = guild.stickers._add(createdSticker);
+  
+  i any disables many type checking rules. Its use should be avoided.
+  
+
+packages\discord.js\src\client\actions\GuildStickerCreate.ts:5:46 lint/suspicious/noExplicitAny ━━━━━━━━━━
+
+  ! Unexpected any. Specify a different type.
+  
+    4 │ export class GuildStickerCreateAction extends Action {
+  > 5 │ 	override handle(guild: any, createdSticker: any) {
+      │ 	                                            ^^^
+    6 │ 		const already = guild.stickers.cache.has(createdSticker.id);
+    7 │ 		const sticker = guild.stickers._add(createdSticker);
+  
+  i any disables many type checking rules. Its use should be avoided.
+  
+
+packages\discord.js\src\client\actions\GuildStickerDelete.ts:5:27 lint/suspicious/noExplicitAny ━━━━━━━━━━
+
+  ! Unexpected any. Specify a different type.
+  
+    4 │ export class GuildStickerDeleteAction extends Action {
+  > 5 │ 	override handle(sticker: any) {
+      │ 	                         ^^^
+    6 │ 		sticker.guild.stickers.cache.delete(sticker.id);
+    7 │ 		/**
+  
+  i any disables many type checking rules. Its use should be avoided.
+  
+
+packages\discord.js\src\client\actions\GuildStickerUpdate.ts:5:27 lint/suspicious/noExplicitAny ━━━━━━━━━━
+
+  ! Unexpected any. Specify a different type.
+  
+    4 │ export class GuildStickerUpdateAction extends Action {
+  > 5 │ 	override handle(current: any, data: any) {
+      │ 	                         ^^^
+    6 │ 		const old = current._update(data);
+    7 │ 		/**
+  
+  i any disables many type checking rules. Its use should be avoided.
+  
+
+packages\discord.js\src\client\actions\GuildStickerUpdate.ts:5:38 lint/suspicious/noExplicitAny ━━━━━━━━━━
+
+  ! Unexpected any. Specify a different type.
+  
+    4 │ export class GuildStickerUpdateAction extends Action {
+  > 5 │ 	override handle(current: any, data: any) {
+      │ 	                                    ^^^
+    6 │ 		const old = current._update(data);
+    7 │ 		/**
+  
+  i any disables many type checking rules. Its use should be avoided.
+  
+
+packages\discord.js\src\client\actions\GuildStickersUpdate.ts:4:24 lint/suspicious/noExplicitAny ━━━━━━━━━━
+
+  ! Unexpected any. Specify a different type.
+  
+    3 │ export class GuildStickersUpdateAction extends Action {
+  > 4 │ 	override handle(data: any) {
+      │ 	                      ^^^
+    5 │ 		const guild = this.client.guilds.cache.get(data.guild_id);
+    6 │ 		if (!guild?.stickers) return;
+  
+  i any disables many type checking rules. Its use should be avoided.
+  
+
+packages\discord.js\src\client\actions\GuildUpdate.ts:5:24 lint/suspicious/noExplicitAny ━━━━━━━━━━━
+
+  ! Unexpected any. Specify a different type.
+  
+    4 │ export class GuildUpdateAction extends Action {
+  > 5 │ 	override handle(data: any) {
+      │ 	                      ^^^
+    6 │ 		const client = this.client;
+    7 │ 
+  
+  i any disables many type checking rules. Its use should be avoided.
+  
+
+packages\discord.js\src\client\actions\InteractionCreate.ts:18:24 lint/suspicious/noExplicitAny ━━━━━━━━━━
+
+  ! Unexpected any. Specify a different type.
+  
+    17 │ export class InteractionCreateAction extends Action {
+  > 18 │ 	override handle(data: any) {
+       │ 	                      ^^^
+    19 │ 		const client = this.client;
+    20 │ 
+  
+  i any disables many type checking rules. Its use should be avoided.
+  
+
+packages\discord.js\src\client\actions\MessageCreate.ts:5:24 lint/suspicious/noExplicitAny ━━━━━━━━━━
+
+  ! Unexpected any. Specify a different type.
+  
+    4 │ export class MessageCreateAction extends Action {
+  > 5 │ 	override handle(data: any) {
+      │ 	                      ^^^
+    6 │ 		const client = this.client;
+    7 │ 		const channel = this.getChannel({
+  
+  i any disables many type checking rules. Its use should be avoided.
+  
+
+packages\discord.js\src\client\actions\MessageDelete.ts:5:24 lint/suspicious/noExplicitAny ━━━━━━━━━━
+
+  ! Unexpected any. Specify a different type.
+  
+    4 │ export class MessageDeleteAction extends Action {
+  > 5 │ 	override handle(data: any) {
+      │ 	                      ^^^
+    6 │ 		const client = this.client;
+    7 │ 		const channel = this.getChannel({ id: data.channel_id, ...('guild_id' in data && { guild_id: data.guild_id }) });
+  
+  i any disables many type checking rules. Its use should be avoided.
+  
+
+packages\discord.js\src\client\actions\MessageDeleteBulk.ts:6:24 lint/suspicious/noExplicitAny ━━━━━━━━━━
+
+  ! Unexpected any. Specify a different type.
+  
+    5 │ export class MessageDeleteBulkAction extends Action {
+  > 6 │ 	override handle(data: any) {
+      │ 	                      ^^^
+    7 │ 		const client = this.client;
+    8 │ 		const channel = client.channels.cache.get(data.channel_id);
+  
+  i any disables many type checking rules. Its use should be avoided.
+  
+
+packages\discord.js\src\client\actions\MessagePollVoteAdd.ts:5:24 lint/suspicious/noExplicitAny ━━━━━━━━━━
+
+  ! Unexpected any. Specify a different type.
+  
+    4 │ export class MessagePollVoteAddAction extends Action {
+  > 5 │ 	override handle(data: any) {
+      │ 	                      ^^^
+    6 │ 		const channel = this.getChannel({ id: data.channel_id, ...('guild_id' in data && { guild_id: data.guild_id }) });
+    7 │ 		if (!channel?.isTextBased()) return false;
+  
+  i any disables many type checking rules. Its use should be avoided.
+  
+
+packages\discord.js\src\client\actions\MessagePollVoteRemove.ts:5:24 lint/suspicious/noExplicitAny ━━━━━━━━━━
+
+  ! Unexpected any. Specify a different type.
+  
+    4 │ export class MessagePollVoteRemoveAction extends Action {
+  > 5 │ 	override handle(data: any) {
+      │ 	                      ^^^
+    6 │ 		const channel = this.getChannel({ id: data.channel_id, ...('guild_id' in data && { guild_id: data.guild_id }) });
+    7 │ 		if (!channel?.isTextBased()) return false;
+  
+  i any disables many type checking rules. Its use should be avoided.
+  
+
+packages\discord.js\src\client\actions\MessageReactionAdd.ts:17:24 lint/suspicious/noExplicitAny ━━━━━━━━━━
+
+  ! Unexpected any. Specify a different type.
+  
+    16 │ export class MessageReactionAddAction extends Action {
+  > 17 │ 	override handle(data: any, fromStructure = false) {
+       │ 	                      ^^^
+    18 │ 		if (!data.emoji) return false;
+    19 │ 
+  
+  i any disables many type checking rules. Its use should be avoided.
+  
+
+packages\discord.js\src\client\actions\MessageReactionRemove.ts:13:24 lint/suspicious/noExplicitAny ━━━━━━━━━━
+
+  ! Unexpected any. Specify a different type.
+  
+    12 │ export class MessageReactionRemoveAction extends Action {
+  > 13 │ 	override handle(data: any) {
+       │ 	                      ^^^
+    14 │ 		if (!data.emoji) return false;
+    15 │ 
+  
+  i any disables many type checking rules. Its use should be avoided.
+  
+
+packages\discord.js\src\client\actions\MessageReactionRemoveAll.ts:5:24 lint/suspicious/noExplicitAny ━━━━━━━━━━
+
+  ! Unexpected any. Specify a different type.
+  
+    4 │ export class MessageReactionRemoveAllAction extends Action {
+  > 5 │ 	override handle(data: any) {
+      │ 	                      ^^^
+    6 │ 		// Verify channel
+    7 │ 		const channel = this.getChannel({ id: data.channel_id, ...('guild_id' in data && { guild_id: data.guild_id }) });
+  
+  i any disables many type checking rules. Its use should be avoided.
+  
+
+packages\discord.js\src\client\actions\MessageReactionRemoveEmoji.ts:5:24 lint/suspicious/noExplicitAny ━━━━━━━━━━
+
+  ! Unexpected any. Specify a different type.
+  
+    4 │ export class MessageReactionRemoveEmojiAction extends Action {
+  > 5 │ 	override handle(data: any) {
+      │ 	                      ^^^
+    6 │ 		const channel = this.getChannel({ id: data.channel_id, ...('guild_id' in data && { guild_id: data.guild_id }) });
+    7 │ 		if (!channel?.isTextBased()) return false;
+  
+  i any disables many type checking rules. Its use should be avoided.
+  
+
+packages\discord.js\src\client\actions\MessageUpdate.ts:4:24 lint/suspicious/noExplicitAny ━━━━━━━━━━
+
+  ! Unexpected any. Specify a different type.
+  
+    3 │ export class MessageUpdateAction extends Action {
+  > 4 │ 	override handle(data: any) {
+      │ 	                      ^^^
+    5 │ 		const channel = this.getChannel({ id: data.channel_id, ...('guild_id' in data && { guild_id: data.guild_id }) });
+    6 │ 		if (channel) {
+  
+  i any disables many type checking rules. Its use should be avoided.
+  
+
+packages\discord.js\src\client\actions\StageInstanceCreate.ts:5:24 lint/suspicious/noExplicitAny ━━━━━━━━━━
+
+  ! Unexpected any. Specify a different type.
+  
+    4 │ export class StageInstanceCreateAction extends Action {
+  > 5 │ 	override handle(data: any) {
+      │ 	                      ^^^
+    6 │ 		const client = this.client;
+    7 │ 		const channel = this.getChannel({ id: data.channel_id, guild_id: data.guild_id });
+  
+  i any disables many type checking rules. Its use should be avoided.
+  
+
+packages\discord.js\src\client\actions\StageInstanceDelete.ts:5:24 lint/suspicious/noExplicitAny ━━━━━━━━━━
+
+  ! Unexpected any. Specify a different type.
+  
+    4 │ export class StageInstanceDeleteAction extends Action {
+  > 5 │ 	override handle(data: any) {
+      │ 	                      ^^^
+    6 │ 		const client = this.client;
+    7 │ 		const channel = this.getChannel({ id: data.channel_id, guild_id: data.guild_id });
+  
+  i any disables many type checking rules. Its use should be avoided.
+  
+
+packages\discord.js\src\client\actions\StageInstanceUpdate.ts:5:24 lint/suspicious/noExplicitAny ━━━━━━━━━━
+
+  ! Unexpected any. Specify a different type.
+  
+    4 │ export class StageInstanceUpdateAction extends Action {
+  > 5 │ 	override handle(data: any) {
+      │ 	                      ^^^
+    6 │ 		const client = this.client;
+    7 │ 		const channel = this.getChannel({ id: data.channel_id, guild_id: data.guild_id });
+  
+  i any disables many type checking rules. Its use should be avoided.
+  
+
+packages\discord.js\src\client\actions\ThreadCreate.ts:5:24 lint/suspicious/noExplicitAny ━━━━━━━━━━
+
+  ! Unexpected any. Specify a different type.
+  
+    4 │ export class ThreadCreateAction extends Action {
+  > 5 │ 	override handle(data: any) {
+      │ 	                      ^^^
+    6 │ 		const client = this.client;
+    7 │ 		const existing = client.channels.cache.has(data.id);
+  
+  i any disables many type checking rules. Its use should be avoided.
+  
+
+packages\discord.js\src\client\actions\ThreadMembersUpdate.ts:6:24 lint/suspicious/noExplicitAny ━━━━━━━━━━
+
+  ! Unexpected any. Specify a different type.
+  
+    5 │ export class ThreadMembersUpdateAction extends Action {
+  > 6 │ 	override handle(data: any) {
+      │ 	                      ^^^
+    7 │ 		const client = this.client;
+    8 │ 		const thread = client.channels.cache.get(data.id);
+  
+  i any disables many type checking rules. Its use should be avoided.
+  
+
+packages\discord.js\src\client\actions\ThreadMembersUpdate.ts:15:21 lint/suspicious/noExplicitAny ━━━━━━━━━━
+
+  ! Unexpected any. Specify a different type.
+  
+    14 │ 			data.added_members?.reduce(
+  > 15 │ 				(_addedMembers: any, addedMember: any) =>
+       │ 				                ^^^
+    16 │ 					_addedMembers.set(addedMember.user_id, thread.members._add(addedMember)),
+    17 │ 				addedMembers,
+  
+  i any disables many type checking rules. Its use should be avoided.
+  
+
+packages\discord.js\src\client\actions\ThreadMembersUpdate.ts:15:39 lint/suspicious/noExplicitAny ━━━━━━━━━━
+
+  ! Unexpected any. Specify a different type.
+  
+    14 │ 			data.added_members?.reduce(
+  > 15 │ 				(_addedMembers: any, addedMember: any) =>
+       │ 				                                  ^^^
+    16 │ 					_addedMembers.set(addedMember.user_id, thread.members._add(addedMember)),
+    17 │ 				addedMembers,
+  
+  i any disables many type checking rules. Its use should be avoided.
+  
+
+packages\discord.js\src\client\actions\ThreadMembersUpdate.ts:20:56 lint/suspicious/noExplicitAny ━━━━━━━━━━
+
+  ! Unexpected any. Specify a different type.
+  
+    18 │ 			);
+    19 │ 
+  > 20 │ 			data.removed_member_ids?.reduce((removedMembersIds: any, removedMembersId: any) => {
+       │ 			                                                    ^^^
+    21 │ 				const threadMember = this.getThreadMember(removedMembersId, thread.members);
+    22 │ 				if (threadMember) removedMembersIds.set(threadMember.id, threadMember);
+  
+  i any disables many type checking rules. Its use should be avoided.
+  
+
+packages\discord.js\src\client\actions\ThreadMembersUpdate.ts:20:79 lint/suspicious/noExplicitAny ━━━━━━━━━━
+
+  ! Unexpected any. Specify a different type.
+  
+    18 │ 			);
+    19 │ 
+  > 20 │ 			data.removed_member_ids?.reduce((removedMembersIds: any, removedMembersId: any) => {
+       │ 			                                                                           ^^^
+    21 │ 				const threadMember = this.getThreadMember(removedMembersId, thread.members);
+    22 │ 				if (threadMember) removedMembersIds.set(threadMember.id, threadMember);
+  
+  i any disables many type checking rules. Its use should be avoided.
+  
+
+packages\discord.js\src\client\actions\TypingStart.ts:6:24 lint/suspicious/noExplicitAny ━━━━━━━━━━━
+
+  ! Unexpected any. Specify a different type.
+  
+    5 │ export class TypingStartAction extends Action {
+  > 6 │ 	override handle(data: any) {
+      │ 	                      ^^^
+    7 │ 		const channel = this.getChannel({ id: data.channel_id, ...('guild_id' in data && { guild_id: data.guild_id }) });
+    8 │ 		if (!channel) return;
+  
+  i any disables many type checking rules. Its use should be avoided.
+  
+
+packages\discord.js\src\client\actions\UserUpdate.ts:5:24 lint/suspicious/noExplicitAny ━━━━━━━━━━━━
+
+  ! Unexpected any. Specify a different type.
+  
+    4 │ export class UserUpdateAction extends Action {
+  > 5 │ 	override handle(data: any) {
+      │ 	                      ^^^
+    6 │ 		const client = this.client;
+    7 │ 
+  
+  i any disables many type checking rules. Its use should be avoided.
+  
+
+packages\discord.js\src\client\voice\ClientVoiceManager.ts:26:66 lint/suspicious/noExplicitAny ━━━━━━━━━━
+
+  ! Unexpected any. Specify a different type.
+  
+    24 │ 		this.adapters = new Map();
+    25 │ 
+  > 26 │ 		client.ws.on(WebSocketShardEvents.Closed, (code: any, shardId: any) => {
+       │ 		                                                               ^^^
+    27 │ 			if (code === CloseCodes.Normal) {
+    28 │ 				for (const [guildId, adapter] of this.adapters.entries()) {
+  
+  i any disables many type checking rules. Its use should be avoided.
+  
+
+packages\discord.js\src\client\voice\ClientVoiceManager.ts:26:52 lint/suspicious/noExplicitAny ━━━━━━━━━━
+
+  ! Unexpected any. Specify a different type.
+  
+    24 │ 		this.adapters = new Map();
+    25 │ 
+  > 26 │ 		client.ws.on(WebSocketShardEvents.Closed, (code: any, shardId: any) => {
+       │ 		                                                 ^^^
+    27 │ 			if (code === CloseCodes.Normal) {
+    28 │ 				for (const [guildId, adapter] of this.adapters.entries()) {
+  
+  i any disables many type checking rules. Its use should be avoided.
+  
+
+packages\discord.js\src\client\voice\ClientVoiceManager.ts:7:19 lint/suspicious/noExplicitAny ━━━━━━━━━━
+
+  ! Unexpected any. Specify a different type.
+  
+    5 │  */
+    6 │ export class ClientVoiceManager {
+  > 7 │ 	public adapters: any;
+      │ 	                 ^^^
+    8 │ 	public client: any;
+    9 │ 	constructor(client: any) {
+  
+  i any disables many type checking rules. Its use should be avoided.
+  
+
+packages\discord.js\src\client\voice\ClientVoiceManager.ts:37:25 lint/suspicious/noExplicitAny ━━━━━━━━━━
+
+  ! Unexpected any. Specify a different type.
+  
+    35 │ 	}
+    36 │ 
+  > 37 │ 	onVoiceServer(payload: any) {
+       │ 	                       ^^^
+    38 │ 		this.adapters.get(payload.guild_id)?.onVoiceServerUpdate(payload);
+    39 │ 	}
+  
+  i any disables many type checking rules. Its use should be avoided.
+  
+
+packages\discord.js\src\client\voice\ClientVoiceManager.ts:41:30 lint/suspicious/noExplicitAny ━━━━━━━━━━
+
+  ! Unexpected any. Specify a different type.
+  
+    39 │ 	}
+    40 │ 
+  > 41 │ 	onVoiceStateUpdate(payload: any) {
+       │ 	                            ^^^
+    42 │ 		if (payload.guild_id && payload.session_id && payload.user_id === this.client.user?.id) {
+    43 │ 			this.adapters.get(payload.guild_id)?.onVoiceStateUpdate(payload);
+  
+  i any disables many type checking rules. Its use should be avoided.
+  
+
+packages\discord.js\src\client\voice\ClientVoiceManager.ts:9:22 lint/suspicious/noExplicitAny ━━━━━━━━━━
+
+  ! Unexpected any. Specify a different type.
+  
+     7 │ 	public adapters: any;
+     8 │ 	public client: any;
+   > 9 │ 	constructor(client: any) {
+       │ 	                    ^^^
+    10 │ 		/**
+    11 │ 		 * The client that instantiated this voice manager
+  
+  i any disables many type checking rules. Its use should be avoided.
+  
+
+packages\discord.js\src\client\voice\ClientVoiceManager.ts:8:17 lint/suspicious/noExplicitAny ━━━━━━━━━━
+
+  ! Unexpected any. Specify a different type.
+  
+     6 │ export class ClientVoiceManager {
+     7 │ 	public adapters: any;
+   > 8 │ 	public client: any;
+       │ 	               ^^^
+     9 │ 	constructor(client: any) {
+    10 │ 		/**
+  
+  i any disables many type checking rules. Its use should be avoided.
+  
+
+packages\discord.js\src\client\websocket\handlers\GUILD_CREATE.ts:23:12 lint/suspicious/noExplicitAny ━━━━━━━━━━
+
+  ! Unexpected any. Specify a different type.
+  
+    21 │ 	} else {
+    22 │ 		// A new guild
+  > 23 │ 		(data as any).shardId = shardId;
+       │ 		         ^^^
+    24 │ 		guild = client.guilds._add(data);
+    25 │ 		if (client.status === Status.Ready) {
+  
+  i any disables many type checking rules. Its use should be avoided.
+  
+
+packages\ws\src\utils\WorkerBootstrapper.ts:31:10 lint/suspicious/noExplicitAny ━━━━━━━━━━━━━━━━━━━━
+
+  ! Unexpected any. Specify a different type.
+  
+    29 │ 						return message.data.gatewayInformation;
+    30 │ 					},
+  > 31 │ 				} as any);
+       │ 				     ^^^
+    32 │ 
+    33 │ 				await this.manager.connect();
+  
+  i any disables many type checking rules. Its use should be avoided.
+  
+
+packages\ws\src\ws\WebSocketShard.ts:873:13 lint/suspicious/noExplicitAny ━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+  ! Unexpected any. Specify a different type.
+  
+    872 │ 			// eslint-disable-next-line @typescript-eslint/no-explicit-any
+  > 873 │ 			(this as any).once(event, listener);
+        │ 			         ^^^
+    874 │ 		});
+    875 │ 	}
+  
+  i any disables many type checking rules. Its use should be avoided.
+  
+
+packages\ws\src\ws\WebSocketShard.ts:461:79 lint/style/noNonNullAssertion ━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+  ! Forbidden non-null assertion.
+  
+    459 │ 			`shard count: ${this.strategy.options.shardCount}`,
+    460 │ 			`intents: ${this.strategy.options.intents}`,
+  > 461 │ 			`compression: ${this.transportCompressionEnabled ? CompressionParameterMap[this.strategy.options.compression!] : this.identifyCompressionEnabled ? 'identify' : 'none'}`,
+        │ 			                                                                           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+    462 │ 		]);
+    463 │ 
+  
+
+packages\ws\src\ws\WebSocketShard.ts:575:69 lint/style/noNonNullAssertion ━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+  ! Forbidden non-null assertion.
+  
+    573 │ 			`isBinary: ${isBinary.toString()}`,
+    574 │ 			`identifyCompressionEnabled: ${this.identifyCompressionEnabled.toString()}`,
+  > 575 │ 			`inflate: ${this.transportCompressionEnabled ? CompressionMethod[this.strategy.options.compression!] : 'none'}`,
+        │ 			                                                                 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+    576 │ 		]);
+    577 │ 
+  
+
+packages\ws\src\ws\WebSocketShard.ts:847:58 lint/suspicious/noExplicitAny ━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+  ! Unexpected any. Specify a different type.
+  
+    846 │ 	// Helper to handle emit type casting
+  > 847 │ 	private emitEvent(event: WebSocketShardEvents, ...args: any[]) {
+        │ 	                                                        ^^^
+    848 │ 		// eslint-disable-next-line @typescript-eslint/no-explicit-any
+    849 │ 		(this as any).emit(event, ...args);
+  
+  i any disables many type checking rules. Its use should be avoided.
+  
+
+packages\ws\src\ws\WebSocketShard.ts:849:12 lint/suspicious/noExplicitAny ━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+  ! Unexpected any. Specify a different type.
+  
+    847 │ 	private emitEvent(event: WebSocketShardEvents, ...args: any[]) {
+    848 │ 		// eslint-disable-next-line @typescript-eslint/no-explicit-any
+  > 849 │ 		(this as any).emit(event, ...args);
+        │ 		         ^^^
+    850 │ 	}
+    851 │ 
+  
+  i any disables many type checking rules. Its use should be avoided.
+  
+
+packages\ws\src\ws\WebSocketShard.ts:853:95 lint/suspicious/noExplicitAny ━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+  ! Unexpected any. Specify a different type.
+  
+    852 │ 	// Helper to replace Node.js once
+  > 853 │ 	private awaitEvent(event: WebSocketShardEvents, options?: { signal?: AbortSignal }): Promise<any[]> {
+        │ 	                                                                                             ^^^
+    854 │ 		return new Promise((resolve, reject) => {
+    855 │ 			const listener = (...args: any[]) => {
+  
+  i any disables many type checking rules. Its use should be avoided.
+  
+
+packages\ws\src\ws\WebSocketShard.ts:855:31 lint/suspicious/noExplicitAny ━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+  ! Unexpected any. Specify a different type.
+  
+    853 │ 	private awaitEvent(event: WebSocketShardEvents, options?: { signal?: AbortSignal }): Promise<any[]> {
+    854 │ 		return new Promise((resolve, reject) => {
+  > 855 │ 			const listener = (...args: any[]) => {
+        │ 			                           ^^^
+    856 │ 				resolve(args);
+    857 │ 			};
+  
+  i any disables many type checking rules. Its use should be avoided.
+  
+
+packages\ws\src\ws\WebSocketShard.ts:867:15 lint/suspicious/noExplicitAny ━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+  ! Unexpected any. Specify a different type.
+  
+    865 │ 				signal.addEventListener('abort', () => {
+    866 │ 					// eslint-disable-next-line @typescript-eslint/no-explicit-any
+  > 867 │ 					(this as any).off(event, listener);
+        │ 					         ^^^
+    868 │ 					reject(signal.reason);
+    869 │ 				});
+  
+  i any disables many type checking rules. Its use should be avoided.
+  
+
+packages\ws\src\ws\WebSocketShard.ts:206:27 lint/suspicious/noExplicitAny ━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+  ! Unexpected any. Specify a different type.
+  
+    205 │ 		connection.onerror = (event: Event) => {
+  > 206 │ 			this.onError((event as any).error ?? new Error('Unknown WebSocket Error'));
+        │ 			                       ^^^
+    207 │ 		};
+    208 │ 
+  
+  i any disables many type checking rules. Its use should be avoided.
+  
+
+packages\ws\src\ws\WebSocketShard.ts:879:30 lint/suspicious/noExplicitAny ━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+  ! Unexpected any. Specify a different type.
+  
+    877 │ 	// Override emit to fix TypeScript visibility/type issues
+    878 │ 	// eslint-disable-next-line @typescript-eslint/no-explicit-any
+  > 879 │ 	public override emit(event: any, ...args: any[]): Promise<boolean> {
+        │ 	                            ^^^
+    880 │ 		// eslint-disable-next-line @typescript-eslint/no-explicit-any
+    881 │ 		return (super.emit as any)(event, ...args);
+  
+  i any disables many type checking rules. Its use should be avoided.
+  
+
+packages\ws\src\ws\WebSocketShard.ts:879:44 lint/suspicious/noExplicitAny ━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+  ! Unexpected any. Specify a different type.
+  
+    877 │ 	// Override emit to fix TypeScript visibility/type issues
+    878 │ 	// eslint-disable-next-line @typescript-eslint/no-explicit-any
+  > 879 │ 	public override emit(event: any, ...args: any[]): Promise<boolean> {
+        │ 	                                          ^^^
+    880 │ 		// eslint-disable-next-line @typescript-eslint/no-explicit-any
+    881 │ 		return (super.emit as any)(event, ...args);
+  
+  i any disables many type checking rules. Its use should be avoided.
+  
+
+packages\ws\src\ws\WebSocketShard.ts:881:25 lint/suspicious/noExplicitAny ━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+  ! Unexpected any. Specify a different type.
+  
+    879 │ 	public override emit(event: any, ...args: any[]): Promise<boolean> {
+    880 │ 		// eslint-disable-next-line @typescript-eslint/no-explicit-any
+  > 881 │ 		return (super.emit as any)(event, ...args);
+        │ 		                      ^^^
+    882 │ 	}
+    883 │ }
+  
+  i any disables many type checking rules. Its use should be avoided.
+  
+
+packages\ws\src\ws\WebSocketShard.ts:76:19 lint/suspicious/noExplicitAny ━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+  ! Unexpected any. Specify a different type.
+  
+    75 │ const WebSocketConstructor: typeof WebSocket = shouldUseGlobalFetchAndWebSocket()
+  > 76 │ 	? (globalThis as any).WebSocket
+       │ 	                 ^^^
+    77 │ 	: WebSocket;
+    78 │ 
+  
+  i any disables many type checking rules. Its use should be avoided.
+  
+
+packages\ws\src\ws\WebSocketShard.ts:95:29 lint/suspicious/noExplicitAny ━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+  ! Unexpected any. Specify a different type.
+  
+    93 │ 	private initialHeartbeatTimeoutController: AbortController | null = null;
+    94 │ 
+  > 95 │ 	private heartbeatInterval: any | null = null;
+       │ 	                           ^^^
+    96 │ 
+    97 │ 	private lastHeartbeatAt = -1;
+  
+  i any disables many type checking rules. Its use should be avoided.
+  
+
+packages\ws\src\ws\WebSocketShard.ts:247:57 lint/style/noNonNullAssertion ━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+  ! Forbidden non-null assertion.
+  
+    245 │ 			`Reason: ${options.reason ?? 'none'}`,
+    246 │ 			`Code: ${options.code}`,
+  > 247 │ 			`Recover: ${options.recover === undefined ? 'none' : WebSocketShardDestroyRecovery[options.recover]!}`,
+        │ 			                                                     ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+    248 │ 		]);
+    249 │ 
+  
+
+packages\ws\src\ws\WebSocketShard.ts:296:31 lint/style/noNonNullAssertion ━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+  ! Forbidden non-null assertion.
+  
+    294 │ 				});
+    295 │ 
+  > 296 │ 				this.connection.onclose = outerResolve!;
+        │ 				                          ^^^^^^^^^^^^^
+    297 │ 
+    298 │ 				this.connection.close(options.code, options.reason);
+  
+
+packages\builders\src\components\button\ButtonBuilder.ts:15:14 lint/suspicious/noUnsafeDeclarationMerging ━━━━━━━━━━
+
+  × This class is unsafely merged with an interface.
+  
+    13 │ export interface ButtonBuilder extends BaseButtonBuilder<APIButtonComponent>, EmojiOrLabelButtonMixin {}
+    14 │ 
+  > 15 │ export class ButtonBuilder extends Mixin(BaseButtonBuilder<APIButtonComponent>, EmojiOrLabelButtonMixin) {
+       │              ^^^^^^^^^^^^^
+    16 │ 	/**
+    17 │ 	 * @internal
+  
+  i The interface is declared here.
+  
+    11 │  */
+    12 │ // @ts-expect-error
+  > 13 │ export interface ButtonBuilder extends BaseButtonBuilder<APIButtonComponent>, EmojiOrLabelButtonMixin {}
+       │                  ^^^^^^^^^^^^^
+    14 │ 
+    15 │ export class ButtonBuilder extends Mixin(BaseButtonBuilder<APIButtonComponent>, EmojiOrLabelButtonMixin) {
+  
+  i The TypeScript compiler doesn't check whether properties defined in the interface are initialized in the class.
+  
+
+packages\builders\src\components\button\LinkButton.ts:19:14 lint/suspicious/noUnsafeDeclarationMerging ━━━━━━━━━━
+
+  × This class is unsafely merged with an interface.
+  
+    17 │ export interface LinkButtonBuilder extends BaseButtonBuilder<APIButtonComponentWithURL>, EmojiOrLabelButtonMixin {}
+    18 │ 
+  > 19 │ export class LinkButtonBuilder extends Mixin(BaseButtonBuilder<APIButtonComponentWithURL>, EmojiOrLabelButtonMixin) {
+       │              ^^^^^^^^^^^^^^^^^
+    20 │ 	protected override readonly data: Partial<APIButtonComponentWithURL>;
+    21 │ 
+  
+  i The interface is declared here.
+  
+    15 │  * @mixes {@link EmojiOrLabelButtonMixin}
+    16 │  */
+  > 17 │ export interface LinkButtonBuilder extends BaseButtonBuilder<APIButtonComponentWithURL>, EmojiOrLabelButtonMixin {}
+       │                  ^^^^^^^^^^^^^^^^^
+    18 │ 
+    19 │ export class LinkButtonBuilder extends Mixin(BaseButtonBuilder<APIButtonComponentWithURL>, EmojiOrLabelButtonMixin) {
+  
+  i The TypeScript compiler doesn't check whether properties defined in the interface are initialized in the class.
+  
+
+packages\builders\src\interactions\commands\chatInput\ChatInputCommandSubcommands.ts:40:11 lint/suspicious/noAssignInExpressions ━━━━━━━━━━
+
+  × The assignment should not be in an expression.
+  
+    38 │ 	 */
+    39 │ 	public get options(): readonly ChatInputCommandSubcommandBuilder[] {
+  > 40 │ 		return (this.data.options ??= []);
+       │ 		        ^^^^^^^^^^^^^^^^^^^^^^^^
+    41 │ 	}
+    42 │ 
+  
+  i The use of assignments in expressions is confusing.
+    Expressions are often considered as side-effect free.
+  
+
+packages\builders\src\interactions\commands\chatInput\mixins\SharedChatInputCommandOptions.ts:31:11 lint/suspicious/noAssignInExpressions ━━━━━━━━━━
+
+  × The assignment should not be in an expression.
+  
+    29 │ 	 */
+    30 │ 	public get options(): readonly ApplicationCommandOptionBase[] {
+  > 31 │ 		return (this.data.options ??= []);
+       │ 		        ^^^^^^^^^^^^^^^^^^^^^^^^
+    32 │ 	}
+    33 │ 
+  
+  i The use of assignments in expressions is confusing.
+    Expressions are often considered as side-effect free.
+  
+
+packages\builders\src\messages\Message.ts:256:12 lint/suspicious/noAssignInExpressions ━━━━━━━━━━━━━
+
+  × The assignment should not be in an expression.
+  
+    254 │ 	 */
+    255 │ 	public updateAllowedMentions(updater: (builder: AllowedMentionsBuilder) => void): this {
+  > 256 │ 		updater((this.data.allowed_mentions ??= new AllowedMentionsBuilder()));
+        │ 		         ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+    257 │ 		return this;
+    258 │ 	}
+  
+  i The use of assignments in expressions is confusing.
+    Expressions are often considered as side-effect free.
+  
+
+packages\builders\src\messages\Message.ts:289:12 lint/suspicious/noAssignInExpressions ━━━━━━━━━━━━━
+
+  × The assignment should not be in an expression.
+  
+    287 │ 	 */
+    288 │ 	public updateMessageReference(updater: (builder: MessageReferenceBuilder) => void): this {
+  > 289 │ 		updater((this.data.message_reference ??= new MessageReferenceBuilder()));
+        │ 		         ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+    290 │ 		return this;
+    291 │ 	}
+  
+  i The use of assignments in expressions is confusing.
+    Expressions are often considered as side-effect free.
+  
+
+packages\builders\src\messages\Message.ts:634:12 lint/suspicious/noAssignInExpressions ━━━━━━━━━━━━━
+
+  × The assignment should not be in an expression.
+  
+    632 │ 	 */
+    633 │ 	public updatePoll(updater: (builder: PollBuilder) => void): this {
+  > 634 │ 		updater((this.data.poll ??= new PollBuilder()));
+        │ 		         ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+    635 │ 		return this;
+    636 │ 	}
+  
+  i The use of assignments in expressions is confusing.
+    Expressions are often considered as side-effect free.
+  
+
+packages\builders\src\messages\embed\Embed.ts:162:12 lint/suspicious/noAssignInExpressions ━━━━━━━━━━
+
+  × The assignment should not be in an expression.
+  
+    160 │ 	 */
+    161 │ 	public updateAuthor(updater: (builder: EmbedAuthorBuilder) => void) {
+  > 162 │ 		updater((this.data.author ??= new EmbedAuthorBuilder()));
+        │ 		         ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+    163 │ 		return this;
+    164 │ 	}
+  
+  i The use of assignments in expressions is confusing.
+    Expressions are often considered as side-effect free.
+  
+
+packages\builders\src\messages\embed\Embed.ts:228:12 lint/suspicious/noAssignInExpressions ━━━━━━━━━━
+
+  × The assignment should not be in an expression.
+  
+    226 │ 	 */
+    227 │ 	public updateFooter(updater: (builder: EmbedFooterBuilder) => void) {
+  > 228 │ 		updater((this.data.footer ??= new EmbedFooterBuilder()));
+        │ 		         ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+    229 │ 		return this;
+    230 │ 	}
+  
+  i The use of assignments in expressions is confusing.
+    Expressions are often considered as side-effect free.
+  
+
+packages\builders\src\util\validation.ts:12:10 lint/suspicious/noAssignInExpressions ━━━━━━━━━━━━━━━
+
+  × The assignment should not be in an expression.
+  
+    10 │  */
+    11 │ export function enableValidators() {
+  > 12 │ 	return (validationEnabled = true);
+       │ 	        ^^^^^^^^^^^^^^^^^^^^^^^^
+    13 │ }
+    14 │ 
+  
+  i The use of assignments in expressions is confusing.
+    Expressions are often considered as side-effect free.
+  
+
+packages\builders\src\util\validation.ts:21:10 lint/suspicious/noAssignInExpressions ━━━━━━━━━━━━━━━
+
+  × The assignment should not be in an expression.
+  
+    19 │  */
+    20 │ export function disableValidators() {
+  > 21 │ 	return (validationEnabled = false);
+       │ 	        ^^^^^^^^^^^^^^^^^^^^^^^^^
+    22 │ }
+    23 │ 
+  
+  i The use of assignments in expressions is confusing.
+    Expressions are often considered as side-effect free.
+  
+
+packages\core\scripts\find-returns-not-return-type.mts:11:22 lint/suspicious/noNonNullAssertedOptionalChain ━━━━━━━━━━
+
+  × Forbidden non-null assertion after optional chaining.
+  
+    10 │ 	for (const match of matches) {
+  > 11 │ 		const returnType = match.groups?.returnType!;
+       │ 		                   ^^^^^^^^^^^^^^^^^^^^^^^^^
+    12 │ 
+    13 │ 		if (!returnType.startsWith('REST') || !returnType.includes('Result')) {
+  
+  i Optional chaining already handles nullish values. Using non-null assertion defeats its purpose and may cause runtime errors.
+  
+  i Consider using the nullish coalescing operator `??` or optional chaining throughout the chain instead.
+  
+
+packages\discord.js\src\client\Client.ts:821:10 lint/security/noGlobalEval ━━━━━━━━━━━━━━━━━━━━━━━━━
+
+  × eval() exposes to security risks and performance issues.
+  
+    819 │ 	 */
+    820 │ 	_eval(script: string) {
+  > 821 │ 		return eval(script);
+        │ 		       ^^^^
+    822 │ 	}
+    823 │ 
+  
+  i See the MDN web docs for more details.
+  
+  i Refactor the code so that it doesn't need to call eval().
+  
+
+packages\discord.js\src\client\actions\GuildRoleCreate.ts:8:7 lint/suspicious/noImplicitAnyLet ━━━━━━━━━━
+
+  × This variable implicitly has the any type.
+  
+     6 │ 		const client = this.client;
+     7 │ 		const guild = client.guilds.cache.get(data.guild_id);
+   > 8 │ 		let role;
+       │ 		    ^^^^
+     9 │ 		if (guild) {
+    10 │ 			const already = guild.roles.cache.has(data.role.id);
+  
+  i Variable declarations without type annotation and initialization implicitly have the any type. Declare a type or initialize the variable with some value.
+  
+
+packages\discord.js\src\client\actions\GuildRoleDelete.ts:8:7 lint/suspicious/noImplicitAnyLet ━━━━━━━━━━
+
+  × This variable implicitly has the any type.
+  
+     6 │ 		const client = this.client;
+     7 │ 		const guild = client.guilds.cache.get(data.guild_id);
+   > 8 │ 		let role;
+       │ 		    ^^^^
+     9 │ 
+    10 │ 		if (guild) {
+  
+  i Variable declarations without type annotation and initialization implicitly have the any type. Declare a type or initialize the variable with some value.
+  
+
+packages\discord.js\src\client\actions\InteractionCreate.ts:25:7 lint/suspicious/noImplicitAnyLet ━━━━━━━━━━
+
+  × This variable implicitly has the any type.
+  
+    24 │ 		// Do not emit this for interactions that cache messages that are non-text-based.
+  > 25 │ 		let InteractionClass;
+       │ 		    ^^^^^^^^^^^^^^^^
+    26 │ 
+    27 │ 		switch (data.type) {
+  
+  i Variable declarations without type annotation and initialization implicitly have the any type. Declare a type or initialize the variable with some value.
+  
+
+packages\discord.js\src\client\actions\MessageDelete.ts:8:7 lint/suspicious/noImplicitAnyLet ━━━━━━━━━━
+
+  × This variable implicitly has the any type.
+  
+     6 │ 		const client = this.client;
+     7 │ 		const channel = this.getChannel({ id: data.channel_id, ...('guild_id' in data && { guild_id: data.guild_id }) });
+   > 8 │ 		let message;
+       │ 		    ^^^^^^^
+     9 │ 		if (channel) {
+    10 │ 			if (!channel.isTextBased()) return {};
+  
+  i Variable declarations without type annotation and initialization implicitly have the any type. Declare a type or initialize the variable with some value.
+  
+
+packages\ws\src\ws\WebSocketShard.ts:148:7 lint/suspicious/noImplicitAnyLet ━━━━━━━━━━━━━━━━━━━━━━━━
+
+  × This variable implicitly has the any type.
+  
+    146 │ 	public async connect() {
+    147 │ 		const controller = new AbortController();
+  > 148 │ 		let promise;
+        │ 		    ^^^^^^^
+    149 │ 
+    150 │ 		if (!this.initialConnectResolved) {
+  
+  i Variable declarations without type annotation and initialization implicitly have the any type. Declare a type or initialize the variable with some value.
+  
+
+The number of diagnostics exceeds the limit allowed. Use --max-diagnostics to increase it.
+Diagnostics not shown: 2628.
+Checked 739 files in 218ms. No fixes applied.
+Found 109 errors.
+Found 2695 warnings.
+Found 24 infos.
+check ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+  × Some errors were emitted while running checks.
+  
+

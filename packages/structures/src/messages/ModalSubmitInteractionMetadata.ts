@@ -1,5 +1,4 @@
 import type { APIModalSubmitInteractionMetadata, InteractionType } from 'discord-api-types/v10';
-import type { Partialize } from '../utils/types.js';
 import { InteractionMetadata } from './InteractionMetadata.js';
 
 /**
@@ -15,11 +14,4 @@ export class ModalSubmitInteractionMetadata<
 	 * The template used for removing data from the raw data stored for each ModalSubmitInteractionMetadata.
 	 */
 	public static override readonly DataTemplate: Partial<APIModalSubmitInteractionMetadata> = {};
-
-	/**
-	 * @param data - The raw data received from the API for the connection
-	 */
-	public constructor(data: Partialize<APIModalSubmitInteractionMetadata, Omitted>) {
-		super(data);
-	}
 }

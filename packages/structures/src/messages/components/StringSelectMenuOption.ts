@@ -1,7 +1,6 @@
 import type { APISelectMenuOption } from 'discord-api-types/v10';
 import { Structure } from '../../Structure.js';
 import { kData } from '../../utils/symbols.js';
-import type { Partialize } from '../../utils/types.js';
 
 /**
  * Represents an option in a string select menu component.
@@ -17,13 +16,6 @@ export class StringSelectMenuOption<Omitted extends keyof APISelectMenuOption | 
 	 * The template used for removing data from the raw data stored for each StringSelectMenuOption.
 	 */
 	public static override readonly DataTemplate: Partial<APISelectMenuOption> = {};
-
-	/**
-	 * @param data - The raw data received from the API for the string select menu option
-	 */
-	public constructor(data: Partialize<APISelectMenuOption, Omitted>) {
-		super(data);
-	}
 
 	/**
 	 * Whether this option should be already-selected by default

@@ -1,7 +1,6 @@
 import type { APIChannelMention } from 'discord-api-types/v10';
 import { Structure } from '../Structure.js';
 import { kData } from '../utils/symbols.js';
-import type { Partialize } from '../utils/types.js';
 
 /**
  * Represents the mention of a channel on a message on Discord.
@@ -16,13 +15,6 @@ export class ChannelMention<Omitted extends keyof APIChannelMention | '' = ''> e
 	 * The template used for removing data from the raw data stored for each ChannelMention.
 	 */
 	public static override DataTemplate: Partial<APIChannelMention> = {};
-
-	/**
-	 * @param data - The raw data received from the API for the channel mention
-	 */
-	public constructor(data: Partialize<APIChannelMention, Omitted>) {
-		super(data);
-	}
 
 	/**
 	 * The type of the mentioned channel

@@ -249,23 +249,23 @@ export class ModalSubmitInteraction extends BaseInteraction {
 
 	// These are here only for documentation purposes - they are implemented by InteractionResponses
 
-	deferReply(options?: any): any {}
+	deferReply(_options?: any): any {}
 
-	reply(options?: any): any {}
+	reply(_options?: any): any {}
 
-	fetchReply(options?: any): any {}
+	fetchReply(_options?: any): any {}
 
-	editReply(options?: any): any {}
+	editReply(_options?: any): any {}
 
-	deleteReply(options?: any): any {}
+	deleteReply(_options?: any): any {}
 
-	followUp(options?: any): any {}
+	followUp(_options?: any): any {}
 
-	deferUpdate(options?: any): any {}
+	deferUpdate(_options?: any): any {}
 
-	update(options?: any): any {}
+	update(_options?: any): any {}
 
-	launchActivity(options?: any): any {}
+	launchActivity(_options?: any): any {}
 }
 
 InteractionResponses.applyToClass(ModalSubmitInteraction, ['showModal'] as any);

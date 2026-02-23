@@ -5,7 +5,7 @@ export class MessageDeleteAction extends Action {
 	override handle(data: any) {
 		const client = this.client;
 		const channel = this.getChannel({ id: data.channel_id, ...('guild_id' in data && { guild_id: data.guild_id }) });
-		let message;
+		let message: any;
 		if (channel) {
 			if (!channel.isTextBased()) return {};
 

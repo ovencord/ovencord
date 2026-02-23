@@ -207,8 +207,8 @@ export class GuildChannel extends BaseChannel {
 
 		const resolvedRoles = roles ?? resolvedMember.roles.cache;
 		const roleOverwrites = [];
-		let memberOverwrites;
-		let everyoneOverwrites;
+		let memberOverwrites: any;
+		let everyoneOverwrites: any;
 
 		for (const overwrite of this.permissionOverwrites.cache.values()) {
 			if (overwrite.id === this.guild.id) {
@@ -255,9 +255,8 @@ export class GuildChannel extends BaseChannel {
 			permissions
 				.remove(overwrites.everyone?.deny ?? PermissionsBitField.DefaultBit)
 				.add(overwrites.everyone?.allow ?? PermissionsBitField.DefaultBit)
-				// @ts-expect-error
 				.remove(
-					overwrites.roles.length > 0 ? overwrites.roles.map((role) => role.deny) : PermissionsBitField.DefaultBit,
+					overwrites.roles.length > 0 ? overwrites.roles.map((role: any) => role.deny) : PermissionsBitField.DefaultBit,
 				)
 				// @ts-expect-error
 				.add(overwrites.roles.length > 0 ? overwrites.roles.map((role) => role.allow) : PermissionsBitField.DefaultBit)
@@ -522,7 +521,7 @@ export class GuildChannel extends BaseChannel {
 	 *   .catch(console.error);
 	 */
 	// @ts-expect-error
-	async delete(reason) {
+	async delete(reason: any) {
 		await this.guild.channels.delete(this.id, reason);
 		return this;
 	}

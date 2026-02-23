@@ -32,7 +32,7 @@ const getMediaChannel = lazy(() => require('../structures/MediaChannel.js').Medi
  * @ignore
  */
 export function createChannel(client: any, data: any, guild: any, { allowUnknownGuild }: any = {}) {
-	let channel;
+	let channel: any;
 	const resolvedGuild = guild ?? client.guilds.cache.get(data.guild_id);
 
 	if (!data.guild_id && !resolvedGuild) {

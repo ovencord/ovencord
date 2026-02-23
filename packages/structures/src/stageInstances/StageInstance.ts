@@ -3,7 +3,6 @@ import type { APIStageInstance } from 'discord-api-types/v10';
 import { Structure } from '../Structure.js';
 import { kData } from '../utils/symbols.js';
 import { isIdSet } from '../utils/type-guards.js';
-import type { Partialize } from '../utils/types.js';
 
 /**
  * Represents any stage instance on Discord.
@@ -18,13 +17,6 @@ export class StageInstance<Omitted extends keyof APIStageInstance | '' = ''> ext
 	 * The template used for removing data from the raw data stored for each stage instance
 	 */
 	public static override readonly DataTemplate: Partial<APIStageInstance> = {};
-
-	/**
-	 * @param data - The raw data received from the API for the stage instance
-	 */
-	public constructor(data: Partialize<APIStageInstance, Omitted>) {
-		super(data);
-	}
 
 	/**
 	 * The stage instance's id

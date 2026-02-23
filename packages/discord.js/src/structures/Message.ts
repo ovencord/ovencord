@@ -990,7 +990,7 @@ export class Message extends Base {
 	 *   .catch(console.error);
 	 */
 	async reply(options: any) {
-		let data;
+		let data: any;
 
 		if (options instanceof MessagePayload) {
 			data = options;
@@ -1127,7 +1127,7 @@ export class Message extends Base {
 		const embedUpdate = !message.author && !message.attachments;
 		if (embedUpdate) return this.id === message.id && this.embeds.length === message.embeds.length;
 
-		let equal =
+		let equal: boolean =
 			this.id === message.id &&
 			this.author.id === message.author.id &&
 			this.content === message.content &&

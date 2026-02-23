@@ -169,7 +169,7 @@ export class DAVESession extends AsyncEventEmitter {
 				this.emit('debug', `Session initialized for protocol version ${this.protocolVersion}`);
 			}
 
-			this.emit('keyPackage', this.session!.getSerializedKeyPackage());
+			this.emit('keyPackage', this.session?.getSerializedKeyPackage());
 		} else if (this.session) {
 			this.session.reset();
 			this.session.setPassthroughMode(true, TRANSITION_EXPIRY);

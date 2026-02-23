@@ -1,7 +1,6 @@
 import type { APIAvatarDecorationData } from 'discord-api-types/v10';
 import { Structure } from '../Structure.js';
 import { kData } from '../utils/symbols.js';
-import type { Partialize } from '../utils/types.js';
 
 /**
  * Represents metadata of an avatar decoration of a User.
@@ -16,13 +15,6 @@ export class AvatarDecorationData<Omitted extends keyof APIAvatarDecorationData 
 	 * The template used for removing data from the raw data stored for each Connection
 	 */
 	public static override readonly DataTemplate: Partial<APIAvatarDecorationData> = {};
-
-	/**
-	 * @param data - The raw data received from the API for the connection
-	 */
-	public constructor(data: Partialize<APIAvatarDecorationData, Omitted>) {
-		super(data);
-	}
 
 	/**
 	 * The id of the SKU this avatar decoration is part of.

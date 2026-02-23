@@ -1,7 +1,6 @@
 import type { APIVoiceRegion } from 'discord-api-types/v10';
 import { Structure } from '../Structure.js';
 import { kData } from '../utils/symbols.js';
-import type { Partialize } from '../utils/types.js';
 
 /**
  * Represents any voice region on Discord.
@@ -13,13 +12,6 @@ export class VoiceRegion<Omitted extends keyof APIVoiceRegion | '' = ''> extends
 	 * The template used for removing data from the raw data stored for each voice region
 	 */
 	public static override readonly DataTemplate: Partial<APIVoiceRegion> = {};
-
-	/**
-	 * @param data - The raw data received from the API for the voice region
-	 */
-	public constructor(data: Partialize<APIVoiceRegion, Omitted>) {
-		super(data);
-	}
 
 	/**
 	 * Unique id for the region

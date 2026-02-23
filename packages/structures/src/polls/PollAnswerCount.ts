@@ -1,7 +1,6 @@
 import type { APIPollAnswerCount } from 'discord-api-types/v10';
 import { Structure } from '../Structure.js';
 import { kData } from '../utils/symbols.js';
-import type { Partialize } from '../utils/types.js';
 
 /**
  * Represents the counts of answers to a poll on a message on Discord.
@@ -16,13 +15,6 @@ export class PollAnswerCount<Omitted extends keyof APIPollAnswerCount | '' = ''>
 	 * The template used for removing data from the raw data stored for each PollAnswerCount.
 	 */
 	public static override DataTemplate: Partial<APIPollAnswerCount> = {};
-
-	/**
-	 * @param data - The raw data received from the API for the poll answer count
-	 */
-	public constructor(data: Partialize<APIPollAnswerCount, Omitted>) {
-		super(data);
-	}
 
 	/**
 	 * The id of the poll answer

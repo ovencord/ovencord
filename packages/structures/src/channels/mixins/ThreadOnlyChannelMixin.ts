@@ -10,7 +10,7 @@ export interface ThreadOnlyChannelMixin<
  * @remarks has an array of sub-structures {@link ForumTag} that extending mixins should add to their DataTemplate and _optimizeData
  */
 export class ThreadOnlyChannelMixin<
-	Type extends ChannelType.GuildForum | ChannelType.GuildMedia = ChannelType.GuildForum | ChannelType.GuildMedia,
+	_Type extends ChannelType.GuildForum | ChannelType.GuildMedia = ChannelType.GuildForum | ChannelType.GuildMedia,
 > {
 	/**
 	 * The emoji to show in the add reaction button on a thread in this channel.

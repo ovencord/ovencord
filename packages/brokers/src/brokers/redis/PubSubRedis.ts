@@ -28,7 +28,7 @@ import { BaseRedisBroker } from './BaseRedis.js';
  * await broker.subscribe('subscribers', ['test']);
  * ```
  */
-export class PubSubRedisBroker<TEvents extends Record<string, any>>
+export class PubSubRedisBroker<TEvents extends Record<string, unknown[]>>
 	extends BaseRedisBroker<TEvents>
 	implements IPubSubBroker<TEvents>
 {
@@ -40,7 +40,7 @@ export class PubSubRedisBroker<TEvents extends Record<string, any>>
 			event as string,
 			'*',
 			BaseRedisBroker.STREAM_DATA_KEY,
-			this.options.encode(data) as any,
+			this.options.encode(data) as unknown as string,
 		);
 	}
 
@@ -48,7 +48,7 @@ export class PubSubRedisBroker<TEvents extends Record<string, any>>
 		const payload: { ack(): Promise<void>; data: unknown } = {
 			data,
 			ack: async () => {
-				await this.redisClient.xack(event, group, id as any);
+				await this.redisClient.xack(event, group, new TextDecoder().decode(id));
 			},
 		};
 

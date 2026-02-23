@@ -1,7 +1,6 @@
 import type { APIPollAnswer } from 'discord-api-types/v10';
 import { Structure } from '../Structure.js';
 import { kData } from '../utils/symbols.js';
-import type { Partialize } from '../utils/types.js';
 
 /**
  * Represents an answer to a poll on a message on Discord.
@@ -14,13 +13,6 @@ export class PollAnswer<Omitted extends keyof APIPollAnswer | '' = ''> extends S
 	 * The template used for removing data from the raw data stored for each PollAnswer.
 	 */
 	public static override DataTemplate: Partial<APIPollAnswer> = {};
-
-	/**
-	 * @param data - The raw data received from the API for the poll answer
-	 */
-	public constructor(data: Partialize<APIPollAnswer, Omitted>) {
-		super(data);
-	}
 
 	/**
 	 * The id of the poll answer

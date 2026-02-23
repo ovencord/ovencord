@@ -1,7 +1,6 @@
 import type { APIMediaGalleryItem } from 'discord-api-types/v10';
 import { Structure } from '../../Structure.js';
 import { kData } from '../../utils/symbols.js';
-import type { Partialize } from '../../utils/types.js';
 
 /**
  * Represents an item in a media gallery on a message.
@@ -17,13 +16,6 @@ export class MediaGalleryItem<Omitted extends keyof APIMediaGalleryItem | '' = '
 	 * The template used for removing data from the raw data stored for each MediaGalleryItem.
 	 */
 	public static override readonly DataTemplate: Partial<APIMediaGalleryItem> = {};
-
-	/**
-	 * @param data - The raw data received from the API for the media gallery item
-	 */
-	public constructor(data: Partialize<APIMediaGalleryItem, Omitted>) {
-		super(data);
-	}
 
 	/**
 	 * Alt text for the media

@@ -1,7 +1,6 @@
 import type { APIReactionCountDetails } from 'discord-api-types/v10';
 import { Structure } from '../Structure.js';
 import { kData } from '../utils/symbols.js';
-import type { Partialize } from '../utils/types.js';
 
 /**
  * Represents the usage count of a reaction on a message on Discord.
@@ -16,13 +15,6 @@ export class ReactionCountDetails<Omitted extends keyof APIReactionCountDetails 
 	 * The template used for removing data from the raw data stored for each ReactionCountDetails.
 	 */
 	public static override DataTemplate: Partial<APIReactionCountDetails> = {};
-
-	/**
-	 * @param data - The raw data received from the API for the reaction count details
-	 */
-	public constructor(data: Partialize<APIReactionCountDetails, Omitted>) {
-		super(data);
-	}
 
 	/**
 	 * The amount how often this emoji has been used to react (excluding super reacts)

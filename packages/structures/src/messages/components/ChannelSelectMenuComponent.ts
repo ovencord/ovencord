@@ -1,6 +1,5 @@
 import type { APIChannelSelectComponent, ChannelType } from 'discord-api-types/v10';
 import { kData } from '../../utils/symbols.js';
-import type { Partialize } from '../../utils/types.js';
 import { SelectMenuComponent } from './SelectMenuComponent.js';
 
 /**
@@ -16,13 +15,6 @@ export class ChannelSelectMenuComponent<
 	 * The template used for removing data from the raw data stored for each ChannelSelectMenuComponent.
 	 */
 	public static override readonly DataTemplate: Partial<APIChannelSelectComponent> = {};
-
-	/**
-	 * @param data - The raw data received from the API for the channel select menu
-	 */
-	public constructor(data: Partialize<APIChannelSelectComponent, Omitted>) {
-		super(data);
-	}
 
 	/**
 	 * The list of channel types to include in the channel select component

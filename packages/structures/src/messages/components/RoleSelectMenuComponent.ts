@@ -1,5 +1,4 @@
 import type { APIRoleSelectComponent } from 'discord-api-types/v10';
-import type { Partialize } from '../../utils/types.js';
 import { SelectMenuComponent } from './SelectMenuComponent.js';
 
 /**
@@ -15,11 +14,4 @@ export class RoleSelectMenuComponent<
 	 * The template used for removing data from the raw data stored for each RoleSelectMenuComponent.
 	 */
 	public static override readonly DataTemplate: Partial<APIRoleSelectComponent> = {};
-
-	/**
-	 * @param data - The raw data received from the API for the role select menu
-	 */
-	public constructor(data: Partialize<APIRoleSelectComponent, Omitted>) {
-		super(data);
-	}
 }

@@ -4,7 +4,7 @@ import type { Client } from '../../Client.js';
 
 const emittedFor = new Set();
 
-export default (client: Client, { d: data }: GatewayRateLimitedDispatch) => {
+export default (_client: Client, { d: data }: GatewayRateLimitedDispatch) => {
 	switch (data.opcode) {
 		case GatewayOpcodes.RequestGuildMembers: {
 			break;

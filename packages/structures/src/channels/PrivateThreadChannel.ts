@@ -10,7 +10,7 @@ import { ChannelSlowmodeMixin } from './mixins/ChannelSlowmodeMixin.js';
 import { TextChannelMixin } from './mixins/TextChannelMixin.js';
 import { ThreadChannelMixin } from './mixins/ThreadChannelMixin.js';
 
-export interface PrivateThreadChannel<Omitted extends keyof APIPrivateThreadChannel | '' = ''>
+export interface PrivateThreadChannel<_Omitted extends keyof APIPrivateThreadChannel | '' = ''>
 	extends MixinTypes<
 		Channel<ChannelType.PrivateThread>,
 		[

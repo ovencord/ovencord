@@ -355,7 +355,7 @@ export class Collector extends AsyncEventEmitter {
 	 * @returns {?(*|Promise<?*>)} Data to insert into collection, if any
 	 * @abstract
 	 */
-	collect(...args: any[]): any {}
+	collect(..._args: any[]): any {}
 
 	/**
 	 * Handles incoming events from the `handleDispose`. Returns null if the event should not
@@ -366,5 +366,5 @@ export class Collector extends AsyncEventEmitter {
 	 * @returns {?*} Key to remove from the collection, if any
 	 * @abstract
 	 */
-	dispose(...args: any[]): any {}
+	dispose(..._args: any[]): any {}
 }

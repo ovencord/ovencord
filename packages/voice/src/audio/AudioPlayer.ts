@@ -1,10 +1,10 @@
 import { AsyncEventEmitter } from '@ovencord/util';
 import { addAudioPlayer, deleteAudioPlayer } from '../DataStore';
 import { noop } from '../util/util';
-import { type VoiceConnection, VoiceConnectionStatus } from '../VoiceConnection';
+import { VoiceConnectionStatus } from '../VoiceConnection';
 import { AudioPlayerError } from './AudioPlayerError';
 import type { AudioResource } from './AudioResource';
-import { PlayerSubscription } from './PlayerSubscription';
+import type { PlayerSubscription } from './PlayerSubscription';
 
 // The Opus "silent" frame
 export const SILENCE_FRAME = new Uint8Array([0xf8, 0xff, 0xfe]);
@@ -258,49 +258,6 @@ export class AudioPlayer extends AsyncEventEmitter {
 	}
 
 	/**
-	 * Subscribes a VoiceConnection to the audio player's play list. If the VoiceConnection is already subscribed,
-	 * then the existing subscription is used.
-	 *
-	 * @remarks
-	 * This method should not be directly called. Instead, use VoiceConnection#subscribe.
-	 * @param connection - The connection to subscribe
-	 * @returns The new subscription if the voice connection is not yet subscribed, otherwise the existing subscription
-	 */
-	// @ts-expect-error
-	private subscribe(connection: VoiceConnection) {
-		const existingSubscription = this.subscribers.find((subscription) => subscription.connection === connection);
-		if (!existingSubscription) {
-			const subscription = new PlayerSubscription(connection, this);
-			this.subscribers.push(subscription);
-			setImmediate(() => this.emit('subscribe', subscription));
-			return subscription;
-		}
-
-		return existingSubscription;
-	}
-
-	/**
-	 * Unsubscribes a subscription - i.e. removes a voice connection from the play list of the audio player.
-	 *
-	 * @remarks
-	 * This method should not be directly called. Instead, use PlayerSubscription#unsubscribe.
-	 * @param subscription - The subscription to remove
-	 * @returns Whether or not the subscription existed on the player and was removed
-	 */
-	// @ts-expect-error
-	private unsubscribe(subscription: PlayerSubscription) {
-		const index = this.subscribers.indexOf(subscription);
-		const exists = index !== -1;
-		if (exists) {
-			this.subscribers.splice(index, 1);
-			subscription.connection.setSpeaking(false);
-			this.emit('unsubscribe', subscription);
-		}
-
-		return exists;
-	}
-
-	/**
 	 * The state that the player is in.
 	 *
 	 * @remarks
@@ -521,121 +478,12 @@ export class AudioPlayer extends AsyncEventEmitter {
 	}
 
 	/**
-	 * Called roughly every 20ms by the global audio player timer. Dispatches any audio packets that are buffered
-	 * by the active connections of this audio player.
-	 */
-	// @ts-expect-error
-	private _stepDispatch() {
-		const state = this._state;
-
-		// Guard against the Idle state
-		if (state.status === AudioPlayerStatus.Idle || state.status === AudioPlayerStatus.Buffering) return;
-
-		// Dispatch any audio packets that were prepared in the previous cycle
-		for (const connection of this.playable) {
-			connection.dispatchAudio();
-		}
-	}
-
-	/**
-	 * Called roughly every 20ms by the global audio player timer. Attempts to read an audio packet from the
-	 * underlying resource of the stream, and then has all the active connections of the audio player prepare it
-	 * (encrypt it, append header data) so that it is ready to play at the start of the next cycle.
-	 */
-	// @ts-expect-error
-	private _stepPrepare() {
-		const state = this._state;
-
-		// Guard against the Idle state
-		if (state.status === AudioPlayerStatus.Idle || state.status === AudioPlayerStatus.Buffering) return;
-
-		// List of connections that can receive the packet
-		const playable = this.playable;
-
-		/* If the player was previously in the AutoPaused state, check to see whether there are newly available
-		   connections, allowing us to transition out of the AutoPaused state back into the Playing state */
-		if (state.status === AudioPlayerStatus.AutoPaused && playable.length > 0) {
-			this.state = {
-				...state,
-				status: AudioPlayerStatus.Playing,
-				missedFrames: 0,
-			};
-		}
-
-		/* If the player is (auto)paused, check to see whether silence packets should be played and
-		   set a timeout to begin the next cycle, ending the current cycle here. */
-		if (state.status === AudioPlayerStatus.Paused || state.status === AudioPlayerStatus.AutoPaused) {
-			if (state.silencePacketsRemaining > 0) {
-				state.silencePacketsRemaining--;
-				this._preparePacket(SILENCE_FRAME, playable, state);
-				if (state.silencePacketsRemaining === 0) {
-					this._signalStopSpeaking();
-				}
-			}
-
-			return;
-		}
-
-		// If there are no available connections in this cycle, observe the configured "no subscriber" behavior.
-		if (playable.length === 0) {
-			if (this.behaviors.noSubscriber === NoSubscriberBehavior.Pause) {
-				this.state = {
-					...state,
-					status: AudioPlayerStatus.AutoPaused,
-					silencePacketsRemaining: 5,
-				};
-				return;
-			} else if (this.behaviors.noSubscriber === NoSubscriberBehavior.Stop) {
-				this.stop(true);
-			}
-		}
-
-		/**
-		 * Attempt to read an Opus packet from the resource. If there isn't an available packet,
-		 * play a silence packet. If there are 5 consecutive cycles with failed reads, then the
-		 * playback will end.
-		 */
-		const packet: Uint8Array | null = state.resource.read();
-
-		if (state.status === AudioPlayerStatus.Playing) {
-			if (packet) {
-				this._preparePacket(packet, playable, state);
-				state.missedFrames = 0;
-			} else {
-				this._preparePacket(SILENCE_FRAME, playable, state);
-				state.missedFrames++;
-				if (state.missedFrames >= this.behaviors.maxMissedFrames) {
-					this.stop();
-				}
-			}
-		}
-	}
-
-	/**
 	 * Signals to all the subscribed connections that they should send a packet to Discord indicating
 	 * they are no longer speaking. Called once playback of a resource ends.
 	 */
 	private _signalStopSpeaking() {
 		for (const { connection } of this.subscribers) {
 			connection.setSpeaking(false);
-		}
-	}
-
-	/**
-	 * Instructs the given connections to each prepare this packet to be played at the start of the
-	 * next cycle.
-	 *
-	 * @param packet - The Opus packet to be prepared by each receiver
-	 * @param receivers - The connections that should play this packet
-	 */
-	private _preparePacket(
-		packet: Uint8Array,
-		receivers: VoiceConnection[],
-		state: AudioPlayerPausedState | AudioPlayerPlayingState,
-	) {
-		state.playbackDuration += 20;
-		for (const connection of receivers) {
-			connection.prepareAudioPacket(packet);
 		}
 	}
 }

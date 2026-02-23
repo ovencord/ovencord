@@ -1,19 +1,11 @@
 import type { APISelectMenuComponent } from 'discord-api-types/v10';
 import { kData } from '../../utils/symbols.js';
-import type { Partialize } from '../../utils/types.js';
 import { Component } from './Component.js';
 
 export abstract class SelectMenuComponent<
 	Type extends APISelectMenuComponent,
 	Omitted extends keyof Type | '' = '',
 > extends Component<Type, Omitted> {
-	/**
-	 * @param data - The raw data received from the API for the select menu
-	 */
-	public constructor(data: Partialize<Type, Omitted>) {
-		super(data);
-	}
-
 	/**
 	 * The customId to be sent in the interaction when a selection is made
 	 */

@@ -4,7 +4,7 @@ import type { Channel } from '../Channel.js';
 
 export interface ChannelOwnerMixin<Type extends ChannelType.GroupDM | ThreadChannelType> extends Channel<Type> {}
 
-export class ChannelOwnerMixin<Type extends ChannelType.GroupDM | ThreadChannelType> {
+export class ChannelOwnerMixin<_Type extends ChannelType.GroupDM | ThreadChannelType> {
 	/**
 	 * The id of the creator of the group DM or thread
 	 */

@@ -1,6 +1,5 @@
 import type { APIMessageComponentInteractionMetadata, InteractionType } from 'discord-api-types/v10';
 import { kData } from '../utils/symbols.js';
-import type { Partialize } from '../utils/types.js';
 import { InteractionMetadata } from './InteractionMetadata.js';
 
 /**
@@ -15,13 +14,6 @@ export class MessageComponentInteractionMetadata<
 	 * The template used for removing data from the raw data stored for each MessageComponentInteractionMetadata.
 	 */
 	public static override readonly DataTemplate: Partial<APIMessageComponentInteractionMetadata> = {};
-
-	/**
-	 * @param data - The raw data received from the API for the connection
-	 */
-	public constructor(data: Partialize<APIMessageComponentInteractionMetadata, Omitted>) {
-		super(data);
-	}
 
 	/**
 	 * The id of the message that contained the interactive component

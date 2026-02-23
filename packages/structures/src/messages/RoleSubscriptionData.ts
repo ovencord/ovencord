@@ -1,7 +1,6 @@
 import type { APIMessageRoleSubscriptionData } from 'discord-api-types/v10';
 import { Structure } from '../Structure.js';
 import { kData } from '../utils/symbols.js';
-import type { Partialize } from '../utils/types.js';
 
 /**
  * Represents metadata about the role subscription causing a message.
@@ -11,13 +10,6 @@ import type { Partialize } from '../utils/types.js';
 export abstract class RoleSubscriptionData<
 	Omitted extends keyof APIMessageRoleSubscriptionData | '' = '',
 > extends Structure<APIMessageRoleSubscriptionData, Omitted> {
-	/**
-	 * @param data - The raw data received from the API for the connection
-	 */
-	public constructor(data: Partialize<APIMessageRoleSubscriptionData, Omitted>) {
-		super(data);
-	}
-
 	/**
 	 * The id of the SKU and listing the user is subscribed to
 	 */

@@ -1,5 +1,4 @@
 import type { APIUserSelectComponent } from 'discord-api-types/v10';
-import type { Partialize } from '../../utils/types.js';
 import { SelectMenuComponent } from './SelectMenuComponent.js';
 
 /**
@@ -15,11 +14,4 @@ export class UserSelectMenuComponent<
 	 * The template used for removing data from the raw data stored for each UserSelectMenuComponent.
 	 */
 	public static override readonly DataTemplate: Partial<APIUserSelectComponent> = {};
-
-	/**
-	 * @param data - The raw data received from the API for the user select menu
-	 */
-	public constructor(data: Partialize<APIUserSelectComponent, Omitted>) {
-		super(data);
-	}
 }

@@ -118,10 +118,10 @@ export class BitField {
 	 * @param {...any} hasParams Additional parameters for the has method, if any
 	 * @returns {Object}
 	 */
-	serialize(...hasParams: any[]): Record<string, boolean> {
+	serialize(..._hasParams: any[]): Record<string, boolean> {
 		const serialized: Record<string, boolean> = {};
 		for (const [flag, bit] of Object.entries((this.constructor as any).Flags)) {
-			if (isNaN(flag as any)) serialized[flag] = this.has(bit);
+			if (Number.isNaN(flag as any)) serialized[flag] = this.has(bit);
 		}
 
 		return serialized;
@@ -145,9 +145,9 @@ export class BitField {
 		return this.bitfield;
 	}
 
-	*[Symbol.iterator](...hasParams: any[]): Generator<string> {
+	*[Symbol.iterator](..._hasParams: any[]): Generator<string> {
 		for (const bitName of Object.keys((this.constructor as any).Flags)) {
-			if (isNaN(bitName as any) && this.has(bitName)) yield bitName;
+			if (Number.isNaN(bitName as any) && this.has(bitName)) yield bitName;
 		}
 	}
 
@@ -168,7 +168,7 @@ export class BitField {
 		}
 
 		if (typeof bit === 'string') {
-			if (!isNaN(bit as any)) return typeof DefaultBit === 'bigint' ? BigInt(bit) : Number(bit);
+			if (!Number.isNaN(bit as any)) return typeof DefaultBit === 'bigint' ? BigInt(bit) : Number(bit);
 			if (BitField.Flags[bit] !== undefined) return BitField.Flags[bit];
 		}
 

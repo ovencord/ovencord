@@ -200,7 +200,7 @@ export class PermissionOverwrites extends Base {
 			throw new DiscordjsTypeError(ErrorCodes.InvalidType, 'overwrite.type', 'OverwriteType', true);
 		}
 
-		let type;
+		let type: any;
 		if (typeof overwrite.id === 'string') {
 			if (overwrite.type === undefined) {
 				if (guild.roles.cache.has(overwrite.id)) {

@@ -7,7 +7,7 @@ export interface ThreadChannelMixin<Type extends ThreadChannelType = ThreadChann
 /**
  * @remarks has a sub-structure {@link ThreadMetadata} that extending mixins should add to their DataTemplate and _optimizeData
  */
-export class ThreadChannelMixin<Type extends ThreadChannelType = ThreadChannelType> {
+export class ThreadChannelMixin<_Type extends ThreadChannelType = ThreadChannelType> {
 	/**
 	 * The approximate count of users in a thread, stops counting at 50
 	 */

@@ -7,7 +7,7 @@ export type ReadonlyCollection<Key, Value> = Omit<
 > &
 	ReadonlyMap<Key, Value>;
 
-export interface Collection<Key, Value> {
+export interface Collection<_Key, _Value> {
 	/**
 	 * Ambient declaration to allow references to `this.constructor` in class methods.
 	 *
@@ -667,7 +667,7 @@ export class Collection<Key, Value> extends Map<Key, Value> {
 		const iterator = this.entries();
 		if (initialValue === undefined) {
 			if (this.size === 0) throw new TypeError('Reduce of empty collection with no initial value');
-			accumulator = iterator.next().value![1] as unknown as InitialValue;
+			accumulator = iterator.next().value?.[1] as unknown as InitialValue;
 		} else {
 			accumulator = initialValue;
 		}
@@ -705,7 +705,7 @@ export class Collection<Key, Value> extends Map<Key, Value> {
 		let index: number;
 		if (initialValue === undefined) {
 			if (entries.length === 0) throw new TypeError('Reduce of empty collection with no initial value');
-			accumulator = entries[entries.length - 1]![1] as unknown as InitialValue;
+			accumulator = entries[entries.length - 1]?.[1] as unknown as InitialValue;
 			index = entries.length - 1;
 		} else {
 			accumulator = initialValue;

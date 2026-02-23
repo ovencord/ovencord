@@ -1,7 +1,6 @@
 import type { APIConnection } from 'discord-api-types/v10';
 import { Structure } from '../Structure.js';
 import { kData } from '../utils/symbols.js';
-import type { Partialize } from '../utils/types.js';
 
 /**
  * Represents a user's connection on Discord.
@@ -13,13 +12,6 @@ export class Connection<Omitted extends keyof APIConnection | '' = ''> extends S
 	 * The template used for removing data from the raw data stored for each Connection
 	 */
 	public static override readonly DataTemplate: Partial<APIConnection> = {};
-
-	/**
-	 * @param data - The raw data received from the API for the connection
-	 */
-	public constructor(data: Partialize<APIConnection, Omitted>) {
-		super(data);
-	}
 
 	/**
 	 * The id of the connection account

@@ -3,7 +3,6 @@ import type { APIStickerPack } from 'discord-api-types/v10';
 import { Structure } from '../Structure.js';
 import { kData } from '../utils/symbols.js';
 import { isIdSet } from '../utils/type-guards.js';
-import type { Partialize } from '../utils/types.js';
 
 /**
  * Represents a sticker pack on Discord.
@@ -16,13 +15,6 @@ export class StickerPack<Omitted extends keyof APIStickerPack | '' = ''> extends
 	 * The template used for removing data from the raw data stored for each sticker pack
 	 */
 	public static override DataTemplate: Partial<APIStickerPack> = {};
-
-	/**
-	 * @param data - The raw data received from the API for the sticker pack
-	 */
-	public constructor(data: Partialize<APIStickerPack, Omitted>) {
-		super(data);
-	}
 
 	/**
 	 * The id of the sticker pack

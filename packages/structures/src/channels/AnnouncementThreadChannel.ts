@@ -11,7 +11,7 @@ import { GuildChannelMixin } from './mixins/GuildChannelMixin.js';
 import { TextChannelMixin } from './mixins/TextChannelMixin.js';
 import { ThreadChannelMixin } from './mixins/ThreadChannelMixin.js';
 
-export interface AnnouncementThreadChannel<Omitted extends keyof APIAnnouncementThreadChannel | '' = ''>
+export interface AnnouncementThreadChannel<_Omitted extends keyof APIAnnouncementThreadChannel | '' = ''>
 	extends MixinTypes<
 		Channel<ChannelType.AnnouncementThread>,
 		[

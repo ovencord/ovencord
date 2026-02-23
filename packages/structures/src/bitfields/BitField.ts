@@ -35,7 +35,7 @@ export abstract class BitField<Flags extends string> {
 	 */
 	public bitField: bigint;
 
-	public declare ['constructor']: NonAbstract<typeof BitField<Flags>>;
+	public declare constructor: NonAbstract<typeof BitField<Flags>>;
 
 	/**
 	 * @param bits - Bit(s) to read from

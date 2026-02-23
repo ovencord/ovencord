@@ -93,7 +93,7 @@ export class VoiceWebSocket extends AsyncEventEmitter {
 		this.ws.binaryType = 'arraybuffer';
 		this.ws.onmessage = (event) => this.onMessage(event);
 		this.ws.onopen = (event) => this.emit('open', event);
-		this.ws.onerror = (event) => this.emit('error', new Error('WebSocket encountered an error'));
+		this.ws.onerror = (_event) => this.emit('error', new Error('WebSocket encountered an error'));
 		this.ws.onclose = (event) => this.emit('close', event);
 
 		this.lastHeartbeatAck = 0;

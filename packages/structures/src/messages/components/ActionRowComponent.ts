@@ -1,5 +1,4 @@
 import type { APIActionRowComponent, APIComponentInActionRow, ComponentType } from 'discord-api-types/v10';
-import type { Partialize } from '../../utils/types.js';
 import type { ComponentDataType } from './Component.js';
 import { Component } from './Component.js';
 
@@ -17,11 +16,4 @@ export class ActionRowComponent<
 	 * The template used for removing data from the raw data stored for each ActionRowComponent.
 	 */
 	public static override readonly DataTemplate: Partial<ComponentDataType<ComponentType.ActionRow>> = {};
-
-	/**
-	 * @param data - The raw data received from the API for the action row
-	 */
-	public constructor(data: Partialize<ComponentDataType<ComponentType.ActionRow>, Omitted>) {
-		super(data);
-	}
 }

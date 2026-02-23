@@ -140,7 +140,7 @@ export class WebhooksAPI {
 			body,
 			auth: false,
 			signal,
-		}) as Promise<RESTPostAPIWebhookWithTokenWaitResult | void>;
+		}) as Promise<RESTPostAPIWebhookWithTokenWaitResult | undefined>;
 	}
 
 	/**

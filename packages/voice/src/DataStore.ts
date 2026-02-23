@@ -119,7 +119,7 @@ function audioCycleStep() {
 	const available = audioPlayers.filter((player) => player.checkPlayable());
 
 	for (const player of available) {
-		player['_stepDispatch']();
+		player._stepDispatch();
 	}
 
 	prepareNextAudioFrame(available);
@@ -140,7 +140,7 @@ function prepareNextAudioFrame(players: AudioPlayer[]) {
 		return;
 	}
 
-	nextPlayer['_stepPrepare']();
+	nextPlayer._stepPrepare();
 
 	// setImmediate to avoid long audio player chains blocking other scheduled tasks
 	setImmediate(() => prepareNextAudioFrame(players));

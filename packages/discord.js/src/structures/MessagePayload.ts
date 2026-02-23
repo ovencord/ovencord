@@ -99,7 +99,7 @@ export class MessagePayload {
 	 * @returns {?string}
 	 */
 	makeContent() {
-		let content;
+		let content: string | undefined;
 		if (this.options.content === null) {
 			content = '';
 		} else if (this.options.content !== undefined) {
@@ -121,7 +121,7 @@ export class MessagePayload {
 		const content = this.makeContent();
 		const tts = Boolean(this.options.tts);
 
-		let nonce;
+		let nonce: string | number | undefined;
 		if (this.options.nonce !== undefined) {
 			nonce = this.options.nonce;
 			if (typeof nonce === 'number' ? !Number.isInteger(nonce) : typeof nonce !== 'string') {
@@ -147,10 +147,10 @@ export class MessagePayload {
 			isJSONEncodable(component) ? component.toJSON() : this.target.client.options.jsonTransformer(component),
 		);
 
-		let username;
-		let avatarURL;
-		let threadName;
-		let appliedTags;
+		let username: string | undefined;
+		let avatarURL: string | undefined;
+		let threadName: string | undefined;
+		let appliedTags: any[] | undefined;
 		if (isWebhook) {
 			username = this.options.username ?? this.target.name;
 			if (this.options.avatarURL) avatarURL = this.options.avatarURL;
@@ -158,7 +158,7 @@ export class MessagePayload {
 			if (this.options.appliedTags) appliedTags = this.options.appliedTags;
 		}
 
-		let flags;
+		let flags: number | bigint | undefined;
 		if (this.options.flags != null) {
 			flags = new MessageFlagsBitField(this.options.flags).bitfield;
 		}
@@ -173,7 +173,7 @@ export class MessagePayload {
 			delete allowedMentions.repliedUser;
 		}
 
-		let message_reference;
+		let message_reference: any;
 		if (this.options.messageReference) {
 			const reference = this.options.messageReference;
 
@@ -214,7 +214,7 @@ export class MessagePayload {
 			);
 		}
 
-		let poll;
+		let poll: any;
 		if (this.options.poll) {
 			poll = isJSONEncodable(this.options.poll)
 				? this.options.poll.toJSON()
@@ -268,9 +268,8 @@ export class MessagePayload {
 	async resolveFiles() {
 		if (this.files) return this;
 
-		// @ts-expect-error
 		this.files = await Promise.all(
-			this.options.files?.map((file) => (this.constructor as typeof MessagePayload).resolveFile(file)) ?? [],
+			this.options.files?.map((file: any) => (this.constructor as typeof MessagePayload).resolveFile(file)) ?? [],
 		);
 		return this;
 	}
@@ -299,8 +298,8 @@ export class MessagePayload {
 			}
 		}
 
-		let attachment;
-		let name;
+		let attachment: any;
+		let name: string | undefined;
 
 		const ownAttachment =
 			typeof fileLike === 'string' || fileLike instanceof Buffer || typeof fileLike.pipe === 'function';

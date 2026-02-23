@@ -1,7 +1,6 @@
 import type { APIUnfurledMediaItem } from 'discord-api-types/v10';
 import { Structure } from '../../Structure.js';
 import { kData } from '../../utils/symbols.js';
-import type { Partialize } from '../../utils/types.js';
 
 // TODO: add `flags` as a BitField class and appropriate getter, once it gets properly documented
 
@@ -18,13 +17,6 @@ export class UnfurledMediaItem<Omitted extends keyof APIUnfurledMediaItem | '' =
 	 * The template used for removing data from the raw data stored for each UnfurledMediaItem.
 	 */
 	public static override readonly DataTemplate: Partial<APIUnfurledMediaItem> = {};
-
-	/**
-	 * @param data - The raw data received from the API for the unfurled media item
-	 */
-	public constructor(data: Partialize<APIUnfurledMediaItem, Omitted>) {
-		super(data);
-	}
 
 	/**
 	 * The id of the uploaded attachment

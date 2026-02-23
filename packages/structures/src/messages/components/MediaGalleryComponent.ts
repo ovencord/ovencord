@@ -1,5 +1,4 @@
 import type { APIMediaGalleryComponent } from 'discord-api-types/v10';
-import type { Partialize } from '../../utils/types.js';
 import { Component } from './Component.js';
 
 /**
@@ -16,11 +15,4 @@ export class MediaGalleryComponent<Omitted extends keyof APIMediaGalleryComponen
 	 * The template used for removing data from the raw data stored for each MediaGalleryComponent.
 	 */
 	public static override readonly DataTemplate: Partial<APIMediaGalleryComponent> = {};
-
-	/**
-	 * @param data - The raw data received from the API for the media gallery
-	 */
-	public constructor(data: Partialize<APIMediaGalleryComponent, Omitted>) {
-		super(data);
-	}
 }

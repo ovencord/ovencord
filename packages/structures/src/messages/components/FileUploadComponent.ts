@@ -1,6 +1,5 @@
 import type { APIFileUploadComponent } from 'discord-api-types/v10';
 import { kData } from '../../utils/symbols.js';
-import type { Partialize } from '../../utils/types.js';
 import { Component } from './Component.js';
 
 /**
@@ -16,13 +15,6 @@ export class FileUploadComponent<Omitted extends keyof APIFileUploadComponent | 
 	 * The template used for removing data from the raw data stored for each FileUploadComponent.
 	 */
 	public static override readonly DataTemplate: Partial<APIFileUploadComponent> = {};
-
-	/**
-	 * @param data - The raw data received from the API for the file upload component
-	 */
-	public constructor(data: Partialize<APIFileUploadComponent, Omitted>) {
-		super(data);
-	}
 
 	/**
 	 * The custom id to be sent in the interaction when the modal gets submitted

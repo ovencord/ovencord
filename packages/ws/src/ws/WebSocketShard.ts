@@ -111,6 +111,7 @@ export class WebSocketShard extends AsyncEventEmitter<WebSocketShardEventsMap> {
 
 	private readonly sendQueue = new AsyncQueue();
 
+	// @ts-expect-error - Collection requires 4 type arguments in some contexts?
 	private readonly timeoutAbortControllers = new Collection<WebSocketShardEvents, AbortController>();
 
 	private readonly strategy: IContextFetchingStrategy;
@@ -145,7 +146,7 @@ export class WebSocketShard extends AsyncEventEmitter<WebSocketShardEventsMap> {
 
 	public async connect() {
 		const controller = new AbortController();
-		let promise;
+		let promise: Promise<unknown> | undefined;
 
 		if (!this.initialConnectResolved) {
 			// Sleep for the remaining time, but if the connection closes in the meantime, we shouldn't wait the remainder to avoid blocking the new conn
@@ -260,7 +261,7 @@ export class WebSocketShard extends AsyncEventEmitter<WebSocketShardEventsMap> {
 
 		this.lastHeartbeatAt = -1;
 
-		for (const controller of this.timeoutAbortControllers.values()) {
+		for (const controller of this.timeoutAbortControllers.values() as IterableIterator<AbortController>) {
 			controller.abort();
 		}
 
@@ -844,15 +845,14 @@ export class WebSocketShard extends AsyncEventEmitter<WebSocketShardEventsMap> {
 	}
 
 	// Helper to handle emit type casting
-	private emitEvent(event: WebSocketShardEvents, ...args: any[]) {
-		// eslint-disable-next-line @typescript-eslint/no-explicit-any
+	private emitEvent(event: WebSocketShardEvents, ...args: unknown[]) {
 		(this as any).emit(event, ...args);
 	}
 
 	// Helper to replace Node.js once
-	private awaitEvent(event: WebSocketShardEvents, options?: { signal?: AbortSignal }): Promise<any[]> {
+	private awaitEvent(event: WebSocketShardEvents, options?: { signal?: AbortSignal }): Promise<unknown[]> {
 		return new Promise((resolve, reject) => {
-			const listener = (...args: any[]) => {
+			const listener = (...args: unknown[]) => {
 				resolve(args);
 			};
 
@@ -875,9 +875,7 @@ export class WebSocketShard extends AsyncEventEmitter<WebSocketShardEventsMap> {
 	}
 
 	// Override emit to fix TypeScript visibility/type issues
-	// eslint-disable-next-line @typescript-eslint/no-explicit-any
-	public override emit(event: any, ...args: any[]): Promise<boolean> {
-		// eslint-disable-next-line @typescript-eslint/no-explicit-any
+	public override emit(event: string | symbol, ...args: unknown[]): Promise<boolean> {
 		return (super.emit as any)(event, ...args);
 	}
 }

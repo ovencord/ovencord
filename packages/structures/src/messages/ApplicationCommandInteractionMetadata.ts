@@ -1,6 +1,5 @@
 import type { APIApplicationCommandInteractionMetadata, InteractionType } from 'discord-api-types/v10';
 import { kData } from '../utils/symbols.js';
-import type { Partialize } from '../utils/types.js';
 import { InteractionMetadata } from './InteractionMetadata.js';
 
 /**
@@ -16,13 +15,6 @@ export class ApplicationCommandInteractionMetadata<
 	 * The template used for removing data from the raw data stored for each ApplicationCommandInteractionMetadata.
 	 */
 	public static override readonly DataTemplate: Partial<APIApplicationCommandInteractionMetadata> = {};
-
-	/**
-	 * @param data - The raw data received from the API for the connection
-	 */
-	public constructor(data: Partialize<APIApplicationCommandInteractionMetadata, Omitted>) {
-		super(data);
-	}
 
 	/**
 	 * The id of the message the command was run on

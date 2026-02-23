@@ -12,7 +12,7 @@ const ignoredRoutes = new Set([
 	'nitroStickerPacks',
 ]);
 
-const cwd = import.meta.dir + '/../src/api/';
+const cwd = `${import.meta.dir}/../src/api/`;
 const glob = new Bun.Glob('**/*.ts');
 
 for await (const file of glob.scan({ cwd })) {

@@ -1,6 +1,5 @@
 import type { APIContainerComponent } from 'discord-api-types/v10';
 import { kData } from '../../utils/symbols.js';
-import type { Partialize } from '../../utils/types.js';
 import { Component } from './Component.js';
 
 /**
@@ -17,13 +16,6 @@ export class ContainerComponent<Omitted extends keyof APIContainerComponent | ''
 	 * The template used for removing data from the raw data stored for each ContainerComponent.
 	 */
 	public static override readonly DataTemplate: Partial<APIContainerComponent> = {};
-
-	/**
-	 * @param data - The raw data received from the API for the container
-	 */
-	public constructor(data: Partialize<APIContainerComponent, Omitted>) {
-		super(data);
-	}
 
 	/**
 	 * Color for the accent on the container as RGB

@@ -3,20 +3,12 @@ import { AttachmentFlagsBitField } from '../bitfields/AttachmentFlagsBitField.js
 import { Structure } from '../Structure.js';
 import { kData } from '../utils/symbols.js';
 import { isFieldSet } from '../utils/type-guards.js';
-import type { Partialize } from '../utils/types.js';
 
 export class Attachment<Omitted extends keyof APIAttachment | '' = ''> extends Structure<APIAttachment, Omitted> {
 	/**
 	 * The template used for removing data from the raw data stored for each Attachment.
 	 */
 	public static override readonly DataTemplate: Partial<APIAttachment> = {};
-
-	/**
-	 * @param data - The raw data received from the API for the connection
-	 */
-	public constructor(data: Partialize<APIAttachment, Omitted>) {
-		super(data);
-	}
 
 	/**
 	 * The id of the attachment

@@ -9,7 +9,7 @@ export interface ChannelWebhookMixin<
 > extends Channel<Type> {}
 
 export class ChannelWebhookMixin<
-	Type extends ChannelType.GuildForum | ChannelType.GuildMedia | Exclude<GuildTextChannelType, ThreadChannelType> =
+	_Type extends ChannelType.GuildForum | ChannelType.GuildMedia | Exclude<GuildTextChannelType, ThreadChannelType> =
 		| ChannelType.GuildForum
 		| ChannelType.GuildMedia
 		| Exclude<GuildTextChannelType, ThreadChannelType>,

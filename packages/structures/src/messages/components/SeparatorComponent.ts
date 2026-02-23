@@ -1,6 +1,5 @@
 import type { APISeparatorComponent } from 'discord-api-types/v10';
 import { kData } from '../../utils/symbols.js';
-import type { Partialize } from '../../utils/types.js';
 import { Component } from './Component.js';
 
 /**
@@ -16,13 +15,6 @@ export class SeparatorComponent<Omitted extends keyof APISeparatorComponent | ''
 	 * The template used for removing data from the raw data stored for each SeparatorComponent.
 	 */
 	public static override readonly DataTemplate: Partial<APISeparatorComponent> = {};
-
-	/**
-	 * @param data - The raw data received from the API for the separator
-	 */
-	public constructor(data: Partialize<APISeparatorComponent, Omitted>) {
-		super(data);
-	}
 
 	/**
 	 * Whether a visual divider should be displayed in the component

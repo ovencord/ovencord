@@ -22,7 +22,7 @@ export class InteractionCreateAction extends Action {
 		const channel = data.channel && this.getChannel(data.channel);
 
 		// Do not emit this for interactions that cache messages that are non-text-based.
-		let InteractionClass;
+		let InteractionClass: any;
 
 		switch (data.type) {
 			case InteractionType.ApplicationCommand:

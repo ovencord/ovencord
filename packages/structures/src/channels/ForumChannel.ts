@@ -9,7 +9,7 @@ import { ChannelPermissionMixin } from './mixins/ChannelPermissionMixin.js';
 import { ChannelTopicMixin } from './mixins/ChannelTopicMixin.js';
 import { ThreadOnlyChannelMixin } from './mixins/ThreadOnlyChannelMixin.js';
 
-export interface ForumChannel<Omitted extends keyof APIGuildForumChannel | '' = ''>
+export interface ForumChannel<_Omitted extends keyof APIGuildForumChannel | '' = ''>
 	extends MixinTypes<
 		Channel<ChannelType.GuildForum>,
 		[

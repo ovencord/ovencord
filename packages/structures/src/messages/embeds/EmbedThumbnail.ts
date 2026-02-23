@@ -1,7 +1,6 @@
 import type { APIEmbedThumbnail } from 'discord-api-types/v10';
 import { Structure } from '../../Structure.js';
 import { kData } from '../../utils/symbols.js';
-import type { Partialize } from '../../utils/types.js';
 
 /**
  * Represents thumbnail data in an embed on a message.
@@ -12,13 +11,6 @@ export class EmbedThumbnail<Omitted extends keyof APIEmbedThumbnail | '' = ''> e
 	APIEmbedThumbnail,
 	Omitted
 > {
-	/**
-	 * @param data - The raw data received from the API for the connection
-	 */
-	public constructor(data: Partialize<APIEmbedThumbnail, Omitted>) {
-		super(data);
-	}
-
 	/**
 	 * The height of the thumbnail
 	 */

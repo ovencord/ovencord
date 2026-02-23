@@ -1,7 +1,6 @@
 import type { APIEmbedProvider } from 'discord-api-types/v10';
 import { Structure } from '../../Structure.js';
 import { kData } from '../../utils/symbols.js';
-import type { Partialize } from '../../utils/types.js';
 
 /**
  * Represents provider data in an embed on a message.
@@ -12,13 +11,6 @@ export class EmbedProvider<Omitted extends keyof APIEmbedProvider | '' = ''> ext
 	APIEmbedProvider,
 	Omitted
 > {
-	/**
-	 * @param data - The raw data received from the API for the connection
-	 */
-	public constructor(data: Partialize<APIEmbedProvider, Omitted>) {
-		super(data);
-	}
-
 	/**
 	 * The name of the provider
 	 */

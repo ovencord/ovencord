@@ -485,7 +485,7 @@ export class MessageBuilder
 	 */
 	public addStickerIds(...stickerIds: RestOrArray<Snowflake>): this {
 		this.data.sticker_ids ??= [] as unknown as MessageBuilderData['sticker_ids'];
-		this.data.sticker_ids!.push(...normalizeArray(stickerIds));
+		this.data.sticker_ids?.push(...normalizeArray(stickerIds));
 		return this;
 	}
 
@@ -519,7 +519,7 @@ export class MessageBuilder
 	 */
 	public spliceStickerIds(index: number, deleteCount: number, ...stickerIds: RestOrArray<Snowflake>): this {
 		this.data.sticker_ids ??= [] as unknown as MessageBuilderData['sticker_ids'];
-		this.data.sticker_ids!.splice(index, deleteCount, ...normalizeArray(stickerIds));
+		this.data.sticker_ids?.splice(index, deleteCount, ...normalizeArray(stickerIds));
 		return this;
 	}
 

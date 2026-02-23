@@ -9,7 +9,7 @@ import { ChannelSlowmodeMixin } from './mixins/ChannelSlowmodeMixin.js';
 import { ChannelWebhookMixin } from './mixins/ChannelWebhookMixin.js';
 import { VoiceChannelMixin } from './mixins/VoiceChannelMixin.js';
 
-export interface StageChannel<Omitted extends keyof APIGuildStageVoiceChannel | '' = ''>
+export interface StageChannel<_Omitted extends keyof APIGuildStageVoiceChannel | '' = ''>
 	extends MixinTypes<
 		Channel<ChannelType.GuildStageVoice>,
 		[

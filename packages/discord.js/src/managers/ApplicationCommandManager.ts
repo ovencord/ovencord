@@ -275,7 +275,7 @@ export class ApplicationCommandManager extends CachedManager {
 	static transformCommand(command: any) {
 		if (isJSONEncodable(command)) return command.toJSON();
 
-		let default_member_permissions;
+		let default_member_permissions: any;
 
 		if ('default_member_permissions' in command) {
 			default_member_permissions = command.default_member_permissions

@@ -3,7 +3,6 @@ import type { APISticker } from 'discord-api-types/v10';
 import { Structure } from '../Structure.js';
 import { kData } from '../utils/symbols.js';
 import { isIdSet } from '../utils/type-guards.js';
-import type { Partialize } from '../utils/types.js';
 
 /**
  * Represents a sticker on Discord.
@@ -15,13 +14,6 @@ export class Sticker<Omitted extends keyof APISticker | '' = ''> extends Structu
 	 * The template used for removing data from the raw data stored for each SitckerItem.
 	 */
 	public static override DataTemplate: Partial<APISticker> = {};
-
-	/**
-	 * @param data - The raw data received from the API for the sticker item
-	 */
-	public constructor(data: Partialize<APISticker, Omitted>) {
-		super(data);
-	}
 
 	/**
 	 * The id of the sticker

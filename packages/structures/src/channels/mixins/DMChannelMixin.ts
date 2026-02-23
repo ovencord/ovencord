@@ -10,7 +10,7 @@ export interface DMChannelMixin<
 /**
  * @remarks has recipients, an array of sub-structures {@link User} that extending mixins should add to their DataTemplate and _optimizeData
  */
-export class DMChannelMixin<Type extends ChannelType.DM | ChannelType.GroupDM = ChannelType.DM | ChannelType.GroupDM> {
+export class DMChannelMixin<_Type extends ChannelType.DM | ChannelType.GroupDM = ChannelType.DM | ChannelType.GroupDM> {
 	/**
 	 * The URL to this channel.
 	 */

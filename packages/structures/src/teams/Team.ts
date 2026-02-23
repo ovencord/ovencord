@@ -3,7 +3,6 @@ import type { APITeam } from 'discord-api-types/v10';
 import { Structure } from '../Structure.js';
 import { kData } from '../utils/symbols.js';
 import { isIdSet } from '../utils/type-guards.js';
-import type { Partialize } from '../utils/types.js';
 
 /**
  * Represents any team on Discord.
@@ -16,13 +15,6 @@ export class Team<Omitted extends keyof APITeam | '' = ''> extends Structure<API
 	 * The template used for removing data from the raw data stored for each team.
 	 */
 	public static override readonly DataTemplate: Partial<APITeam> = {};
-
-	/**
-	 * @param data - The raw data received from the API for the team.
-	 */
-	public constructor(data: Partialize<APITeam, Omitted>) {
-		super(data);
-	}
 
 	/**
 	 * Hash of the image of the team's icon

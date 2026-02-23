@@ -1,5 +1,4 @@
 import type { APISectionComponent } from 'discord-api-types/v10';
-import type { Partialize } from '../../utils/types.js';
 import { Component } from './Component.js';
 
 /**
@@ -16,11 +15,4 @@ export class SectionComponent<Omitted extends keyof APISectionComponent | '' = '
 	 * The template used for removing data from the raw data stored for each SectionComponent.
 	 */
 	public static override readonly DataTemplate: Partial<APISectionComponent> = {};
-
-	/**
-	 * @param data - The raw data received from the API for the section
-	 */
-	public constructor(data: Partialize<APISectionComponent, Omitted>) {
-		super(data);
-	}
 }

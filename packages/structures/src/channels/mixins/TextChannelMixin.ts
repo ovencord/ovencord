@@ -4,7 +4,7 @@ import type { Channel } from '../Channel.js';
 
 export interface TextChannelMixin<Type extends TextChannelType = TextChannelType> extends Channel<Type> {}
 
-export class TextChannelMixin<Type extends TextChannelType = TextChannelType> {
+export class TextChannelMixin<_Type extends TextChannelType = TextChannelType> {
 	/**
 	 * The id of the last message sent in this channel.
 	 */

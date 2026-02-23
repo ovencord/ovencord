@@ -1,6 +1,5 @@
 import type { APILabelComponent, ComponentType } from 'discord-api-types/v10';
 import { kData } from '../../utils/symbols.js';
-import type { Partialize } from '../../utils/types.js';
 import type { ComponentDataType } from './Component.js';
 import { Component } from './Component.js';
 
@@ -18,13 +17,6 @@ export class LabelComponent<Omitted extends keyof APILabelComponent | '' = ''> e
 	 * The template used for removing data from the raw data stored for each LabelComponent.
 	 */
 	public static override readonly DataTemplate: Partial<ComponentDataType<ComponentType.Label>> = {};
-
-	/**
-	 * @param data - The raw data received from the API for the label
-	 */
-	public constructor(data: Partialize<ComponentDataType<ComponentType.Label>, Omitted>) {
-		super(data);
-	}
 
 	/**
 	 * The label text

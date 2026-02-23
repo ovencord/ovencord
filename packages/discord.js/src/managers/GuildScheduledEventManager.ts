@@ -106,8 +106,8 @@ export class GuildScheduledEventManager extends CachedManager {
 			recurrenceRule,
 		} = options;
 
-		let channel_id;
-		let entity_metadata;
+		let channel_id: any;
+		let entity_metadata: any;
 		if (entityType === GuildScheduledEventEntityType.External) {
 			channel_id = channel === undefined ? channel : null;
 			entity_metadata = { location: entityMetadata?.location };

@@ -5,7 +5,7 @@ export class GuildRoleCreateAction extends Action {
 	override handle(data: any) {
 		const client = this.client;
 		const guild = client.guilds.cache.get(data.guild_id);
-		let role;
+		let role: any;
 		if (guild) {
 			const already = guild.roles.cache.has(data.role.id);
 			role = guild.roles._add(data.role);

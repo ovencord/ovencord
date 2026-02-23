@@ -1,7 +1,6 @@
 import type { APITeamMember } from 'discord-api-types/v10';
 import { Structure } from '../Structure.js';
 import { kData } from '../utils/symbols.js';
-import type { Partialize } from '../utils/types.js';
 
 /**
  * Represents any team member on Discord.
@@ -14,13 +13,6 @@ export class TeamMember<Omitted extends keyof APITeamMember | '' = ''> extends S
 	 * The template used for removing data from the raw data stored for each team member
 	 */
 	public static override readonly DataTemplate: Partial<APITeamMember> = {};
-
-	/**
-	 * @param data - The raw data received from the API for the team member
-	 */
-	public constructor(data: Partialize<APITeamMember, Omitted>) {
-		super(data);
-	}
 
 	/**
 	 * User's membership state on the team

@@ -4,8 +4,8 @@ import type { RedisBrokerOptions } from './BaseRedis.js';
 import { BaseRedisBroker, DefaultRedisBrokerOptions } from './BaseRedis.js';
 
 interface InternalPromise {
-	reject(error: any): void;
-	resolve(data: any): void;
+	reject(error: unknown): void;
+	resolve(data: unknown): void;
 	timeout: NodeJS.Timeout;
 }
 
@@ -52,7 +52,10 @@ export const DefaultRPCRedisBrokerOptions = {
  * await broker.subscribe('responders', ['testcall']);
  * ```
  */
-export class RPCRedisBroker<TEvents extends Record<string, any[]>, TResponses extends Record<keyof TEvents, any>>
+export class RPCRedisBroker<
+		TEvents extends Record<string, unknown[]>,
+		TResponses extends Record<keyof TEvents, unknown>,
+	>
 	extends BaseRedisBroker<TEvents, TResponses>
 	implements IRPCBroker<TEvents, TResponses>
 {
@@ -73,9 +76,11 @@ export class RPCRedisBroker<TEvents extends Record<string, any[]>, TResponses ex
 		this.streamReadClient.on('messageBuffer', (channel: Uint8Array, message: Uint8Array) => {
 			const [, id] = new TextDecoder().decode(channel).split(':');
 			if (id && this.promises.has(id)) {
-				const { resolve, timeout } = this.promises.get(id)!;
-				resolve(this.options.decode(message));
-				clearTimeout(timeout);
+				const promise = this.promises.get(id);
+				if (promise) {
+					promise.resolve(this.options.decode(message));
+					clearTimeout(promise.timeout);
+				}
 			}
 		});
 	}
@@ -92,12 +97,16 @@ export class RPCRedisBroker<TEvents extends Record<string, any[]>, TResponses ex
 			event as string,
 			'*',
 			BaseRedisBroker.STREAM_DATA_KEY,
-			this.options.encode(data) as any,
+			this.options.encode(data) as unknown as string,
 		);
-		// This id! assertion is valid. From redis docs:
+		if (!id) {
+			throw new Error('Failed to acquire a unique ID from Redis');
+		}
+
+		// This id assertion is valid. From redis docs:
 		// "The command returns a Null reply when used with the NOMKSTREAM option and the key doesn't exist."
 		// See: https://redis.io/commands/xadd/
-		const rpcChannel = `${event as string}:${id!}`;
+		const rpcChannel = `${event as string}:${id}`;
 
 		// Construct the error here for better stack traces
 		const timedOut = new Error(`timed out after ${timeoutDuration}ms`);
@@ -106,10 +115,10 @@ export class RPCRedisBroker<TEvents extends Record<string, any[]>, TResponses ex
 		return new Promise<TResponses[Event]>((resolve, reject) => {
 			const timeout = setTimeout(() => reject(timedOut), timeoutDuration).unref();
 
-			this.promises.set(id!, { resolve, reject, timeout });
+			this.promises.set(id, { resolve, reject, timeout });
 		}).finally(() => {
 			void this.streamReadClient.unsubscribe(rpcChannel);
-			this.promises.delete(id!);
+			this.promises.delete(id);
 		});
 	}
 
@@ -117,10 +126,13 @@ export class RPCRedisBroker<TEvents extends Record<string, any[]>, TResponses ex
 		const payload: { ack(): Promise<void>; data: unknown; reply(data: unknown): Promise<void> } = {
 			data,
 			ack: async () => {
-				await this.redisClient.xack(event, group, id as any);
+				await this.redisClient.xack(event, group, new TextDecoder().decode(id));
 			},
 			reply: async (data) => {
-				await this.redisClient.publish(`${event}:${new TextDecoder().decode(id)}`, this.options.encode(data) as any);
+				await this.redisClient.publish(
+					`${event}:${new TextDecoder().decode(id)}`,
+					this.options.encode(data) as unknown as string,
+				);
 			},
 		};
 

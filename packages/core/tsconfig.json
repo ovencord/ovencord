@@ -5,7 +5,6 @@
 		"moduleResolution": "Bundler",
 		"baseUrl": ".",
 		"paths": {
-			"@ovencord/*": ["../*/src"],
 			"@ovencord/*": ["../*/src"]
 		}
 	},

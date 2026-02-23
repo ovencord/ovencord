@@ -3,7 +3,6 @@ import type { APISoundboardSound } from 'discord-api-types/v10';
 import { Structure } from '../Structure';
 import { kData } from '../utils/symbols';
 import { isIdSet } from '../utils/type-guards';
-import type { Partialize } from '../utils/types';
 
 /**
  * Represents any soundboard sound on Discord.
@@ -19,13 +18,6 @@ export class SoundboardSound<Omitted extends keyof APISoundboardSound | '' = ''>
 	 * The template used for removing data from the raw data stored for each soundboard sound.
 	 */
 	public static override readonly DataTemplate: Partial<APISoundboardSound> = {};
-
-	/**
-	 * @param data - The raw data received from the API for the soundboard sound
-	 */
-	public constructor(data: Partialize<APISoundboardSound, Omitted>) {
-		super(data);
-	}
 
 	/**
 	 * The name of this sound

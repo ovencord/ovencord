@@ -3,7 +3,6 @@ import { SKUFlagsBitField } from '../bitfields/SKUFlagsBitField.js';
 import { Structure } from '../Structure.js';
 import { kData } from '../utils/symbols.js';
 import { isFieldSet } from '../utils/type-guards.js';
-import type { Partialize } from '../utils/types.js';
 
 /**
  * Represents any SKU (stock-keeping units) on Discord.
@@ -15,13 +14,6 @@ export class SKU<Omitted extends keyof APISKU | '' = ''> extends Structure<APISK
 	 * The template used for removing data from the raw data stored for each SKU
 	 */
 	public static override readonly DataTemplate: Partial<APISKU> = {};
-
-	/**
-	 * @param data - The raw data received from the API for the SKU
-	 */
-	public constructor(data: Partialize<APISKU, Omitted>) {
-		super(data);
-	}
 
 	/**
 	 * Id of the SKU

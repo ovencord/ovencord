@@ -5,7 +5,6 @@ import type {
 } from 'discord-api-types/v10';
 import { Structure } from '../../Structure.js';
 import { kData } from '../../utils/symbols.js';
-import type { Partialize } from '../../utils/types.js';
 
 /**
  * Represents an auto moderation action metadata on Discord.
@@ -19,13 +18,6 @@ export class AutoModerationActionMetadata<
 	 * The template used for removing data from the raw data stored for each auto moderation action metadata
 	 */
 	public static override DataTemplate: Partial<APIAutoModerationActionMetadata> = {};
-
-	/**
-	 * @param data - The raw data received from the API for the auto moderation action metadata
-	 */
-	public constructor(data: Partialize<APIAutoModerationActionMetadata, Omitted>) {
-		super(data);
-	}
 
 	/**
 	 * Channel to which user content should be logged. This must be an existing channel

@@ -17,7 +17,7 @@ export class AsyncQueue {
 	 * @param options.signal - An optional abort signal
 	 */
 	public wait(options?: { signal?: AbortSignal }): Promise<void> {
-		const next = this.#promises.length ? this.#promises.at(-1)!.promise : Promise.resolve();
+		const next = this.#promises.length ? this.#promises.at(-1)?.promise : Promise.resolve();
 
 		let resolve!: () => void;
 		const promise = new Promise<void>((res) => {
@@ -32,7 +32,7 @@ export class AsyncQueue {
 		}
 
 		return new Promise((res, rej) => {
-			if (options.signal!.aborted) {
+			if (options.signal?.aborted) {
 				// Bridge immediately: when next resolves, we resolve our token
 				next.then(() => resolve());
 				rej(new Error('AbortError')); // TODO: Use DOMException or standard AbortError if available
@@ -45,10 +45,10 @@ export class AsyncQueue {
 				rej(new Error('AbortError'));
 			};
 
-			options.signal!.addEventListener('abort', abortHandler, { once: true });
+			options.signal?.addEventListener('abort', abortHandler, { once: true });
 
 			next.then(() => {
-				options.signal!.removeEventListener('abort', abortHandler);
+				options.signal?.removeEventListener('abort', abortHandler);
 				res();
 			});
 		});

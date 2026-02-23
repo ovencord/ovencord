@@ -14,7 +14,7 @@ import { SpeakingMap } from './SpeakingMap';
 import { SSRCMap } from './SSRCMap';
 
 const UNPADDED_NONCE_LENGTH = 4;
-const AUTH_TAG_LENGTH = 16;
+const _AUTH_TAG_LENGTH = 16;
 
 /**
  * Attaches to a VoiceConnection, allowing you to receive audio packets from other

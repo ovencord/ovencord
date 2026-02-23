@@ -171,7 +171,7 @@ export class ChannelManager extends CachedManager {
 	 *   .catch(console.error);
 	 */
 	async createMessage(channel: any, options: any) {
-		let payload;
+		let payload: any;
 
 		if (options instanceof MessagePayload) {
 			payload = await options.resolveBody().resolveFiles();

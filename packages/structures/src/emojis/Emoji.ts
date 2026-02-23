@@ -3,7 +3,6 @@ import type { APIEmoji } from 'discord-api-types/v10';
 import { Structure } from '../Structure.js';
 import { kData } from '../utils/symbols.js';
 import { isIdSet } from '../utils/type-guards.js';
-import type { Partialize } from '../utils/types.js';
 
 /**
  * Represents any emoji on Discord.
@@ -17,13 +16,6 @@ export class Emoji<Omitted extends keyof APIEmoji | '' = ''> extends Structure<A
 	 * The template used for removing data from the raw data stored for each emoji
 	 */
 	public static override readonly DataTemplate: Partial<APIEmoji> = {};
-
-	/**
-	 * @param data - The raw data received from the API for the emoji
-	 */
-	public constructor(data: Partialize<APIEmoji, Omitted>) {
-		super(data);
-	}
 
 	/**
 	 * The emoji's id

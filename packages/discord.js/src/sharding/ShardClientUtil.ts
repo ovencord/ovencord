@@ -36,13 +36,13 @@ export class ShardClientUtil {
 			case 'process':
 				process.on('message', this._handleMessage.bind(this));
 				client.on(Events.ClientReady, () => {
-					process.send!({ _ready: true });
+					process.send?.({ _ready: true });
 				});
 				client.ws.on(WebSocketShardEvents.Closed, () => {
-					process.send!({ _disconnect: true });
+					process.send?.({ _disconnect: true });
 				});
 				client.ws.on(WebSocketShardEvents.Resumed, () => {
-					process.send!({ _resume: true });
+					process.send?.({ _resume: true });
 				});
 				break;
 			case 'worker':
@@ -75,7 +75,7 @@ export class ShardClientUtil {
 		return new Promise((resolve, reject) => {
 			switch (this.mode) {
 				case 'process':
-					process.send!(message, (err: Error | null) => {
+					process.send?.(message, (err: Error | null) => {
 						if (err) reject(err);
 						else resolve(undefined);
 					});

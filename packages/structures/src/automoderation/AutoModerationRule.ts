@@ -1,7 +1,6 @@
 import type { APIAutoModerationRule } from 'discord-api-types/v10';
 import { Structure } from '../Structure.js';
 import { kData } from '../utils/symbols.js';
-import type { Partialize } from '../utils/types.js';
 
 /**
  * Represents an auto moderation rule on Discord.
@@ -18,13 +17,6 @@ export class AutoModerationRule<Omitted extends keyof APIAutoModerationRule | ''
 	 * The template used for removing data from the raw data stored for each auto moderation rule
 	 */
 	public static override DataTemplate: Partial<APIAutoModerationRule> = {};
-
-	/**
-	 * @param data - The raw data received from the API for the auto moderation rule
-	 */
-	public constructor(data: Partialize<APIAutoModerationRule, Omitted>) {
-		super(data);
-	}
 
 	/**
 	 * The id of this rule

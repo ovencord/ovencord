@@ -26,7 +26,7 @@ export class PlayerSubscription {
 	 * audio player cannot stream audio to it until a new subscription is made.
 	 */
 	public unsubscribe() {
-		this.connection['onSubscriptionRemoved'](this);
-		this.player['unsubscribe'](this);
+		this.connection.onSubscriptionRemoved(this);
+		this.player.unsubscribe(this);
 	}
 }

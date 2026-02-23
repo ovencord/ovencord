@@ -28,11 +28,11 @@ export const DefaultBrokerOptions = {
 } as const satisfies Required<BaseBrokerOptions>;
 
 export type ToEventMap<
-	TRecord extends Record<string, any[]>,
-	TResponses extends Record<keyof TRecord, any> | undefined = undefined,
+	TRecord extends Record<string, unknown[]>,
+	TResponses extends Record<keyof TRecord, unknown> | undefined = undefined,
 > = {
 	[TKey in keyof TRecord]: [
-		event: TResponses extends Record<keyof TRecord, any>
+		event: TResponses extends Record<keyof TRecord, unknown>
 			? { ack(): Promise<void>; reply(data: TResponses[TKey]): Promise<void> }
 			: { ack(): Promise<void>; data: TRecord[TKey] },
 	];
@@ -58,8 +58,10 @@ export interface IPubSubBroker<TEvents extends {}>
 	publish<Event extends keyof TEvents>(event: Event, data: TEvents[Event]): Promise<void>;
 }
 
-export interface IRPCBroker<TEvents extends Record<string, any[]>, TResponses extends Record<keyof TEvents, any>>
-	extends IBaseBroker<TEvents>,
+export interface IRPCBroker<
+	TEvents extends Record<string, unknown[]>,
+	TResponses extends Record<keyof TEvents, unknown>,
+> extends IBaseBroker<TEvents>,
 		AsyncEventEmitter<ToEventMap<TEvents, TResponses>> {
 	/**
 	 * Makes an RPC call

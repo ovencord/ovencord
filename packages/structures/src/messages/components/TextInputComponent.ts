@@ -1,6 +1,5 @@
 import type { APITextInputComponent } from 'discord-api-types/v10';
 import { kData } from '../../utils/symbols.js';
-import type { Partialize } from '../../utils/types.js';
 import { Component } from './Component.js';
 
 /**
@@ -16,13 +15,6 @@ export class TextInputComponent<Omitted extends keyof APITextInputComponent | ''
 	 * The template used for removing data from the raw data stored for each TextInputComponent.
 	 */
 	public static override readonly DataTemplate: Partial<APITextInputComponent> = {};
-
-	/**
-	 * @param data - The raw data received from the API for the text input
-	 */
-	public constructor(data: Partialize<APITextInputComponent, Omitted>) {
-		super(data);
-	}
 
 	/**
 	 * The custom id for the text input

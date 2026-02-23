@@ -1,6 +1,5 @@
 import type { APIFileComponent } from 'discord-api-types/v10';
 import { kData } from '../../utils/symbols.js';
-import type { Partialize } from '../../utils/types.js';
 import { Component } from './Component.js';
 
 /**
@@ -17,13 +16,6 @@ export class FileComponent<Omitted extends keyof APIFileComponent | '' = ''> ext
 	 * The template used for removing data from the raw data stored for each FileComponent.
 	 */
 	public static override readonly DataTemplate: Partial<APIFileComponent> = {};
-
-	/**
-	 * @param data - The raw data received from the API for the file component
-	 */
-	public constructor(data: Partialize<APIFileComponent, Omitted>) {
-		super(data);
-	}
 
 	/**
 	 * Whether the media should be a spoiler (or blurred out)

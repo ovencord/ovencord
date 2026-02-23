@@ -1,6 +1,5 @@
 import type { ButtonStyle } from 'discord-api-types/v10';
 import { kData } from '../../utils/symbols.js';
-import type { Partialize } from '../../utils/types.js';
 import type { ButtonDataType } from './ButtonComponent.js';
 import { ButtonComponent } from './ButtonComponent.js';
 
@@ -14,13 +13,6 @@ export abstract class LabeledButtonComponent<
 	Style extends Exclude<ButtonStyle, ButtonStyle.Premium>,
 	Omitted extends keyof ButtonDataType<Style> | '' = '',
 > extends ButtonComponent<Style, Omitted> {
-	/**
-	 * @param data - The raw data received from the API for the button
-	 */
-	public constructor(data: Partialize<ButtonDataType<Style>, Omitted>) {
-		super(data);
-	}
-
 	/**
 	 * The label to be displayed on the button
 	 */

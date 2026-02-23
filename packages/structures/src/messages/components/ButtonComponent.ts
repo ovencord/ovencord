@@ -1,6 +1,5 @@
 import type { APIButtonComponent, APIButtonComponentWithCustomId, ButtonStyle } from 'discord-api-types/v10';
 import { kData } from '../../utils/symbols.js';
-import type { Partialize } from '../../utils/types.js';
 import { Component } from './Component.js';
 
 /**
@@ -18,13 +17,6 @@ export abstract class ButtonComponent<
 	Style extends ButtonStyle,
 	Omitted extends keyof ButtonDataType<Style> | '' = '',
 > extends Component<ButtonDataType<Style>, Omitted> {
-	/**
-	 * @param data - The raw data received from the API for the button
-	 */
-	public constructor(data: Partialize<ButtonDataType<Style>, Omitted>) {
-		super(data);
-	}
-
 	/**
 	 * The style of the button
 	 */

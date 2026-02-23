@@ -1,6 +1,5 @@
 import type { APIInteractionDataResolved } from 'discord-api-types/v10';
 import { Structure } from '../Structure.js';
-import type { Partialize } from '../utils/types.js';
 
 /**
  * Represents data for users, members, channels, and roles in the message's auto-populated select menus.
@@ -10,11 +9,4 @@ import type { Partialize } from '../utils/types.js';
  */
 export abstract class ResolvedInteractionData<
 	Omitted extends keyof APIInteractionDataResolved | '' = '',
-> extends Structure<APIInteractionDataResolved, Omitted> {
-	/**
-	 * @param data - The raw data received from the API for the connection
-	 */
-	public constructor(data: Partialize<APIInteractionDataResolved, Omitted>) {
-		super(data);
-	}
-}
+> extends Structure<APIInteractionDataResolved, Omitted> {}

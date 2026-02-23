@@ -684,7 +684,7 @@ export class VoiceConnection extends AsyncEventEmitter {
 	public subscribe(player: AudioPlayer) {
 		if (this.state.status === VoiceConnectionStatus.Destroyed) return;
 
-		const subscription = player['subscribe'](this);
+		const subscription = player.subscribe(this);
 
 		this.state = {
 			...this.state,

@@ -8,7 +8,7 @@ import { DMChannelMixin } from './mixins/DMChannelMixin.js';
 import { GroupDMMixin } from './mixins/GroupDMMixin.js';
 import { TextChannelMixin } from './mixins/TextChannelMixin.js';
 
-export interface GroupDMChannel<Omitted extends keyof APIGroupDMChannel | '' = ''>
+export interface GroupDMChannel<_Omitted extends keyof APIGroupDMChannel | '' = ''>
 	extends MixinTypes<
 		Channel<ChannelType.GroupDM>,
 		[

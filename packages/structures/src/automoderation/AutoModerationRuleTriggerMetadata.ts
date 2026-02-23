@@ -1,7 +1,6 @@
 import type { APIAutoModerationRuleTriggerMetadata, AutoModerationRuleTriggerType } from 'discord-api-types/v10';
 import { Structure } from '../Structure.js';
 import { kData } from '../utils/symbols.js';
-import type { Partialize } from '../utils/types.js';
 
 /**
  * Represents an auto moderation rule trigger metadata on Discord.
@@ -15,13 +14,6 @@ export class AutoModerationRuleTriggerMetadata<
 	 * The template used for removing data from the raw data stored for each auto moderation rule trigger metadata
 	 */
 	public static override DataTemplate: Partial<APIAutoModerationRuleTriggerMetadata> = {};
-
-	/**
-	 * @param data - The raw data received from the API for the auto moderation rule trigger metadata
-	 */
-	public constructor(data: Partialize<APIAutoModerationRuleTriggerMetadata, Omitted>) {
-		super(data);
-	}
 
 	/**
 	 * Substrings which will be searched for in content (Maximum of 1000)

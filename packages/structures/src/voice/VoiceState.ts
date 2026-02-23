@@ -1,7 +1,6 @@
 import type { APIVoiceState } from 'discord-api-types/v10';
 import { Structure } from '../Structure.js';
 import { kData } from '../utils/symbols.js';
-import type { Partialize } from '../utils/types.js';
 
 /**
  * Represents any voice state on Discord.
@@ -14,13 +13,6 @@ export class VoiceState<Omitted extends keyof APIVoiceState | '' = ''> extends S
 	 * The template used for removing data from the raw data stored for each voice state
 	 */
 	public static override readonly DataTemplate: Partial<APIVoiceState> = {};
-
-	/**
-	 * @param data - The raw data received from the API for the voice state
-	 */
-	public constructor(data: Partialize<APIVoiceState, Omitted>) {
-		super(data);
-	}
 
 	/**
 	 * The guild id this voice state is for

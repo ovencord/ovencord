@@ -150,8 +150,8 @@ export class ThreadManager extends CachedManager {
 			path = Routes.channelJoinedArchivedThreads(this.channel.id);
 		}
 
-		let timestamp;
-		let id;
+		let timestamp: any;
+		let id: any;
 		const query = makeURLSearchParams({ limit });
 		if (before !== undefined) {
 			if (before instanceof ThreadChannel || /^\d{17,19}$/.test(String(before))) {

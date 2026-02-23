@@ -1,13 +1,11 @@
 import { lazy } from '@ovencord/util';
-import { ChannelFlags, ChannelType, PermissionFlagsBits, Routes } from 'discord-api-types/v10';
-import { DiscordjsRangeError, ErrorCodes } from '../errors/index.js';
+import { ChannelType, PermissionFlagsBits } from 'discord-api-types/v10';
 import { GuildMessageManager } from '../managers/GuildMessageManager.js';
 import { ThreadMemberManager } from '../managers/ThreadMemberManager.js';
-import { ChannelFlagsBitField } from '../util/ChannelFlagsBitField.js';
 import { BaseChannel } from './BaseChannel.js';
 import { TextBasedChannel } from './interfaces/TextBasedChannel.js';
 
-const getThreadOnlyChannel = lazy(() => require('./ThreadOnlyChannel.js').ThreadOnlyChannel);
+const _getThreadOnlyChannel = lazy(() => require('./ThreadOnlyChannel.js').ThreadOnlyChannel);
 
 /**
  * Represents a thread channel on Discord.

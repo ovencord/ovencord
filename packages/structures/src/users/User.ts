@@ -3,7 +3,6 @@ import type { APIUser } from 'discord-api-types/v10';
 import { Structure } from '../Structure.js';
 import { kData } from '../utils/symbols.js';
 import { isIdSet } from '../utils/type-guards.js';
-import type { Partialize } from '../utils/types.js';
 
 /**
  * Represents any user on Discord.
@@ -16,13 +15,6 @@ export class User<Omitted extends keyof APIUser | '' = ''> extends Structure<API
 	 * The template used for removing data from the raw data stored for each User
 	 */
 	public static override readonly DataTemplate: Partial<APIUser> = {};
-
-	/**
-	 * @param data - The raw data received from the API for the user
-	 */
-	public constructor(data: Partialize<APIUser, Omitted>) {
-		super(data);
-	}
 
 	/**
 	 * The user's id

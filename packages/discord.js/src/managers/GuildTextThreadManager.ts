@@ -67,7 +67,7 @@ export class GuildTextThreadManager extends ThreadManager {
 	}: any = {}) {
 		let resolvedType =
 			this.channel.type === ChannelType.GuildAnnouncement ? ChannelType.AnnouncementThread : ChannelType.PublicThread;
-		let startMessageId;
+		let startMessageId: any;
 		if (startMessage) {
 			startMessageId = this.channel.messages.resolveId(startMessage);
 			if (!startMessageId) throw new DiscordjsTypeError(ErrorCodes.InvalidType, 'startMessage', 'MessageResolvable');

@@ -141,7 +141,7 @@ export class Shard extends AsyncEventEmitter {
 					ipc: (message: any) => {
 						this._handleMessage(message);
 					},
-					onExit: (_proc: any, exitCode: number | null, signalCode: number | null) => {
+					onExit: (_proc: any, _exitCode: number | null, _signalCode: number | null) => {
 						this._handleExit(undefined, timeout);
 					},
 				});
@@ -286,7 +286,7 @@ export class Shard extends AsyncEventEmitter {
 		if (this._fetches.has(prop)) return this._fetches.get(prop);
 
 		const promise = new Promise((resolve, reject) => {
-			const originalHandler = this._handleMessage.bind(this);
+			const _originalHandler = this._handleMessage.bind(this);
 
 			const listener = (message: any) => {
 				if (message?._fetchProp !== prop) return;
@@ -330,7 +330,7 @@ export class Shard extends AsyncEventEmitter {
 		// Cached promise from previous call
 		if (this._evals.has(_eval)) return this._evals.get(_eval);
 
-		const promise = new Promise((resolve, reject) => {
+		const promise = new Promise((_resolve, reject) => {
 			this.send({ _eval }).catch((error) => {
 				this._evals.delete(_eval);
 				reject(error);

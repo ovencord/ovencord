@@ -6,7 +6,7 @@ import type { Channel } from '../Channel.js';
 
 export interface GuildChannelMixin<Type extends GuildChannelType = GuildChannelType> extends Channel<Type> {}
 
-export class GuildChannelMixin<Type extends GuildChannelType = GuildChannelType> {
+export class GuildChannelMixin<_Type extends GuildChannelType = GuildChannelType> {
 	/**
 	 * The flags that are applied to the channel.
 	 *

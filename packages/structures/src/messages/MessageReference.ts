@@ -1,7 +1,6 @@
 import { type APIMessageReference, MessageReferenceType } from 'discord-api-types/v10';
 import { Structure } from '../Structure.js';
 import { kData } from '../utils/symbols.js';
-import type { Partialize } from '../utils/types.js';
 
 /**
  * Represents the reference to another message on a message on Discord.
@@ -16,13 +15,6 @@ export class MessageReference<Omitted extends keyof APIMessageReference | '' = '
 	 * The template used for removing data from the raw data stored for each MessageReference.
 	 */
 	public static override DataTemplate: Partial<APIMessageReference> = {};
-
-	/**
-	 * @param data - The raw data received from the API for the message reference
-	 */
-	public constructor(data: Partialize<APIMessageReference, Omitted>) {
-		super(data);
-	}
 
 	/**
 	 * The type of this reference

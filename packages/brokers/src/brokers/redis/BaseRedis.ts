@@ -4,7 +4,7 @@ import { ReplyError } from 'ioredis';
 import type { BaseBrokerOptions, IBaseBroker, ToEventMap } from '../Broker.js';
 import { DefaultBrokerOptions } from '../Broker.js';
 
-const xCleanGroupLuaScript = await Bun.file(import.meta.dir + '/../../../scripts/xcleangroup.lua').text();
+const xCleanGroupLuaScript = await Bun.file(`${import.meta.dir}/../../../scripts/xcleangroup.lua`).text();
 
 type RedisReadGroupData = [Uint8Array, [Uint8Array, Uint8Array[]][]][];
 
@@ -79,8 +79,8 @@ export const DefaultRedisBrokerOptions = {
  * Helper class with shared Redis logic
  */
 export abstract class BaseRedisBroker<
-		TEvents extends Record<string, any[]>,
-		TResponses extends Record<keyof TEvents, any> | undefined = undefined,
+		TEvents extends Record<string, unknown[]>,
+		TResponses extends Record<keyof TEvents, unknown> | undefined = undefined,
 	>
 	extends AsyncEventEmitter<ToEventMap<TEvents, TResponses>>
 	implements IBaseBroker<TEvents>
@@ -288,7 +288,8 @@ export abstract class BaseRedisBroker<
 					continue;
 				}
 
-				const [msgId, fields] = entries[0]!;
+				const [msgId, fields] = entries[0] ?? [];
+				if (!msgId || !fields) continue;
 				const decoder = new TextDecoder('utf-8');
 				const idx = fields.findIndex((value, idx) => decoder.decode(value) === 'data' && idx % 2 === 0);
 				if (idx < 0) {

@@ -280,7 +280,7 @@ client.on('autoModerationRuleCreate', ({ client }) => expectType<Client<true>>(c
 client.on('autoModerationRuleDelete', ({ client }) => expectType<Client<true>>(client));
 
 client.on('autoModerationRuleUpdate', (oldAutoModerationRule, { client: newClient }) => {
-	expectType<Client<true>>(oldAutoModerationRule!.client);
+	expectType<Client<true>>(oldAutoModerationRule?.client);
 	expectType<Client<true>>(newClient);
 });
 
@@ -319,7 +319,7 @@ client.on('guildMemberRemove', (member) => {
 });
 
 client.on('guildMembersChunk', (members, { client }) => {
-	expectType<Client<true>>(members.first()!.client);
+	expectType<Client<true>>(members.first()?.client);
 	expectType<Client<true>>(client);
 });
 
@@ -332,7 +332,7 @@ client.on('guildScheduledEventCreate', ({ client }) => expectType<Client<true>>(
 client.on('guildScheduledEventDelete', ({ client }) => expectType<Client<true>>(client));
 
 client.on('guildScheduledEventUpdate', (oldGuildScheduledEvent, { client }) => {
-	expectType<Client<true>>(oldGuildScheduledEvent!.client);
+	expectType<Client<true>>(oldGuildScheduledEvent?.client);
 	expectType<Client<true>>(client);
 });
 
@@ -728,7 +728,7 @@ client.on('messageCreate', async (message) => {
 client.on('messageDelete', ({ client }) => expectType<Client<true>>(client));
 
 client.on('messageDeleteBulk', (messages, { client }) => {
-	expectType<Client<true>>(messages.first()!.client);
+	expectType<Client<true>>(messages.first()?.client);
 	expectType<Client<true>>(client);
 });
 
@@ -802,7 +802,7 @@ client.on('messageReactionRemoveAll', async (message, reactions) => {
 	if (message.partial) message = await message.fetch();
 	console.log(`messageReactionRemoveAll - content: ${message.content}`);
 	expectType<Client<true>>(message.client);
-	expectType<Client<true>>(reactions.first()!.client);
+	expectType<Client<true>>(reactions.first()?.client);
 });
 
 client.on('messageReactionRemoveEmoji', ({ client }) => expectType<Client<true>>(client));
@@ -813,7 +813,7 @@ client.on('messageUpdate', ({ client: oldClient }, { client: newClient }) => {
 });
 
 client.on('presenceUpdate', (oldPresence, { client }) => {
-	expectType<Client<true>>(oldPresence!.client);
+	expectType<Client<true>>(oldPresence?.client);
 	expectType<Client<true>>(client);
 });
 
@@ -827,10 +827,10 @@ client.on('clientReady', async (client) => {
 
 	// Test fetching all global commands and ones from one guild
 	expectType<Collection<string, ApplicationCommand<{ guild: GuildResolvable }>>>(
-		await client.application!.commands.fetch(),
+		await client.application?.commands.fetch(),
 	);
 	expectType<Collection<string, ApplicationCommand<{ guild: GuildResolvable }>>>(
-		await client.application!.commands.fetch({ guildId: testGuildId }),
+		await client.application?.commands.fetch({ guildId: testGuildId }),
 	);
 
 	// Test command manager methods
@@ -1307,7 +1307,7 @@ client.on('stageInstanceCreate', ({ client }) => expectType<Client<true>>(client
 client.on('stageInstanceDelete', ({ client }) => expectType<Client<true>>(client));
 
 client.on('stageInstanceUpdate', (oldStageInstance, { client }) => {
-	expectType<Client<true>>(oldStageInstance!.client);
+	expectType<Client<true>>(oldStageInstance?.client);
 	expectType<Client<true>>(client);
 });
 
@@ -1334,13 +1334,13 @@ client.on('threadCreate', (thread) => {
 client.on('threadDelete', ({ client }) => expectType<Client<true>>(client));
 
 client.on('threadListSync', (threads, { client }) => {
-	expectType<Client<true>>(threads.first()!.client);
+	expectType<Client<true>>(threads.first()?.client);
 	expectType<Client<true>>(client);
 });
 
 client.on('threadMembersUpdate', (addedMembers, removedMembers, thread) => {
-	expectType<Client<true>>(addedMembers.first()!.client);
-	expectType<Client<true>>(removedMembers.first()!.client);
+	expectType<Client<true>>(addedMembers.first()?.client);
+	expectType<Client<true>>(removedMembers.first()?.client);
 	expectType<Client<true>>(thread.client);
 	expectType<ReadonlyCollection<Snowflake, ThreadMember>>(addedMembers);
 	expectType<ReadonlyCollection<Snowflake, PartialThreadMember | ThreadMember>>(removedMembers);
@@ -1601,18 +1601,18 @@ declare const applicationCommandManager: ApplicationCommandManager;
 	// Test inference of choice values.
 	if ('choices' in applicationCommandOptionData) {
 		if (applicationCommandOptionData.type === ApplicationCommandOptionType.String) {
-			expectType<string>(applicationCommandOptionData.choices[0]!.value);
-			expectNotType<number>(applicationCommandOptionData.choices[0]!.value);
+			expectType<string>(applicationCommandOptionData.choices[0]?.value);
+			expectNotType<number>(applicationCommandOptionData.choices[0]?.value);
 		}
 
 		if (applicationCommandOptionData.type === ApplicationCommandOptionType.Integer) {
-			expectType<number>(applicationCommandOptionData.choices[0]!.value);
-			expectNotType<string>(applicationCommandOptionData.choices[0]!.value);
+			expectType<number>(applicationCommandOptionData.choices[0]?.value);
+			expectNotType<string>(applicationCommandOptionData.choices[0]?.value);
 		}
 
 		if (applicationCommandOptionData.type === ApplicationCommandOptionType.Number) {
-			expectType<number>(applicationCommandOptionData.choices[0]!.value);
-			expectNotType<string>(applicationCommandOptionData.choices[0]!.value);
+			expectType<number>(applicationCommandOptionData.choices[0]?.value);
+			expectNotType<string>(applicationCommandOptionData.choices[0]?.value);
 		}
 	}
 }

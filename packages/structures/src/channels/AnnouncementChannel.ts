@@ -10,7 +10,7 @@ import { ChannelSlowmodeMixin } from './mixins/ChannelSlowmodeMixin.js';
 import { ChannelTopicMixin } from './mixins/ChannelTopicMixin.js';
 import { TextChannelMixin } from './mixins/TextChannelMixin.js';
 
-export interface AnnouncementChannel<Omitted extends keyof APINewsChannel | '' = ''>
+export interface AnnouncementChannel<_Omitted extends keyof APINewsChannel | '' = ''>
 	extends MixinTypes<
 		Channel<ChannelType.GuildAnnouncement>,
 		[

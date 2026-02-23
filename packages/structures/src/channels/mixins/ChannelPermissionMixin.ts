@@ -13,7 +13,7 @@ export interface ChannelPermissionMixin<
  * @remarks has an array of sub-structures {@link PermissionOverwrite} that extending mixins should add to their DataTemplate and _optimizeData
  */
 export class ChannelPermissionMixin<
-	Type extends Exclude<GuildChannelType, ChannelType.GuildDirectory | ThreadChannelType> = Exclude<
+	_Type extends Exclude<GuildChannelType, ChannelType.GuildDirectory | ThreadChannelType> = Exclude<
 		GuildChannelType,
 		ChannelType.GuildDirectory | ThreadChannelType
 	>,

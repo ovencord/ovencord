@@ -7,7 +7,7 @@ import { ChannelPinMixin } from './mixins/ChannelPinMixin.js';
 import { DMChannelMixin } from './mixins/DMChannelMixin.js';
 import { TextChannelMixin } from './mixins/TextChannelMixin.js';
 
-export interface DMChannel<Omitted extends keyof APIDMChannel | '' = ''>
+export interface DMChannel<_Omitted extends keyof APIDMChannel | '' = ''>
 	extends MixinTypes<
 		Channel<ChannelType.DM>,
 		[DMChannelMixin<ChannelType.DM>, TextChannelMixin<ChannelType.DM>, ChannelPinMixin<ChannelType.DM>]

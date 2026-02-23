@@ -3,9 +3,9 @@ import { Events } from '../../../util/Events.js';
 import type { Client } from '../../Client.js';
 
 export default (client: Client, { d: data }: GatewayEntitlementDeleteDispatch) => {
-	const entitlement = client.application!.entitlements._add(data, false);
+	const entitlement = client.application?.entitlements._add(data, false);
 
-	client.application!.entitlements.cache.delete(entitlement.id);
+	client.application?.entitlements.cache.delete(entitlement.id);
 
 	/**
 	 * Emitted whenever an entitlement is deleted.

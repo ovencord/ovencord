@@ -235,7 +235,7 @@ export class Webhook {
 	async send(options: any) {
 		if (!this.token) throw new DiscordjsError(ErrorCodes.WebhookTokenUnavailable);
 
-		let messagePayload;
+		let messagePayload: any;
 
 		if (options instanceof MessagePayload) {
 			messagePayload = options.resolveBody();
@@ -369,7 +369,7 @@ export class Webhook {
 	async editMessage(message: any, options: any) {
 		if (!this.token) throw new DiscordjsError(ErrorCodes.WebhookTokenUnavailable);
 
-		let messagePayload;
+		let messagePayload: any;
 
 		if (options instanceof MessagePayload) messagePayload = options;
 		else messagePayload = MessagePayload.create(this, options);

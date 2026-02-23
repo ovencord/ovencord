@@ -1,6 +1,5 @@
 import type { APIThumbnailComponent } from 'discord-api-types/v10';
 import { kData } from '../../utils/symbols.js';
-import type { Partialize } from '../../utils/types.js';
 import { Component } from './Component.js';
 
 /**
@@ -17,13 +16,6 @@ export class ThumbnailComponent<Omitted extends keyof APIThumbnailComponent | ''
 	 * The template used for removing data from the raw data stored for each ThumbnailComponent.
 	 */
 	public static override readonly DataTemplate: Partial<APIThumbnailComponent> = {};
-
-	/**
-	 * @param data - The raw data received from the API for the thumbnail
-	 */
-	public constructor(data: Partialize<APIThumbnailComponent, Omitted>) {
-		super(data);
-	}
 
 	/**
 	 * Alt text for the media

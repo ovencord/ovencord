@@ -131,146 +131,154 @@ export class InteractionResponses {
 	async reply(options: any) {
 		if (this.deferred || this.replied) throw new DiscordjsError(ErrorCodes.InteractionAlreadyReplied);
 
-		let messagePayload;
-		if (options instanceof MessagePayload) messagePayload = options;
-		else messagePayload = MessagePayload.create(this, options);
+		async;
+		update((options = {}));
+		{
+			if (this.deferred || this.replied) throw new DiscordjsError(ErrorCodes.InteractionAlreadyReplied);
 
-		const { body: data, files } = await messagePayload.resolveBody().resolveFiles();
+			let messagePayload: any;
+			if (options instanceof MessagePayload) messagePayload = options;
+			else messagePayload = MessagePayload.create(this, options);
 
-		const response = await this.client.rest.post(Routes.interactionCallback(this.id, this.token), {
-			body: {
-				type: InteractionResponseType.ChannelMessageWithSource,
-				data,
-			},
-			files,
-			auth: false,
-			query: makeURLSearchParams({ with_response: options.withResponse ?? false }),
-		});
+			const { body: data, files } = await messagePayload.resolveBody().resolveFiles();
 
-		this.ephemeral = Boolean(data.flags & MessageFlags.Ephemeral);
-		this.replied = true;
+			const response = await this.client.rest.post(Routes.interactionCallback(this.id, this.token), {
+				body: {
+					type: InteractionResponseType.ChannelMessageWithSource,
+					data,
+				},
+				files,
+				auth: false,
+				query: makeURLSearchParams({ with_response: options.withResponse ?? false }),
+			});
 
-		return options.withResponse ? new InteractionCallbackResponse(this.client, response) : undefined;
-	}
+			this.ephemeral = Boolean(data.flags & MessageFlags.Ephemeral);
+			this.replied = true;
 
-	/**
-	 * Fetches a reply to this interaction.
-	 *
-	 * @see Webhook#fetchMessage
-	 * @param {Snowflake|'@original'} [message='@original'] The response to fetch
-	 * @returns {Promise<Message>}
-	 * @example
-	 * // Fetch the initial reply to this interaction
-	 * interaction.fetchReply()
-	 *   .then(reply => console.log(`Replied with ${reply.content}`))
-	 *   .catch(console.error);
-	 */
-	async fetchReply(message = '@original') {
+			return options.withResponse ? new InteractionCallbackResponse(this.client, response) : undefined;
+		}
+
+		/**
+		 * Fetches a reply to this interaction.
+		 *
+		 * @see Webhook#fetchMessage
+		 * @param {Snowflake|'@original'} [message='@original'] The response to fetch
+		 * @returns {Promise<Message>}
+		 * @example
+		 * // Fetch the initial reply to this interaction
+		 * interaction.fetchReply()
+		 *   .then(reply => console.log(`Replied with ${reply.content}`))
+		 *   .catch(console.error);
+		 */
+		async;
+		fetchReply((message = '@original'));
 		return this.webhook.fetchMessage(message);
-	}
 
-	/**
-	 * Options that can be passed into {@link InteractionResponses#editReply}.
-	 *
-	 * @typedef {WebhookMessageEditOptions} InteractionEditReplyOptions
-	 * @property {MessageResolvable|'@original'} [message='@original'] The response to edit
-	 */
+		/**
+		 * Options that can be passed into {@link InteractionResponses#editReply}.
+		 *
+		 * @typedef {WebhookMessageEditOptions} InteractionEditReplyOptions
+		 * @property {MessageResolvable|'@original'} [message='@original'] The response to edit
+		 */
 
-	/**
-	 * Edits a reply to this interaction.
-	 *
-	 * @see Webhook#editMessage
-	 * @param {string|MessagePayload|InteractionEditReplyOptions} options The new options for the message
-	 * @returns {Promise<Message>}
-	 * @example
-	 * // Edit the initial reply to this interaction
-	 * interaction.editReply('New content')
-	 *   .then(console.log)
-	 *   .catch(console.error);
-	 */
-	async editReply(options: any) {
-		if (!this.deferred && !this.replied) throw new DiscordjsError(ErrorCodes.InteractionNotReplied);
-		const msg = await this.webhook.editMessage(options.message ?? '@original', options);
-		this.replied = true;
-		return msg;
-	}
+		/**
+		 * Edits a reply to this interaction.
+		 *
+		 * @see Webhook#editMessage
+		 * @param {string|MessagePayload|InteractionEditReplyOptions} options The new options for the message
+		 * @returns {Promise<Message>}
+		 * @example
+		 * // Edit the initial reply to this interaction
+		 * interaction.editReply('New content')
+		 *   .then(console.log)
+		 *   .catch(console.error);
+		 */
+		async;
+		editReply(options: any)
+		{
+			if (!this.deferred && !this.replied) throw new DiscordjsError(ErrorCodes.InteractionNotReplied);
+			const msg = await this.webhook.editMessage(options.message ?? '@original', options);
+			this.replied = true;
+			return msg;
+		}
 
-	/**
-	 * Deletes a reply to this interaction.
-	 *
-	 * @see Webhook#deleteMessage
-	 * @param {MessageResolvable|'@original'} [message='@original'] The response to delete
-	 * @returns {Promise<void>}
-	 * @example
-	 * // Delete the initial reply to this interaction
-	 * interaction.deleteReply()
-	 *   .then(console.log)
-	 *   .catch(console.error);
-	 */
-	async deleteReply(message = '@original') {
+		/**
+		 * Deletes a reply to this interaction.
+		 *
+		 * @see Webhook#deleteMessage
+		 * @param {MessageResolvable|'@original'} [message='@original'] The response to delete
+		 * @returns {Promise<void>}
+		 * @example
+		 * // Delete the initial reply to this interaction
+		 * interaction.deleteReply()
+		 *   .then(console.log)
+		 *   .catch(console.error);
+		 */
+		async;
+		deleteReply((message = '@original'));
 		if (!this.deferred && !this.replied) throw new DiscordjsError(ErrorCodes.InteractionNotReplied);
 
 		await this.webhook.deleteMessage(message);
-	}
 
-	/**
-	 * Send a follow-up message to this interaction.
-	 *
-	 * @param {string|MessagePayload|InteractionReplyOptions} options The options for the reply
-	 * @returns {Promise<Message>}
-	 */
-	async followUp(options: any) {
-		if (!this.deferred && !this.replied) throw new DiscordjsError(ErrorCodes.InteractionNotReplied);
-		const msg = await this.webhook.send(options);
-		this.replied = true;
-		return msg;
-	}
+		/**
+		 * Send a follow-up message to this interaction.
+		 *
+		 * @param {string|MessagePayload|InteractionReplyOptions} options The options for the reply
+		 * @returns {Promise<Message>}
+		 */
+		async;
+		followUp(options: any)
+		{
+			if (!this.deferred && !this.replied) throw new DiscordjsError(ErrorCodes.InteractionNotReplied);
+			const msg = await this.webhook.send(options);
+			this.replied = true;
+			return msg;
+		}
 
-	/**
-	 * Defers an update to the message to which the component was attached.
-	 *
-	 * @param {InteractionDeferUpdateOptions} [options] Options for deferring the update to this interaction
-	 * @returns {Promise<InteractionCallbackResponse|undefined>}
-	 * @example
-	 * // Defer updating and reset the component's loading state
-	 * interaction.deferUpdate()
-	 *   .then(console.log)
-	 *   .catch(console.error);
-	 */
-	async deferUpdate(options = {}) {
-		if (this.deferred || this.replied) throw new DiscordjsError(ErrorCodes.InteractionAlreadyReplied);
-		const response = await this.client.rest.post(Routes.interactionCallback(this.id, this.token), {
-			body: {
-				type: InteractionResponseType.DeferredMessageUpdate,
-			},
-			auth: false,
+		/**
+		 * Defers an update to the message to which the component was attached.
+		 *
+		 * @param {InteractionDeferUpdateOptions} [options] Options for deferring the update to this interaction
+		 * @returns {Promise<InteractionCallbackResponse|undefined>}
+		 * @example
+		 * // Defer updating and reset the component's loading state
+		 * interaction.deferUpdate()
+		 *   .then(console.log)
+		 *   .catch(console.error);
+		 */
+		async;
+		deferUpdate((options = {}));
+		{
+			if (this.deferred || this.replied) throw new DiscordjsError(ErrorCodes.InteractionAlreadyReplied);
+			const response = await this.client.rest.post(Routes.interactionCallback(this.id, this.token), {
+				body: {
+					type: InteractionResponseType.DeferredMessageUpdate,
+				},
+				auth: false,
+				// @ts-expect-error
+				query: makeURLSearchParams({ with_response: options.withResponse ?? false }),
+			});
+			this.deferred = true;
+
 			// @ts-expect-error
-			query: makeURLSearchParams({ with_response: options.withResponse ?? false }),
-		});
-		this.deferred = true;
+			return options.withResponse ? new InteractionCallbackResponse(this.client, response) : undefined;
+		}
 
-		// @ts-expect-error
-		return options.withResponse ? new InteractionCallbackResponse(this.client, response) : undefined;
-	}
-
-	/**
-	 * Updates the original message of the component on which the interaction was received on.
-	 *
-	 * @param {string|MessagePayload|InteractionUpdateOptions} [options] The options for the updated message
-	 * @returns {Promise<InteractionCallbackResponse|undefined>}
-	 * @example
-	 * // Remove the components from the message
-	 * interaction.update({
-	 *   content: "A component interaction was received",
-	 *   components: []
-	 * })
-	 *   .then(console.log)
-	 *   .catch(console.error);
-	 */
-	async update(options = {}) {
-		if (this.deferred || this.replied) throw new DiscordjsError(ErrorCodes.InteractionAlreadyReplied);
-
-		let messagePayload;
+		/**
+		 * Updates the original message of the component on which the interaction was received on.
+		 *
+		 * @param {string|MessagePayload|InteractionUpdateOptions} [options] The options for the updated message
+		 * @returns {Promise<InteractionCallbackResponse|undefined>}
+		 * @example
+		 * // Remove the components from the message
+		 * interaction.update({
+		 *   content: "A component interaction was received",
+		 *   components: []
+		 * })
+		 *   .then(console.log)
+		 *   .catch(console.error);
+		 */
+		let messagePayload: any;
 		if (options instanceof MessagePayload) messagePayload = options;
 		else messagePayload = MessagePayload.create(this, options);
 

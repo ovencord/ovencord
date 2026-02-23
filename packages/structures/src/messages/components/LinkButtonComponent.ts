@@ -1,6 +1,5 @@
 import type { APIButtonComponentWithURL, ButtonStyle } from 'discord-api-types/v10';
 import { kData } from '../../utils/symbols.js';
-import type { Partialize } from '../../utils/types.js';
 import { LabeledButtonComponent } from './LabeledButtonComponent.js';
 
 /**
@@ -15,13 +14,6 @@ export class LinkButtonComponent<
 	 * The template used for removing data from the raw data stored for each LinkButtonComponent.
 	 */
 	public static override readonly DataTemplate: Partial<APIButtonComponentWithURL> = {};
-
-	/**
-	 * @param data - The raw data received from the API for the link button
-	 */
-	public constructor(data: Partialize<APIButtonComponentWithURL, Omitted>) {
-		super(data);
-	}
 
 	/**
 	 * The URL to direct users to when clicked

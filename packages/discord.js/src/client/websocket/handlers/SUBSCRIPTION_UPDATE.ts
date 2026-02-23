@@ -3,8 +3,8 @@ import { Events } from '../../../util/Events.js';
 import type { Client } from '../../Client.js';
 
 export default (client: Client, { d: data }: GatewaySubscriptionUpdateDispatch) => {
-	const oldSubscription = client.application!.subscriptions.cache.get(data.id)?._clone() ?? null;
-	const newSubscription = client.application!.subscriptions._add(data);
+	const oldSubscription = client.application?.subscriptions.cache.get(data.id)?._clone() ?? null;
+	const newSubscription = client.application?.subscriptions._add(data);
 
 	/**
 	 * Emitted whenever a subscription is updated - i.e. when a user's subscription renews.

@@ -1,6 +1,5 @@
 import type { APITextDisplayComponent } from 'discord-api-types/v10';
 import { kData } from '../../utils/symbols.js';
-import type { Partialize } from '../../utils/types.js';
 import { Component } from './Component.js';
 
 /**
@@ -16,13 +15,6 @@ export class TextDisplayComponent<Omitted extends keyof APITextDisplayComponent 
 	 * The template used for removing data from the raw data stored for each TextDisplayComponent.
 	 */
 	public static override readonly DataTemplate: Partial<APITextDisplayComponent> = {};
-
-	/**
-	 * @param data - The raw data received from the API for the text display
-	 */
-	public constructor(data: Partialize<APITextDisplayComponent, Omitted>) {
-		super(data);
-	}
 
 	/**
 	 * Text that will be displayed similar to a message
