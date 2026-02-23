@@ -1,1 +1,1 @@
-export { pipeline, Readable, type ReadableOptions } from 'node:stream';
+export { pipeline, Readable } from 'node:stream';

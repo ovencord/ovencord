@@ -1,10 +1,9 @@
-import { glob, readFile } from 'node:fs/promises';
-
-const cwd = new URL('../src/api/', import.meta.url);
+const cwd = import.meta.dir + '/../src/api/';
 const results: string[] = [];
+const glob = new Bun.Glob('**/*.ts');
 
-for await (const file of glob('**/*.ts', { cwd })) {
-	const content = await readFile(new URL(file, cwd), { encoding: 'utf-8' });
+for await (const file of glob.scan({ cwd })) {
+	const content = await Bun.file(`${cwd}${file}`).text();
 
 	const matches = content.matchAll(/as Promise<(?<returnType>\w+)>/g);
 

@@ -199,7 +199,7 @@ export class VoiceReceiver {
 			...options,
 		});
 
-		stream.once('close', () => this.subscriptions.delete(userId));
+		stream.onClose = () => this.subscriptions.delete(userId);
 		this.subscriptions.set(userId, stream);
 		return stream;
 	}

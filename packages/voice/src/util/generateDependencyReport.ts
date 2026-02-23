@@ -1,6 +1,6 @@
 /* eslint-disable @typescript-eslint/no-var-requires */
 /* eslint-disable @typescript-eslint/no-require-imports */
-import { resolve, dirname } from 'node:path';
+
 import prism from 'prism-media';
 
 /**
@@ -16,13 +16,14 @@ function findPackageJSON(
 	depth: number,
 ): { name: string; version: string } | undefined {
 	if (depth === 0) return undefined;
-	const attemptedPath = resolve(dir, './package.json');
+	const attemptedPath = `${dir}/package.json`;
 	try {
 		const pkg = require(attemptedPath);
 		if (pkg.name !== packageName) throw new Error('package.json does not match');
 		return pkg;
 	} catch {
-		return findPackageJSON(resolve(dir, '..'), packageName, depth - 1);
+		const parentDir = dir.substring(0, Math.max(dir.lastIndexOf('/'), dir.lastIndexOf('\\')));
+		return findPackageJSON(parentDir, packageName, depth - 1);
 	}
 }
 
@@ -37,7 +38,9 @@ function version(name: string): string {
 			return '[VI]{{inject}}[/VI]';
 		}
 
-		const pkg = findPackageJSON(dirname(require.resolve(name)), name, 3);
+		const resolvedPath = require.resolve(name);
+		const dir = resolvedPath.substring(0, Math.max(resolvedPath.lastIndexOf('/'), resolvedPath.lastIndexOf('\\')));
+		const pkg = findPackageJSON(dir, name, 3);
 		return pkg?.version ?? 'not found';
 	} catch {
 		return 'not found';

@@ -1,7 +1,5 @@
-import { readFile, writeFile } from 'node:fs/promises';
-
-const data = await readFile('./dist/index.mjs', 'utf8');
-await writeFile(
+const data = await Bun.file('./dist/index.mjs').text();
+await Bun.write(
 	'./dist/index.mjs',
 	`import { createRequire as topLevelCreateRequire } from "module";
 const require = topLevelCreateRequire(import.meta.url);

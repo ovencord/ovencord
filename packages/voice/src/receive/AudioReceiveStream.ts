@@ -1,5 +1,3 @@
-
-import { Readable, type ReadableOptions } from '../util/stream';
 import { SILENCE_FRAME } from '../audio/AudioPlayer';
 
 /**
@@ -31,7 +29,7 @@ export type EndBehavior =
 			behavior: EndBehaviorType.Manual;
 	  };
 
-export interface AudioReceiveStreamOptions extends ReadableOptions {
+export interface AudioReceiveStreamOptions extends UnderlyingSource<Uint8Array | null> {
 	end: EndBehavior;
 }
 
@@ -47,26 +45,49 @@ export function createDefaultAudioReceiveStreamOptions(): AudioReceiveStreamOpti
  * A readable stream of Opus packets received from a specific entity
  * in a Discord voice connection.
  */
-export class AudioReceiveStream extends Readable {
+export class AudioReceiveStream {
+	/**
+	 * The underlying Web Stream
+	 */
+	public readonly stream: ReadableStream<Uint8Array | null>;
+
 	/**
 	 * The end behavior of the receive stream.
 	 */
 	public readonly end: EndBehavior;
 
 	private endTimeout?: NodeJS.Timeout;
+	private controller!: ReadableStreamDefaultController<Uint8Array | null>;
+	private isClosed = false;
+
+	public onClose?: () => void;
+
+	public get destroyed() {
+		return this.isClosed;
+	}
 
 	public constructor(options: AudioReceiveStreamOptions) {
 		const { end, ...rest } = options;
 
-		super({
-			...rest,
-			objectMode: true,
-		});
-
 		this.end = end;
+
+		this.stream = new ReadableStream<Uint8Array | null>({
+			...rest,
+			start: (controller) => {
+				this.controller = controller as any;
+				if (rest.start) rest.start(controller);
+			},
+			cancel: (reason) => {
+				this.isClosed = true;
+				if (rest.cancel) rest.cancel(reason);
+				if (this.onClose) this.onClose();
+			}
+		});
 	}
 
-	public override push(buffer: Uint8Array | null) {
+	public push(buffer: Uint8Array | null) {
+		if (this.isClosed) return;
+
 		if (
 			buffer &&
 			(this.end.behavior === EndBehaviorType.AfterInactivity ||
@@ -77,11 +98,29 @@ export class AudioReceiveStream extends Readable {
 		}
 
 		if (buffer === null) {
-			// null marks EOF for stream
-			process.nextTick(() => this.destroy());
+			this.destroy();
+		} else {
+			try {
+				this.controller.enqueue(buffer);
+			} catch {
+				this.isClosed = true;
+			}
 		}
+	}
 
-		return super.push(buffer);
+	public destroy(error?: Error) {
+		if (this.isClosed) return;
+		this.isClosed = true;
+
+		try {
+			if (error) {
+				this.controller.error(error);
+			} else {
+				this.controller.close();
+			}
+		} catch {}
+
+		if (this.onClose) this.onClose();
 	}
 
 	private renewEndTimeout(end: EndBehavior & { duration: number }) {
@@ -91,6 +130,4 @@ export class AudioReceiveStream extends Readable {
 
 		this.endTimeout = setTimeout(() => this.push(null), end.duration);
 	}
-
-	public override _read() {}
 }

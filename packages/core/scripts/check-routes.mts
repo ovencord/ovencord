@@ -1,5 +1,4 @@
 import { Routes } from 'discord-api-types/v10';
-import { glob, readFile } from 'node:fs/promises';
 
 const usedRoutes = new Set<string>();
 
@@ -13,10 +12,11 @@ const ignoredRoutes = new Set([
 	'nitroStickerPacks',
 ]);
 
-const cwd = new URL('../src/api/', import.meta.url);
+const cwd = import.meta.dir + '/../src/api/';
+const glob = new Bun.Glob('**/*.ts');
 
-for await (const file of glob('**/*.ts', { cwd })) {
-	const content = await readFile(new URL(file, cwd), 'utf-8');
+for await (const file of glob.scan({ cwd })) {
+	const content = await Bun.file(`${cwd}${file}`).text();
 
 	const routes = content.matchAll(/Routes\.([\w\d_]+)/g);
 	for (const route of routes) {
