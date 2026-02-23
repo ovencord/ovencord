@@ -1,4 +1,3 @@
-import { Buffer } from 'node:buffer';
 import { AsyncEventEmitter } from '@ovencord/util';
 import type { VoiceSendPayload } from 'discord-api-types/voice/v8';
 import { VoiceOpcodes } from 'discord-api-types/voice/v8';
@@ -9,7 +8,7 @@ import WebSocket, { type MessageEvent } from 'ws';
  */
 export interface BinaryWebSocketMessage {
 	op: VoiceOpcodes;
-	payload: Buffer;
+	payload: Uint8Array;
 	seq: number;
 }
 
@@ -124,10 +123,14 @@ export class VoiceWebSocket extends AsyncEventEmitter {
 	 * @param event - The message event
 	 */
 	public onMessage(event: MessageEvent) {
-		if (event.data instanceof Buffer || event.data instanceof ArrayBuffer) {
-			const buffer = event.data instanceof ArrayBuffer ? Buffer.from(event.data) : event.data;
-			const seq = buffer.readUInt16BE(0);
-			const op = buffer.readUInt8(2);
+		if (event.data instanceof Buffer || event.data instanceof ArrayBuffer || event.data instanceof Uint8Array) {
+			const buffer = event.data instanceof ArrayBuffer 
+                ? new Uint8Array(event.data) 
+                : (event.data instanceof Uint8Array ? event.data : new Uint8Array(event.data));
+			
+			const view = new DataView(buffer.buffer, buffer.byteOffset, buffer.byteLength);
+			const seq = view.getUint16(0, false);
+			const op = view.getUint8(2);
 			const payload = buffer.subarray(3);
 
 			this.sequence = seq;
@@ -185,9 +188,11 @@ export class VoiceWebSocket extends AsyncEventEmitter {
 	 * @param opcode - The opcode to use
 	 * @param payload - The payload to send
 	 */
-	public sendBinaryMessage(opcode: VoiceOpcodes, payload: Buffer) {
+	public sendBinaryMessage(opcode: VoiceOpcodes, payload: Uint8Array) {
 		try {
-			const message = Buffer.concat([new Uint8Array([opcode]), payload]);
+			const message = new Uint8Array(1 + payload.length);
+			message[0] = opcode;
+			message.set(payload, 1);
 			this.debug?.(`>> [bin] opcode ${opcode}, ${payload.byteLength} bytes`);
 			this.ws.send(message);
 		} catch (error) {

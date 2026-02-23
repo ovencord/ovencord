@@ -1,68 +1,66 @@
-import { Buffer } from 'node:buffer';
-
 interface Methods {
 	crypto_aead_xchacha20poly1305_ietf_decrypt(
-		cipherText: Buffer,
-		additionalData: Buffer,
-		nonce: Buffer,
+		cipherText: Uint8Array,
+		additionalData: Uint8Array,
+		nonce: Uint8Array,
 		key: Uint8Array,
-	): Buffer;
+	): Uint8Array;
 	crypto_aead_xchacha20poly1305_ietf_encrypt(
-		plaintext: Buffer,
-		additionalData: Buffer,
-		nonce: Buffer,
+		plaintext: Uint8Array,
+		additionalData: Uint8Array,
+		nonce: Uint8Array,
 		key: Uint8Array,
-	): Buffer;
+	): Uint8Array;
 }
 
 const libs = {
 	'sodium-native': (sodium: any): Methods => ({
 		crypto_aead_xchacha20poly1305_ietf_decrypt: (
-			cipherText: Buffer,
-			additionalData: Buffer,
-			nonce: Buffer,
+			cipherText: Uint8Array,
+			additionalData: Uint8Array,
+			nonce: Uint8Array,
 			key: Uint8Array,
 		) => {
-			const message = Buffer.alloc(cipherText.length - sodium.crypto_aead_xchacha20poly1305_ietf_ABYTES);
+			const message = new Uint8Array(cipherText.length - sodium.crypto_aead_xchacha20poly1305_ietf_ABYTES);
 			sodium.crypto_aead_xchacha20poly1305_ietf_decrypt(message, null, cipherText, additionalData, nonce, key);
 			return message;
 		},
 		crypto_aead_xchacha20poly1305_ietf_encrypt: (
-			plaintext: Buffer,
-			additionalData: Buffer,
-			nonce: Buffer,
+			plaintext: Uint8Array,
+			additionalData: Uint8Array,
+			nonce: Uint8Array,
 			key: Uint8Array,
 		) => {
-			const cipherText = Buffer.alloc(plaintext.length + sodium.crypto_aead_xchacha20poly1305_ietf_ABYTES);
+			const cipherText = new Uint8Array(plaintext.length + sodium.crypto_aead_xchacha20poly1305_ietf_ABYTES);
 			sodium.crypto_aead_xchacha20poly1305_ietf_encrypt(cipherText, plaintext, additionalData, null, nonce, key);
 			return cipherText;
 		},
 	}),
 	sodium: (sodium: any): Methods => ({
 		crypto_aead_xchacha20poly1305_ietf_decrypt: (
-			cipherText: Buffer,
-			additionalData: Buffer,
-			nonce: Buffer,
+			cipherText: Uint8Array,
+			additionalData: Uint8Array,
+			nonce: Uint8Array,
 			key: Uint8Array,
 		) => sodium.api.crypto_aead_xchacha20poly1305_ietf_decrypt(cipherText, additionalData, null, nonce, key),
 		crypto_aead_xchacha20poly1305_ietf_encrypt: (
-			plaintext: Buffer,
-			additionalData: Buffer,
-			nonce: Buffer,
+			plaintext: Uint8Array,
+			additionalData: Uint8Array,
+			nonce: Uint8Array,
 			key: Uint8Array,
 		) => sodium.api.crypto_aead_xchacha20poly1305_ietf_encrypt(plaintext, additionalData, null, nonce, key),
 	}),
 	'libsodium-wrappers': (sodium: any): Methods => ({
 		crypto_aead_xchacha20poly1305_ietf_decrypt: (
-			cipherText: Buffer,
-			additionalData: Buffer,
-			nonce: Buffer,
+			cipherText: Uint8Array,
+			additionalData: Uint8Array,
+			nonce: Uint8Array,
 			key: Uint8Array,
 		) => sodium.crypto_aead_xchacha20poly1305_ietf_decrypt(null, cipherText, additionalData, nonce, key),
 		crypto_aead_xchacha20poly1305_ietf_encrypt: (
-			plaintext: Buffer,
-			additionalData: Buffer,
-			nonce: Buffer,
+			plaintext: Uint8Array,
+			additionalData: Uint8Array,
+			nonce: Uint8Array,
 			key: Uint8Array,
 		) => sodium.crypto_aead_xchacha20poly1305_ietf_encrypt(plaintext, additionalData, null, nonce, key),
 	}),

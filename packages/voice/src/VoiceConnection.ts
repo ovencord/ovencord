@@ -1,5 +1,5 @@
 /* eslint-disable @typescript-eslint/unbound-method */
-import type { Buffer } from 'node:buffer';
+
 import { AsyncEventEmitter } from '@ovencord/util';
 import type { GatewayVoiceServerUpdateDispatchData, GatewayVoiceStateUpdateDispatchData } from 'discord-api-types/v10';
 import type { JoinConfig } from './DataStore';
@@ -543,7 +543,7 @@ export class VoiceConnection extends AsyncEventEmitter {
 	 *
 	 * @param buffer - The Opus packet to prepare
 	 */
-	public prepareAudioPacket(buffer: Buffer) {
+	public prepareAudioPacket(buffer: Uint8Array) {
 		const state = this.state;
 		if (state.status !== VoiceConnectionStatus.Ready) return;
 		return state.networking.prepareAudioPacket(buffer);
@@ -563,7 +563,7 @@ export class VoiceConnection extends AsyncEventEmitter {
 	 *
 	 * @param buffer - The Opus packet to play
 	 */
-	public playOpusPacket(buffer: Buffer) {
+	public playOpusPacket(buffer: Uint8Array) {
 		const state = this.state;
 		if (state.status !== VoiceConnectionStatus.Ready) return;
 		state.networking.prepareAudioPacket(buffer);

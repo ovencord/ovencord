@@ -1,4 +1,4 @@
-import { Buffer } from 'node:buffer';
+
 import { AsyncEventEmitter } from '@ovencord/util';
 import Davey from '@snazzah/davey';
 import type { VoiceDavePrepareEpochData, VoiceDavePrepareTransitionData } from 'discord-api-types/voice/v8';
@@ -6,24 +6,24 @@ import { SILENCE_FRAME } from '../audio/AudioPlayer';
 
 interface SessionMethods {
 	canPassthrough(userId: string): boolean;
-	decrypt(userId: string, mediaType: 0 | 1, packet: Buffer): Buffer;
-	encryptOpus(packet: Buffer): Buffer;
-	getSerializedKeyPackage(): Buffer;
+	decrypt(userId: string, mediaType: 0 | 1, packet: Uint8Array): Uint8Array;
+	encryptOpus(packet: Uint8Array): Uint8Array;
+	getSerializedKeyPackage(): Uint8Array;
 	getVerificationCode(userId: string): Promise<string>;
-	processCommit(commit: Buffer): void;
-	processProposals(optype: 0 | 1, proposals: Buffer, recognizedUserIds?: string[]): ProposalsResult;
-	processWelcome(welcome: Buffer): void;
+	processCommit(commit: Uint8Array): void;
+	processProposals(optype: 0 | 1, proposals: Uint8Array, recognizedUserIds?: string[]): ProposalsResult;
+	processWelcome(welcome: Uint8Array): void;
 	ready: boolean;
 	reinit(protocolVersion: number, userId: string, channelId: string): void;
 	reset(): void;
-	setExternalSender(externalSender: Buffer): void;
+	setExternalSender(externalSender: Uint8Array): void;
 	setPassthroughMode(passthrough: boolean, expiry: number): void;
 	voicePrivacyCode: string;
 }
 
 interface ProposalsResult {
-	commit?: Buffer;
-	welcome?: Buffer;
+	commit?: Uint8Array;
+	welcome?: Uint8Array;
 }
 
 /**
@@ -65,7 +65,7 @@ export function getMaxProtocolVersion(): number {
 export interface DAVESession extends AsyncEventEmitter {
 	on(event: 'error', listener: (error: Error) => void): this;
 	on(event: 'debug', listener: (message: string) => void): this;
-	on(event: 'keyPackage', listener: (message: Buffer) => void): this;
+	on(event: 'keyPackage', listener: (message: Uint8Array) => void): this;
 	on(event: 'invalidateTransition', listener: (transitionId: number) => void): this;
 }
 
@@ -162,7 +162,7 @@ export class DAVESession extends AsyncEventEmitter {
 				this.session.reinit(this.protocolVersion, this.userId, this.channelId);
 				this.emit('debug', `Session reinitialized for protocol version ${this.protocolVersion}`);
 			} else {
-				this.session = new Davey.DAVESession(this.protocolVersion, this.userId, this.channelId);
+				this.session = new Davey.DAVESession(this.protocolVersion, this.userId, this.channelId) as unknown as SessionMethods;
 				this.emit('debug', `Session initialized for protocol version ${this.protocolVersion}`);
 			}
 
@@ -179,7 +179,7 @@ export class DAVESession extends AsyncEventEmitter {
 	 *
 	 * @param externalSender - The external sender
 	 */
-	public setExternalSender(externalSender: Buffer) {
+	public setExternalSender(externalSender: Uint8Array) {
 		if (!this.session) throw new Error('No session available');
 		this.session.setExternalSender(externalSender);
 		this.emit('debug', 'Set MLS external sender');
@@ -274,9 +274,9 @@ export class DAVESession extends AsyncEventEmitter {
 	 * @param connectedClients - The set of connected client IDs
 	 * @returns The payload to send back to the voice server, if there is one
 	 */
-	public processProposals(payload: Buffer, connectedClients: Set<string>): Buffer | undefined {
+	public processProposals(payload: Uint8Array, connectedClients: Set<string>): Uint8Array | undefined {
 		if (!this.session) throw new Error('No session available');
-		const optype = payload.readUInt8(0) as 0 | 1;
+		const optype = payload[0] as 0 | 1;
 		const { commit, welcome } = this.session.processProposals(
 			optype,
 			payload.subarray(1),
@@ -284,7 +284,13 @@ export class DAVESession extends AsyncEventEmitter {
 		);
 		this.emit('debug', 'MLS proposals processed');
 		if (!commit) return;
-		return welcome ? Buffer.concat([commit, welcome]) : commit;
+		if (welcome) {
+			const result = new Uint8Array(commit.length + welcome.length);
+			result.set(commit);
+			result.set(welcome, commit.length);
+			return result;
+		}
+		return commit;
 	}
 
 	/**
@@ -293,9 +299,10 @@ export class DAVESession extends AsyncEventEmitter {
 	 * @param payload - The payload
 	 * @returns The transaction id and whether it was successful
 	 */
-	public processCommit(payload: Buffer): TransitionResult {
+	public processCommit(payload: Uint8Array): TransitionResult {
 		if (!this.session) throw new Error('No session available');
-		const transitionId = payload.readUInt16BE(0);
+		const view = new DataView(payload.buffer, payload.byteOffset, payload.byteLength);
+		const transitionId = view.getUint16(0, false);
 		try {
 			this.session.processCommit(payload.subarray(2));
 			if (transitionId === 0) {
@@ -320,9 +327,10 @@ export class DAVESession extends AsyncEventEmitter {
 	 * @param payload - The payload
 	 * @returns The transaction id and whether it was successful
 	 */
-	public processWelcome(payload: Buffer): TransitionResult {
+	public processWelcome(payload: Uint8Array): TransitionResult {
 		if (!this.session) throw new Error('No session available');
-		const transitionId = payload.readUInt16BE(0);
+		const view = new DataView(payload.buffer, payload.byteOffset, payload.byteLength);
+		const transitionId = view.getUint16(0, false);
 		try {
 			this.session.processWelcome(payload.subarray(2));
 			if (transitionId === 0) {
@@ -346,8 +354,8 @@ export class DAVESession extends AsyncEventEmitter {
 	 *
 	 * @param packet - The packet to encrypt
 	 */
-	public encrypt(packet: Buffer) {
-		if (this.protocolVersion === 0 || !this.session?.ready || packet.equals(SILENCE_FRAME)) return packet;
+	public encrypt(packet: Uint8Array) {
+		if (this.protocolVersion === 0 || !this.session?.ready || (packet.length === SILENCE_FRAME.length && packet[0] === SILENCE_FRAME[0] && packet[1] === SILENCE_FRAME[1] && packet[2] === SILENCE_FRAME[2])) return packet;
 		return this.session.encryptOpus(packet);
 	}
 
@@ -358,9 +366,9 @@ export class DAVESession extends AsyncEventEmitter {
 	 * @param userId - The user id that sent the packet
 	 * @returns The decrypted packet, or `null` if the decryption failed but should be ignored
 	 */
-	public decrypt(packet: Buffer, userId: string) {
+	public decrypt(packet: Uint8Array, userId: string) {
 		const canDecrypt = this.session?.ready && (this.protocolVersion !== 0 || this.session?.canPassthrough(userId));
-		if (packet.equals(SILENCE_FRAME) || !canDecrypt || !this.session) return packet;
+		if ((packet.length === SILENCE_FRAME.length && packet[0] === SILENCE_FRAME[0] && packet[1] === SILENCE_FRAME[1] && packet[2] === SILENCE_FRAME[2]) || !canDecrypt || !this.session) return packet;
 		try {
 			// @ts-expect-error - const enum is exported and works (todo: drop const modifier on Davey end)
 			const buffer = this.session.decrypt(userId, Davey.MediaType.AUDIO, packet);

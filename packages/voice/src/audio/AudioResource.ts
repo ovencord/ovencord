@@ -1,5 +1,5 @@
-import type { Buffer } from 'node:buffer';
-import { pipeline, type Readable } from 'node:stream';
+
+import { pipeline, type Readable } from '../util/stream';
 import prism from 'prism-media';
 import { noop } from '../util/util';
 import { SILENCE_FRAME, type AudioPlayer } from './AudioPlayer';
@@ -150,7 +150,7 @@ export class AudioResource<Metadata = unknown> {
 	 * read from it.
 	 * @internal
 	 */
-	public read(): Buffer | null {
+	public read(): Uint8Array | null {
 		if (this.silenceRemaining === 0) {
 			return null;
 		} else if (this.silenceRemaining > 0) {
@@ -158,7 +158,7 @@ export class AudioResource<Metadata = unknown> {
 			return SILENCE_FRAME;
 		}
 
-		const packet = this.playStream.read() as Buffer | null;
+		const packet = this.playStream.read() as Uint8Array | null;
 		if (packet) {
 			this.playbackDuration += 20;
 		}

@@ -1,4 +1,4 @@
-import type { Readable } from 'node:stream';
+import type { Readable } from '../util/stream';
 import prism from 'prism-media';
 
 /**

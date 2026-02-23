@@ -1,8 +1,8 @@
 /* eslint-disable jsdoc/check-param-names */
 /* eslint-disable id-length */
 /* eslint-disable @typescript-eslint/unbound-method */
-import { Buffer } from 'node:buffer';
-import crypto from 'node:crypto';
+// @ts-expect-error - TS may fail to resolve the export map
+import { gcm } from '@noble/ciphers/aes';
 import { AsyncEventEmitter } from '@ovencord/util';
 import type { VoiceReceivePayload, VoiceSpeakingFlags } from 'discord-api-types/voice/v8';
 import { VoiceEncryptionMode, VoiceOpcodes } from 'discord-api-types/voice/v8';
@@ -19,12 +19,10 @@ const CHANNELS = 2;
 const TIMESTAMP_INC = (48_000 / 100) * CHANNELS;
 const MAX_NONCE_SIZE = 2 ** 32 - 1;
 
-export const SUPPORTED_ENCRYPTION_MODES: VoiceEncryptionMode[] = [VoiceEncryptionMode.AeadXChaCha20Poly1305RtpSize];
-
-// Just in case there's some system that doesn't come with aes-256-gcm, conditionally add it as supported
-if (crypto.getCiphers().includes('aes-256-gcm')) {
-	SUPPORTED_ENCRYPTION_MODES.unshift(VoiceEncryptionMode.AeadAes256GcmRtpSize);
-}
+export const SUPPORTED_ENCRYPTION_MODES: VoiceEncryptionMode[] = [
+	VoiceEncryptionMode.AeadAes256GcmRtpSize,
+	VoiceEncryptionMode.AeadXChaCha20Poly1305RtpSize
+];
 
 /**
  * The different statuses that a networking instance can hold. The order
@@ -92,7 +90,7 @@ export interface NetworkingReadyState {
 	connectionData: ConnectionData;
 	connectionOptions: ConnectionOptions;
 	dave?: DAVESession | undefined;
-	preparedPacket?: Buffer | undefined;
+	preparedPacket?: Uint8Array | undefined;
 	udp: VoiceUDPSocket;
 	ws: VoiceWebSocket;
 }
@@ -106,7 +104,7 @@ export interface NetworkingResumingState {
 	connectionData: ConnectionData;
 	connectionOptions: ConnectionOptions;
 	dave?: DAVESession | undefined;
-	preparedPacket?: Buffer | undefined;
+	preparedPacket?: Uint8Array | undefined;
 	udp: VoiceUDPSocket;
 	ws: VoiceWebSocket;
 }
@@ -153,7 +151,7 @@ export interface ConnectionData {
 	connectedClients: Set<string>;
 	encryptionMode: string;
 	nonce: number;
-	nonceBuffer: Buffer;
+	nonceBuffer: Uint8Array;
 	packetsPlayed: number;
 	secretKey: Uint8Array;
 	sequence: number;
@@ -174,7 +172,7 @@ export interface NetworkingOptions {
 /**
  * An empty buffer that is reused in packet encryption by many different networking instances.
  */
-const nonce = Buffer.alloc(24);
+const nonce = new Uint8Array(24);
 
 export interface Networking extends AsyncEventEmitter {
 	/**
@@ -531,7 +529,7 @@ export class Networking extends AsyncEventEmitter {
 					sequence: randomNBit(16),
 					timestamp: randomNBit(32),
 					nonce: 0,
-					nonceBuffer: encryptionMode === 'aead_aes256_gcm_rtpsize' ? Buffer.alloc(12) : Buffer.alloc(24),
+					nonceBuffer: encryptionMode === 'aead_aes256_gcm_rtpsize' ? new Uint8Array(12) : new Uint8Array(24),
 					speaking: false,
 					packetsPlayed: 0,
 				},
@@ -584,12 +582,12 @@ export class Networking extends AsyncEventEmitter {
 	private onWsBinary(message: BinaryWebSocketMessage) {
 		if (this.state.code === NetworkingStatusCode.Ready && this.state.dave) {
 			if (message.op === VoiceOpcodes.DaveMlsExternalSender) {
-				this.state.dave.setExternalSender(message.payload);
+				this.state.dave.setExternalSender(message.payload as any);
 			} else if (message.op === VoiceOpcodes.DaveMlsProposals) {
-				const payload = this.state.dave.processProposals(message.payload, this.state.connectionData.connectedClients);
-				if (payload) this.state.ws.sendBinaryMessage(VoiceOpcodes.DaveMlsCommitWelcome, payload);
+				const payload = this.state.dave.processProposals(message.payload as any, this.state.connectionData.connectedClients);
+				if (payload) this.state.ws.sendBinaryMessage(VoiceOpcodes.DaveMlsCommitWelcome, payload as any);
 			} else if (message.op === VoiceOpcodes.DaveMlsAnnounceCommitTransition) {
-				const { transitionId, success } = this.state.dave.processCommit(message.payload);
+				const { transitionId, success } = this.state.dave.processCommit(message.payload as any);
 				if (success) {
 					if (transitionId === 0) this.emit('transitioned', transitionId);
 					else
@@ -599,7 +597,7 @@ export class Networking extends AsyncEventEmitter {
 						});
 				}
 			} else if (message.op === VoiceOpcodes.DaveMlsWelcome) {
-				const { transitionId, success } = this.state.dave.processWelcome(message.payload);
+				const { transitionId, success } = this.state.dave.processWelcome(message.payload as any);
 				if (success) {
 					if (transitionId === 0) this.emit('transitioned', transitionId);
 					else
@@ -617,7 +615,7 @@ export class Networking extends AsyncEventEmitter {
 	 *
 	 * @param keyPackage - The new key package
 	 */
-	private onDaveKeyPackage(keyPackage: Buffer) {
+	private onDaveKeyPackage(keyPackage: Uint8Array) {
 		if (this.state.code === NetworkingStatusCode.SelectingProtocol || this.state.code === NetworkingStatusCode.Ready)
 			this.state.ws.sendBinaryMessage(VoiceOpcodes.DaveMlsKeyPackage, keyPackage);
 	}
@@ -672,7 +670,7 @@ export class Networking extends AsyncEventEmitter {
 	 * @param opusPacket - The Opus packet to encrypt
 	 * @returns The audio packet that was prepared
 	 */
-	public prepareAudioPacket(opusPacket: Buffer) {
+	public prepareAudioPacket(opusPacket: Uint8Array) {
 		const state = this.state;
 		if (state.code !== NetworkingStatusCode.Ready) return;
 		state.preparedPacket = this.createAudioPacket(opusPacket, state.connectionData, state.dave);
@@ -700,7 +698,7 @@ export class Networking extends AsyncEventEmitter {
 	 *
 	 * @param audioPacket - The audio packet to play
 	 */
-	private playAudioPacket(audioPacket: Buffer) {
+	private playAudioPacket(audioPacket: Uint8Array) {
 		const state = this.state;
 		if (state.code !== NetworkingStatusCode.Ready) return;
 		const { connectionData } = state;
@@ -742,19 +740,28 @@ export class Networking extends AsyncEventEmitter {
 	 * @param connectionData - The current connection data of the instance
 	 * @param daveSession - The DAVE session to use for encryption
 	 */
-	private createAudioPacket(opusPacket: Buffer, connectionData: ConnectionData, daveSession?: DAVESession) {
-		const rtpHeader = Buffer.alloc(12);
+	private createAudioPacket(opusPacket: Uint8Array, connectionData: ConnectionData, daveSession?: DAVESession) {
+		const rtpHeader = new Uint8Array(12);
+		const view = new DataView(rtpHeader.buffer);
 		rtpHeader[0] = 0x80;
 		rtpHeader[1] = 0x78;
 
 		const { sequence, timestamp, ssrc } = connectionData;
 
-		rtpHeader.writeUIntBE(sequence, 2, 2);
-		rtpHeader.writeUIntBE(timestamp, 4, 4);
-		rtpHeader.writeUIntBE(ssrc, 8, 4);
+		view.setUint16(2, sequence, false);
+		view.setUint32(4, timestamp, false);
+		view.setUint32(8, ssrc, false);
 
-		rtpHeader.copy(nonce, 0, 0, 12);
-		return Buffer.concat([rtpHeader, ...this.encryptOpusPacket(opusPacket, connectionData, rtpHeader, daveSession)]);
+		nonce.set(rtpHeader.subarray(0, 12));
+		
+		const [encrypted, noncePadding] = this.encryptOpusPacket(opusPacket, connectionData, rtpHeader, daveSession);
+
+		const result = new Uint8Array(12 + encrypted.length + noncePadding.length);
+		result.set(rtpHeader, 0);
+		result.set(encrypted, 12);
+		result.set(noncePadding, 12 + encrypted.length);
+		
+		return result;
 	}
 
 	/**
@@ -765,37 +772,39 @@ export class Networking extends AsyncEventEmitter {
 	 * @param daveSession - The DAVE session to use for encryption
 	 */
 	private encryptOpusPacket(
-		opusPacket: Buffer,
+		opusPacket: Uint8Array,
 		connectionData: ConnectionData,
-		additionalData: Buffer,
+		additionalData: Uint8Array,
 		daveSession?: DAVESession,
-	) {
+	): [Uint8Array, Uint8Array] {
 		const { secretKey, encryptionMode } = connectionData;
 
-		const packet = daveSession?.encrypt(opusPacket) ?? opusPacket;
+		const packet = daveSession?.encrypt(opusPacket instanceof Buffer ? opusPacket : Buffer.from(opusPacket)) ?? opusPacket;
 
 		// Both supported encryption methods want the nonce to be an incremental integer
 		connectionData.nonce++;
 		if (connectionData.nonce > MAX_NONCE_SIZE) connectionData.nonce = 0;
-		connectionData.nonceBuffer.writeUInt32BE(connectionData.nonce, 0);
+		
+		const nonceView = new DataView(connectionData.nonceBuffer.buffer);
+		nonceView.setUint32(0, connectionData.nonce, false);
 
 		// 4 extra bytes of padding on the end of the encrypted packet
 		const noncePadding = connectionData.nonceBuffer.subarray(0, 4);
 
-		let encrypted;
+		let encrypted: Uint8Array;
+		const uintPacket = packet instanceof Uint8Array ? packet : new Uint8Array(packet);
+
 		switch (encryptionMode) {
 			case 'aead_aes256_gcm_rtpsize': {
-				const cipher = crypto.createCipheriv('aes-256-gcm', secretKey, connectionData.nonceBuffer);
-				cipher.setAAD(additionalData);
-
-				encrypted = Buffer.concat([cipher.update(packet), cipher.final(), cipher.getAuthTag()]);
+				const cipher = gcm(secretKey, connectionData.nonceBuffer);
+				encrypted = cipher.encrypt(uintPacket, additionalData);
 
 				return [encrypted, noncePadding];
 			}
 
 			case 'aead_xchacha20_poly1305_rtpsize': {
 				encrypted = secretbox.methods.crypto_aead_xchacha20poly1305_ietf_encrypt(
-					packet,
+					uintPacket,
 					additionalData,
 					connectionData.nonceBuffer,
 					secretKey,

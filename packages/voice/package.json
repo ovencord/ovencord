@@ -1,7 +1,7 @@
 {
 	"$schema": "https://json.schemastore.org/package.json",
 	"name": "@ovencord/voice",
-	"version": "0.19.4",
+	"version": "0.19.5",
 	"description": "Implementation of the Discord Voice API for Node.js",
 	"scripts": {
 		"test": "bun test",
@@ -41,12 +41,11 @@
 		"@types/ws": "^8.18.1",
 		"discord-api-types": "^0.38.36",
 		"prism-media": "^1.3.5",
-		"tslib": "^2.8.1",
-		"ws": "^8.18.3"
-	},
-	"devDependencies": {
+
+		"ws": "^8.18.3",
 		"@noble/ciphers": "^2.1.1"
 	},
+	"devDependencies": {},
 	"engines": {
 		"bun": ">=1.3.0"
 	},

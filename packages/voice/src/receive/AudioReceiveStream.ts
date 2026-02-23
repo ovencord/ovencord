@@ -1,6 +1,5 @@
-import type { Buffer } from 'node:buffer';
-import process from 'node:process';
-import { Readable, type ReadableOptions } from 'node:stream';
+
+import { Readable, type ReadableOptions } from '../util/stream';
 import { SILENCE_FRAME } from '../audio/AudioPlayer';
 
 /**
@@ -67,12 +66,12 @@ export class AudioReceiveStream extends Readable {
 		this.end = end;
 	}
 
-	public override push(buffer: Buffer | null) {
+	public override push(buffer: Uint8Array | null) {
 		if (
 			buffer &&
 			(this.end.behavior === EndBehaviorType.AfterInactivity ||
 				(this.end.behavior === EndBehaviorType.AfterSilence &&
-					(buffer.compare(SILENCE_FRAME) !== 0 || this.endTimeout === undefined)))
+					(!(buffer.length === SILENCE_FRAME.length && buffer[0] === SILENCE_FRAME[0] && buffer[1] === SILENCE_FRAME[1] && buffer[2] === SILENCE_FRAME[2]) || this.endTimeout === undefined)))
 		) {
 			this.renewEndTimeout(this.end);
 		}

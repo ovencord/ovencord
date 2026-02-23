@@ -1,5 +1,5 @@
 /* eslint-disable @typescript-eslint/prefer-ts-expect-error, @typescript-eslint/method-signature-style */
-import { Buffer } from 'node:buffer';
+
 import { AsyncEventEmitter } from '@ovencord/util';
 import { addAudioPlayer, deleteAudioPlayer } from '../DataStore';
 import { VoiceConnectionStatus, type VoiceConnection } from '../VoiceConnection';
@@ -9,7 +9,7 @@ import type { AudioResource } from './AudioResource';
 import { PlayerSubscription } from './PlayerSubscription';
 
 // The Opus "silent" frame
-export const SILENCE_FRAME = Buffer.from([0xf8, 0xff, 0xfe]);
+export const SILENCE_FRAME = new Uint8Array([0xf8, 0xff, 0xfe]);
 
 /**
  * Describes the behavior of the player when an audio packet is played but there are no available
@@ -597,7 +597,7 @@ export class AudioPlayer extends AsyncEventEmitter {
 		 * play a silence packet. If there are 5 consecutive cycles with failed reads, then the
 		 * playback will end.
 		 */
-		const packet: Buffer | null = state.resource.read();
+		const packet: Uint8Array | null = state.resource.read();
 
 		if (state.status === AudioPlayerStatus.Playing) {
 			if (packet) {
@@ -631,7 +631,7 @@ export class AudioPlayer extends AsyncEventEmitter {
 	 * @param receivers - The connections that should play this packet
 	 */
 	private _preparePacket(
-		packet: Buffer,
+		packet: Uint8Array,
 		receivers: VoiceConnection[],
 		state: AudioPlayerPausedState | AudioPlayerPlayingState,
 	) {

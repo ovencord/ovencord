@@ -1,7 +1,5 @@
-import { Buffer } from 'node:buffer';
-import { createSocket, type Socket } from 'node:dgram';
 import { AsyncEventEmitter } from '@ovencord/util';
-import { isIPv4 } from 'node:net';
+type UDPSocket = Awaited<ReturnType<typeof Bun.udpSocket>>;
 
 /**
  * Stores an IP address and port. Used to store socket details for the local client as well as
@@ -17,16 +15,23 @@ export interface SocketConfig {
  *
  * @param message - The received message
  */
-export function parseLocalPacket(message: Buffer): SocketConfig {
-	const packet = Buffer.from(message);
+export function parseLocalPacket(message: Uint8Array): SocketConfig {
+	const view = new DataView(message.buffer, message.byteOffset, message.byteLength);
 
-	const ip = packet.subarray(8, packet.indexOf(0, 8)).toString('utf8');
+	let nullIndex = 8;
+	while (nullIndex < message.length && message[nullIndex] !== 0) {
+		nullIndex++;
+	}
 
-	if (!isIPv4(ip)) {
+	const ipBytes = message.subarray(8, nullIndex);
+	const ip = new TextDecoder().decode(ipBytes);
+
+	const ipv4Regex = /^(?:[0-9]{1,3}\.){3}[0-9]{1,3}$/;
+	if (!ipv4Regex.test(ip)) {
 		throw new Error('Malformed IP address');
 	}
 
-	const port = packet.readUInt16BE(packet.length - 2);
+	const port = view.getUint16(message.length - 2, false);
 
 	return { ip, port };
 }
@@ -45,7 +50,7 @@ export interface VoiceUDPSocket extends AsyncEventEmitter {
 	on(event: 'error', listener: (error: Error) => void): this;
 	on(event: 'close', listener: () => void): this;
 	on(event: 'debug', listener: (message: string) => void): this;
-	on(event: 'message', listener: (message: Buffer) => void): this;
+	on(event: 'message', listener: (message: Uint8Array) => void): this;
 }
 
 /**
@@ -55,7 +60,7 @@ export class VoiceUDPSocket extends AsyncEventEmitter {
 	/**
 	 * The underlying network Socket for the VoiceUDPSocket.
 	 */
-	private readonly socket: Socket;
+	private socket?: any;
 
 	/**
 	 * The socket details for Discord (remote)
@@ -70,12 +75,17 @@ export class VoiceUDPSocket extends AsyncEventEmitter {
 	/**
 	 * The buffer used to write the keep alive counter into.
 	 */
-	private readonly keepAliveBuffer: Buffer;
+	private readonly keepAliveBuffer: Uint8Array;
 
 	/**
-	 * The Node.js interval for the keep-alive mechanism.
+	 * The DataView for writing to the keep alive buffer.
 	 */
-	private readonly keepAliveInterval: NodeJS.Timeout;
+	private readonly keepAliveView: DataView;
+
+	/**
+	 * The interval for the keep-alive mechanism.
+	 */
+	private keepAliveInterval?: ReturnType<typeof setInterval>;
 
 	/**
 	 * The time taken to receive a response to keep alive messages.
@@ -91,14 +101,22 @@ export class VoiceUDPSocket extends AsyncEventEmitter {
 	 */
 	public constructor(remote: SocketConfig) {
 		super();
-		this.socket = createSocket('udp4');
-		this.socket.on('error', (error: Error) => this.emit('error', error));
-		this.socket.on('message', (buffer: Buffer) => this.onMessage(buffer));
-		this.socket.on('close', () => this.emit('close'));
 		this.remote = remote;
-		this.keepAliveBuffer = Buffer.alloc(8);
-		this.keepAliveInterval = setInterval(() => this.keepAlive(), KEEP_ALIVE_INTERVAL);
-		setImmediate(() => this.keepAlive());
+		this.keepAliveBuffer = new Uint8Array(8);
+		this.keepAliveView = new DataView(this.keepAliveBuffer.buffer);
+		
+		Bun.udpSocket({
+			socket: {
+				data: (_socket, buf) => { void this.onMessage(buf); },
+				error: (_socket, error) => { this.emit('error', error); },
+			},
+		}).then(socket => {
+			this.socket = socket;
+			this.keepAliveInterval = setInterval(() => this.keepAlive(), KEEP_ALIVE_INTERVAL);
+			this.keepAlive();
+		}).catch(error => {
+			this.emit('error', error);
+		});
 	}
 
 	/**
@@ -106,16 +124,16 @@ export class VoiceUDPSocket extends AsyncEventEmitter {
 	 *
 	 * @param buffer - The received buffer
 	 */
-	private onMessage(buffer: Buffer): void {
+	private onMessage(buffer: Buffer | Uint8Array): void {
 		// Propagate the message
-		this.emit('message', buffer);
+		this.emit('message', buffer instanceof Uint8Array ? buffer : new Uint8Array(buffer));
 	}
 
 	/**
 	 * Called at a regular interval to check whether we are still able to send datagrams to Discord.
 	 */
 	private keepAlive() {
-		this.keepAliveBuffer.writeUInt32LE(this.keepAliveCounter, 0);
+		this.keepAliveView.setUint32(0, this.keepAliveCounter, true); // LE
 		this.send(this.keepAliveBuffer);
 		this.keepAliveCounter++;
 		if (this.keepAliveCounter > MAX_COUNTER_VALUE) {
@@ -128,8 +146,8 @@ export class VoiceUDPSocket extends AsyncEventEmitter {
 	 *
 	 * @param buffer - The buffer to send
 	 */
-	public send(buffer: Buffer) {
-		this.socket.send(buffer, this.remote.port, this.remote.ip);
+	public send(buffer: Uint8Array) {
+		(this.socket as any)?.send(buffer, this.remote.port, this.remote.ip);
 	}
 
 	/**
@@ -137,10 +155,10 @@ export class VoiceUDPSocket extends AsyncEventEmitter {
 	 */
 	public destroy() {
 		try {
-			this.socket.close();
+			this.socket?.close();
 		} catch {}
 
-		clearInterval(this.keepAliveInterval);
+		if (this.keepAliveInterval) clearInterval(this.keepAliveInterval);
 	}
 
 	/**
@@ -149,24 +167,30 @@ export class VoiceUDPSocket extends AsyncEventEmitter {
 	 * @param ssrc - The SSRC received from Discord
 	 */
 	public async performIPDiscovery(ssrc: number): Promise<SocketConfig> {
+		while(!this.socket) {
+			await Bun.sleep(5);
+		}
+
 		return new Promise((resolve, reject) => {
-			const listener = (message: Buffer) => {
+			const listener = (message: Uint8Array) => {
 				try {
-					if (message.readUInt16BE(0) !== 2) return;
+					const view = new DataView(message.buffer, message.byteOffset, message.byteLength);
+					if (view.getUint16(0, false) !== 2) return;
 					const packet = parseLocalPacket(message);
-					this.socket.off('message', listener);
+					this.off('message', listener);
 					resolve(packet);
 				} catch {}
 			};
 
-			this.socket.on('message', listener);
-			this.socket.once('close', () => reject(new Error('Cannot perform IP discovery - socket closed')));
+			this.on('message', listener);
+			this.once('close', () => reject(new Error('Cannot perform IP discovery - socket closed')));
 
-			const discoveryBuffer = Buffer.alloc(74);
+			const discoveryBuffer = new Uint8Array(74);
+			const discoveryView = new DataView(discoveryBuffer.buffer);
 
-			discoveryBuffer.writeUInt16BE(1, 0);
-			discoveryBuffer.writeUInt16BE(70, 2);
-			discoveryBuffer.writeUInt32BE(ssrc, 4);
+			discoveryView.setUint16(0, 1, false);
+			discoveryView.setUint16(2, 70, false);
+			discoveryView.setUint32(4, ssrc, false);
 			this.send(discoveryBuffer);
 		});
 	}

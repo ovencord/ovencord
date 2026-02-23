@@ -56,7 +56,7 @@ This is NOT a simple port. Every line of code has been scrutinized and rewritten
 ### Dependency Annihilation
 
 **Before (discord.js ecosystem)**:
-- Runtime: `ws`, `zlib-sync`, `tslib`, `@ovencord/*`
+- Runtime: `ws`, `zlib-sync`, `@ovencord/*`
 - Dev: `vitest`, `tsup`, `prettier`, `eslint-config-neon`, 15+ more
 - **Total**: ~56MB of `node_modules`
 

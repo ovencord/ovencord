@@ -1,6 +1,5 @@
-import { Buffer } from 'node:buffer';
-import process from 'node:process';
-import { Readable } from 'node:stream';
+
+import { Readable } from './stream';
 import prism from 'prism-media';
 import { StreamType } from '..';
 import { noop } from './util';
@@ -11,9 +10,10 @@ import { noop } from './util';
  * @param opusHead - The Opus Head to validate
  * @returns `true` if suitable to play in a Discord voice channel, otherwise `false`
  */
-export function validateDiscordOpusHead(opusHead: Buffer): boolean {
-	const channels = opusHead.readUInt8(9);
-	const sampleRate = opusHead.readUInt32LE(12);
+export function validateDiscordOpusHead(opusHead: Uint8Array): boolean {
+	const channels = opusHead[9];
+	const view = new DataView(opusHead.buffer, opusHead.byteOffset, opusHead.byteLength);
+	const sampleRate = view.getUint32(12, true);
 	return channels === 2 && sampleRate === 48_000;
 }
 
@@ -58,7 +58,7 @@ export async function demuxProbe(
 			return;
 		}
 
-		let readBuffer = Buffer.alloc(0);
+		let readBuffer = new Uint8Array(0);
 
 		let resolved: StreamType | undefined;
 
@@ -88,7 +88,7 @@ export async function demuxProbe(
 			}
 		};
 
-		const foundHead = (type: StreamType) => (head: Buffer) => {
+		const foundHead = (type: StreamType) => (head: Uint8Array) => {
 			if (validator(head)) {
 				finish(type);
 			}
@@ -108,8 +108,11 @@ export async function demuxProbe(
 			}
 		};
 
-		const onData = (buffer: Buffer) => {
-			readBuffer = Buffer.concat([readBuffer, buffer]);
+		const onData = (buffer: Uint8Array) => {
+			const newBuffer = new Uint8Array(readBuffer.length + buffer.length);
+			newBuffer.set(readBuffer);
+			newBuffer.set(buffer, readBuffer.length);
+			readBuffer = newBuffer;
 
 			webm.write(buffer);
 			ogg.write(buffer);

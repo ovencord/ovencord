@@ -1,7 +1,7 @@
 /* eslint-disable jsdoc/check-param-names */
 
-import { Buffer } from 'node:buffer';
-import crypto from 'node:crypto';
+// @ts-expect-error - TS may fail to resolve the export map
+import { gcm } from '@noble/ciphers/aes';
 import type { VoiceReceivePayload } from 'discord-api-types/voice/v8';
 import { VoiceOpcodes } from 'discord-api-types/voice/v8';
 import { VoiceConnectionStatus, type VoiceConnection } from '../VoiceConnection';
@@ -15,7 +15,6 @@ import {
 import { SSRCMap } from './SSRCMap';
 import { SpeakingMap } from './SpeakingMap';
 
-const HEADER_EXTENSION_BYTE = Buffer.from([0xbe, 0xde]);
 const UNPADDED_NONCE_LENGTH = 4;
 const AUTH_TAG_LENGTH = 16;
 
@@ -78,42 +77,33 @@ export class VoiceReceiver {
 		}
 	}
 
-	private decrypt(buffer: Buffer, mode: string, nonce: Buffer, secretKey: Uint8Array) {
+	private decrypt(buffer: Uint8Array, mode: string, nonce: Uint8Array, secretKey: Uint8Array): Uint8Array {
 		// Copy the last 4 bytes of unpadded nonce to the padding of (12 - 4) or (24 - 4) bytes
-		buffer.copy(nonce, 0, buffer.length - UNPADDED_NONCE_LENGTH);
+		nonce.set(buffer.subarray(buffer.length - UNPADDED_NONCE_LENGTH), 0);
 
 		let headerSize = 12;
-		const first = buffer.readUint8();
+		const first = buffer[0];
 		if ((first >> 4) & 0x01) headerSize += 4;
 
 		// The unencrypted RTP header contains 12 bytes, HEADER_EXTENSION and the extension size
 		const header = buffer.subarray(0, headerSize);
 
 		// Encrypted contains the extension, if any, the opus packet, and the auth tag
-		const encrypted = buffer.subarray(headerSize, buffer.length - AUTH_TAG_LENGTH - UNPADDED_NONCE_LENGTH);
-		const authTag = buffer.subarray(
-			buffer.length - AUTH_TAG_LENGTH - UNPADDED_NONCE_LENGTH,
-			buffer.length - UNPADDED_NONCE_LENGTH,
-		);
+		const encryptedWithAuthTag = buffer.subarray(headerSize, buffer.length - UNPADDED_NONCE_LENGTH);
 
 		switch (mode) {
 			case 'aead_aes256_gcm_rtpsize': {
-				const decipheriv = crypto.createDecipheriv('aes-256-gcm', secretKey, nonce);
-				decipheriv.setAAD(header);
-				decipheriv.setAuthTag(authTag);
-
-				return Buffer.concat([decipheriv.update(encrypted), decipheriv.final()]);
+				const cipher = gcm(secretKey, nonce);
+				return cipher.decrypt(encryptedWithAuthTag, header);
 			}
 
 			case 'aead_xchacha20_poly1305_rtpsize': {
 				// Combined mode expects authtag in the encrypted message
-				return Buffer.from(
-					methods.crypto_aead_xchacha20poly1305_ietf_decrypt(
-						Buffer.concat([encrypted, authTag]),
-						header,
-						nonce,
-						secretKey,
-					),
+				return methods.crypto_aead_xchacha20poly1305_ietf_decrypt(
+					encryptedWithAuthTag,
+					header,
+					nonce,
+					secretKey,
 				);
 			}
 
@@ -133,14 +123,15 @@ export class VoiceReceiver {
 	 * @param userId - The user id that sent the packet
 	 * @returns The parsed Opus packet
 	 */
-	private parsePacket(buffer: Buffer, mode: string, nonce: Buffer, secretKey: Uint8Array, userId: string) {
-		let packet: Buffer = this.decrypt(buffer, mode, nonce, secretKey);
+	private parsePacket(buffer: Uint8Array, mode: string, nonce: Uint8Array, secretKey: Uint8Array, userId: string): Uint8Array {
+		let packet = this.decrypt(buffer, mode, nonce, secretKey);
 		if (!packet) throw new Error('Failed to parse packet');
 
 		// Strip decrypted RTP Header Extension if present
 		// The header is only indicated in the original data, so compare with buffer first
-		if (buffer.subarray(12, 14).compare(HEADER_EXTENSION_BYTE) === 0) {
-			const headerExtensionLength = buffer.subarray(14).readUInt16BE();
+		if (buffer[12] === 0xbe && buffer[13] === 0xde) {
+			const view = new DataView(buffer.buffer, buffer.byteOffset, buffer.byteLength);
+			const headerExtensionLength = view.getUint16(14, false);
 			packet = packet.subarray(4 * headerExtensionLength);
 		}
 
@@ -151,7 +142,7 @@ export class VoiceReceiver {
 				this.voiceConnection.state.networking.state.code === NetworkingStatusCode.Resuming)
 		) {
 			const daveSession = this.voiceConnection.state.networking.state.dave;
-			if (daveSession) packet = daveSession.decrypt(packet, userId)!;
+			if (daveSession) packet = daveSession.decrypt(packet as any, userId)!;
 		}
 
 		return packet;
@@ -163,9 +154,11 @@ export class VoiceReceiver {
 	 * @param msg - The received message
 	 * @internal
 	 */
-	public onUdpMessage(msg: Buffer) {
+	public onUdpMessage(msg: Uint8Array) {
 		if (msg.length <= 8) return;
-		const ssrc = msg.readUInt32BE(8);
+		
+		const view = new DataView(msg.buffer, msg.byteOffset, msg.byteLength);
+		const ssrc = view.getUint32(8, false);
 
 		const userData = this.ssrcMap.get(ssrc);
 		if (!userData) return;
