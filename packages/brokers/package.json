@@ -1,12 +1,14 @@
 {
 	"$schema": "https://json.schemastore.org/package.json",
 	"name": "@ovencord/brokers",
-	"version": "1.0.1",
+	"version": "1.0.2",
 	"description": "Powerful set of message brokers",
 	"scripts": {
 		"test": "bun test",
 		"typecheck": "tsc --noEmit",
-		"lint": "eslint src"
+		"lint": "biome check .",
+		"format": "biome format --write .",
+		"check": "biome check --write ."
 	},
 	"exports": "./src/index.ts",
 	"main": "./src/index.ts",
@@ -39,9 +41,9 @@
 	"homepage": "https://ovencord.dev",
 	"funding": "https://github.com/ovencord/ovencord?sponsor",
 	"dependencies": {
-		"@msgpack/msgpack": "^3.1.2",
-		"@ovencord/util": "^1.1.4",
-		"ioredis": "^5.8.2"
+		"@msgpack/msgpack": "^3.1.3",
+		"@ovencord/util": "^1.1.6",
+		"ioredis": "^5.9.3"
 	},
 	"devDependencies": {},
 	"engines": {

@@ -1,5 +1,3 @@
-/* eslint-disable jsdoc/check-param-names */
-
 import { makeURLSearchParams, type RawFile, type RequestData, type REST } from '@ovencord/rest';
 import {
 	Routes,

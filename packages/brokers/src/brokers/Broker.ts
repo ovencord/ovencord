@@ -8,12 +8,11 @@ export interface BaseBrokerOptions {
 	/**
 	 * Function to use for decoding messages
 	 */
-	// eslint-disable-next-line @typescript-eslint/method-signature-style
 	decode?: (data: Uint8Array) => unknown;
 	/**
 	 * Function to use for encoding messages
 	 */
-	// eslint-disable-next-line @typescript-eslint/method-signature-style
+
 	encode?: (data: unknown) => Uint8Array;
 }
 
@@ -39,7 +38,6 @@ export type ToEventMap<
 	];
 };
 
-// eslint-disable-next-line @typescript-eslint/no-empty-object-type
 export interface IBaseBroker<TEvents extends {}> {
 	/**
 	 * Subscribes to the given events
@@ -51,7 +49,6 @@ export interface IBaseBroker<TEvents extends {}> {
 	unsubscribe(events: (keyof TEvents)[]): Promise<void>;
 }
 
-// eslint-disable-next-line @typescript-eslint/no-empty-object-type
 export interface IPubSubBroker<TEvents extends {}>
 	extends IBaseBroker<TEvents>, AsyncEventEmitter<ToEventMap<TEvents>> {
 	/**

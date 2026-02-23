@@ -1,5 +1,3 @@
-/* eslint-disable @typescript-eslint/prefer-ts-expect-error, @typescript-eslint/method-signature-style */
-
 import { AsyncEventEmitter } from '@ovencord/util';
 import { addAudioPlayer, deleteAudioPlayer } from '../DataStore';
 import { VoiceConnectionStatus, type VoiceConnection } from '../VoiceConnection';

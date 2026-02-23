@@ -127,7 +127,6 @@ export class Options extends null {
     return ({ managerType, manager }: any) => {
       // @ts-ignore
       const setting = settings[manager.name] ?? settings[managerType.name];
-      /* eslint-disable-next-line eqeqeq */
       if (setting == null) {
         return new Collection();
       }
@@ -140,7 +139,6 @@ export class Options extends null {
         return new LimitedCollection({ maxSize: setting });
       }
 
-      /* eslint-disable-next-line eqeqeq */
       const noLimit = setting.maxSize == null || setting.maxSize === Infinity;
       if (noLimit) {
         return new Collection();

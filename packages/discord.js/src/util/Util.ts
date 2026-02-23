@@ -4,7 +4,6 @@ import { Collection } from '@ovencord/collection';
 import { lazy } from '@ovencord/util';
 import { ChannelType, RouteBases, Routes } from 'discord-api-types/v10';
 import { Colors } from './Colors.js';
-// eslint-disable-next-line import-x/order
 import { DiscordjsError, DiscordjsRangeError, DiscordjsTypeError, ErrorCodes } from '../errors/index.js';
 
 // Fixes circular dependencies.
@@ -45,7 +44,6 @@ function _flatten(obj: any, seen: WeakSet<object>, depth: number, ...props: any[
 
   const out = {};
 
-  // eslint-disable-next-line prefer-const
   for (let [prop, newProp] of Object.entries(mergedProps)) {
     if (!newProp) continue;
     newProp = newProp === true ? prop : newProp;

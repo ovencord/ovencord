@@ -251,13 +251,11 @@ export class GuildMemberManager extends CachedManager {
       let index = 0;
 
       const cleanup = () => {
-        /* eslint-disable no-use-before-define */
         clearTimeout(timeout);
 
         this.client.ws.removeListener(WebSocketShardEvents.Dispatch, rateLimitHandler);
         this.client.removeListener(Events.GuildMembersChunk, handler);
         this.client.decrementMaxListeners();
-        /* eslint-enable no-use-before-define */
       };
 
       const timeout = setTimeout(() => {
@@ -304,7 +302,6 @@ export class GuildMemberManager extends CachedManager {
 
       this.guild.client.ws.send(this.guild.shardId, {
         op: GatewayOpcodes.RequestGuildMembers,
-        // eslint-disable-next-line id-length
         d: requestData,
       });
     });
@@ -407,7 +404,6 @@ export class GuildMemberManager extends CachedManager {
 
     if (options.communicationDisabledUntil !== undefined) {
       options.communication_disabled_until =
-        // eslint-disable-next-line eqeqeq
         options.communicationDisabledUntil == null
           ? options.communicationDisabledUntil
           : new Date(options.communicationDisabledUntil).toISOString();

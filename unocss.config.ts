@@ -80,7 +80,6 @@ export default defineConfig({
 					'margin-top': '1.25em',
 					'scroll-margin-top': '6.5rem',
 				},
-				// eslint-disable-next-line id-length
 				p: {
 					margin: '.5em 0',
 				},

@@ -1,5 +1,3 @@
-/* eslint-disable jsdoc/check-param-names */
-
 import type { RequestData, REST } from '@ovencord/rest';
 import {
 	type Snowflake,

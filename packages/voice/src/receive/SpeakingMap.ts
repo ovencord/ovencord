@@ -1,4 +1,3 @@
-/* eslint-disable @typescript-eslint/unified-signatures */
 import { AsyncEventEmitter } from '@ovencord/util';
 
 export interface SpeakingMap extends AsyncEventEmitter {

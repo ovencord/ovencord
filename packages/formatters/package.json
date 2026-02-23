@@ -1,12 +1,14 @@
 {
 	"$schema": "https://json.schemastore.org/package.json",
 	"name": "@ovencord/formatters",
-	"version": "0.6.2",
+	"version": "0.6.3",
 	"description": "A set of functions to format strings for Discord.",
 	"scripts": {
 		"test": "bun test",
 		"typecheck": "tsc --noEmit",
-		"lint": "eslint src"
+		"lint": "biome check .",
+		"format": "biome format --write .",
+		"check": "biome check --write ."
 	},
 	"exports": "./src/index.ts",
 	"main": "./src/index.ts",

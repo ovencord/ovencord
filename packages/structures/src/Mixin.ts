@@ -49,7 +49,6 @@ export function Mixin<DestinationClass extends typeof Structure<{}>>(
 			if (
 				DataTemplatePropertyName in extendedClass &&
 				typeof extendedClass.DataTemplate === 'object' &&
-				// eslint-disable-next-line no-eq-null, eqeqeq
 				extendedClass.DataTemplate != null
 			) {
 				dataTemplates.push(extendedClass.DataTemplate as Record<string, unknown>);
@@ -106,7 +105,6 @@ export function Mixin<DestinationClass extends typeof Structure<{}>>(
 			writable: true,
 			enumerable: false,
 			configurable: true,
-			// eslint-disable-next-line func-name-matching
 			value: function _mixinConstructors(data: Partial<unknown>) {
 				for (const construct of constructors) {
 					construct.call(this, data);
@@ -138,7 +136,6 @@ export function Mixin<DestinationClass extends typeof Structure<{}>>(
 			writable: true,
 			enumerable: false,
 			configurable: true,
-			// eslint-disable-next-line func-name-matching
 			value: function _mixinOptimizeData(data: unknown) {
 				for (const optimization of dataOptimizations) {
 					optimization.call(this, data);
@@ -152,7 +149,6 @@ export function Mixin<DestinationClass extends typeof Structure<{}>>(
 			writable: true,
 			enumerable: false,
 			configurable: true,
-			// eslint-disable-next-line func-name-matching
 			value: function _mixinToJSON(data: Partial<unknown>) {
 				for (const enricher of enrichToJSONs) {
 					enricher.call(this, data);

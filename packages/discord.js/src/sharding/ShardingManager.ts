@@ -222,7 +222,6 @@ export class ShardingManager extends AsyncEventEmitter {
     // Obtain/verify the number of shards to spawn
     let shardAmount = amount;
     if (shardAmount === 'auto') {
-      // eslint-disable-next-line require-atomic-updates
       shardAmount = await fetchRecommendedShardCount(this.token);
     } else {
       if (typeof shardAmount !== 'number' || Number.isNaN(shardAmount)) {

@@ -73,7 +73,6 @@ export class RPCRedisBroker<TEvents extends Record<string, any[]>, TResponses ex
 		this.streamReadClient.on('messageBuffer', (channel: Uint8Array, message: Uint8Array) => {
 			const [, id] = new TextDecoder().decode(channel).split(':');
 			if (id && this.promises.has(id)) {
-				// eslint-disable-next-line @typescript-eslint/unbound-method
 				const { resolve, timeout } = this.promises.get(id)!;
 				resolve(this.options.decode(message));
 				clearTimeout(timeout);
@@ -108,7 +107,6 @@ export class RPCRedisBroker<TEvents extends Record<string, any[]>, TResponses ex
 			const timeout = setTimeout(() => reject(timedOut), timeoutDuration).unref();
 
 			this.promises.set(id!, { resolve, reject, timeout });
-			// eslint-disable-next-line
 		}).finally(() => {
 			void this.streamReadClient.unsubscribe(rpcChannel);
 			this.promises.delete(id!);

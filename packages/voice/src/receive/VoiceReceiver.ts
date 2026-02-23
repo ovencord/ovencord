@@ -1,5 +1,3 @@
-/* eslint-disable jsdoc/check-param-names */
-
 // @ts-expect-error - TS may fail to resolve the export map
 import { gcm } from '@noble/ciphers/aes';
 import type { VoiceReceivePayload } from 'discord-api-types/voice/v8';

@@ -822,7 +822,6 @@ export class Client extends AsyncEventEmitter {
    * @private
    */
   _eval(script: string) {
-    // eslint-disable-next-line no-eval
     return eval(script);
   }
 

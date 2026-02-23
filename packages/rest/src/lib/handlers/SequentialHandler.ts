@@ -215,7 +215,6 @@ export class SequentialHandler implements IHandler {
 				limit = this.manager.options.globalRequestsPerSecond;
 				timeout = this.manager.globalReset + offset - Date.now();
 				// If this is the first task to reach the global timeout, set the global delay
-				// eslint-disable-next-line @typescript-eslint/prefer-nullish-coalescing
 				if (!this.manager.globalDelay) {
 					// The global delay function clears the global delay state when it is resolved
 					this.manager.globalDelay = this.globalDelayFor(timeout);
@@ -273,7 +272,6 @@ export class SequentialHandler implements IHandler {
 
 		// Retry requested
 		if (res === null) {
-			// eslint-disable-next-line no-param-reassign
 			return this.runRequest(routeId, url, options, requestData, ++retries);
 		}
 
@@ -406,7 +404,6 @@ export class SequentialHandler implements IHandler {
 				this.#sublimitPromise = null;
 				await sleep(sublimitTimeout);
 				let resolve: () => void;
-				// eslint-disable-next-line  no-promise-executor-return
 				const promise = new Promise<void>((res) => (resolve = res));
 				this.#sublimitPromise = { promise, resolve: resolve! };
 				if (firstSublimit) {
@@ -421,7 +418,6 @@ export class SequentialHandler implements IHandler {
 		} else {
 			const handled = await handleErrors(this.manager, res, method, url, requestData, retries, routeId);
 			if (handled === null) {
-				// eslint-disable-next-line no-param-reassign
 				return this.runRequest(routeId, url, options, requestData, ++retries);
 			}
 

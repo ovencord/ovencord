@@ -81,7 +81,6 @@ export class BurstHandler implements IHandler {
 
 		// Retry requested
 		if (res === null) {
-			// eslint-disable-next-line no-param-reassign
 			return this.runRequest(routeId, url, options, requestData, ++retries);
 		}
 
@@ -143,7 +142,6 @@ export class BurstHandler implements IHandler {
 		} else {
 			const handled = await handleErrors(this.manager, res, method, url, requestData, retries, routeId);
 			if (handled === null) {
-				// eslint-disable-next-line no-param-reassign
 				return this.runRequest(routeId, url, options, requestData, ++retries);
 			}
 

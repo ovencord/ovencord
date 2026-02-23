@@ -1,13 +1,14 @@
 {
 	"$schema": "https://json.schemastore.org/package.json",
 	"name": "@ovencord/ui",
-	"private": true,
-	"version": "0.1.1",
+	"version": "0.1.2",
 	"description": "",
 	"scripts": {
 		"test": "bun test",
 		"typecheck": "tsc --noEmit",
-		"lint": "eslint src"
+		"lint": "biome check .",
+		"format": "biome format --write .",
+		"check": "biome check --write ."
 	},
 	"type": "module",
 	"exports": "./src/index.ts",

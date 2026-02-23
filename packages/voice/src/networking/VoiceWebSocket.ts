@@ -211,9 +211,7 @@ export class VoiceWebSocket extends AsyncEventEmitter {
 		const nonce = this.lastHeartbeatSend;
 		this.sendPacket({
 			op: VoiceOpcodes.Heartbeat,
-			// eslint-disable-next-line id-length
 			d: {
-				// eslint-disable-next-line id-length
 				t: nonce,
 				seq_ack: this.sequence,
 			},

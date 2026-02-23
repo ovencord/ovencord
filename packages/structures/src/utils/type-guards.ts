@@ -27,6 +27,5 @@ export function isFieldSet<Value extends object, Key extends string, Type extend
 	fieldName: Key,
 	type: Type,
 ): data is Record<Key, TypeMap[Type]> & Value {
-	// eslint-disable-next-line valid-typeof
 	return hasProperty(data, fieldName) && typeof data[fieldName] === type;
 }

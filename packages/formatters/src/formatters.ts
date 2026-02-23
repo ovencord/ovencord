@@ -520,7 +520,6 @@ export function heading<Content extends string>(content: Content, level: Heading
 export function heading<Content extends string>(content: Content, level: HeadingLevel.Three): `### ${Content}`;
 
 export function heading(content: string, level?: HeadingLevel) {
-	// eslint-disable-next-line @typescript-eslint/switch-exhaustiveness-check
 	switch (level) {
 		case HeadingLevel.Three:
 			return `### ${content}`;
@@ -617,7 +616,6 @@ export function time<Seconds extends number, Style extends TimestampStylesString
 
 export function time(timeOrSeconds?: Date | number, style?: TimestampStylesString): string {
 	if (typeof timeOrSeconds !== 'number') {
-		// eslint-disable-next-line no-param-reassign
 		timeOrSeconds = Math.floor((timeOrSeconds?.getTime() ?? Date.now()) / 1_000);
 	}
 

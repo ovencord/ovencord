@@ -57,7 +57,6 @@ export class InteractionWebhook {
 
   deleteMessage() {}
 
-  // eslint-disable-next-line getter-return
   get url(): any { return undefined; }
 }
 

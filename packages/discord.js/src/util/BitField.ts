@@ -1,5 +1,3 @@
-/* eslint-disable unicor */
-
 import { DiscordjsRangeError, ErrorCodes  } from '../errors/index.js';
 
 /**

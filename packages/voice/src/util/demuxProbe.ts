@@ -63,11 +63,8 @@ export async function demuxProbe(
 		let resolved: StreamType | undefined;
 
 		const finish = (type: StreamType) => {
-			// eslint-disable-next-line @typescript-eslint/no-use-before-define
 			stream.off('data', onData);
-			// eslint-disable-next-line @typescript-eslint/no-use-before-define
 			stream.off('close', onClose);
-			// eslint-disable-next-line @typescript-eslint/no-use-before-define
 			stream.off('end', onClose);
 			stream.pause();
 			resolved = type;

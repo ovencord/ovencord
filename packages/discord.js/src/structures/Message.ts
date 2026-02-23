@@ -645,7 +645,6 @@ export class Message extends Base {
    * @readonly
    */
   get cleanContent() {
-    // eslint-disable-next-line eqeqeq
     return this.content != null && this.channel ? cleanContent(this.content, this.channel) : null;
   }
 

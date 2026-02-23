@@ -185,7 +185,6 @@ export interface MappedEvents {
 	[GatewayDispatchEvents.WebhooksUpdate]: [ToEventProps<GatewayWebhooksUpdateDispatchData>];
 }
 
-// eslint-disable-next-line @typescript-eslint/no-empty-object-type
 export interface ManagerShardEventsMap extends MappedEvents {}
 
 export interface ClientOptions {
@@ -262,7 +261,6 @@ export class Client extends AsyncEventEmitter<MappedEvents> {
 		this.on(GatewayDispatchEvents.RateLimited, onRatelimit);
 		await this.gateway.send(shardId, {
 			op: GatewayOpcodes.RequestGuildMembers,
-			// eslint-disable-next-line id-length
 			d: {
 				...options,
 				nonce,
@@ -291,7 +289,6 @@ export class Client extends AsyncEventEmitter<MappedEvents> {
 
 				if (data.chunk_index >= data.chunk_count - 1) break;
 
-				// eslint-disable-next-line require-atomic-updates
 				timer = createTimer(controller, timeout);
 			}
 		} catch (error) {
@@ -363,7 +360,6 @@ export class Client extends AsyncEventEmitter<MappedEvents> {
 		for (const [shardId, guildIds] of shardIds) {
 			await this.gateway.send(shardId, {
 				op: GatewayOpcodes.RequestSoundboardSounds,
-				// eslint-disable-next-line id-length
 				d: {
 					...options,
 					guild_ids: guildIds,
@@ -446,7 +442,6 @@ export class Client extends AsyncEventEmitter<MappedEvents> {
 
 		await this.gateway.send(shardId, {
 			op: GatewayOpcodes.VoiceStateUpdate,
-			// eslint-disable-next-line id-length
 			d: options,
 		});
 	}
@@ -460,7 +455,6 @@ export class Client extends AsyncEventEmitter<MappedEvents> {
 	public async updatePresence(shardId: number, options: GatewayPresenceUpdateData) {
 		await this.gateway.send(shardId, {
 			op: GatewayOpcodes.PresenceUpdate,
-			// eslint-disable-next-line id-length
 			d: options,
 		});
 	}

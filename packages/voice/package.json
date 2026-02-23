@@ -1,12 +1,14 @@
 {
 	"$schema": "https://json.schemastore.org/package.json",
 	"name": "@ovencord/voice",
-	"version": "0.19.5",
+	"version": "0.19.6",
 	"description": "Implementation of the Discord Voice API for Node.js",
 	"scripts": {
 		"test": "bun test",
 		"typecheck": "tsc --noEmit",
-		"lint": "eslint src"
+		"lint": "biome check .",
+		"format": "biome format --write .",
+		"check": "biome check --write ."
 	},
 	"exports": "./src/index.ts",
 	"main": "./src/index.ts",

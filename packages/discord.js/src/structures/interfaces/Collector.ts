@@ -210,9 +210,7 @@ export class Collector extends AsyncEventEmitter {
       }
 
       const cleanup = () => {
-        // eslint-disable-next-line no-use-before-define
         this.off('collect', onCollect);
-        // eslint-disable-next-line no-use-before-define
         this.off('end', onEnd);
       };
 
@@ -357,7 +355,6 @@ export class Collector extends AsyncEventEmitter {
    * @returns {?(*|Promise<?*>)} Data to insert into collection, if any
    * @abstract
    */
-  // eslint-disable-next-line no-unused-vars
   collect(...args: any[]): any {}
 
   /**
@@ -369,6 +366,5 @@ export class Collector extends AsyncEventEmitter {
    * @returns {?*} Key to remove from the collection, if any
    * @abstract
    */
-  // eslint-disable-next-line no-unused-vars
   dispose(...args: any[]): any {}
 }

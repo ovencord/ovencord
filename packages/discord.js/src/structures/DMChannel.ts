@@ -116,7 +116,6 @@ export class DMChannel extends BaseChannel {
 
   // These are here only for documentation purposes - they are implemented by TextBasedChannel
 
-  /* eslint-disable getter-return */
   get lastMessage() { return undefined as any; }
 
   get lastPinAt() { return undefined as any; }

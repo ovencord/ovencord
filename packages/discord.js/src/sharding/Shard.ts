@@ -1,5 +1,3 @@
-/* eslint-disable   no-use-before-define */
-
 import { AsyncEventEmitter } from '../util/AsyncEventEmitter.js';
 import { DiscordjsError, ErrorCodes } from '../errors/index.js';
 import { ShardEvents } from '../util/ShardEvents.js';

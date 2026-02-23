@@ -103,7 +103,6 @@ const methods: Methods = {
 	crypto_aead_xchacha20poly1305_ietf_decrypt: fallbackError,
 };
 
-// eslint-disable-next-line no-async-promise-executor
 export const secretboxLoadPromise = new Promise<void>(async (resolve) => {
 	for (const libName of Object.keys(libs) as (keyof typeof libs)[]) {
 		try {

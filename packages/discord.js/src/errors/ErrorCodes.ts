@@ -1,5 +1,3 @@
-/* eslint-disable jsdoc/tag-lines, jsdoc/require-property-description */
-
 /**
  * @typedef {Object} DiscordjsErrorCodes
  * @property {'ClientInvalidOption'} ClientInvalidOption

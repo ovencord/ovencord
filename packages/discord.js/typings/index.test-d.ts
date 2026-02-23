@@ -1,4 +1,3 @@
-/* eslint-disable no-lone-blocks, @typescript-eslint/unbound-method, @typescript-eslint/ban-ts-comment, no-param-reassign, id-length */
 import type { Subprocess } from 'bun';
 import type { ChatInputCommandBuilder, ContextMenuCommandBuilder } from '@ovencord/builders';
 import type { ReadonlyCollection } from '@ovencord/collection';
@@ -1472,7 +1471,6 @@ expectType<string | null>(loggedOutClient.token);
 expectType<null>(loggedOutClient.uptime);
 expectType<null>(loggedOutClient.user);
 
-// eslint-disable-next-line @typescript-eslint/no-confusing-void-expression
 expectType<undefined>(serialize(undefined));
 expectType<null>(serialize(null));
 expectType<number[]>(serialize([1, 2, 3]));

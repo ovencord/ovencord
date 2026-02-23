@@ -10,9 +10,7 @@
  * const value = lazy(() => computeExpensiveValue());
  * ```
  */
-// eslint-disable-next-line
 export function lazy<Value>(cb: () => Value): () => Value {
 	let defaultValue: Value;
-	// eslint-disable-next-line
 	return () => (defaultValue ??= cb());
 }

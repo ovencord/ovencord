@@ -365,7 +365,6 @@ export class REST extends AsyncEventEmitter<RestEvents> {
 			}
 
 			// If a JSON body was added as well, attach it to the form data, using payload_json unless otherwise specified
-			// eslint-disable-next-line no-eq-null, eqeqeq
 			if (request.body != null) {
 				if (request.appendToFormData) {
 					for (const [key, value] of Object.entries(request.body as Record<string, unknown>)) {
@@ -382,7 +381,6 @@ export class REST extends AsyncEventEmitter<RestEvents> {
 			// Set the final body to the form data
 			finalBody = formData;
 
-			// eslint-disable-next-line no-eq-null, eqeqeq
 		} else if (request.body != null) {
 			if (request.passThroughBody) {
 				finalBody = request.body as any;

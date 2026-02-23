@@ -1,12 +1,14 @@
 {
 	"$schema": "https://json.schemastore.org/package.json",
 	"name": "@ovencord/util",
-	"version": "1.1.5",
+	"version": "1.1.7",
 	"description": "Utilities shared across Discord.js packages",
 	"scripts": {
 		"test": "bun test",
 		"typecheck": "tsc --noEmit",
-		"lint": "eslint src"
+		"lint": "biome check .",
+		"format": "biome format --write .",
+		"check": "biome check --write ."
 	},
 	"type": "module",
 	"exports": "./src/index.ts",

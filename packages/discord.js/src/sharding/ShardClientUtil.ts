@@ -1,4 +1,3 @@
-/* eslint-disable   */
 import { calculateShardId } from '@ovencord/util';
 import { WebSocketShardEvents } from '@ovencord/ws';
 import { DiscordjsError, DiscordjsTypeError, ErrorCodes } from '../errors/index.js';

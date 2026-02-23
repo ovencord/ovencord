@@ -171,7 +171,6 @@ export class GuildManager extends CachedManager {
     for (const [shardId, shardGuildIds] of shardIds) {
       this.client.ws.send(shardId, {
         op: GatewayOpcodes.RequestSoundboardSounds,
-        // eslint-disable-next-line id-length
         d: {
           guild_ids: shardGuildIds,
         },
@@ -184,7 +183,6 @@ export class GuildManager extends CachedManager {
       const fetchedSoundboardSounds = new Collection();
 
       const handler = (soundboardSounds: any, guild: any) => {
-        // eslint-disable-next-line no-use-before-define
         timeout.refresh();
 
         if (!remainingGuildIds.has(guild.id)) return;
@@ -194,7 +192,6 @@ export class GuildManager extends CachedManager {
         remainingGuildIds.delete(guild.id);
 
         if (remainingGuildIds.size === 0) {
-          // eslint-disable-next-line no-use-before-define
           clearTimeout(timeout);
           this.client.removeListener(Events.SoundboardSounds, handler);
           this.client.decrementMaxListeners();

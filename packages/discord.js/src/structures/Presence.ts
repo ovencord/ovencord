@@ -1,5 +1,3 @@
-/* eslint-disable no-use-before-define */
-
 import { ActivityFlagsBitField  } from '../util/ActivityFlagsBitField.js';
 import { flatten  } from '../util/Util.js';
 import { Base  } from './Base.js';

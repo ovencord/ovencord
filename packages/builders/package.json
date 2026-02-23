@@ -1,12 +1,14 @@
 {
 	"$schema": "https://json.schemastore.org/package.json",
 	"name": "@ovencord/builders",
-	"version": "1.12.7",
+	"version": "1.12.8",
 	"description": "A set of builders that you can use when creating your bot",
 	"scripts": {
 		"test": "bun test",
 		"typecheck": "tsc --noEmit",
-		"lint": "eslint src"
+		"lint": "biome check .",
+		"format": "biome format --write .",
+		"check": "biome check --write ."
 	},
 	"exports": "./src/index.ts",
 	"main": "./src/index.ts",

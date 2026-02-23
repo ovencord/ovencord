@@ -1,5 +1,3 @@
-/* eslint-disable no-param-reassign */
-
 /**
  * Represents an immutable version of a collection
  */
@@ -25,7 +23,7 @@ export interface Collection<Key, Value> {
  * @typeParam Key - The key type this collection holds
  * @typeParam Value - The value type this collection holds
  */
-// eslint-disable-next-line @typescript-eslint/no-unsafe-declaration-merging
+
 export class Collection<Key, Value> extends Map<Key, Value> {
 	/**
 	 * Obtains the value of the given key if it exists, otherwise sets and returns the value provided by the default value generator.
@@ -79,7 +77,6 @@ export class Collection<Key, Value> extends Map<Key, Value> {
 		if (amount >= this.size) return [...this.values()];
 
 		const iter = this.values();
-		// eslint-disable-next-line unicor
 		const results: Value[] = new Array(amount);
 		for (let index = 0; index < amount; index++) {
 			results[index] = iter.next().value!;
@@ -103,7 +100,6 @@ export class Collection<Key, Value> extends Map<Key, Value> {
 		if (amount >= this.size) return [...this.keys()];
 
 		const iter = this.keys();
-		// eslint-disable-next-line unicor
 		const results: Key[] = new Array(amount);
 		for (let index = 0; index < amount; index++) {
 			results[index] = iter.next().value!;
@@ -521,7 +517,6 @@ export class Collection<Key, Value> extends Map<Key, Value> {
 		fn: (value: Value, key: Key, collection: this) => Collection<Key, NewValue>,
 		thisArg?: unknown,
 	): Collection<Key, NewValue> {
-		// eslint-disable-next-line unicor
 		const collections = this.map(fn, thisArg);
 		return new this.constructor[Symbol.species]<Key, NewValue>().concat(...collections);
 	}
@@ -546,7 +541,6 @@ export class Collection<Key, Value> extends Map<Key, Value> {
 		if (typeof fn !== 'function') throw new TypeError(`${fn} is not a function`);
 		if (thisArg !== undefined) fn = fn.bind(thisArg);
 		const iter = this.entries();
-		// eslint-disable-next-line unicor
 		const results: NewValue[] = new Array(this.size);
 		for (let index = 0; index < this.size; index++) {
 			const { 0: key, 1: value } = iter.next().value!;

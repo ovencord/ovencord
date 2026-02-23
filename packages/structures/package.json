@@ -1,12 +1,14 @@
 {
 	"$schema": "https://json.schemastore.org/package.json",
 	"name": "@ovencord/structures",
-	"version": "0.1.2",
+	"version": "0.1.3",
 	"description": "Wrapper around Discord's structures",
 	"scripts": {
 		"test": "bun test",
 		"typecheck": "tsc --noEmit",
-		"lint": "eslint src"
+		"lint": "biome check .",
+		"format": "biome format --write .",
+		"check": "biome check --write ."
 	},
 	"exports": "./src/index.ts",
 	"main": "./src/index.ts",
@@ -35,9 +37,9 @@
 	},
 	"homepage": "https://ovencord.dev",
 	"dependencies": {
-		"@ovencord/util": "^1.1.4",
+		"@ovencord/util": "^1.1.6",
 		"discord-api-types": "^0.38.40",
-		"@ovencord/formatters": "^0.6.2"
+		"@ovencord/formatters": "^0.6.3"
 	},
 	"devDependencies": {
 		"cpy-cli": "^6.0.0"

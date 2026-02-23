@@ -1,5 +1,3 @@
-/* eslint-disable id-length */
-
 import { GatewayOpcodes, ActivityType  } from 'discord-api-types/v10';
 import { DiscordjsTypeError, ErrorCodes  } from '../errors/index.js';
 import { Presence  } from './Presence.js';

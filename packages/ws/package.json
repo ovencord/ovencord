@@ -1,12 +1,14 @@
 {
 	"$schema": "https://json.schemastore.org/package.json",
 	"name": "@ovencord/ws",
-	"version": "2.0.5",
+	"version": "2.0.6",
 	"description": "Wrapper around Discord's gateway",
 	"scripts": {
 		"test": "bun test",
 		"typecheck": "tsc --noEmit",
-		"lint": "eslint src"
+		"lint": "biome check .",
+		"format": "biome format --write .",
+		"check": "biome check --write ."
 	},
 	"type": "module",
 	"exports": "./src/index.ts",
@@ -34,8 +36,8 @@
 	"homepage": "https://ovencord.dev",
 	"funding": "https://github.com/ovencord/ovencord?sponsor",
 	"dependencies": {
-		"@ovencord/collection": "^2.1.2",
-		"@ovencord/util": "^1.1.4",
+		"@ovencord/collection": "^2.1.3",
+		"@ovencord/util": "^1.1.6",
 		"discord-api-types": "^0.38.40"
 	},
 	"devDependencies": {},

@@ -1,5 +1,3 @@
-/* eslint-disable prefer-named-capture-group */
-
 /**
  * The options that affect what will be escaped.
  */

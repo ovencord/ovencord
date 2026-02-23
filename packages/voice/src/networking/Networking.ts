@@ -1,6 +1,3 @@
-/* eslint-disable jsdoc/check-param-names */
-/* eslint-disable id-length */
-/* eslint-disable @typescript-eslint/unbound-method */
 // @ts-expect-error - TS may fail to resolve the export map
 import { gcm } from '@noble/ciphers/aes';
 import { AsyncEventEmitter } from '@ovencord/util';
@@ -482,7 +479,6 @@ export class Networking extends AsyncEventEmitter {
 			udp.once('close', this.onUdpClose);
 			udp
 				.performIPDiscovery(ssrc)
-				// eslint-disable-next-line
 				.then((localConfig) => {
 					if (this.state.code !== NetworkingStatusCode.UdpHandshaking) return;
 					this.state.ws.sendPacket({
@@ -501,7 +497,6 @@ export class Networking extends AsyncEventEmitter {
 						code: NetworkingStatusCode.SelectingProtocol,
 					};
 				})
-				// eslint-disable-next-line
 				.catch((error: Error) => this.emit('error', error));
 
 			this.state = {

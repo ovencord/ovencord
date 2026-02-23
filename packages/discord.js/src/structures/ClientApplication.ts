@@ -119,7 +119,6 @@ export class ClientApplication extends Application {
      * Scopes and permissions regarding the installation context
      */
 
-    /* eslint-disable jsdoc/valid-types */
     /**
      * The application's supported installation context data.
      *
@@ -129,7 +128,6 @@ export class ClientApplication extends Application {
      * @property {IntegrationTypesConfigurationContext} [1] Scopes and permissions
      * regarding the user-installation context
      */
-    /* eslint-enable jsdoc/valid-types */
 
     if ('integration_types_config' in data) {
       /**
