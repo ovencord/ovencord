@@ -73,7 +73,7 @@ export interface SendRateLimitState {
 }
 
 const WebSocketConstructor: typeof WebSocket = shouldUseGlobalFetchAndWebSocket()
-	? (globalThis as any).WebSocket
+	? (globalThis as typeof globalThis & { WebSocket: typeof WebSocket }).WebSocket
 	: WebSocket;
 
 export class WebSocketShard extends AsyncEventEmitter<WebSocketShardEventsMap> {
@@ -92,7 +92,7 @@ export class WebSocketShard extends AsyncEventEmitter<WebSocketShardEventsMap> {
 
 	private initialHeartbeatTimeoutController: AbortController | null = null;
 
-	private heartbeatInterval: any | null = null;
+	private heartbeatInterval: Timer | null = null;
 
 	private lastHeartbeatAt = -1;
 
@@ -204,7 +204,7 @@ export class WebSocketShard extends AsyncEventEmitter<WebSocketShardEventsMap> {
 		};
 
 		connection.onerror = (event: Event) => {
-			this.onError((event as any).error ?? new Error('Unknown WebSocket Error'));
+			this.onError((event as ErrorEvent).error ?? new Error('Unknown WebSocket Error'));
 		};
 
 		connection.onclose = (event) => {
@@ -245,7 +245,7 @@ export class WebSocketShard extends AsyncEventEmitter<WebSocketShardEventsMap> {
 			'Destroying shard',
 			`Reason: ${options.reason ?? 'none'}`,
 			`Code: ${options.code}`,
-			`Recover: ${options.recover === undefined ? 'none' : WebSocketShardDestroyRecovery[options.recover]!}`,
+			`Recover: ${options.recover === undefined ? 'none' : WebSocketShardDestroyRecovery[options.recover]}`,
 		]);
 
 		// Reset state
@@ -294,7 +294,7 @@ export class WebSocketShard extends AsyncEventEmitter<WebSocketShardEventsMap> {
 					outerResolve = resolve;
 				});
 
-				this.connection.onclose = outerResolve!;
+				this.connection.onclose = outerResolve;
 
 				this.connection.close(options.code, options.reason);
 
@@ -459,7 +459,7 @@ export class WebSocketShard extends AsyncEventEmitter<WebSocketShardEventsMap> {
 			`shard id: ${this.id.toString()}`,
 			`shard count: ${this.strategy.options.shardCount}`,
 			`intents: ${this.strategy.options.intents}`,
-			`compression: ${this.transportCompressionEnabled ? CompressionParameterMap[this.strategy.options.compression!] : this.identifyCompressionEnabled ? 'identify' : 'none'}`,
+			`compression: ${this.transportCompressionEnabled ? (this.strategy.options.compression ? CompressionParameterMap[this.strategy.options.compression] : 'none') : this.identifyCompressionEnabled ? 'identify' : 'none'}`,
 		]);
 
 		const data: GatewayIdentifyData = {
@@ -573,7 +573,7 @@ export class WebSocketShard extends AsyncEventEmitter<WebSocketShardEventsMap> {
 			'Received a message we were unable to decompress',
 			`isBinary: ${isBinary.toString()}`,
 			`identifyCompressionEnabled: ${this.identifyCompressionEnabled.toString()}`,
-			`inflate: ${this.transportCompressionEnabled ? CompressionMethod[this.strategy.options.compression!] : 'none'}`,
+			`inflate: ${this.transportCompressionEnabled ? (this.strategy.options.compression ? CompressionMethod[this.strategy.options.compression] : 'none') : 'none'}`,
 		]);
 
 		return null;
@@ -846,7 +846,7 @@ export class WebSocketShard extends AsyncEventEmitter<WebSocketShardEventsMap> {
 
 	// Helper to handle emit type casting
 	private emitEvent(event: WebSocketShardEvents, ...args: unknown[]) {
-		(this as any).emit(event, ...args);
+		(this as AsyncEventEmitter<WebSocketShardEventsMap>).emit(event, ...args);
 	}
 
 	// Helper to replace Node.js once
@@ -864,18 +864,18 @@ export class WebSocketShard extends AsyncEventEmitter<WebSocketShardEventsMap> {
 				}
 				signal.addEventListener('abort', () => {
 					// eslint-disable-next-line @typescript-eslint/no-explicit-any
-					(this as any).off(event, listener);
+					(this as AsyncEventEmitter<WebSocketShardEventsMap>).off(event, listener);
 					reject(signal.reason);
 				});
 			}
 
 			// eslint-disable-next-line @typescript-eslint/no-explicit-any
-			(this as any).once(event, listener);
+			(this as AsyncEventEmitter<WebSocketShardEventsMap>).once(event, listener);
 		});
 	}
 
 	// Override emit to fix TypeScript visibility/type issues
 	public override emit(event: string | symbol, ...args: unknown[]): Promise<boolean> {
-		return (super.emit as any)(event, ...args);
+		return (super.emit as (event: string | symbol, ...args: unknown[]) => Promise<boolean>)(event, ...args);
 	}
 }

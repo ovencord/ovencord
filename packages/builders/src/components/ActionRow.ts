@@ -25,7 +25,7 @@ import {
 import { LinkButtonBuilder } from './button/LinkButton.js';
 import { PremiumButtonBuilder } from './button/PremiumButton.js';
 import { ComponentBuilder } from './Component.js';
-import type { AnyActionRowComponentBuilder } from './Components.js';
+import type { AnyActionRowComponentBuilder, MessageComponentBuilder } from './Components.js';
 import { createComponentBuilder } from './Components.js';
 import { ChannelSelectMenuBuilder } from './selectMenu/ChannelSelectMenu.js';
 import { MentionableSelectMenuBuilder } from './selectMenu/MentionableSelectMenu.js';
@@ -349,7 +349,7 @@ export class ActionRowBuilder<
 
 		const data = {
 			...structuredClone(rest),
-			components: components.map((component) => (component as any).toJSON(validationOverride)),
+			components: components.map((component) => (component as MessageComponentBuilder).toJSON(validationOverride)),
 		};
 
 		validate(actionRowPredicate, data, validationOverride);

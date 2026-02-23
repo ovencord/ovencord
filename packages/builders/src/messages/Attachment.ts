@@ -109,7 +109,7 @@ export class AttachmentBuilder implements JSONEncodable<RESTAPIAttachment> {
 	 * @remarks Note that this data is NOT included in the {@link toJSON} output. To retrieve it, use {@link getRawFile}.
 	 */
 	public setFileData(data: Uint8Array | string): this {
-		this.fileData.data = data as any;
+		this.fileData.data = data as unknown as RawFile['data'];
 		return this;
 	}
 

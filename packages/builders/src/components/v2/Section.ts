@@ -20,7 +20,7 @@ import {
 import { LinkButtonBuilder } from '../button/LinkButton.js';
 import { PremiumButtonBuilder } from '../button/PremiumButton.js';
 import { ComponentBuilder } from '../Component.js';
-import { type ButtonBuilder, resolveAccessoryComponent } from '../Components.js';
+import { type ButtonBuilder, type MessageComponentBuilder, resolveAccessoryComponent } from '../Components.js';
 import { sectionPredicate } from './Assertions.js';
 import { TextDisplayBuilder } from './TextDisplay.js';
 import { ThumbnailBuilder } from './Thumbnail.js';
@@ -264,19 +264,9 @@ export class SectionBuilder extends ComponentBuilder<APISectionComponent> {
 	public override toJSON(validationOverride?: boolean): APISectionComponent {
 		const { components, accessory, ...rest } = this.data;
 
-		// Resolve accessory if it exists
-		if (accessory) {
-			console.log('DEBUG: Section.toJSON accessory:', accessory);
-			console.log('DEBUG: Constructor:', (accessory as any).constructor.name);
-			console.log('DEBUG: Has toJSON?', 'toJSON' in accessory);
-			if ('toJSON' in accessory) {
-				console.log('DEBUG: calling toJSON result:', (accessory as any).toJSON(validationOverride));
-			}
-		}
-
 		const accessoryData = accessory
-			? (accessory as any).toJSON
-				? (accessory as any).toJSON(validationOverride)
+			? (accessory as unknown as MessageComponentBuilder).toJSON
+				? (accessory as unknown as MessageComponentBuilder).toJSON(validationOverride)
 				: accessory
 			: undefined;
 

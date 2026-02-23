@@ -60,7 +60,7 @@ export class TextDisplayBuilder extends ComponentBuilder<APITextDisplayComponent
 		// Enforce only type and content are present
 		const data: APITextDisplayComponent = {
 			type: ComponentType.TextDisplay,
-			content: clone.content!,
+			content: clone.content ?? '',
 		};
 
 		validate(textDisplayPredicate, data, validationOverride);

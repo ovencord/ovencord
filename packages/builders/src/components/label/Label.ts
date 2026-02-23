@@ -3,6 +3,7 @@ import type {
 	APIFileUploadComponent,
 	APILabelComponent,
 	APIMentionableSelectComponent,
+	APIMessageComponent,
 	APIRoleSelectComponent,
 	APIStringSelectComponent,
 	APITextInputComponent,
@@ -70,7 +71,9 @@ export class LabelBuilder extends ComponentBuilder<APILabelComponent> {
 
 		this.data = {
 			...structuredClone(rest),
-			component: component ? (createComponentBuilder(component as any) as any) : undefined,
+			component: component
+				? (createComponentBuilder(component as APIMessageComponent) as LabelBuilderData['component'])
+				: undefined,
 			type: ComponentType.Label,
 		};
 	}

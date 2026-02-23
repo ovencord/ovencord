@@ -34,7 +34,7 @@ export class ButtonBuilder extends Mixin(BaseButtonBuilder<APIButtonComponent>, 
 	 * @param customId - The custom id to use
 	 */
 	public setCustomId(customId: string) {
-		(this.data as any).custom_id = customId;
+		(this.data as Record<string, unknown>).custom_id = customId;
 		return this;
 	}
 
@@ -44,7 +44,7 @@ export class ButtonBuilder extends Mixin(BaseButtonBuilder<APIButtonComponent>, 
 	 * @param style - The style to use
 	 */
 	public setStyle(style: ButtonStyle) {
-		(this.data as any).style = style;
+		(this.data as Record<string, unknown>).style = style;
 		return this;
 	}
 
@@ -54,7 +54,7 @@ export class ButtonBuilder extends Mixin(BaseButtonBuilder<APIButtonComponent>, 
 	 * @param url - The URL to use
 	 */
 	public setURL(url: string) {
-		(this.data as any).url = url;
+		(this.data as Record<string, unknown>).url = url;
 		return this;
 	}
 
@@ -64,7 +64,7 @@ export class ButtonBuilder extends Mixin(BaseButtonBuilder<APIButtonComponent>, 
 	 * @param skuId - The SKU id to use
 	 */
 	public setSKUId(skuId: string) {
-		(this.data as any).sku_id = skuId;
+		(this.data as Record<string, unknown>).sku_id = skuId;
 		return this;
 	}
 }

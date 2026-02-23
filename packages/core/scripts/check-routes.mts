@@ -20,7 +20,10 @@ for await (const file of glob.scan({ cwd })) {
 
 	const routes = content.matchAll(/Routes\.([\w\d_]+)/g);
 	for (const route of routes) {
-		usedRoutes.add(route[1]!);
+		const routeName = route[1];
+		if (routeName) {
+			usedRoutes.add(routeName);
+		}
 	}
 }
 

@@ -8,9 +8,9 @@ for await (const file of glob.scan({ cwd })) {
 	const matches = content.matchAll(/as Promise<(?<returnType>\w+)>/g);
 
 	for (const match of matches) {
-		const returnType = match.groups?.returnType!;
+		const returnType = match.groups?.returnType;
 
-		if (!returnType.startsWith('REST') || !returnType.includes('Result')) {
+		if (returnType && (!returnType.startsWith('REST') || !returnType.includes('Result'))) {
 			results.push(`in file core/src/api/${file}: ${returnType}`);
 		}
 	}

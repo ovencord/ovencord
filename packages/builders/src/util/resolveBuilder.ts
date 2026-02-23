@@ -6,7 +6,7 @@ import type { JSONEncodable } from '@ovencord/util';
  * function, TS doesn't narrow out the type `Builder`, causing a type error on the last return statement.
  * @internal
  */
-function isBuilder<Builder extends JSONEncodable<any>>(
+function isBuilder<Builder extends JSONEncodable<unknown>>(
 	builder: unknown,
 	Constructor: new () => Builder,
 ): builder is Builder {
@@ -24,7 +24,10 @@ function isBuilder<Builder extends JSONEncodable<any>>(
  * @param builder - The user input, as described in the function description
  * @param Constructor - The constructor of the builder
  */
-export function resolveBuilder<Builder extends JSONEncodable<any>, BuilderData extends Record<PropertyKey, any>>(
+export function resolveBuilder<
+	Builder extends JSONEncodable<unknown>,
+	BuilderData extends Record<PropertyKey, unknown>,
+>(
 	builder: Builder | BuilderData | ((builder: Builder) => Builder),
 	Constructor: new (data?: BuilderData) => Builder,
 ): Builder {

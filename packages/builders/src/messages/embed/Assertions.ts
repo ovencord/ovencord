@@ -1,4 +1,5 @@
 import { embedLength } from '@ovencord/util';
+import type { APIEmbed } from 'discord-api-types/v10';
 import { z } from 'zod';
 
 const namePredicate = z.string().max(256);
@@ -60,6 +61,6 @@ export const embedPredicate = z
 			message: 'Embed must have at least a title, description, a field, a footer, an author, an image, OR a thumbnail.',
 		},
 	)
-	.refine((embed) => embedLength(embed as any) <= 6_000, {
+	.refine((embed) => embedLength(embed as unknown as APIEmbed) <= 6_000, {
 		message: 'Embeds must not exceed 6000 characters in total.',
 	});

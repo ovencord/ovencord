@@ -35,7 +35,13 @@ const numericMixinIntegerOptionPredicate = z.object({
 
 const channelMixinOptionPredicate = z.object({
 	channel_types: z
-		.union(ApplicationCommandOptionAllowedChannelTypes.map((type) => z.literal(type)) as any)
+		.union(
+			ApplicationCommandOptionAllowedChannelTypes.map((type) => z.literal(type)) as unknown as [
+				z.ZodTypeAny,
+				z.ZodTypeAny,
+				...z.ZodTypeAny[],
+			],
+		)
 		.array()
 		.optional(),
 });
@@ -159,7 +165,7 @@ export const chatInputCommandSubcommandPredicate = z.object({
 	...sharedNameAndDescriptionPredicate.shape,
 	type: z.literal(ApplicationCommandOptionType.Subcommand),
 	options: z
-		.array(z.union(basicOptionPredicates as any))
+		.array(z.union(basicOptionPredicates as unknown as [z.ZodTypeAny, z.ZodTypeAny, ...z.ZodTypeAny[]]))
 		.max(25)
 		.optional(),
 });
@@ -178,7 +184,7 @@ export const chatInputCommandPredicate = z.object({
 	nsfw: z.boolean().optional(),
 	options: z
 		.union([
-			z.array(z.union(basicOptionPredicates as any)).max(25),
+			z.array(z.union(basicOptionPredicates as unknown as [z.ZodTypeAny, z.ZodTypeAny, ...z.ZodTypeAny[]])).max(25),
 			z.array(z.union([chatInputCommandSubcommandPredicate, chatInputCommandSubcommandGroupPredicate])).max(25),
 		])
 		.optional(),

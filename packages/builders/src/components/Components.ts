@@ -1,9 +1,17 @@
 import type {
+	APIActionRowComponent,
 	APIBaseComponent,
 	APIButtonComponent,
+	APIChannelSelectComponent,
+	APIComponentInActionRow,
+	APIMentionableSelectComponent,
 	APIMessageComponent,
 	APIModalComponent,
+	APIRoleSelectComponent,
 	APISectionAccessoryComponent,
+	APIStringSelectComponent,
+	APITextInputComponent,
+	APIUserSelectComponent,
 } from 'discord-api-types/v10';
 import { ButtonStyle, ComponentType } from 'discord-api-types/v10';
 import { ActionRowBuilder } from './ActionRow.js';
@@ -196,45 +204,45 @@ export function createComponentBuilder(
 	data: APIMessageComponent | APIModalComponent | MessageComponentBuilder,
 ): ComponentBuilder<APIBaseComponent<ComponentType>> {
 	if (data instanceof ComponentBuilder || (typeof data === 'object' && data !== null && 'toJSON' in data)) {
-		return data as any;
+		return data as unknown as ComponentBuilder<APIBaseComponent<ComponentType>>;
 	}
 
 	const rawData = data as APIMessageComponent | APIModalComponent;
 	switch (rawData.type) {
 		case ComponentType.ActionRow:
-			return new ActionRowBuilder(rawData as any);
+			return new ActionRowBuilder(rawData as APIActionRowComponent<APIComponentInActionRow>);
 		case ComponentType.Button:
-			return createButtonBuilder(rawData as any) as any;
+			return createButtonBuilder(rawData as APIButtonComponent) as unknown as MessageComponentBuilder;
 		case ComponentType.StringSelect:
-			return new StringSelectMenuBuilder(rawData as any);
+			return new StringSelectMenuBuilder(rawData as APIStringSelectComponent);
 		case ComponentType.TextInput:
-			return new TextInputBuilder(rawData as any);
+			return new TextInputBuilder(rawData as APITextInputComponent);
 		case ComponentType.UserSelect:
-			return new UserSelectMenuBuilder(rawData as any);
+			return new UserSelectMenuBuilder(rawData as APIUserSelectComponent);
 		case ComponentType.RoleSelect:
-			return new RoleSelectMenuBuilder(rawData as any);
+			return new RoleSelectMenuBuilder(rawData as APIRoleSelectComponent);
 		case ComponentType.MentionableSelect:
-			return new MentionableSelectMenuBuilder(rawData as any);
+			return new MentionableSelectMenuBuilder(rawData as APIMentionableSelectComponent);
 		case ComponentType.ChannelSelect:
-			return new ChannelSelectMenuBuilder(rawData as any);
+			return new ChannelSelectMenuBuilder(rawData as APIChannelSelectComponent);
 		case ComponentType.Thumbnail:
-			return new ThumbnailBuilder(rawData as any);
+			return new ThumbnailBuilder(rawData as unknown);
 		case ComponentType.File:
-			return new FileBuilder(rawData as any);
+			return new FileBuilder(rawData as unknown);
 		case ComponentType.Separator:
-			return new SeparatorBuilder(rawData as any);
+			return new SeparatorBuilder(rawData as unknown);
 		case ComponentType.TextDisplay:
-			return new TextDisplayBuilder(rawData as any);
+			return new TextDisplayBuilder(rawData as unknown);
 		case ComponentType.MediaGallery:
-			return new MediaGalleryBuilder(rawData as any);
+			return new MediaGalleryBuilder(rawData as unknown);
 		case ComponentType.Section:
-			return new SectionBuilder(rawData as any);
+			return new SectionBuilder(rawData as unknown);
 		case ComponentType.Container:
-			return new ContainerBuilder(rawData as any);
+			return new ContainerBuilder(rawData as unknown);
 		case ComponentType.Label:
-			return new LabelBuilder(rawData as any);
+			return new LabelBuilder(rawData as unknown);
 		case ComponentType.FileUpload:
-			return new FileUploadBuilder(rawData as any);
+			return new FileUploadBuilder(rawData as unknown);
 		default:
 			// This case can still occur if we get a newer unsupported component type
 			throw new Error(`Cannot properly serialize component type: ${rawData.type}`);
@@ -244,17 +252,17 @@ export function createComponentBuilder(
 function createButtonBuilder(data: APIButtonComponent): ButtonBuilder {
 	switch (data.style) {
 		case ButtonStyle.Primary:
-			return new PrimaryButtonBuilder(data) as any;
+			return new PrimaryButtonBuilder(data) as unknown as ButtonBuilder;
 		case ButtonStyle.Secondary:
-			return new SecondaryButtonBuilder(data) as any;
+			return new SecondaryButtonBuilder(data) as unknown as ButtonBuilder;
 		case ButtonStyle.Success:
-			return new SuccessButtonBuilder(data) as any;
+			return new SuccessButtonBuilder(data) as unknown as ButtonBuilder;
 		case ButtonStyle.Danger:
-			return new DangerButtonBuilder(data) as any;
+			return new DangerButtonBuilder(data) as unknown as ButtonBuilder;
 		case ButtonStyle.Link:
-			return new LinkButtonBuilder(data) as any;
+			return new LinkButtonBuilder(data) as unknown as ButtonBuilder;
 		case ButtonStyle.Premium:
-			return new PremiumButtonBuilder(data) as any;
+			return new PremiumButtonBuilder(data) as unknown as ButtonBuilder;
 		default:
 			// @ts-expect-error This case can still occur if we get a newer unsupported button style
 			throw new Error(`Cannot properly serialize button with style: ${data.style}`);
