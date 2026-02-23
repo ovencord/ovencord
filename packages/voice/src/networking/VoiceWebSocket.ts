@@ -1,7 +1,7 @@
 import { AsyncEventEmitter } from '@ovencord/util';
 import type { VoiceSendPayload } from 'discord-api-types/voice/v8';
 import { VoiceOpcodes } from 'discord-api-types/voice/v8';
-import WebSocket, { type MessageEvent } from 'ws';
+
 
 /**
  * A binary WebSocket message.
@@ -14,8 +14,8 @@ export interface BinaryWebSocketMessage {
 
 export interface VoiceWebSocket extends AsyncEventEmitter {
 	on(event: 'error', listener: (error: Error) => void): this;
-	on(event: 'open', listener: (event: WebSocket.Event) => void): this;
-	on(event: 'close', listener: (event: WebSocket.CloseEvent) => void): this;
+	on(event: 'open', listener: (event: Event) => void): this;
+	on(event: 'close', listener: (event: CloseEvent) => void): this;
 	/**
 	 * Debug event for VoiceWebSocket.
 	 *
@@ -91,10 +91,11 @@ export class VoiceWebSocket extends AsyncEventEmitter {
 	public constructor(address: string, debug: boolean) {
 		super();
 		this.ws = new WebSocket(address);
-		this.ws.onmessage = (err) => this.onMessage(err);
-		this.ws.onopen = (err) => this.emit('open', err);
-		this.ws.onerror = (err: Error | WebSocket.ErrorEvent) => this.emit('error', err instanceof Error ? err : err.error);
-		this.ws.onclose = (err) => this.emit('close', err);
+		this.ws.binaryType = 'arraybuffer';
+		this.ws.onmessage = (event) => this.onMessage(event);
+		this.ws.onopen = (event) => this.emit('open', event);
+		this.ws.onerror = (event) => this.emit('error', new Error('WebSocket encountered an error'));
+		this.ws.onclose = (event) => this.emit('close', event);
 
 		this.lastHeartbeatAck = 0;
 		this.lastHeartbeatSend = 0;

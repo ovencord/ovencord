@@ -38,11 +38,8 @@
 	"funding": "https://github.com/ovencord/ovencord?sponsor",
 	"dependencies": {
 		"@snazzah/davey": "^0.1.8",
-		"@types/ws": "^8.18.1",
-		"discord-api-types": "^0.38.36",
+		"discord-api-types": "^0.38.40",
 		"prism-media": "^1.3.5",
-
-		"ws": "^8.18.3",
 		"@noble/ciphers": "^2.1.1"
 	},
 	"devDependencies": {},

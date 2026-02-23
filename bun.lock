@@ -27,10 +27,10 @@
     },
     "packages/builders": {
       "name": "@ovencord/builders",
-      "version": "1.12.6",
+      "version": "1.12.7",
       "dependencies": {
-        "@ovencord/util": "^1.1.4",
-        "discord-api-types": "^0.38.36",
+        "@ovencord/util": "^1.1.5",
+        "discord-api-types": "^0.38.40",
         "ts-mixer": "^6.0.4",
         "zod": "^4.3.6",
       },
@@ -46,7 +46,7 @@
         "@ovencord/rest": "^2.5.6",
         "@ovencord/util": "^1.1.4",
         "@ovencord/ws": "^2.0.4",
-        "discord-api-types": "^0.38.36",
+        "discord-api-types": "^0.38.40",
       },
     },
     "packages/discord.js": {
@@ -59,14 +59,14 @@
         "@ovencord/rest": "^2.5.6",
         "@ovencord/util": "^1.1.4",
         "@ovencord/ws": "^2.0.4",
-        "discord-api-types": "^0.38.36",
+        "discord-api-types": "^0.38.40",
       },
     },
     "packages/formatters": {
       "name": "@ovencord/formatters",
       "version": "0.6.2",
       "dependencies": {
-        "discord-api-types": "^0.38.36",
+        "discord-api-types": "^0.38.40",
       },
     },
     "packages/next": {
@@ -80,7 +80,7 @@
         "@ovencord/rest": "^2.5.6",
         "@ovencord/util": "^1.1.4",
         "@ovencord/ws": "^2.0.4",
-        "discord-api-types": "^0.38.36",
+        "discord-api-types": "^0.38.40",
       },
     },
     "packages/rest": {
@@ -89,7 +89,7 @@
       "dependencies": {
         "@ovencord/collection": "^2.1.2",
         "@ovencord/util": "^1.1.4",
-        "discord-api-types": "^0.38.36",
+        "discord-api-types": "^0.38.40",
       },
     },
     "packages/structures": {
@@ -98,7 +98,7 @@
       "dependencies": {
         "@ovencord/formatters": "^0.6.2",
         "@ovencord/util": "^1.1.4",
-        "discord-api-types": "^0.38.36",
+        "discord-api-types": "^0.38.40",
       },
       "devDependencies": {
         "cpy-cli": "^6.0.0",
@@ -132,7 +132,7 @@
       "name": "@ovencord/util",
       "version": "1.1.5",
       "dependencies": {
-        "discord-api-types": "^0.38.36",
+        "discord-api-types": "^0.38.40",
       },
     },
     "packages/voice": {
@@ -141,10 +141,8 @@
       "dependencies": {
         "@noble/ciphers": "^2.1.1",
         "@snazzah/davey": "^0.1.8",
-        "@types/ws": "^8.18.1",
-        "discord-api-types": "^0.38.36",
+        "discord-api-types": "^0.38.40",
         "prism-media": "^1.3.5",
-        "ws": "^8.18.3",
       },
     },
     "packages/ws": {
@@ -153,7 +151,7 @@
       "dependencies": {
         "@ovencord/collection": "^2.1.2",
         "@ovencord/util": "^1.1.4",
-        "discord-api-types": "^0.38.36",
+        "discord-api-types": "^0.38.40",
       },
     },
   },
@@ -491,8 +489,6 @@
     "@types/react-dom": ["@types/react-dom@19.2.3", "", { "peerDependencies": { "@types/react": "^19.2.0" } }, "sha512-jp2L/eY6fn+KgVVQAOqYItbF0VY/YApe5Mz2F0aykSO8gx31bYCZyvSeYxCHKvzHG5eZjc+zyaS5BrBWya2+kQ=="],
 
     "@types/resolve": ["@types/resolve@1.20.6", "", {}, "sha512-A4STmOXPhMUtHH+S6ymgE2GiBSMqf4oTvcQZMcHzokuTLVYzXTB8ttjcgxOVaAp2lGwEdzZ0J+cRbbeevQj1UQ=="],
-
-    "@types/ws": ["@types/ws@8.18.1", "", { "dependencies": { "@types/node": "*" } }, "sha512-ThVF6DCVhA8kUGy+aazFQ4kXQ7E1Ty7A3ypFOe0IcJV8O/M511G99AW24irKrW56Wt44yG9+ij8FaqoBGkuBXg=="],
 
     "@typescript-eslint/eslint-plugin": ["@typescript-eslint/eslint-plugin@8.56.0", "", { "dependencies": { "@eslint-community/regexpp": "^4.12.2", "@typescript-eslint/scope-manager": "8.56.0", "@typescript-eslint/type-utils": "8.56.0", "@typescript-eslint/utils": "8.56.0", "@typescript-eslint/visitor-keys": "8.56.0", "ignore": "^7.0.5", "natural-compare": "^1.4.0", "ts-api-utils": "^2.4.0" }, "peerDependencies": { "@typescript-eslint/parser": "^8.56.0", "eslint": "^8.57.0 || ^9.0.0 || ^10.0.0", "typescript": ">=4.8.4 <6.0.0" } }, "sha512-lRyPDLzNCuae71A3t9NEINBiTn7swyOhvUj3MyUOxb8x6g6vPEFoOU+ZRmGMusNC3X3YMhqMIX7i8ShqhT74Pw=="],
 
@@ -1095,6 +1091,8 @@
     "@testing-library/dom/aria-query": ["aria-query@5.3.0", "", { "dependencies": { "dequal": "^2.0.3" } }, "sha512-b0P0sZPKtyu8HkeRAfCq0IfURZK+SuwMjY1UXGBU27wpAiTwQAIlq56IbIO+ytk/JjS1fMR14ee5WBBfKi5J6A=="],
 
     "@testing-library/dom/dom-accessibility-api": ["dom-accessibility-api@0.5.16", "", {}, "sha512-X7BJ2yElsnOJ30pZF4uIIDfBEVgF4XEBxL9Bxhy6dnrm5hkzqmsWHGTiHqRiITNhMyFLyAiWndIJP7Z1NTteDg=="],
+
+    "@types/babel__core/@babel/parser": ["@babel/parser@7.29.0", "", { "dependencies": { "@babel/types": "^7.29.0" }, "bin": "./bin/babel-parser.js" }, "sha512-IyDgFV5GeDUVX4YdF/3CPULtVGSXXMLh1xVIgdCgxApktqnQV0r7/8Nqthg+8YLGaAtdyIlo2qIdZrbCv4+7ww=="],
 
     "@types/babel__template/@babel/parser": ["@babel/parser@7.29.0", "", { "dependencies": { "@babel/types": "^7.29.0" }, "bin": "./bin/babel-parser.js" }, "sha512-IyDgFV5GeDUVX4YdF/3CPULtVGSXXMLh1xVIgdCgxApktqnQV0r7/8Nqthg+8YLGaAtdyIlo2qIdZrbCv4+7ww=="],
 

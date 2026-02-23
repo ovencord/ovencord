@@ -6,7 +6,7 @@ import { gcm } from '@noble/ciphers/aes';
 import { AsyncEventEmitter } from '@ovencord/util';
 import type { VoiceReceivePayload, VoiceSpeakingFlags } from 'discord-api-types/voice/v8';
 import { VoiceEncryptionMode, VoiceOpcodes } from 'discord-api-types/voice/v8';
-import type { CloseEvent } from 'ws';
+
 import * as secretbox from '../util/Secretbox';
 import { noop } from '../util/util';
 import { DAVESession, getMaxProtocolVersion } from './DAVESession';
