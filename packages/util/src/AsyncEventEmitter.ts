@@ -2,7 +2,7 @@ import { AsyncQueue } from './AsyncQueue.js';
 
 export type EventMap = Record<string | symbol, any[]>;
 
-export class AsyncEventEmitter<Events extends Record<keyof Events, any[]> = EventMap> {
+export class AsyncEventEmitter<Events extends Record<keyof Events, any[]> = any> {
   private _listeners = new Map<keyof Events | string | symbol, Set<Function>>();
   private _maxListeners = 10;
 
@@ -141,7 +141,6 @@ export class AsyncEventEmitter<Events extends Record<keyof Events, any[]> = Even
   }
 
   public waitFor<K extends keyof Events>(event: K, timeout?: number): Promise<Events[K]>;
-  public waitFor<K extends string | symbol>(event: K, timeout?: number): Promise<any[]>;
   public waitFor(event: string | symbol, timeout?: number): Promise<any[]> {
     return new Promise((resolve, reject) => {
       let timeoutId: Timer | undefined;

@@ -153,7 +153,7 @@ export class Client extends AsyncEventEmitter {
      */
     this.rest = new REST(this.options.rest);
 
-    this.rest.on(RESTEvents.Debug, message => this.emit(Events.Debug, message));
+    this.rest.on(RESTEvents.Debug, message => { this.emit(Events.Debug, message); });
 
     // In Bun, Worker env vars and Bun.spawn env vars populate process.env directly
     const data = process.env;
@@ -411,9 +411,9 @@ export class Client extends AsyncEventEmitter {
    * @private
    */
   _attachEvents() {
-    this.ws.on(WebSocketShardEvents.Debug, (message: string, shardId: number) =>
-      this.emit(Events.Debug, `[WS => ${typeof shardId === 'number' ? `Shard ${shardId}` : 'Manager'}] ${message}`),
-    );
+    this.ws.on(WebSocketShardEvents.Debug, (message: string, shardId: number) => {
+      this.emit(Events.Debug, `[WS => ${typeof shardId === 'number' ? `Shard ${shardId}` : 'Manager'}] ${message}`);
+    });
     this.ws.on(WebSocketShardEvents.Dispatch, this._handlePacket.bind(this));
 
     this.ws.on(WebSocketShardEvents.HeartbeatComplete, ({ heartbeatAt, latency }: { heartbeatAt: number; latency: number }, shardId: number) => {
