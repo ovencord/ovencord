@@ -1,10 +1,10 @@
 import { AsyncEventEmitter } from '@ovencord/util';
 import { addAudioPlayer, deleteAudioPlayer } from '../DataStore';
 import { noop } from '../util/util';
-import { VoiceConnectionStatus } from '../VoiceConnection';
+import { VoiceConnectionStatus, type VoiceConnection } from '../VoiceConnection';
 import { AudioPlayerError } from './AudioPlayerError';
 import type { AudioResource } from './AudioResource';
-import type { PlayerSubscription } from './PlayerSubscription';
+import { PlayerSubscription } from './PlayerSubscription';
 
 // The Opus "silent" frame
 export const SILENCE_FRAME = new Uint8Array([0xf8, 0xff, 0xfe]);
@@ -233,6 +233,11 @@ export class AudioPlayer extends AsyncEventEmitter {
 	 * The debug logger function, if debugging is enabled.
 	 */
 	private readonly debug: ((message: string) => void) | null;
+
+	/**
+	 * The next audio frame to be played.
+	 */
+	private renderedFrame: Uint8Array | undefined;
 
 	/**
 	 * Creates a new AudioPlayer.
@@ -475,6 +480,85 @@ export class AudioPlayer extends AsyncEventEmitter {
 		}
 
 		return true;
+	}
+
+	/**
+	 * Subscribes a VoiceConnection to this audio player.
+	 *
+	 * @param connection - The VoiceConnection to subscribe
+	 * @returns The created subscription
+	 */
+	public subscribe(connection: VoiceConnection) {
+		const subscription = new PlayerSubscription(connection, this);
+		this.subscribers.push(subscription);
+		this.emit('subscribe', subscription);
+		return subscription;
+	}
+
+	/**
+	 * Unsubscribes a subscription from this audio player.
+	 *
+	 * @param subscription - The subscription to unsubscribe
+	 * @returns `true` if the subscription was removed, otherwise `false`
+	 */
+	public unsubscribe(subscription: PlayerSubscription) {
+		const index = this.subscribers.indexOf(subscription);
+		if (index !== -1) {
+			this.subscribers.splice(index, 1);
+			this.emit('unsubscribe', subscription);
+			return true;
+		}
+		return false;
+	}
+
+	/**
+	 * Dispatches the rendered frame to all subscribers.
+	 *
+	 * @internal
+	 */
+	public _stepDispatch() {
+		const { renderedFrame } = this;
+		this.renderedFrame = undefined;
+
+		for (const subscription of this.subscribers) {
+			if (renderedFrame) {
+				subscription.connection.playOpusPacket(renderedFrame);
+			}
+		}
+	}
+
+	/**
+	 * Prepares the next audio frame for playback.
+	 *
+	 * @internal
+	 */
+	public _stepPrepare() {
+		const state = this.state;
+		if (state.status === AudioPlayerStatus.Idle || state.status === AudioPlayerStatus.Buffering) return;
+
+		if (state.status === AudioPlayerStatus.AutoPaused || state.status === AudioPlayerStatus.Paused) {
+			if (state.silencePacketsRemaining > 0) {
+				state.silencePacketsRemaining--;
+				this.renderedFrame = SILENCE_FRAME;
+				return;
+			}
+			return;
+		}
+
+		// Playing state
+		if (state.status === AudioPlayerStatus.Playing) {
+			const frame = state.resource.read();
+			if (frame) {
+				this.renderedFrame = frame;
+				state.playbackDuration += 20; // 20ms frames
+				state.missedFrames = 0;
+			} else {
+				state.missedFrames++;
+				if (state.missedFrames >= this.behaviors.maxMissedFrames) {
+					this.stop();
+				}
+			}
+		}
 	}
 
 	/**

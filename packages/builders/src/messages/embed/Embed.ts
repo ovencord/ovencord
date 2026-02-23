@@ -159,7 +159,8 @@ export class EmbedBuilder implements JSONEncodable<APIEmbed> {
 	 * @param updater - The function to update the author with
 	 */
 	public updateAuthor(updater: (builder: EmbedAuthorBuilder) => void) {
-		updater((this.data.author ??= new EmbedAuthorBuilder()));
+		this.data.author ??= new EmbedAuthorBuilder();
+		updater(this.data.author);
 		return this;
 	}
 
@@ -225,7 +226,8 @@ export class EmbedBuilder implements JSONEncodable<APIEmbed> {
 	 * @param updater - The function to update the footer with
 	 */
 	public updateFooter(updater: (builder: EmbedFooterBuilder) => void) {
-		updater((this.data.footer ??= new EmbedFooterBuilder()));
+		this.data.footer ??= new EmbedFooterBuilder();
+		updater(this.data.footer);
 		return this;
 	}
 

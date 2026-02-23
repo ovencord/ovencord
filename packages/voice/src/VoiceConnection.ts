@@ -759,7 +759,7 @@ export class VoiceConnection extends AsyncEventEmitter {
 	 *
 	 * @param subscription - The removed subscription
 	 */
-	protected onSubscriptionRemoved(subscription: PlayerSubscription) {
+	public onSubscriptionRemoved(subscription: PlayerSubscription) {
 		if (this.state.status !== VoiceConnectionStatus.Destroyed && this.state.subscription === subscription) {
 			this.state = {
 				...this.state,

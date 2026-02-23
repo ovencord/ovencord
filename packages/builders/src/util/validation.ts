@@ -9,7 +9,8 @@ let validationEnabled = true;
  * @returns Whether validation is occurring.
  */
 export function enableValidators() {
-	return (validationEnabled = true);
+	validationEnabled = true;
+	return validationEnabled;
 }
 
 /**
@@ -18,7 +19,8 @@ export function enableValidators() {
  * @returns Whether validation is occurring.
  */
 export function disableValidators() {
-	return (validationEnabled = false);
+	validationEnabled = false;
+	return validationEnabled;
 }
 
 /**

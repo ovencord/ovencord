@@ -37,7 +37,8 @@ export class ChatInputCommandSubcommandGroupBuilder
 	 * The options within this subcommand group.
 	 */
 	public get options(): readonly ChatInputCommandSubcommandBuilder[] {
-		return (this.data.options ??= []);
+		this.data.options ??= [];
+		return this.data.options;
 	}
 
 	/**

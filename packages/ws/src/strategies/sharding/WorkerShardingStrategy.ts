@@ -250,10 +250,12 @@ export enum WorkerReceivePayloadOp {
 
 export interface WorkerSendPayload {
 	op: WorkerSendPayloadOp;
+	// biome-ignore lint/suspicious/noExplicitAny: Worker payload can be anything
 	d: any;
 }
 
 export interface WorkerReceivePayload {
 	op: WorkerReceivePayloadOp;
+	// biome-ignore lint/suspicious/noExplicitAny: Worker payload can be anything
 	d: any;
 }

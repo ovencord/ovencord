@@ -38,7 +38,7 @@ export interface DiscordGatewayAdapterImplementerMethods {
 	 * @param payload - The payload to send to the main Discord gateway connection
 	 * @returns `false` if the payload definitely failed to send - in this case, the voice connection disconnects
 	 */
-	sendPayload(payload: any): boolean;
+	sendPayload(payload: unknown): boolean;
 }
 
 /**

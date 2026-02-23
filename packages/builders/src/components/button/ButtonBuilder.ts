@@ -9,9 +9,10 @@ import { EmojiOrLabelButtonMixin } from './mixins/EmojiOrLabelButtonMixin.js';
  * @mixes {@link BaseButtonBuilder}\<{@link discord-api-types/v10#(APIButtonComponent:interface)}\>
  * @mixes {@link EmojiOrLabelButtonMixin}
  */
-// @ts-expect-error
+// @ts-expect-error - Structural mismatch from ts-mixer
 export interface ButtonBuilder extends BaseButtonBuilder<APIButtonComponent>, EmojiOrLabelButtonMixin {}
 
+// biome-ignore lint/suspicious/noExplicitAny: Structural any from ts-mixer
 export class ButtonBuilder extends Mixin(BaseButtonBuilder<APIButtonComponent>, EmojiOrLabelButtonMixin) {
 	/**
 	 * @internal

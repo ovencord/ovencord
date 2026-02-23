@@ -28,7 +28,8 @@ export class SharedChatInputCommandOptions {
 	 * The options within this command.
 	 */
 	public get options(): readonly ApplicationCommandOptionBase[] {
-		return (this.data.options ??= []);
+		this.data.options ??= [];
+		return this.data.options;
 	}
 
 	/**

@@ -111,7 +111,6 @@ export class WebSocketShard extends AsyncEventEmitter<WebSocketShardEventsMap> {
 
 	private readonly sendQueue = new AsyncQueue();
 
-	// @ts-expect-error - Collection requires 4 type arguments in some contexts?
 	private readonly timeoutAbortControllers = new Collection<WebSocketShardEvents, AbortController>();
 
 	private readonly strategy: IContextFetchingStrategy;

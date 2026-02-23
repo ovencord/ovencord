@@ -253,7 +253,8 @@ export class MessageBuilder
 	 * @param updater - The function to update the allowed mentions with
 	 */
 	public updateAllowedMentions(updater: (builder: AllowedMentionsBuilder) => void): this {
-		updater((this.data.allowed_mentions ??= new AllowedMentionsBuilder()));
+		this.data.allowed_mentions ??= new AllowedMentionsBuilder();
+		updater(this.data.allowed_mentions);
 		return this;
 	}
 
@@ -286,7 +287,8 @@ export class MessageBuilder
 	 * @param updater - The function to update the message reference with
 	 */
 	public updateMessageReference(updater: (builder: MessageReferenceBuilder) => void): this {
-		updater((this.data.message_reference ??= new MessageReferenceBuilder()));
+		this.data.message_reference ??= new MessageReferenceBuilder();
+		updater(this.data.message_reference);
 		return this;
 	}
 
@@ -631,7 +633,8 @@ export class MessageBuilder
 	 * @param updater - The function to update the poll with
 	 */
 	public updatePoll(updater: (builder: PollBuilder) => void): this {
-		updater((this.data.poll ??= new PollBuilder()));
+		this.data.poll ??= new PollBuilder();
+		updater(this.data.poll);
 		return this;
 	}
 

@@ -7,7 +7,7 @@ export type ReadonlyCollection<Key, Value> = Omit<
 > &
 	ReadonlyMap<Key, Value>;
 
-export interface Collection<_Key, _Value> {
+export interface Collection<Key, Value> {
 	/**
 	 * Ambient declaration to allow references to `this.constructor` in class methods.
 	 *

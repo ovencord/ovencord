@@ -46,7 +46,7 @@ export class WorkerContextFetchingStrategy implements IContextFetchingStrategy {
 		const payload: WorkerReceivePayload = {
 			op: WorkerReceivePayloadOp.RetrieveSessionInfo,
 			d: { shardId, nonce },
-		} as any;
+		};
 
 		const promise = new Promise<SessionInfo | null>((resolve) => this.sessionPromises.set(nonce, resolve));
 		self.postMessage(payload);
@@ -57,7 +57,7 @@ export class WorkerContextFetchingStrategy implements IContextFetchingStrategy {
 		const payload: WorkerReceivePayload = {
 			op: WorkerReceivePayloadOp.UpdateSessionInfo,
 			d: { shardId, session: sessionInfo },
-		} as any;
+		};
 		self.postMessage(payload);
 	}
 
@@ -67,7 +67,7 @@ export class WorkerContextFetchingStrategy implements IContextFetchingStrategy {
 		const payload: WorkerReceivePayload = {
 			op: WorkerReceivePayloadOp.WaitForIdentify,
 			d: { nonce, shardId },
-		} as any;
+		};
 		const promise = new Promise<void>((resolve, reject) =>
 			this.waitForIdentifyPromises.set(nonce, { signal, resolve, reject }),
 		);
@@ -78,7 +78,7 @@ export class WorkerContextFetchingStrategy implements IContextFetchingStrategy {
 			const payload: WorkerReceivePayload = {
 				op: WorkerReceivePayloadOp.CancelIdentify,
 				d: { nonce },
-			} as any;
+			};
 
 			self.postMessage(payload);
 		};

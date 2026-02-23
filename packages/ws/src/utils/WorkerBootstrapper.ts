@@ -28,7 +28,7 @@ export class WorkerBootstrapper {
 						// For now, satisfy the interface.
 						return message.data.gatewayInformation;
 					},
-				} as any);
+				} as unknown as any);
 
 				await this.manager.connect();
 				return;

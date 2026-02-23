@@ -59,7 +59,10 @@ export async function entersState<Target extends AudioPlayer | VoiceConnection>(
 					resolve();
 				};
 				const onAbort = () => {
-					(target as unknown as AsyncEventEmitter<any>).removeListener(status as string, onEvent as any);
+					(target as unknown as AsyncEventEmitter<Record<string, unknown[]>>).removeListener(
+						status as string,
+						onEvent as () => void,
+					);
 					reject(new AbortError());
 				};
 
@@ -68,7 +71,10 @@ export async function entersState<Target extends AudioPlayer | VoiceConnection>(
 					return;
 				}
 
-				(target as unknown as AsyncEventEmitter<any>).once(status as string, onEvent as any);
+				(target as unknown as AsyncEventEmitter<Record<string, unknown[]>>).once(
+					status as string,
+					onEvent as () => void,
+				);
 				signal.addEventListener('abort', onAbort, { once: true });
 			});
 		} finally {
