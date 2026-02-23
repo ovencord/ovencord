@@ -138,7 +138,7 @@
     },
     "packages/voice": {
       "name": "@ovencord/voice",
-      "version": "0.19.3",
+      "version": "0.19.4",
       "dependencies": {
         "@snazzah/davey": "^0.1.8",
         "@types/ws": "^8.18.1",
