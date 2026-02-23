@@ -1,26 +1,26 @@
-import { Events  } from '../../util/Events.js';
-import { Action  } from './Action.js';
+import { Events } from '../../util/Events.js';
+import { Action } from './Action.js';
 
 export class GuildRoleDeleteAction extends Action {
-  override handle(data: any) {
-    const client = this.client;
-    const guild = client.guilds.cache.get(data.guild_id);
-    let role;
+	override handle(data: any) {
+		const client = this.client;
+		const guild = client.guilds.cache.get(data.guild_id);
+		let role;
 
-    if (guild) {
-      role = guild.roles.cache.get(data.role_id);
-      if (role) {
-        guild.roles.cache.delete(data.role_id);
-        /**
-         * Emitted whenever a guild role is deleted.
-         *
-         * @event Client#roleDelete
-         * @param {Role} role The role that was deleted
-         */
-        client.emit(Events.GuildRoleDelete, role);
-      }
-    }
+		if (guild) {
+			role = guild.roles.cache.get(data.role_id);
+			if (role) {
+				guild.roles.cache.delete(data.role_id);
+				/**
+				 * Emitted whenever a guild role is deleted.
+				 *
+				 * @event Client#roleDelete
+				 * @param {Role} role The role that was deleted
+				 */
+				client.emit(Events.GuildRoleDelete, role);
+			}
+		}
 
-    return { role };
-  }
+		return { role };
+	}
 }

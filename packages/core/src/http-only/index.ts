@@ -1,7 +1,6 @@
+export * from 'discord-api-types/v10';
 export * from '../api/index.js';
 export * from '../util/index.js';
-
-export * from 'discord-api-types/v10';
 
 /**
  * The {@link https://github.com/ovencord/ovencord/blob/main/packages/core#readme | @ovencord/core} version

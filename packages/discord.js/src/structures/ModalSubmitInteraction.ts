@@ -1,10 +1,10 @@
-import { Collection  } from '@ovencord/collection';
-import { lazy  } from '@ovencord/util';
-import { transformResolved  } from '../util/Util.js';
-import { BaseInteraction  } from './BaseInteraction.js';
-import { InteractionWebhook  } from './InteractionWebhook.js';
-import { ModalComponentResolver  } from './ModalComponentResolver.js';
-import { InteractionResponses  } from './interfaces/InteractionResponses.js';
+import { Collection } from '@ovencord/collection';
+import { lazy } from '@ovencord/util';
+import { transformResolved } from '../util/Util.js';
+import { BaseInteraction } from './BaseInteraction.js';
+import { InteractionWebhook } from './InteractionWebhook.js';
+import { InteractionResponses } from './interfaces/InteractionResponses.js';
+import { ModalComponentResolver } from './ModalComponentResolver.js';
 
 const getMessage = lazy(() => require('./Message.js').Message);
 const getAttachment = lazy(() => require('./Attachment.js').Attachment);
@@ -63,209 +63,209 @@ const getAttachment = lazy(() => require('./Attachment.js').Attachment);
  * @implements {InteractionResponses}
  */
 export class ModalSubmitInteraction extends BaseInteraction {
-  public customId: any;
-  public message: any;
-  public components: any;
-  public fields: any;
-  public deferred: any;
-  public replied: any;
-  public ephemeral: any;
-  public webhook: any;
-  constructor(client: any, data: any) {
-    super(client, data);
-    /**
-     * The custom id of the modal.
-     *
-     * @type {string}
-     */
-    this.customId = data.data.custom_id;
+	public customId: any;
+	public message: any;
+	public components: any;
+	public fields: any;
+	public deferred: any;
+	public replied: any;
+	public ephemeral: any;
+	public webhook: any;
+	constructor(client: any, data: any) {
+		super(client, data);
+		/**
+		 * The custom id of the modal.
+		 *
+		 * @type {string}
+		 */
+		this.customId = data.data.custom_id;
 
-    if ('message' in data) {
-      /**
-       * The message associated with this interaction
-       *
-       * @type {?Message}
-       */
-      this.message = this.channel?.messages._add(data.message) ?? new (getMessage())(this.client, data.message);
-    } else {
-      this.message = null;
-    }
+		if ('message' in data) {
+			/**
+			 * The message associated with this interaction
+			 *
+			 * @type {?Message}
+			 */
+			this.message = this.channel?.messages._add(data.message) ?? new (getMessage())(this.client, data.message);
+		} else {
+			this.message = null;
+		}
 
-    /**
-     * The components within the modal
-     *
-     * @type {ModalComponentResolver}
-     */
-    this.components = new ModalComponentResolver(
-      this.client,
-      // @ts-ignore
-      data.data.components?.map(component => this.transformComponent(component, data.data.resolved)),
-      transformResolved({ client: this.client, guild: this.guild, channel: this.channel }, data.data.resolved),
-    );
+		/**
+		 * The components within the modal
+		 *
+		 * @type {ModalComponentResolver}
+		 */
+		this.components = new ModalComponentResolver(
+			this.client,
+			// @ts-expect-error
+			data.data.components?.map((component) => this.transformComponent(component, data.data.resolved)),
+			transformResolved({ client: this.client, guild: this.guild, channel: this.channel }, data.data.resolved),
+		);
 
-    /**
-     * The fields within the modal (alias for components).
-     * Provides backward compatibility with the classic discord.js API.
-     *
-     * @type {ModalComponentResolver}
-     */
-    this.fields = this.components;
+		/**
+		 * The fields within the modal (alias for components).
+		 * Provides backward compatibility with the classic discord.js API.
+		 *
+		 * @type {ModalComponentResolver}
+		 */
+		this.fields = this.components;
 
-    /**
-     * Whether the reply to this interaction has been deferred
-     *
-     * @type {boolean}
-     */
-    this.deferred = false;
+		/**
+		 * Whether the reply to this interaction has been deferred
+		 *
+		 * @type {boolean}
+		 */
+		this.deferred = false;
 
-    /**
-     * Whether this interaction has already been replied to
-     *
-     * @type {boolean}
-     */
-    this.replied = false;
+		/**
+		 * Whether this interaction has already been replied to
+		 *
+		 * @type {boolean}
+		 */
+		this.replied = false;
 
-    /**
-     * Whether the reply to this interaction is ephemeral
-     *
-     * @type {?boolean}
-     */
-    this.ephemeral = null;
+		/**
+		 * Whether the reply to this interaction is ephemeral
+		 *
+		 * @type {?boolean}
+		 */
+		this.ephemeral = null;
 
-    /**
-     * An associated interaction webhook, can be used to further interact with this interaction
-     *
-     * @type {InteractionWebhook}
-     */
-    this.webhook = new InteractionWebhook(this.client, this.applicationId, this.token);
-  }
+		/**
+		 * An associated interaction webhook, can be used to further interact with this interaction
+		 *
+		 * @type {InteractionWebhook}
+		 */
+		this.webhook = new InteractionWebhook(this.client, this.applicationId, this.token);
+	}
 
-  /**
-   * Transforms component data to discord.js-compatible data
-   *
-   * @param {*} rawComponent The data to transform
-   * @param {APIInteractionDataResolved} resolved The resolved data for the interaction
-   * @returns {ModalData[]}
-   * @private
-   */
-  // @ts-ignore
-  transformComponent(rawComponent: any, resolved: any) {
-    if ('components' in rawComponent) {
-      return {
-        type: rawComponent.type,
-        id: rawComponent.id,
-        // @ts-ignore
-        components: rawComponent.components.map(component => this.transformComponent(component, resolved)),
-      };
-    }
+	/**
+	 * Transforms component data to discord.js-compatible data
+	 *
+	 * @param {*} rawComponent The data to transform
+	 * @param {APIInteractionDataResolved} resolved The resolved data for the interaction
+	 * @returns {ModalData[]}
+	 * @private
+	 */
+	// @ts-expect-error
+	transformComponent(rawComponent: any, resolved: any) {
+		if ('components' in rawComponent) {
+			return {
+				type: rawComponent.type,
+				id: rawComponent.id,
+				// @ts-expect-error
+				components: rawComponent.components.map((component) => this.transformComponent(component, resolved)),
+			};
+		}
 
-    if ('component' in rawComponent) {
-      return {
-        type: rawComponent.type,
-        id: rawComponent.id,
-        component: this.transformComponent(rawComponent.component, resolved),
-      };
-    }
+		if ('component' in rawComponent) {
+			return {
+				type: rawComponent.type,
+				id: rawComponent.id,
+				component: this.transformComponent(rawComponent.component, resolved),
+			};
+		}
 
-    const data: any = {
-      type: rawComponent.type,
-      id: rawComponent.id,
-    };
+		const data: any = {
+			type: rawComponent.type,
+			id: rawComponent.id,
+		};
 
-    // Text display components do not have custom ids.
-    if ('custom_id' in rawComponent) data.customId = rawComponent.custom_id;
+		// Text display components do not have custom ids.
+		if ('custom_id' in rawComponent) data.customId = rawComponent.custom_id;
 
-    if ('value' in rawComponent) data.value = rawComponent.value;
+		if ('value' in rawComponent) data.value = rawComponent.value;
 
-    if (rawComponent.values) {
-      data.values = rawComponent.values;
-      if (resolved) {
-        const { members, users, channels, roles, attachments } = resolved;
-        const valueSet = new Set(rawComponent.values);
+		if (rawComponent.values) {
+			data.values = rawComponent.values;
+			if (resolved) {
+				const { members, users, channels, roles, attachments } = resolved;
+				const valueSet = new Set(rawComponent.values);
 
-        if (users) {
-          data.users = new Collection();
+				if (users) {
+					data.users = new Collection();
 
-          for (const [id, user] of Object.entries(users)) {
-            if (valueSet.has(id)) {
-              data.users.set(id, this.client.users._add(user));
-            }
-          }
-        }
+					for (const [id, user] of Object.entries(users)) {
+						if (valueSet.has(id)) {
+							data.users.set(id, this.client.users._add(user));
+						}
+					}
+				}
 
-        if (channels) {
-          data.channels = new Collection();
+				if (channels) {
+					data.channels = new Collection();
 
-          for (const [id, apiChannel] of Object.entries(channels)) {
-            if (valueSet.has(id)) {
-              data.channels.set(id, this.client.channels._add(apiChannel, this.guild) ?? apiChannel);
-            }
-          }
-        }
+					for (const [id, apiChannel] of Object.entries(channels)) {
+						if (valueSet.has(id)) {
+							data.channels.set(id, this.client.channels._add(apiChannel, this.guild) ?? apiChannel);
+						}
+					}
+				}
 
-        if (members) {
-          data.members = new Collection();
+				if (members) {
+					data.members = new Collection();
 
-          for (const [id, member] of Object.entries(members)) {
-            if (valueSet.has(id)) {
-              const user = users?.[id];
-              data.members.set(id, this.guild?.members._add(Object.assign({ user }, member)) ?? member);
-            }
-          }
-        }
+					for (const [id, member] of Object.entries(members)) {
+						if (valueSet.has(id)) {
+							const user = users?.[id];
+							data.members.set(id, this.guild?.members._add(Object.assign({ user }, member)) ?? member);
+						}
+					}
+				}
 
-        if (roles) {
-          data.roles = new Collection();
+				if (roles) {
+					data.roles = new Collection();
 
-          for (const [id, role] of Object.entries(roles)) {
-            if (valueSet.has(id)) {
-              data.roles.set(id, this.guild?.roles._add(role) ?? role);
-            }
-          }
-        }
+					for (const [id, role] of Object.entries(roles)) {
+						if (valueSet.has(id)) {
+							data.roles.set(id, this.guild?.roles._add(role) ?? role);
+						}
+					}
+				}
 
-        if (attachments) {
-          data.attachments = new Collection();
-          for (const [id, attachment] of Object.entries(attachments)) {
-            if (valueSet.has(id)) {
-              data.attachments.set(id, new (getAttachment())(attachment));
-            }
-          }
-        }
-      }
-    }
+				if (attachments) {
+					data.attachments = new Collection();
+					for (const [id, attachment] of Object.entries(attachments)) {
+						if (valueSet.has(id)) {
+							data.attachments.set(id, new (getAttachment())(attachment));
+						}
+					}
+				}
+			}
+		}
 
-    return data;
-  }
+		return data;
+	}
 
-  /**
-   * Whether this is from a {@link MessageComponentInteraction}.
-   *
-   * @returns {boolean}
-   */
-  isFromMessage() {
-    return Boolean(this.message);
-  }
+	/**
+	 * Whether this is from a {@link MessageComponentInteraction}.
+	 *
+	 * @returns {boolean}
+	 */
+	isFromMessage() {
+		return Boolean(this.message);
+	}
 
-  // These are here only for documentation purposes - they are implemented by InteractionResponses
+	// These are here only for documentation purposes - they are implemented by InteractionResponses
 
-  deferReply(options?: any): any {}
+	deferReply(options?: any): any {}
 
-  reply(options?: any): any {}
+	reply(options?: any): any {}
 
-  fetchReply(options?: any): any {}
+	fetchReply(options?: any): any {}
 
-  editReply(options?: any): any {}
+	editReply(options?: any): any {}
 
-  deleteReply(options?: any): any {}
+	deleteReply(options?: any): any {}
 
-  followUp(options?: any): any {}
+	followUp(options?: any): any {}
 
-  deferUpdate(options?: any): any {}
+	deferUpdate(options?: any): any {}
 
-  update(options?: any): any {}
+	update(options?: any): any {}
 
-  launchActivity(options?: any): any {}
+	launchActivity(options?: any): any {}
 }
 
 InteractionResponses.applyToClass(ModalSubmitInteraction, ['showModal'] as any);

@@ -1,17 +1,17 @@
-import { Events  } from '../../util/Events.js';
-import { Action  } from './Action.js';
+import { Events } from '../../util/Events.js';
+import { Action } from './Action.js';
 
 export class GuildEmojiCreateAction extends Action {
-  override handle(guild: any, createdEmoji: any) {
-    const already = guild.emojis.cache.has(createdEmoji.id);
-    const emoji = guild.emojis._add(createdEmoji);
-    /**
-     * Emitted whenever a custom emoji is created in a guild.
-     *
-     * @event Client#emojiCreate
-     * @param {GuildEmoji} emoji The emoji that was created
-     */
-    if (!already) this.client.emit(Events.GuildEmojiCreate, emoji);
-    return { emoji };
-  }
+	override handle(guild: any, createdEmoji: any) {
+		const already = guild.emojis.cache.has(createdEmoji.id);
+		const emoji = guild.emojis._add(createdEmoji);
+		/**
+		 * Emitted whenever a custom emoji is created in a guild.
+		 *
+		 * @event Client#emojiCreate
+		 * @param {GuildEmoji} emoji The emoji that was created
+		 */
+		if (!already) this.client.emit(Events.GuildEmojiCreate, emoji);
+		return { emoji };
+	}
 }

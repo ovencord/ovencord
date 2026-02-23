@@ -1,5 +1,5 @@
-import { InviteFlags  } from 'discord-api-types/v10';
-import { BitField  } from './BitField.js';
+import { InviteFlags } from 'discord-api-types/v10';
+import { BitField } from './BitField.js';
 
 /**
  * Data structure that makes it easy to interact with a {@link GuildInvite#flags} bit field.
@@ -7,13 +7,13 @@ import { BitField  } from './BitField.js';
  * @extends {BitField}
  */
 export class InviteFlagsBitField extends BitField {
-  /**
-   * Numeric invite flags.
-   *
-   * @type {InviteFlags}
-   * @memberof InviteFlagsBitField
-   */
-  static Flags = InviteFlags;
+	/**
+	 * Numeric invite flags.
+	 *
+	 * @type {InviteFlags}
+	 * @memberof InviteFlagsBitField
+	 */
+	static Flags = InviteFlags;
 }
 
 /**

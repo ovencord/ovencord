@@ -1,9 +1,9 @@
-import { Collection  } from '@ovencord/collection';
-import { OverwriteType, Routes  } from 'discord-api-types/v10';
-import { DiscordjsTypeError, ErrorCodes  } from '../errors/index.js';
-import { PermissionOverwrites  } from '../structures/PermissionOverwrites.js';
-import { Role  } from '../structures/Role.js';
-import { CachedManager  } from './CachedManager.js';
+import { Collection } from '@ovencord/collection';
+import { OverwriteType, Routes } from 'discord-api-types/v10';
+import { DiscordjsTypeError, ErrorCodes } from '../errors/index.js';
+import { PermissionOverwrites } from '../structures/PermissionOverwrites.js';
+import { Role } from '../structures/Role.js';
+import { CachedManager } from './CachedManager.js';
 
 let cacheWarningEmitted = false;
 
@@ -13,162 +13,162 @@ let cacheWarningEmitted = false;
  * @extends {CachedManager}
  */
 export class PermissionOverwriteManager extends CachedManager {
-  public channel: any;
-  constructor(channel: any, iterable?: any) {
-    super(channel.client, PermissionOverwrites);
-    if (!cacheWarningEmitted && this._cache.constructor.name !== 'Collection') {
-      cacheWarningEmitted = true;
-      process.emitWarning(
-        `Overriding the cache handling for ${this.constructor.name} is unsupported and breaks functionality.`,
-        'UnsupportedCacheOverwriteWarning',
-      );
-    }
+	public channel: any;
+	constructor(channel: any, iterable?: any) {
+		super(channel.client, PermissionOverwrites);
+		if (!cacheWarningEmitted && this._cache.constructor.name !== 'Collection') {
+			cacheWarningEmitted = true;
+			process.emitWarning(
+				`Overriding the cache handling for ${this.constructor.name} is unsupported and breaks functionality.`,
+				'UnsupportedCacheOverwriteWarning',
+			);
+		}
 
-    /**
-     * The channel of the permission overwrite this manager belongs to
-     *
-     * @type {GuildChannel}
-     */
-    this.channel = channel;
+		/**
+		 * The channel of the permission overwrite this manager belongs to
+		 *
+		 * @type {GuildChannel}
+		 */
+		this.channel = channel;
 
-    if (iterable) {
-      for (const item of iterable) {
-        this._add(item, true);
-      }
-    }
-  }
+		if (iterable) {
+			for (const item of iterable) {
+				this._add(item, true);
+			}
+		}
+	}
 
-  /**
-   * The cache of this Manager
-   *
-   * @type {Collection<Snowflake, PermissionOverwrites>}
-   * @name PermissionOverwriteManager#cache
-   */
+	/**
+	 * The cache of this Manager
+	 *
+	 * @type {Collection<Snowflake, PermissionOverwrites>}
+	 * @name PermissionOverwriteManager#cache
+	 */
 
-  _add(data: any, cache: any) {
-    return super._add(data, cache, { extras: [this.channel] });
-  }
+	_add(data: any, cache: any) {
+		return super._add(data, cache, { extras: [this.channel] });
+	}
 
-  /**
-   * Replaces the permission overwrites in this channel.
-   *
-   * @param {OverwriteResolvable[]|Collection<Snowflake, OverwriteResolvable>} overwrites
-   * Permission overwrites the channel gets updated with
-   * @param {string} [reason] Reason for updating the channel overwrites
-   * @returns {Promise<GuildChannel>}
-   * @example
-   * message.channel.permissionOverwrites.set([
-   *   {
-   *      id: message.author.id,
-   *      deny: [PermissionFlagsBits.ViewChannel],
-   *   },
-   * ], 'Needed to change permissions');
-   */
-  async set(overwrites: any, reason: any) {
-    if (!Array.isArray(overwrites) && !(overwrites instanceof Collection)) {
-      throw new DiscordjsTypeError(
-        ErrorCodes.InvalidType,
-        'overwrites',
-        'Array or Collection of Permission Overwrites',
-        true,
-      );
-    }
+	/**
+	 * Replaces the permission overwrites in this channel.
+	 *
+	 * @param {OverwriteResolvable[]|Collection<Snowflake, OverwriteResolvable>} overwrites
+	 * Permission overwrites the channel gets updated with
+	 * @param {string} [reason] Reason for updating the channel overwrites
+	 * @returns {Promise<GuildChannel>}
+	 * @example
+	 * message.channel.permissionOverwrites.set([
+	 *   {
+	 *      id: message.author.id,
+	 *      deny: [PermissionFlagsBits.ViewChannel],
+	 *   },
+	 * ], 'Needed to change permissions');
+	 */
+	async set(overwrites: any, reason: any) {
+		if (!Array.isArray(overwrites) && !(overwrites instanceof Collection)) {
+			throw new DiscordjsTypeError(
+				ErrorCodes.InvalidType,
+				'overwrites',
+				'Array or Collection of Permission Overwrites',
+				true,
+			);
+		}
 
-    return this.channel.edit({ permissionOverwrites: overwrites, reason });
-  }
+		return this.channel.edit({ permissionOverwrites: overwrites, reason });
+	}
 
-  /**
-   * Extra information about the overwrite.
-   *
-   * @typedef {Object} GuildChannelOverwriteOptions
-   * @property {string} [reason] The reason for creating/editing this overwrite
-   * @property {OverwriteType} [type] The type of overwrite. Use this to bypass automatic resolution of `type`
-   * that results in an error for an uncached structure
-   */
+	/**
+	 * Extra information about the overwrite.
+	 *
+	 * @typedef {Object} GuildChannelOverwriteOptions
+	 * @property {string} [reason] The reason for creating/editing this overwrite
+	 * @property {OverwriteType} [type] The type of overwrite. Use this to bypass automatic resolution of `type`
+	 * that results in an error for an uncached structure
+	 */
 
-  /**
-   * Creates or edits permission overwrites for a user or role in this channel.
-   *
-   * @param {RoleResolvable|UserResolvable} userOrRole The user or role to update
-   * @param {PermissionOverwriteOptions} options The options for the update
-   * @param {GuildChannelOverwriteOptions} [overwriteOptions] The extra information for the update
-   * @param {PermissionOverwrites} [existing] The existing overwrites to merge with this update
-   * @returns {Promise<GuildChannel>}
-   * @private
-   */
-  // @ts-ignore
-  async upsert(userOrRole: any, options: any, { reason, type }: any = {}, existing = undefined) {
-    const userOrRoleId = this.channel.guild.roles.resolveId(userOrRole) ?? this.client.users.resolveId(userOrRole);
+	/**
+	 * Creates or edits permission overwrites for a user or role in this channel.
+	 *
+	 * @param {RoleResolvable|UserResolvable} userOrRole The user or role to update
+	 * @param {PermissionOverwriteOptions} options The options for the update
+	 * @param {GuildChannelOverwriteOptions} [overwriteOptions] The extra information for the update
+	 * @param {PermissionOverwrites} [existing] The existing overwrites to merge with this update
+	 * @returns {Promise<GuildChannel>}
+	 * @private
+	 */
+	// @ts-expect-error
+	async upsert(userOrRole: any, options: any, { reason, type }: any = {}, existing = undefined) {
+		const userOrRoleId = this.channel.guild.roles.resolveId(userOrRole) ?? this.client.users.resolveId(userOrRole);
 
-    let resolvedType = type;
-    if (typeof resolvedType !== 'number') {
-      const resolvedUserOrRole = this.channel.guild.roles.resolve(userOrRole) ?? this.client.users.resolve(userOrRole);
-      if (!resolvedUserOrRole) throw new DiscordjsTypeError(ErrorCodes.InvalidType, 'parameter', 'User nor a Role');
-      resolvedType = resolvedUserOrRole instanceof Role ? OverwriteType.Role : OverwriteType.Member;
-    }
+		let resolvedType = type;
+		if (typeof resolvedType !== 'number') {
+			const resolvedUserOrRole = this.channel.guild.roles.resolve(userOrRole) ?? this.client.users.resolve(userOrRole);
+			if (!resolvedUserOrRole) throw new DiscordjsTypeError(ErrorCodes.InvalidType, 'parameter', 'User nor a Role');
+			resolvedType = resolvedUserOrRole instanceof Role ? OverwriteType.Role : OverwriteType.Member;
+		}
 
-    const { allow, deny } = PermissionOverwrites.resolveOverwriteOptions(options, existing);
+		const { allow, deny } = PermissionOverwrites.resolveOverwriteOptions(options, existing);
 
-    await this.client.rest.put(Routes.channelPermission(this.channel.id, userOrRoleId), {
-      body: { id: userOrRoleId, type: resolvedType, allow, deny },
-      reason,
-    });
-    return this.channel;
-  }
+		await this.client.rest.put(Routes.channelPermission(this.channel.id, userOrRoleId), {
+			body: { id: userOrRoleId, type: resolvedType, allow, deny },
+			reason,
+		});
+		return this.channel;
+	}
 
-  /**
-   * Creates permission overwrites for a user or role in this channel, or replaces them if already present.
-   *
-   * @param {RoleResolvable|UserResolvable} userOrRole The user or role to update
-   * @param {PermissionOverwriteOptions} options The options for the update
-   * @param {GuildChannelOverwriteOptions} [overwriteOptions] The extra information for the update
-   * @returns {Promise<GuildChannel>}
-   * @example
-   * // Create or Replace permission overwrites for a message author
-   * message.channel.permissionOverwrites.create(message.author, {
-   *   SendMessages: false
-   * })
-   *   .then(channel => console.log(channel.permissionOverwrites.cache.get(message.author.id)))
-   *   .catch(console.error);
-   */
-  async create(userOrRole: any, options: any, overwriteOptions: any) {
-    return this.upsert(userOrRole, options, overwriteOptions);
-  }
+	/**
+	 * Creates permission overwrites for a user or role in this channel, or replaces them if already present.
+	 *
+	 * @param {RoleResolvable|UserResolvable} userOrRole The user or role to update
+	 * @param {PermissionOverwriteOptions} options The options for the update
+	 * @param {GuildChannelOverwriteOptions} [overwriteOptions] The extra information for the update
+	 * @returns {Promise<GuildChannel>}
+	 * @example
+	 * // Create or Replace permission overwrites for a message author
+	 * message.channel.permissionOverwrites.create(message.author, {
+	 *   SendMessages: false
+	 * })
+	 *   .then(channel => console.log(channel.permissionOverwrites.cache.get(message.author.id)))
+	 *   .catch(console.error);
+	 */
+	async create(userOrRole: any, options: any, overwriteOptions: any) {
+		return this.upsert(userOrRole, options, overwriteOptions);
+	}
 
-  /**
-   * Edits permission overwrites for a user or role in this channel, or creates an entry if not already present.
-   *
-   * @param {RoleResolvable|UserResolvable} userOrRole The user or role to update
-   * @param {PermissionOverwriteOptions} options The options for the update
-   * @param {GuildChannelOverwriteOptions} [overwriteOptions] The extra information for the update
-   * @returns {Promise<GuildChannel>}
-   * @example
-   * // Edit or Create permission overwrites for a message author
-   * message.channel.permissionOverwrites.edit(message.author, {
-   *   SendMessages: false
-   * })
-   *   .then(channel => console.log(channel.permissionOverwrites.cache.get(message.author.id)))
-   *   .catch(console.error);
-   */
-  async edit(userOrRole: any, options: any, overwriteOptions: any) {
-    const existing = this.cache.get(
-      this.channel.guild.roles.resolveId(userOrRole) ?? this.client.users.resolveId(userOrRole),
-    );
-    return this.upsert(userOrRole, options, overwriteOptions, existing);
-  }
+	/**
+	 * Edits permission overwrites for a user or role in this channel, or creates an entry if not already present.
+	 *
+	 * @param {RoleResolvable|UserResolvable} userOrRole The user or role to update
+	 * @param {PermissionOverwriteOptions} options The options for the update
+	 * @param {GuildChannelOverwriteOptions} [overwriteOptions] The extra information for the update
+	 * @returns {Promise<GuildChannel>}
+	 * @example
+	 * // Edit or Create permission overwrites for a message author
+	 * message.channel.permissionOverwrites.edit(message.author, {
+	 *   SendMessages: false
+	 * })
+	 *   .then(channel => console.log(channel.permissionOverwrites.cache.get(message.author.id)))
+	 *   .catch(console.error);
+	 */
+	async edit(userOrRole: any, options: any, overwriteOptions: any) {
+		const existing = this.cache.get(
+			this.channel.guild.roles.resolveId(userOrRole) ?? this.client.users.resolveId(userOrRole),
+		);
+		return this.upsert(userOrRole, options, overwriteOptions, existing);
+	}
 
-  /**
-   * Deletes permission overwrites for a user or role in this channel.
-   *
-   * @param {UserResolvable|RoleResolvable} userOrRole The user or role to delete
-   * @param {string} [reason] The reason for deleting the overwrite
-   * @returns {Promise<GuildChannel>}
-   */
-  async delete(userOrRole: any, reason: any) {
-    const userOrRoleId = this.channel.guild.roles.resolveId(userOrRole) ?? this.client.users.resolveId(userOrRole);
-    if (!userOrRoleId) throw new DiscordjsTypeError(ErrorCodes.InvalidType, 'parameter', 'User nor a Role');
+	/**
+	 * Deletes permission overwrites for a user or role in this channel.
+	 *
+	 * @param {UserResolvable|RoleResolvable} userOrRole The user or role to delete
+	 * @param {string} [reason] The reason for deleting the overwrite
+	 * @returns {Promise<GuildChannel>}
+	 */
+	async delete(userOrRole: any, reason: any) {
+		const userOrRoleId = this.channel.guild.roles.resolveId(userOrRole) ?? this.client.users.resolveId(userOrRole);
+		if (!userOrRoleId) throw new DiscordjsTypeError(ErrorCodes.InvalidType, 'parameter', 'User nor a Role');
 
-    await this.client.rest.delete(Routes.channelPermission(this.channel.id, userOrRoleId), { reason });
-    return this.channel;
-  }
+		await this.client.rest.delete(Routes.channelPermission(this.channel.id, userOrRoleId), { reason });
+		return this.channel;
+	}
 }

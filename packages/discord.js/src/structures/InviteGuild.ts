@@ -1,5 +1,5 @@
-import { AnonymousGuild  } from './AnonymousGuild.js';
-import { WelcomeScreen  } from './WelcomeScreen.js';
+import { AnonymousGuild } from './AnonymousGuild.js';
+import { WelcomeScreen } from './WelcomeScreen.js';
 
 /**
  * Represents a guild received from an invite, includes welcome screen data if available.
@@ -7,15 +7,15 @@ import { WelcomeScreen  } from './WelcomeScreen.js';
  * @extends {AnonymousGuild}
  */
 export class InviteGuild extends AnonymousGuild {
-  public welcomeScreen: any;
-  constructor(client: any, data: any) {
-    super(client, data);
+	public welcomeScreen: any;
+	constructor(client: any, data: any) {
+		super(client, data);
 
-    /**
-     * The welcome screen for this invite guild
-     *
-     * @type {?WelcomeScreen}
-     */
-    this.welcomeScreen = data.welcome_screen === undefined ? null : new WelcomeScreen(this, data.welcome_screen);
-  }
+		/**
+		 * The welcome screen for this invite guild
+		 *
+		 * @type {?WelcomeScreen}
+		 */
+		this.welcomeScreen = data.welcome_screen === undefined ? null : new WelcomeScreen(this, data.welcome_screen);
+	}
 }

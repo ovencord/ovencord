@@ -1,9 +1,8 @@
-import { makeURLSearchParams, type RequestData, type RawFile, type REST } from '@ovencord/rest';
+import { makeURLSearchParams, type RawFile, type REST, type RequestData } from '@ovencord/rest';
 import {
-	Routes,
+	type RESTGetAPIWebhookResult,
 	type RESTGetAPIWebhookWithTokenMessageQuery,
 	type RESTGetAPIWebhookWithTokenMessageResult,
-	type RESTGetAPIWebhookResult,
 	type RESTPatchAPIWebhookJSONBody,
 	type RESTPatchAPIWebhookResult,
 	type RESTPatchAPIWebhookWithTokenMessageJSONBody,
@@ -14,6 +13,7 @@ import {
 	type RESTPostAPIWebhookWithTokenQuery,
 	type RESTPostAPIWebhookWithTokenSlackQuery,
 	type RESTPostAPIWebhookWithTokenWaitResult,
+	Routes,
 	type Snowflake,
 } from 'discord-api-types/v10';
 

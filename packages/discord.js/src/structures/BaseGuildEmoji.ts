@@ -1,4 +1,4 @@
-import { Emoji  } from './Emoji.js';
+import { Emoji } from './Emoji.js';
 
 /**
  * Parent class for {@link GuildEmoji} and {@link GuildPreviewEmoji}.
@@ -7,58 +7,58 @@ import { Emoji  } from './Emoji.js';
  * @abstract
  */
 export class BaseGuildEmoji extends Emoji {
-  public guild: any;
-  public requiresColons: any;
-  public managed: any;
-  public available: any;
-  public declare name: any;
-  constructor(client: any, data: any, guild: any) {
-    super(client, data);
+	public guild: any;
+	public requiresColons: any;
+	public managed: any;
+	public available: any;
+	public declare name: any;
+	constructor(client: any, data: any, guild: any) {
+		super(client, data);
 
-    /**
-     * The guild this emoji is a part of
-     *
-     * @type {Guild|GuildPreview}
-     */
-    this.guild = guild;
+		/**
+		 * The guild this emoji is a part of
+		 *
+		 * @type {Guild|GuildPreview}
+		 */
+		this.guild = guild;
 
-    this.requiresColons = null;
-    this.managed = null;
-    this.available = null;
+		this.requiresColons = null;
+		this.managed = null;
+		this.available = null;
 
-    this._patch(data);
-  }
+		this._patch(data);
+	}
 
-  _patch(data: any) {
-    if ('name' in data) this.name = data.name;
+	_patch(data: any) {
+		if ('name' in data) this.name = data.name;
 
-    if ('require_colons' in data) {
-      /**
-       * Whether or not this emoji requires colons surrounding it
-       *
-       * @type {?boolean}
-       */
-      this.requiresColons = data.require_colons;
-    }
+		if ('require_colons' in data) {
+			/**
+			 * Whether or not this emoji requires colons surrounding it
+			 *
+			 * @type {?boolean}
+			 */
+			this.requiresColons = data.require_colons;
+		}
 
-    if ('managed' in data) {
-      /**
-       * Whether this emoji is managed by an external service
-       *
-       * @type {?boolean}
-       */
-      this.managed = data.managed;
-    }
+		if ('managed' in data) {
+			/**
+			 * Whether this emoji is managed by an external service
+			 *
+			 * @type {?boolean}
+			 */
+			this.managed = data.managed;
+		}
 
-    if ('available' in data) {
-      /**
-       * Whether this emoji is available
-       *
-       * @type {?boolean}
-       */
-      this.available = data.available;
-    }
-  }
+		if ('available' in data) {
+			/**
+			 * Whether this emoji is available
+			 *
+			 * @type {?boolean}
+			 */
+			this.available = data.available;
+		}
+	}
 }
 
 /**

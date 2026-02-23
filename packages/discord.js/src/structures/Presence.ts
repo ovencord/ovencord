@@ -1,7 +1,7 @@
-import { ActivityFlagsBitField  } from '../util/ActivityFlagsBitField.js';
-import { flatten  } from '../util/Util.js';
-import { Base  } from './Base.js';
-import { Emoji  } from './Emoji.js';
+import { ActivityFlagsBitField } from '../util/ActivityFlagsBitField.js';
+import { flatten } from '../util/Util.js';
+import { Base } from './Base.js';
+import { Emoji } from './Emoji.js';
 
 /**
  * Activity sent in a message.
@@ -36,415 +36,415 @@ import { Emoji  } from './Emoji.js';
  * @extends {Base}
  */
 export class Presence extends Base {
-  public userId: any;
-  public guild: any;
-  public status: any;
-  public activities: any;
-  public clientStatus: any;
-  constructor(client: any, data = {}) {
-    super(client);
+	public userId: any;
+	public guild: any;
+	public status: any;
+	public activities: any;
+	public clientStatus: any;
+	constructor(client: any, data = {}) {
+		super(client);
 
-    /**
-     * The presence's user id
-     *
-     * @type {Snowflake}
-     */
-    // @ts-ignore
-    this.userId = data.user.id;
+		/**
+		 * The presence's user id
+		 *
+		 * @type {Snowflake}
+		 */
+		// @ts-expect-error
+		this.userId = data.user.id;
 
-    /**
-     * The guild this presence is in
-     *
-     * @type {?Guild}
-     */
-    // @ts-ignore
-    this.guild = data.guild ?? null;
+		/**
+		 * The guild this presence is in
+		 *
+		 * @type {?Guild}
+		 */
+		// @ts-expect-error
+		this.guild = data.guild ?? null;
 
-    this._patch(data);
-  }
+		this._patch(data);
+	}
 
-  /**
-   * The user of this presence
-   *
-   * @type {?User}
-   * @readonly
-   */
-  get user() {
-    return this.client.users.resolve(this.userId);
-  }
+	/**
+	 * The user of this presence
+	 *
+	 * @type {?User}
+	 * @readonly
+	 */
+	get user() {
+		return this.client.users.resolve(this.userId);
+	}
 
-  /**
-   * The member of this presence
-   *
-   * @type {?GuildMember}
-   * @readonly
-   */
-  get member() {
-    return this.guild.members.resolve(this.userId);
-  }
+	/**
+	 * The member of this presence
+	 *
+	 * @type {?GuildMember}
+	 * @readonly
+	 */
+	get member() {
+		return this.guild.members.resolve(this.userId);
+	}
 
-  _patch(data: any) {
-    if ('status' in data) {
-      /**
-       * The status of this presence
-       *
-       * @type {PresenceStatus}
-       */
-      this.status = data.status;
-    } else {
-      this.status ??= 'offline';
-    }
+	_patch(data: any) {
+		if ('status' in data) {
+			/**
+			 * The status of this presence
+			 *
+			 * @type {PresenceStatus}
+			 */
+			this.status = data.status;
+		} else {
+			this.status ??= 'offline';
+		}
 
-    if ('activities' in data) {
-      /**
-       * The activities of this presence
-       *
-       * @type {Activity[]}
-       */
-      // @ts-ignore
-      this.activities = data.activities.map(activity => new Activity(this, activity));
-    } else {
-      this.activities ??= [];
-    }
+		if ('activities' in data) {
+			/**
+			 * The activities of this presence
+			 *
+			 * @type {Activity[]}
+			 */
+			// @ts-expect-error
+			this.activities = data.activities.map((activity) => new Activity(this, activity));
+		} else {
+			this.activities ??= [];
+		}
 
-    if ('client_status' in data) {
-      /**
-       * @typedef {Object} ClientPresenceStatusData
-       * @property {?ClientPresenceStatus} web The current presence in the web application
-       * @property {?ClientPresenceStatus} mobile The current presence in the mobile application
-       * @property {?ClientPresenceStatus} desktop The current presence in the desktop application
-       */
+		if ('client_status' in data) {
+			/**
+			 * @typedef {Object} ClientPresenceStatusData
+			 * @property {?ClientPresenceStatus} web The current presence in the web application
+			 * @property {?ClientPresenceStatus} mobile The current presence in the mobile application
+			 * @property {?ClientPresenceStatus} desktop The current presence in the desktop application
+			 */
 
-      /**
-       * The devices this presence is on
-       *
-       * @type {?ClientPresenceStatusData}
-       */
-      this.clientStatus = data.client_status;
-    } else {
-      this.clientStatus ??= null;
-    }
+			/**
+			 * The devices this presence is on
+			 *
+			 * @type {?ClientPresenceStatusData}
+			 */
+			this.clientStatus = data.client_status;
+		} else {
+			this.clientStatus ??= null;
+		}
 
-    return this;
-  }
+		return this;
+	}
 
-  _clone() {
-    const clone = Object.assign(Object.create(this), this);
-    // @ts-ignore
-    clone.activities = this.activities.map(activity => activity._clone());
-    return clone;
-  }
+	_clone() {
+		const clone = Object.assign(Object.create(this), this);
+		// @ts-expect-error
+		clone.activities = this.activities.map((activity) => activity._clone());
+		return clone;
+	}
 
-  /**
-   * Whether this presence is equal to another.
-   *
-   * @param {Presence} presence The presence to compare with
-   * @returns {boolean}
-   */
-  equals(presence: any) {
-    return (
-      this === presence ||
-      (presence &&
-        this.status === presence.status &&
-        this.clientStatus?.web === presence.clientStatus?.web &&
-        this.clientStatus?.mobile === presence.clientStatus?.mobile &&
-        this.clientStatus?.desktop === presence.clientStatus?.desktop &&
-        this.activities.length === presence.activities.length &&
-        this.activities.every((activity: any, index: any) => activity.equals(presence.activities[index])))
-    );
-  }
+	/**
+	 * Whether this presence is equal to another.
+	 *
+	 * @param {Presence} presence The presence to compare with
+	 * @returns {boolean}
+	 */
+	equals(presence: any) {
+		return (
+			this === presence ||
+			(presence &&
+				this.status === presence.status &&
+				this.clientStatus?.web === presence.clientStatus?.web &&
+				this.clientStatus?.mobile === presence.clientStatus?.mobile &&
+				this.clientStatus?.desktop === presence.clientStatus?.desktop &&
+				this.activities.length === presence.activities.length &&
+				this.activities.every((activity: any, index: any) => activity.equals(presence.activities[index])))
+		);
+	}
 
-  toJSON() {
-    return flatten(this);
-  }
+	toJSON() {
+		return flatten(this);
+	}
 }
 
 /**
  * Represents an activity that is part of a user's presence.
  */
 export class Activity {
-  public name: any;
-  public type: any;
-  public url: any;
-  public details: any;
-  public state: any;
-  public applicationId: any;
-  public timestamps: any;
-  public party: any;
-  public syncId: any;
-  public assets: any;
-  public flags: any;
-  public emoji: any;
-  public buttons: any;
-  public createdTimestamp: any;
-  constructor(presence: any, data: any) {
-    /**
-     * The presence of the Activity
-     *
-     * @type {Presence}
-     * @readonly
-     * @name Activity#presence
-     */
-    Object.defineProperty(this, 'presence', { value: presence });
+	public name: any;
+	public type: any;
+	public url: any;
+	public details: any;
+	public state: any;
+	public applicationId: any;
+	public timestamps: any;
+	public party: any;
+	public syncId: any;
+	public assets: any;
+	public flags: any;
+	public emoji: any;
+	public buttons: any;
+	public createdTimestamp: any;
+	constructor(presence: any, data: any) {
+		/**
+		 * The presence of the Activity
+		 *
+		 * @type {Presence}
+		 * @readonly
+		 * @name Activity#presence
+		 */
+		Object.defineProperty(this, 'presence', { value: presence });
 
-    /**
-     * The activity's name
-     *
-     * @type {string}
-     */
-    this.name = data.name;
+		/**
+		 * The activity's name
+		 *
+		 * @type {string}
+		 */
+		this.name = data.name;
 
-    /**
-     * The activity status's type
-     *
-     * @type {ActivityType}
-     */
-    this.type = data.type;
+		/**
+		 * The activity status's type
+		 *
+		 * @type {ActivityType}
+		 */
+		this.type = data.type;
 
-    /**
-     * If the activity is being streamed, a link to the stream
-     *
-     * @type {?string}
-     */
-    this.url = data.url ?? null;
+		/**
+		 * If the activity is being streamed, a link to the stream
+		 *
+		 * @type {?string}
+		 */
+		this.url = data.url ?? null;
 
-    /**
-     * Details about the activity
-     *
-     * @type {?string}
-     */
-    this.details = data.details ?? null;
+		/**
+		 * Details about the activity
+		 *
+		 * @type {?string}
+		 */
+		this.details = data.details ?? null;
 
-    /**
-     * State of the activity
-     *
-     * @type {?string}
-     */
-    this.state = data.state ?? null;
+		/**
+		 * State of the activity
+		 *
+		 * @type {?string}
+		 */
+		this.state = data.state ?? null;
 
-    /**
-     * The id of the application associated with this activity
-     *
-     * @type {?Snowflake}
-     */
-    this.applicationId = data.application_id ?? null;
+		/**
+		 * The id of the application associated with this activity
+		 *
+		 * @type {?Snowflake}
+		 */
+		this.applicationId = data.application_id ?? null;
 
-    /**
-     * Represents timestamps of an activity
-     *
-     * @typedef {Object} ActivityTimestamps
-     * @property {?Date} start When the activity started
-     * @property {?Date} end When the activity will end
-     */
+		/**
+		 * Represents timestamps of an activity
+		 *
+		 * @typedef {Object} ActivityTimestamps
+		 * @property {?Date} start When the activity started
+		 * @property {?Date} end When the activity will end
+		 */
 
-    /**
-     * Timestamps for the activity
-     *
-     * @type {?ActivityTimestamps}
-     */
-    this.timestamps = data.timestamps
-      ? {
-          start: data.timestamps.start ? new Date(Number(data.timestamps.start)) : null,
-          end: data.timestamps.end ? new Date(Number(data.timestamps.end)) : null,
-        }
-      : null;
+		/**
+		 * Timestamps for the activity
+		 *
+		 * @type {?ActivityTimestamps}
+		 */
+		this.timestamps = data.timestamps
+			? {
+					start: data.timestamps.start ? new Date(Number(data.timestamps.start)) : null,
+					end: data.timestamps.end ? new Date(Number(data.timestamps.end)) : null,
+				}
+			: null;
 
-    /**
-     * Represents a party of an activity
-     *
-     * @typedef {Object} ActivityParty
-     * @property {?string} id The party's id
-     * @property {number[]} size Size of the party as `[current, max]`
-     */
+		/**
+		 * Represents a party of an activity
+		 *
+		 * @typedef {Object} ActivityParty
+		 * @property {?string} id The party's id
+		 * @property {number[]} size Size of the party as `[current, max]`
+		 */
 
-    /**
-     * Party of the activity
-     *
-     * @type {?ActivityParty}
-     */
-    this.party = data.party ?? null;
+		/**
+		 * Party of the activity
+		 *
+		 * @type {?ActivityParty}
+		 */
+		this.party = data.party ?? null;
 
-    /**
-     * The sync id of the activity
-     * <info>This property is not documented by Discord and represents the track id in spotify activities.</info>
-     *
-     * @type {?string}
-     */
-    this.syncId = data.sync_id ?? null;
+		/**
+		 * The sync id of the activity
+		 * <info>This property is not documented by Discord and represents the track id in spotify activities.</info>
+		 *
+		 * @type {?string}
+		 */
+		this.syncId = data.sync_id ?? null;
 
-    /**
-     * Assets for rich presence
-     *
-     * @type {?RichPresenceAssets}
-     */
-    this.assets = data.assets ? new RichPresenceAssets(this, data.assets) : null;
+		/**
+		 * Assets for rich presence
+		 *
+		 * @type {?RichPresenceAssets}
+		 */
+		this.assets = data.assets ? new RichPresenceAssets(this, data.assets) : null;
 
-    /**
-     * Flags that describe the activity
-     *
-     * @type {Readonly<ActivityFlagsBitField>}
-     */
-    this.flags = new ActivityFlagsBitField(data.flags).freeze();
+		/**
+		 * Flags that describe the activity
+		 *
+		 * @type {Readonly<ActivityFlagsBitField>}
+		 */
+		this.flags = new ActivityFlagsBitField(data.flags).freeze();
 
-    /**
-     * Emoji for a custom activity
-     *
-     * @type {?Emoji}
-     */
-    this.emoji = data.emoji ? new Emoji(presence.client, data.emoji) : null;
+		/**
+		 * Emoji for a custom activity
+		 *
+		 * @type {?Emoji}
+		 */
+		this.emoji = data.emoji ? new Emoji(presence.client, data.emoji) : null;
 
-    /**
-     * The labels of the buttons of this rich presence
-     *
-     * @type {string[]}
-     */
-    this.buttons = data.buttons ?? [];
+		/**
+		 * The labels of the buttons of this rich presence
+		 *
+		 * @type {string[]}
+		 */
+		this.buttons = data.buttons ?? [];
 
-    /**
-     * Creation date of the activity
-     *
-     * @type {number}
-     */
-    this.createdTimestamp = data.created_at;
-  }
+		/**
+		 * Creation date of the activity
+		 *
+		 * @type {number}
+		 */
+		this.createdTimestamp = data.created_at;
+	}
 
-  /**
-   * Whether this activity is equal to another activity.
-   *
-   * @param {Activity} activity The activity to compare with
-   * @returns {boolean}
-   */
-  equals(activity: any) {
-    return (
-      this === activity ||
-      (activity &&
-        this.name === activity.name &&
-        this.type === activity.type &&
-        this.url === activity.url &&
-        this.state === activity.state &&
-        this.details === activity.details &&
-        this.emoji?.id === activity.emoji?.id &&
-        this.emoji?.name === activity.emoji?.name)
-    );
-  }
+	/**
+	 * Whether this activity is equal to another activity.
+	 *
+	 * @param {Activity} activity The activity to compare with
+	 * @returns {boolean}
+	 */
+	equals(activity: any) {
+		return (
+			this === activity ||
+			(activity &&
+				this.name === activity.name &&
+				this.type === activity.type &&
+				this.url === activity.url &&
+				this.state === activity.state &&
+				this.details === activity.details &&
+				this.emoji?.id === activity.emoji?.id &&
+				this.emoji?.name === activity.emoji?.name)
+		);
+	}
 
-  /**
-   * The time the activity was created at
-   *
-   * @type {Date}
-   * @readonly
-   */
-  get createdAt() {
-    return new Date(this.createdTimestamp);
-  }
+	/**
+	 * The time the activity was created at
+	 *
+	 * @type {Date}
+	 * @readonly
+	 */
+	get createdAt() {
+		return new Date(this.createdTimestamp);
+	}
 
-  /**
-   * When concatenated with a string, this automatically returns the activity's name instead of the Activity object.
-   *
-   * @returns {string}
-   */
-  toString() {
-    return this.name;
-  }
+	/**
+	 * When concatenated with a string, this automatically returns the activity's name instead of the Activity object.
+	 *
+	 * @returns {string}
+	 */
+	toString() {
+		return this.name;
+	}
 
-  _clone() {
-    return Object.assign(Object.create(this), this);
-  }
+	_clone() {
+		return Object.assign(Object.create(this), this);
+	}
 }
 
 /**
  * Assets for a rich presence
  */
 export class RichPresenceAssets {
-  public largeText: any;
-  public smallText: any;
-  public largeImage: any;
-  public smallImage: any;
-  public activity: any;
-  constructor(activity: any, assets: any) {
-    /**
-     * The activity of the RichPresenceAssets
-     *
-     * @type {Activity}
-     * @readonly
-     * @name RichPresenceAssets#activity
-     */
-    Object.defineProperty(this, 'activity', { value: activity });
+	public largeText: any;
+	public smallText: any;
+	public largeImage: any;
+	public smallImage: any;
+	public activity: any;
+	constructor(activity: any, assets: any) {
+		/**
+		 * The activity of the RichPresenceAssets
+		 *
+		 * @type {Activity}
+		 * @readonly
+		 * @name RichPresenceAssets#activity
+		 */
+		Object.defineProperty(this, 'activity', { value: activity });
 
-    /**
-     * Hover text for the large image
-     *
-     * @type {?string}
-     */
-    this.largeText = assets.large_text ?? null;
+		/**
+		 * Hover text for the large image
+		 *
+		 * @type {?string}
+		 */
+		this.largeText = assets.large_text ?? null;
 
-    /**
-     * Hover text for the small image
-     *
-     * @type {?string}
-     */
-    this.smallText = assets.small_text ?? null;
+		/**
+		 * Hover text for the small image
+		 *
+		 * @type {?string}
+		 */
+		this.smallText = assets.small_text ?? null;
 
-    /**
-     * The large image asset's id
-     *
-     * @type {?Snowflake}
-     */
-    this.largeImage = assets.large_image ?? null;
+		/**
+		 * The large image asset's id
+		 *
+		 * @type {?Snowflake}
+		 */
+		this.largeImage = assets.large_image ?? null;
 
-    /**
-     * The small image asset's id
-     *
-     * @type {?Snowflake}
-     */
-    this.smallImage = assets.small_image ?? null;
-  }
+		/**
+		 * The small image asset's id
+		 *
+		 * @type {?Snowflake}
+		 */
+		this.smallImage = assets.small_image ?? null;
+	}
 
-  /**
-   * Gets the URL of the small image asset
-   *
-   * @param {ImageURLOptions} [options={}] Options for the image URL
-   * @returns {?string}
-   */
-  smallImageURL(options = {}) {
-    if (!this.smallImage) return null;
-    if (this.smallImage.includes(':')) {
-      const [platform, id] = this.smallImage.split(':');
-      switch (platform) {
-        case 'mp':
-          return `https://media.discordapp.net/${id}`;
-        default:
-          return null;
-      }
-    }
+	/**
+	 * Gets the URL of the small image asset
+	 *
+	 * @param {ImageURLOptions} [options={}] Options for the image URL
+	 * @returns {?string}
+	 */
+	smallImageURL(options = {}) {
+		if (!this.smallImage) return null;
+		if (this.smallImage.includes(':')) {
+			const [platform, id] = this.smallImage.split(':');
+			switch (platform) {
+				case 'mp':
+					return `https://media.discordapp.net/${id}`;
+				default:
+					return null;
+			}
+		}
 
-    return this.activity.presence.client.rest.cdn.appAsset(this.activity.applicationId, this.smallImage, options);
-  }
+		return this.activity.presence.client.rest.cdn.appAsset(this.activity.applicationId, this.smallImage, options);
+	}
 
-  /**
-   * Gets the URL of the large image asset
-   *
-   * @param {ImageURLOptions} [options={}] Options for the image URL
-   * @returns {?string}
-   */
-  largeImageURL(options = {}) {
-    if (!this.largeImage) return null;
-    if (this.largeImage.includes(':')) {
-      const [platform, id] = this.largeImage.split(':');
-      switch (platform) {
-        case 'mp':
-          return `https://media.discordapp.net/${id}`;
-        case 'spotify':
-          return `https://i.scdn.co/image/${id}`;
-        case 'youtube':
-          return `https://i.ytimg.com/vi/${id}/hqdefault_live.jpg`;
-        case 'twitch':
-          return `https://static-cdn.jtvnw.net/previews-ttv/live_user_${id}.png`;
-        default:
-          return null;
-      }
-    }
+	/**
+	 * Gets the URL of the large image asset
+	 *
+	 * @param {ImageURLOptions} [options={}] Options for the image URL
+	 * @returns {?string}
+	 */
+	largeImageURL(options = {}) {
+		if (!this.largeImage) return null;
+		if (this.largeImage.includes(':')) {
+			const [platform, id] = this.largeImage.split(':');
+			switch (platform) {
+				case 'mp':
+					return `https://media.discordapp.net/${id}`;
+				case 'spotify':
+					return `https://i.scdn.co/image/${id}`;
+				case 'youtube':
+					return `https://i.ytimg.com/vi/${id}/hqdefault_live.jpg`;
+				case 'twitch':
+					return `https://static-cdn.jtvnw.net/previews-ttv/live_user_${id}.png`;
+				default:
+					return null;
+			}
+		}
 
-    return this.activity.presence.client.rest.cdn.appAsset(this.activity.applicationId, this.largeImage, options);
-  }
+		return this.activity.presence.client.rest.cdn.appAsset(this.activity.applicationId, this.largeImage, options);
+	}
 }

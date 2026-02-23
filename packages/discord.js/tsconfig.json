@@ -1,21 +1,19 @@
 {
-  "$schema": "https://json.schemastore.org/tsconfig.json",
-  "extends": "../../tsconfig.json",
-  "compilerOptions": {
-    // Output Formatting
-    "pretty": false,
+	"$schema": "https://json.schemastore.org/tsconfig.json",
+	"extends": "../../tsconfig.json",
+	"compilerOptions": {
+		// Output Formatting
+		"pretty": false,
 
-    // Completeness
-    "skipDefaultLibCheck": true,
+		// Completeness
+		"skipDefaultLibCheck": true,
 
-    "moduleResolution": "Bundler",
-    "baseUrl": ".",
-    "paths": {
-        "@ovencord/*": ["../*/src"]
-    },
-    "types": [
-      "bun"
-    ],
-    "exactOptionalPropertyTypes": false
-  }
+		"moduleResolution": "Bundler",
+		"baseUrl": ".",
+		"paths": {
+			"@ovencord/*": ["../*/src"]
+		},
+		"types": ["bun"],
+		"exactOptionalPropertyTypes": false
+	}
 }

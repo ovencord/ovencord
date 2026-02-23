@@ -13,9 +13,7 @@ export type MixinTypes<BaseClass extends Structure<{}>, Mixins extends readonly 
 	BaseClass extends Structure<infer DataType, infer Omitted>
 		? Mixins[number] extends Structure<DataType, Omitted>
 			? // prettier-ignore
-				Structure<DataType, Omitted>[typeof kData] extends
-				// @ts-expect-error kData is protected
-				Mixins[number][typeof kData]
+				Structure<DataType, Omitted>[typeof kData] extends Mixins[number][typeof kData] // @ts-expect-error kData is protected
 				? Omit<MergePrototypes<Mixins>, keyof BaseClass | typeof kMixinConstruct>
 				: never
 			: never

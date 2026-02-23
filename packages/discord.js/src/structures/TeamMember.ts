@@ -1,4 +1,4 @@
-import { Base  } from './Base.js';
+import { Base } from './Base.js';
 
 /**
  * Represents a Client OAuth2 Application Team Member.
@@ -6,72 +6,72 @@ import { Base  } from './Base.js';
  * @extends {Base}
  */
 export class TeamMember extends Base {
-  public team: any;
-  public membershipState: any;
-  public user: any;
-  public role: any;
-  constructor(team: any, data: any) {
-    super(team.client);
+	public team: any;
+	public membershipState: any;
+	public user: any;
+	public role: any;
+	constructor(team: any, data: any) {
+		super(team.client);
 
-    /**
-     * The Team this member is part of
-     *
-     * @type {Team}
-     */
-    this.team = team;
+		/**
+		 * The Team this member is part of
+		 *
+		 * @type {Team}
+		 */
+		this.team = team;
 
-    this._patch(data);
-  }
+		this._patch(data);
+	}
 
-  _patch(data: any) {
-    if ('membership_state' in data) {
-      /**
-       * The permissions this Team Member has with regard to the team
-       *
-       * @type {TeamMemberMembershipState}
-       */
-      this.membershipState = data.membership_state;
-    }
+	_patch(data: any) {
+		if ('membership_state' in data) {
+			/**
+			 * The permissions this Team Member has with regard to the team
+			 *
+			 * @type {TeamMemberMembershipState}
+			 */
+			this.membershipState = data.membership_state;
+		}
 
-    if ('user' in data) {
-      /**
-       * The user for this Team Member
-       *
-       * @type {User}
-       */
-      this.user = this.client.users._add(data.user);
-    }
+		if ('user' in data) {
+			/**
+			 * The user for this Team Member
+			 *
+			 * @type {User}
+			 */
+			this.user = this.client.users._add(data.user);
+		}
 
-    if ('role' in data) {
-      /**
-       * The role of this Team Member
-       *
-       * @type {TeamMemberRole}
-       */
-      this.role = data.role;
-    }
-  }
+		if ('role' in data) {
+			/**
+			 * The role of this Team Member
+			 *
+			 * @type {TeamMemberRole}
+			 */
+			this.role = data.role;
+		}
+	}
 
-  /**
-   * The Team Member's id
-   *
-   * @type {Snowflake}
-   * @readonly
-   */
-  get id() {
-    return this.user.id;
-  }
+	/**
+	 * The Team Member's id
+	 *
+	 * @type {Snowflake}
+	 * @readonly
+	 */
+	get id() {
+		return this.user.id;
+	}
 
-  /**
-   * When concatenated with a string, this automatically returns the team member's mention instead of the
-   * TeamMember object.
-   *
-   * @returns {string}
-   * @example
-   * // Logs: Team Member's mention: <@123456789012345678>
-   * console.log(`Team Member's mention: ${teamMember}`);
-   */
-  toString() {
-    return this.user.toString();
-  }
+	/**
+	 * When concatenated with a string, this automatically returns the team member's mention instead of the
+	 * TeamMember object.
+	 *
+	 * @returns {string}
+	 * @example
+	 * // Logs: Team Member's mention: <@123456789012345678>
+	 * console.log(`Team Member's mention: ${teamMember}`);
+	 */
+	toString() {
+		return this.user.toString();
+	}
 }

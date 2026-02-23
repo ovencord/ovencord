@@ -1,5 +1,5 @@
-import { Base  } from './Base.js';
-import { Emoji  } from './Emoji.js';
+import { Base } from './Base.js';
+import { Emoji } from './Emoji.js';
 
 /**
  * Represents a channel link in a guild's welcome screen.
@@ -7,61 +7,61 @@ import { Emoji  } from './Emoji.js';
  * @extends {Base}
  */
 export class WelcomeChannel extends Base {
-  public guild: any;
-  public description: any;
-  public _emoji: any;
-  public channelId: any;
-  constructor(guild: any, data: any) {
-    super(guild.client);
+	public guild: any;
+	public description: any;
+	public _emoji: any;
+	public channelId: any;
+	constructor(guild: any, data: any) {
+		super(guild.client);
 
-    /**
-     * The guild for this welcome channel
-     *
-     * @type {Guild|InviteGuild}
-     */
-    this.guild = guild;
+		/**
+		 * The guild for this welcome channel
+		 *
+		 * @type {Guild|InviteGuild}
+		 */
+		this.guild = guild;
 
-    /**
-     * The description of this welcome channel
-     *
-     * @type {string}
-     */
-    this.description = data.description;
+		/**
+		 * The description of this welcome channel
+		 *
+		 * @type {string}
+		 */
+		this.description = data.description;
 
-    /**
-     * The raw emoji data
-     *
-     * @type {Object}
-     * @private
-     */
-    this._emoji = {
-      name: data.emoji_name,
-      id: data.emoji_id,
-    };
+		/**
+		 * The raw emoji data
+		 *
+		 * @type {Object}
+		 * @private
+		 */
+		this._emoji = {
+			name: data.emoji_name,
+			id: data.emoji_id,
+		};
 
-    /**
-     * The id of this welcome channel
-     *
-     * @type {Snowflake}
-     */
-    this.channelId = data.channel_id;
-  }
+		/**
+		 * The id of this welcome channel
+		 *
+		 * @type {Snowflake}
+		 */
+		this.channelId = data.channel_id;
+	}
 
-  /**
-   * The channel of this welcome channel
-   *
-   * @type {?(TextChannel|AnnouncementChannel|ForumChannel|MediaChannel)}
-   */
-  get channel() {
-    return this.client.channels.resolve(this.channelId);
-  }
+	/**
+	 * The channel of this welcome channel
+	 *
+	 * @type {?(TextChannel|AnnouncementChannel|ForumChannel|MediaChannel)}
+	 */
+	get channel() {
+		return this.client.channels.resolve(this.channelId);
+	}
 
-  /**
-   * The emoji of this welcome channel
-   *
-   * @type {GuildEmoji|Emoji}
-   */
-  get emoji() {
-    return this.guild.emojis.cache.get(this._emoji.id) ?? new Emoji(this.client, this._emoji);
-  }
+	/**
+	 * The emoji of this welcome channel
+	 *
+	 * @type {GuildEmoji|Emoji}
+	 */
+	get emoji() {
+		return this.guild.emojis.cache.get(this._emoji.id) ?? new Emoji(this.client, this._emoji);
+	}
 }

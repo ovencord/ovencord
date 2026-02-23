@@ -15,7 +15,7 @@ export const DefaultUserAgent =
 export const DefaultUserAgentAppendix = getUserAgentAppendix();
 
 export const DefaultRestOptions = {
-	// @ts-ignore
+	// @ts-expect-error
 	agent: null,
 	api: 'https://discord.com/api',
 	authPrefix: 'Bot',
@@ -24,7 +24,7 @@ export const DefaultRestOptions = {
 	invalidRequestWarningInterval: 0,
 	globalRequestsPerSecond: 50,
 	offset: 50,
-	// @ts-ignore
+	// @ts-expect-error
 	rejectOnRateLimit: null,
 	retries: 3,
 	retryBackoff: 0,
@@ -60,7 +60,6 @@ export const ALLOWED_SIZES: readonly number[] = [
 
 export type ImageExtension = (typeof ALLOWED_EXTENSIONS)[number];
 export type StickerExtension = (typeof ALLOWED_STICKER_EXTENSIONS)[number];
-
 
 export const BurstHandlerMajorIdKey = 'burst';
 

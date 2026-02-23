@@ -1,5 +1,5 @@
-import { flatten  } from '../util/Util.js';
-import { Emoji  } from './Emoji.js';
+import { flatten } from '../util/Util.js';
+import { Emoji } from './Emoji.js';
 
 /**
  * Represents a limited emoji set used for both custom and unicode emojis. Custom emojis
@@ -9,22 +9,22 @@ import { Emoji  } from './Emoji.js';
  * @extends {Emoji}
  */
 export class ReactionEmoji extends Emoji {
-  public reaction: any;
-  constructor(reaction: any, emoji: any) {
-    super(reaction.message.client, emoji);
-    /**
-     * The message reaction this emoji refers to
-     *
-     * @type {MessageReaction}
-     */
-    this.reaction = reaction;
-  }
+	public reaction: any;
+	constructor(reaction: any, emoji: any) {
+		super(reaction.message.client, emoji);
+		/**
+		 * The message reaction this emoji refers to
+		 *
+		 * @type {MessageReaction}
+		 */
+		this.reaction = reaction;
+	}
 
-  toJSON() {
-    return flatten(this, { identifier: true });
-  }
+	toJSON() {
+		return flatten(this, { identifier: true });
+	}
 
-  valueOf() {
-    return this.id;
-  }
+	valueOf() {
+		return this.id;
+	}
 }

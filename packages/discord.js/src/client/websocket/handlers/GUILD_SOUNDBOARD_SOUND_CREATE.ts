@@ -1,19 +1,19 @@
-import type { Client } from '../../Client.js';
 import type { GatewayGuildSoundboardSoundCreateDispatch } from 'discord-api-types/v10';
-import { Events  } from '../../../util/Events.js';
+import { Events } from '../../../util/Events.js';
+import type { Client } from '../../Client.js';
 
 export default (client: Client, { d: data }: GatewayGuildSoundboardSoundCreateDispatch) => {
-  const guild = client.guilds.cache.get(data.guild_id);
+	const guild = client.guilds.cache.get(data.guild_id);
 
-  if (!guild) return;
+	if (!guild) return;
 
-  const soundboardSound = guild.soundboardSounds._add(data);
+	const soundboardSound = guild.soundboardSounds._add(data);
 
-  /**
-   * Emitted whenever a guild soundboard sound is created.
-   *
-   * @event Client#guildSoundboardSoundCreate
-   * @param {SoundboardSound} soundboardSound The created guild soundboard sound
-   */
-  client.emit(Events.GuildSoundboardSoundCreate, soundboardSound);
+	/**
+	 * Emitted whenever a guild soundboard sound is created.
+	 *
+	 * @event Client#guildSoundboardSoundCreate
+	 * @param {SoundboardSound} soundboardSound The created guild soundboard sound
+	 */
+	client.emit(Events.GuildSoundboardSoundCreate, soundboardSound);
 };

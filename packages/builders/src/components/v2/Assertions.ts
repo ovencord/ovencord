@@ -4,7 +4,12 @@ import { idPredicate } from '../../Assertions.js';
 import { actionRowPredicate, buttonPredicate } from '../Assertions.js';
 
 const unfurledMediaItemPredicate = z.object({
-	url: z.string().url().refine((url) => url.startsWith('http:') || url.startsWith('https:') || url.startsWith('attachment:'), { message: 'URL must use http, https, or attachment protocol' }),
+	url: z
+		.string()
+		.url()
+		.refine((url) => url.startsWith('http:') || url.startsWith('https:') || url.startsWith('attachment:'), {
+			message: 'URL must use http, https, or attachment protocol',
+		}),
 });
 
 export const thumbnailPredicate = z.object({
@@ -16,7 +21,10 @@ export const thumbnailPredicate = z.object({
 });
 
 const unfurledMediaItemAttachmentOnlyPredicate = z.object({
-	url: z.string().url().refine((url) => url.startsWith('attachment:'), { message: 'URL must use attachment protocol' }),
+	url: z
+		.string()
+		.url()
+		.refine((url) => url.startsWith('attachment:'), { message: 'URL must use attachment protocol' }),
 });
 
 export const filePredicate = z.object({
@@ -56,10 +64,7 @@ export const sectionPredicate = z.object({
 	type: z.literal(ComponentType.Section),
 	id: idPredicate,
 	components: z.array(textDisplayPredicate).min(1).max(3),
-	accessory: z.union([
-		buttonPredicate,
-		thumbnailPredicate,
-	]),
+	accessory: z.union([buttonPredicate, thumbnailPredicate]),
 });
 
 export const containerPredicate = z.object({

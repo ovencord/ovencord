@@ -1,9 +1,8 @@
-import { isJSONEncodable, lazy  } from '@ovencord/util';
-import { DiscordSnowflake } from '@ovencord/util';
-import { DiscordjsError, DiscordjsRangeError, ErrorCodes  } from '../errors/index.js';
-import { resolveFile  } from '../util/DataResolver.js';
-import { MessageFlagsBitField  } from '../util/MessageFlagsBitField.js';
-import { findName, verifyString, resolvePartialEmoji  } from '../util/Util.js';
+import { DiscordSnowflake, isJSONEncodable, lazy } from '@ovencord/util';
+import { DiscordjsError, DiscordjsRangeError, ErrorCodes } from '../errors/index.js';
+import { resolveFile } from '../util/DataResolver.js';
+import { MessageFlagsBitField } from '../util/MessageFlagsBitField.js';
+import { findName, resolvePartialEmoji, verifyString } from '../util/Util.js';
 
 // Fixes circular dependencies.
 const getWebhook = lazy(() => require('./Webhook.js').Webhook);
@@ -16,323 +15,322 @@ const getMessageManager = lazy(() => require('../managers/MessageManager.js').Me
  * Represents a message to be sent to the API.
  */
 export class MessagePayload {
-  public target: any;
-  public options: any;
-  public body: any;
-  public files: any;
-  /**
-   * @param {MessageTarget} target The target for this message to be sent to
-   * @param {MessagePayloadOption} options The payload of this message
-   */
-  constructor(target: any, options: any) {
-    /**
-     * The target for this message to be sent to
-     *
-     * @type {MessageTarget}
-     */
-    this.target = target;
+	public target: any;
+	public options: any;
+	public body: any;
+	public files: any;
+	/**
+	 * @param {MessageTarget} target The target for this message to be sent to
+	 * @param {MessagePayloadOption} options The payload of this message
+	 */
+	constructor(target: any, options: any) {
+		/**
+		 * The target for this message to be sent to
+		 *
+		 * @type {MessageTarget}
+		 */
+		this.target = target;
 
-    /**
-     * The payload of this message.
-     *
-     * @type {MessagePayloadOption}
-     */
-    this.options = options;
+		/**
+		 * The payload of this message.
+		 *
+		 * @type {MessagePayloadOption}
+		 */
+		this.options = options;
 
-    /**
-     * Body sendable to the API
-     *
-     * @type {?APIMessage}
-     */
-    this.body = null;
+		/**
+		 * Body sendable to the API
+		 *
+		 * @type {?APIMessage}
+		 */
+		this.body = null;
 
-    /**
-     * Files sendable to the API
-     *
-     * @type {?RawFile[]}
-     */
-    this.files = null;
-  }
+		/**
+		 * Files sendable to the API
+		 *
+		 * @type {?RawFile[]}
+		 */
+		this.files = null;
+	}
 
-  /**
-   * Whether or not the target is a {@link Webhook}
-   *
-   * @type {boolean}
-   * @readonly
-   */
-  get isWebhook() {
-    return this.target instanceof getWebhook();
-  }
+	/**
+	 * Whether or not the target is a {@link Webhook}
+	 *
+	 * @type {boolean}
+	 * @readonly
+	 */
+	get isWebhook() {
+		return this.target instanceof getWebhook();
+	}
 
-  /**
-   * Whether or not the target is a {@link User}
-   *
-   * @type {boolean}
-   * @readonly
-   */
-  get isUser() {
-    return this.target instanceof getUser() || this.target instanceof getGuildMember();
-  }
+	/**
+	 * Whether or not the target is a {@link User}
+	 *
+	 * @type {boolean}
+	 * @readonly
+	 */
+	get isUser() {
+		return this.target instanceof getUser() || this.target instanceof getGuildMember();
+	}
 
-  /**
-   * Whether or not the target is a {@link Message}
-   *
-   * @type {boolean}
-   * @readonly
-   */
-  get isMessage() {
-    return this.target instanceof getMessage();
-  }
+	/**
+	 * Whether or not the target is a {@link Message}
+	 *
+	 * @type {boolean}
+	 * @readonly
+	 */
+	get isMessage() {
+		return this.target instanceof getMessage();
+	}
 
-  /**
-   * Whether or not the target is a {@link MessageManager}
-   *
-   * @type {boolean}
-   * @readonly
-   */
-  get isMessageManager() {
-    return this.target instanceof getMessageManager();
-  }
+	/**
+	 * Whether or not the target is a {@link MessageManager}
+	 *
+	 * @type {boolean}
+	 * @readonly
+	 */
+	get isMessageManager() {
+		return this.target instanceof getMessageManager();
+	}
 
-  /**
-   * Makes the content of this message.
-   *
-   * @returns {?string}
-   */
-  makeContent() {
-    let content;
-    if (this.options.content === null) {
-      content = '';
-    } else if (this.options.content !== undefined) {
-      content = verifyString(this.options.content, DiscordjsRangeError, ErrorCodes.MessageContentType, true);
-    }
+	/**
+	 * Makes the content of this message.
+	 *
+	 * @returns {?string}
+	 */
+	makeContent() {
+		let content;
+		if (this.options.content === null) {
+			content = '';
+		} else if (this.options.content !== undefined) {
+			content = verifyString(this.options.content, DiscordjsRangeError, ErrorCodes.MessageContentType, true);
+		}
 
-    return content;
-  }
+		return content;
+	}
 
-  /**
-   * Resolves the body.
-   *
-   * @returns {MessagePayload}
-   */
-  resolveBody() {
-    if (this.body) return this;
-    const isWebhook = this.isWebhook;
+	/**
+	 * Resolves the body.
+	 *
+	 * @returns {MessagePayload}
+	 */
+	resolveBody() {
+		if (this.body) return this;
+		const isWebhook = this.isWebhook;
 
-    const content = this.makeContent();
-    const tts = Boolean(this.options.tts);
+		const content = this.makeContent();
+		const tts = Boolean(this.options.tts);
 
-    let nonce;
-    if (this.options.nonce !== undefined) {
-      nonce = this.options.nonce;
-      if (typeof nonce === 'number' ? !Number.isInteger(nonce) : typeof nonce !== 'string') {
-        throw new DiscordjsRangeError(ErrorCodes.MessageNonceType);
-      }
-    }
+		let nonce;
+		if (this.options.nonce !== undefined) {
+			nonce = this.options.nonce;
+			if (typeof nonce === 'number' ? !Number.isInteger(nonce) : typeof nonce !== 'string') {
+				throw new DiscordjsRangeError(ErrorCodes.MessageNonceType);
+			}
+		}
 
-    let enforce_nonce = Boolean(this.options.enforceNonce);
+		let enforce_nonce = Boolean(this.options.enforceNonce);
 
-    // If `nonce` isn't provided, generate one & set `enforceNonce`
-    // Unless `enforceNonce` is explicitly set to `false`(not just falsy)
-    if (nonce === undefined) {
-      if (this.options.enforceNonce !== false && this.target.client.options.enforceNonce) {
-        nonce = DiscordSnowflake.generate().toString();
-        enforce_nonce = true;
-      } else if (enforce_nonce) {
-        throw new DiscordjsError(ErrorCodes.MessageNonceRequired);
-      }
-    }
+		// If `nonce` isn't provided, generate one & set `enforceNonce`
+		// Unless `enforceNonce` is explicitly set to `false`(not just falsy)
+		if (nonce === undefined) {
+			if (this.options.enforceNonce !== false && this.target.client.options.enforceNonce) {
+				nonce = DiscordSnowflake.generate().toString();
+				enforce_nonce = true;
+			} else if (enforce_nonce) {
+				throw new DiscordjsError(ErrorCodes.MessageNonceRequired);
+			}
+		}
 
-    // @ts-ignore
-    const components = this.options.components?.map(component =>
-      isJSONEncodable(component) ? component.toJSON() : this.target.client.options.jsonTransformer(component),
-    );
+		// @ts-expect-error
+		const components = this.options.components?.map((component) =>
+			isJSONEncodable(component) ? component.toJSON() : this.target.client.options.jsonTransformer(component),
+		);
 
-    let username;
-    let avatarURL;
-    let threadName;
-    let appliedTags;
-    if (isWebhook) {
-      username = this.options.username ?? this.target.name;
-      if (this.options.avatarURL) avatarURL = this.options.avatarURL;
-      if (this.options.threadName) threadName = this.options.threadName;
-      if (this.options.appliedTags) appliedTags = this.options.appliedTags;
-    }
+		let username;
+		let avatarURL;
+		let threadName;
+		let appliedTags;
+		if (isWebhook) {
+			username = this.options.username ?? this.target.name;
+			if (this.options.avatarURL) avatarURL = this.options.avatarURL;
+			if (this.options.threadName) threadName = this.options.threadName;
+			if (this.options.appliedTags) appliedTags = this.options.appliedTags;
+		}
 
-    let flags;
-    if (
-      this.options.flags != null
-    ) {
-      flags = new MessageFlagsBitField(this.options.flags).bitfield;
-    }
+		let flags;
+		if (this.options.flags != null) {
+			flags = new MessageFlagsBitField(this.options.flags).bitfield;
+		}
 
-    let allowedMentions =
-      this.options.allowedMentions === undefined
-        ? this.target.client.options.allowedMentions
-        : this.options.allowedMentions;
+		let allowedMentions =
+			this.options.allowedMentions === undefined
+				? this.target.client.options.allowedMentions
+				: this.options.allowedMentions;
 
-    if (allowedMentions?.repliedUser !== undefined) {
-      allowedMentions = { ...allowedMentions, replied_user: allowedMentions.repliedUser };
-      delete allowedMentions.repliedUser;
-    }
+		if (allowedMentions?.repliedUser !== undefined) {
+			allowedMentions = { ...allowedMentions, replied_user: allowedMentions.repliedUser };
+			delete allowedMentions.repliedUser;
+		}
 
-    let message_reference;
-    if (this.options.messageReference) {
-      const reference = this.options.messageReference;
+		let message_reference;
+		if (this.options.messageReference) {
+			const reference = this.options.messageReference;
 
-      if (reference.messageId) {
-        message_reference = {
-          message_id: reference.messageId,
-          channel_id: reference.channelId,
-          guild_id: reference.guildId,
-          type: reference.type,
-          fail_if_not_exists: reference.failIfNotExists ?? this.target.client.options.failIfNotExists,
-        };
-      }
-    }
+			if (reference.messageId) {
+				message_reference = {
+					message_id: reference.messageId,
+					channel_id: reference.channelId,
+					guild_id: reference.guildId,
+					type: reference.type,
+					fail_if_not_exists: reference.failIfNotExists ?? this.target.client.options.failIfNotExists,
+				};
+			}
+		}
 
-    const attachments = this.options.files?.map((file: any, index: any) => {
-      // Extract filename from builder API or direct property
-      // NOTE: Do NOT call file.toJSON() here — it triggers Zod validation that requires 'id' to be set
-      const filename = file.name
-        ?? (typeof file.getRawFile === 'function' ? file.getRawFile()?.name : undefined);
+		const attachments = this.options.files?.map((file: any, index: any) => {
+			// Extract filename from builder API or direct property
+			// NOTE: Do NOT call file.toJSON() here — it triggers Zod validation that requires 'id' to be set
+			const filename = file.name ?? (typeof file.getRawFile === 'function' ? file.getRawFile()?.name : undefined);
 
-      return {
-        id: index.toString(),
-        filename,
-        description: file.description,
-        title: file.title,
-        waveform: file.waveform,
-        duration_secs: file.duration,
-      };
-    });
+			return {
+				id: index.toString(),
+				filename,
+				description: file.description,
+				title: file.title,
+				waveform: file.waveform,
+				duration_secs: file.duration,
+			};
+		});
 
-    // Only passable during edits
-    if (Array.isArray(this.options.attachments)) {
-      attachments.push(
-        // Note how we don't check for file body encodable, since we aren't expecting file data here
-        // @ts-ignore
-        ...this.options.attachments.map(attachment => (isJSONEncodable(attachment) ? attachment.toJSON() : attachment)),
-      );
-    }
+		// Only passable during edits
+		if (Array.isArray(this.options.attachments)) {
+			attachments.push(
+				// Note how we don't check for file body encodable, since we aren't expecting file data here
+				// @ts-expect-error
+				...this.options.attachments.map((attachment) =>
+					isJSONEncodable(attachment) ? attachment.toJSON() : attachment,
+				),
+			);
+		}
 
-    let poll;
-    if (this.options.poll) {
-      poll = isJSONEncodable(this.options.poll)
-        ? this.options.poll.toJSON()
-        : {
-            question: {
-              text: this.options.poll.question.text,
-            },
-            // @ts-ignore
-            answers: this.options.poll.answers.map(answer => ({
-              poll_media: { text: answer.text, emoji: resolvePartialEmoji(answer.emoji) },
-            })),
-            duration: this.options.poll.duration,
-            allow_multiselect: this.options.poll.allowMultiselect,
-            layout_type: this.options.poll.layoutType,
-          };
-    }
+		let poll;
+		if (this.options.poll) {
+			poll = isJSONEncodable(this.options.poll)
+				? this.options.poll.toJSON()
+				: {
+						question: {
+							text: this.options.poll.question.text,
+						},
+						// @ts-expect-error
+						answers: this.options.poll.answers.map((answer) => ({
+							poll_media: { text: answer.text, emoji: resolvePartialEmoji(answer.emoji) },
+						})),
+						duration: this.options.poll.duration,
+						allow_multiselect: this.options.poll.allowMultiselect,
+						layout_type: this.options.poll.layoutType,
+					};
+		}
 
-    this.body = {
-      content,
-      tts,
-      nonce,
-      enforce_nonce,
-      // @ts-ignore
-      embeds: this.options.embeds?.map(embed =>
-        isJSONEncodable(embed) ? embed.toJSON() : this.target.client.options.jsonTransformer(embed),
-      ),
-      components,
-      username,
-      avatar_url: avatarURL,
-      allowed_mentions:
-        this.isMessage && message_reference === undefined && this.target.author.id !== this.target.client.user.id
-          ? undefined
-          : allowedMentions,
-      flags,
-      message_reference,
-      attachments,
-      // @ts-ignore
-      sticker_ids: this.options.stickers?.map(sticker => sticker.id ?? sticker),
-      thread_name: threadName,
-      applied_tags: appliedTags,
-      poll,
-    };
-    return this;
-  }
+		this.body = {
+			content,
+			tts,
+			nonce,
+			enforce_nonce,
+			// @ts-expect-error
+			embeds: this.options.embeds?.map((embed) =>
+				isJSONEncodable(embed) ? embed.toJSON() : this.target.client.options.jsonTransformer(embed),
+			),
+			components,
+			username,
+			avatar_url: avatarURL,
+			allowed_mentions:
+				this.isMessage && message_reference === undefined && this.target.author.id !== this.target.client.user.id
+					? undefined
+					: allowedMentions,
+			flags,
+			message_reference,
+			attachments,
+			// @ts-expect-error
+			sticker_ids: this.options.stickers?.map((sticker) => sticker.id ?? sticker),
+			thread_name: threadName,
+			applied_tags: appliedTags,
+			poll,
+		};
+		return this;
+	}
 
-  /**
-   * Resolves files.
-   *
-   * @returns {Promise<MessagePayload>}
-   */
-  async resolveFiles() {
-    if (this.files) return this;
+	/**
+	 * Resolves files.
+	 *
+	 * @returns {Promise<MessagePayload>}
+	 */
+	async resolveFiles() {
+		if (this.files) return this;
 
-    // @ts-ignore
-    this.files = await Promise.all(this.options.files?.map(file => (this.constructor as typeof MessagePayload).resolveFile(file)) ?? []);
-    return this;
-  }
+		// @ts-expect-error
+		this.files = await Promise.all(
+			this.options.files?.map((file) => (this.constructor as typeof MessagePayload).resolveFile(file)) ?? [],
+		);
+		return this;
+	}
 
-  /**
-   * Resolves a single file into an object sendable to the API.
-   *
-   * @param {AttachmentPayload|BufferResolvable|Stream} fileLike Something that could be resolved to a file
-   * @returns {Promise<RawFile>}
-   */
-  static async resolveFile(fileLike: any) {
-    // New AttachmentBuilder (from @ovencord/builders) — use getRawFile() API
-    if (typeof fileLike?.getRawFile === 'function') {
-      const raw = fileLike.getRawFile();
-      if (raw?.data) {
-        return {
-          data: Buffer.isBuffer(raw.data) ? raw.data : Buffer.from(raw.data),
-          name: raw.name ?? fileLike.toJSON?.()?.filename ?? 'file.bin',
-          contentType: raw.contentType,
-        };
-      }
-      // getRawFile() returned no data — try toJSON() for metadata-only attachment
-      const json = fileLike.toJSON?.();
-      if (json?.filename) {
-        return { data: Buffer.alloc(0), name: json.filename };
-      }
-    }
+	/**
+	 * Resolves a single file into an object sendable to the API.
+	 *
+	 * @param {AttachmentPayload|BufferResolvable|Stream} fileLike Something that could be resolved to a file
+	 * @returns {Promise<RawFile>}
+	 */
+	static async resolveFile(fileLike: any) {
+		// New AttachmentBuilder (from @ovencord/builders) — use getRawFile() API
+		if (typeof fileLike?.getRawFile === 'function') {
+			const raw = fileLike.getRawFile();
+			if (raw?.data) {
+				return {
+					data: Buffer.isBuffer(raw.data) ? raw.data : Buffer.from(raw.data),
+					name: raw.name ?? fileLike.toJSON?.()?.filename ?? 'file.bin',
+					contentType: raw.contentType,
+				};
+			}
+			// getRawFile() returned no data — try toJSON() for metadata-only attachment
+			const json = fileLike.toJSON?.();
+			if (json?.filename) {
+				return { data: Buffer.alloc(0), name: json.filename };
+			}
+		}
 
-    let attachment;
-    let name;
+		let attachment;
+		let name;
 
-    const ownAttachment =
-      typeof fileLike === 'string' || fileLike instanceof Buffer || typeof fileLike.pipe === 'function';
-    if (ownAttachment) {
-      attachment = fileLike;
-      name = findName(attachment);
-    } else {
-      attachment = fileLike.attachment;
-      name = fileLike.name ?? findName(attachment);
-    }
+		const ownAttachment =
+			typeof fileLike === 'string' || fileLike instanceof Buffer || typeof fileLike.pipe === 'function';
+		if (ownAttachment) {
+			attachment = fileLike;
+			name = findName(attachment);
+		} else {
+			attachment = fileLike.attachment;
+			name = fileLike.name ?? findName(attachment);
+		}
 
-    const { data, contentType } = await resolveFile(attachment);
-    return { data, name, contentType };
-  }
+		const { data, contentType } = await resolveFile(attachment);
+		return { data, name, contentType };
+	}
 
-  /**
-   * Creates a {@link MessagePayload} from user-level arguments.
-   *
-   * @param {MessageTarget} target Target to send to
-   * @param {string|MessagePayloadOption} options Options or content to use
-   * @param {MessagePayloadOption} [extra={}] Extra options to add onto specified options
-   * @returns {MessagePayload}
-   */
-  static create(target: any, options: any, extra = {}) {
-    return new this(
-      target,
-      typeof options !== 'object' || options === null ? { content: options, ...extra } : { ...options, ...extra },
-    );
-  }
+	/**
+	 * Creates a {@link MessagePayload} from user-level arguments.
+	 *
+	 * @param {MessageTarget} target Target to send to
+	 * @param {string|MessagePayloadOption} options Options or content to use
+	 * @param {MessagePayloadOption} [extra={}] Extra options to add onto specified options
+	 * @returns {MessagePayload}
+	 */
+	static create(target: any, options: any, extra = {}) {
+		return new MessagePayload(
+			target,
+			typeof options !== 'object' || options === null ? { content: options, ...extra } : { ...options, ...extra },
+		);
+	}
 }
-
-
 
 /**
  * A target for a message.

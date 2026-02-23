@@ -1,10 +1,10 @@
-import { ChannelType, Routes  } from 'discord-api-types/v10';
-import { DiscordjsError, ErrorCodes  } from '../errors/index.js';
-import { GuildMember  } from '../structures/GuildMember.js';
-import { Message  } from '../structures/Message.js';
-import { ThreadMember  } from '../structures/ThreadMember.js';
-import { User  } from '../structures/User.js';
-import { CachedManager  } from './CachedManager.js';
+import { ChannelType, Routes } from 'discord-api-types/v10';
+import { DiscordjsError, ErrorCodes } from '../errors/index.js';
+import { GuildMember } from '../structures/GuildMember.js';
+import { Message } from '../structures/Message.js';
+import { ThreadMember } from '../structures/ThreadMember.js';
+import { User } from '../structures/User.js';
+import { CachedManager } from './CachedManager.js';
 
 /**
  * Manages API methods for users and stores their cache.
@@ -12,128 +12,128 @@ import { CachedManager  } from './CachedManager.js';
  * @extends {CachedManager}
  */
 export class UserManager extends CachedManager {
-  constructor(client: any, iterable?: any) {
-    super(client, User, iterable);
-  }
+	constructor(client: any, iterable?: any) {
+		super(client, User, iterable);
+	}
 
-  /**
-   * The cache of this manager
-   *
-   * @type {Collection<Snowflake, User>}
-   * @name UserManager#cache
-   */
+	/**
+	 * The cache of this manager
+	 *
+	 * @type {Collection<Snowflake, User>}
+	 * @name UserManager#cache
+	 */
 
-  /**
-   * Data that resolves to give a User object. This can be:
-   * - A User object
-   * - A Snowflake
-   * - A Message object (resolves to the message author)
-   * - A GuildMember object
-   * - A ThreadMember object
-   *
-   * @typedef {User|Snowflake|Message|GuildMember|ThreadMember} UserResolvable
-   */
+	/**
+	 * Data that resolves to give a User object. This can be:
+	 * - A User object
+	 * - A Snowflake
+	 * - A Message object (resolves to the message author)
+	 * - A GuildMember object
+	 * - A ThreadMember object
+	 *
+	 * @typedef {User|Snowflake|Message|GuildMember|ThreadMember} UserResolvable
+	 */
 
-  /**
-   * The DM between the client's user and a user
-   *
-   * @param {Snowflake} userId The user id
-   * @returns {?DMChannel}
-   * @private
-   */
-  dmChannel(userId: any) {
-    return (
-      // @ts-ignore
-      this.client.channels.cache.find(channel => channel.type === ChannelType.DM && channel.recipientId === userId) ??
-      null
-    );
-  }
+	/**
+	 * The DM between the client's user and a user
+	 *
+	 * @param {Snowflake} userId The user id
+	 * @returns {?DMChannel}
+	 * @private
+	 */
+	dmChannel(userId: any) {
+		return (
+			// @ts-expect-error
+			this.client.channels.cache.find((channel) => channel.type === ChannelType.DM && channel.recipientId === userId) ??
+			null
+		);
+	}
 
-  /**
-   * Creates a {@link DMChannel} between the client and a user.
-   *
-   * @param {UserResolvable} user The UserResolvable to identify
-   * @param {BaseFetchOptions} [options] Additional options for this fetch
-   * @returns {Promise<DMChannel>}
-   */
-  async createDM(user: any, { cache = true, force = false } = {}) {
-    const id = this.resolveId(user);
+	/**
+	 * Creates a {@link DMChannel} between the client and a user.
+	 *
+	 * @param {UserResolvable} user The UserResolvable to identify
+	 * @param {BaseFetchOptions} [options] Additional options for this fetch
+	 * @returns {Promise<DMChannel>}
+	 */
+	async createDM(user: any, { cache = true, force = false } = {}) {
+		const id = this.resolveId(user);
 
-    if (!force) {
-      const dmChannel = this.dmChannel(id);
-      if (dmChannel && !dmChannel.partial) return dmChannel;
-    }
+		if (!force) {
+			const dmChannel = this.dmChannel(id);
+			if (dmChannel && !dmChannel.partial) return dmChannel;
+		}
 
-    const data = await this.client.rest.post(Routes.userChannels(), { body: { recipient_id: id } });
-    return this.client.channels._add(data, null, { cache });
-  }
+		const data = await this.client.rest.post(Routes.userChannels(), { body: { recipient_id: id } });
+		return this.client.channels._add(data, null, { cache });
+	}
 
-  /**
-   * Deletes a {@link DMChannel} (if one exists) between the client and a user. Resolves with the channel if successful.
-   *
-   * @param {UserResolvable} user The UserResolvable to identify
-   * @returns {Promise<DMChannel>}
-   */
-  async deleteDM(user: any) {
-    const id = this.resolveId(user);
-    const dmChannel = this.dmChannel(id);
-    if (!dmChannel) throw new DiscordjsError(ErrorCodes.UserNoDMChannel);
-    await this.client.rest.delete(Routes.channel(dmChannel.id));
-    this.client.channels._remove(dmChannel.id);
-    return dmChannel;
-  }
+	/**
+	 * Deletes a {@link DMChannel} (if one exists) between the client and a user. Resolves with the channel if successful.
+	 *
+	 * @param {UserResolvable} user The UserResolvable to identify
+	 * @returns {Promise<DMChannel>}
+	 */
+	async deleteDM(user: any) {
+		const id = this.resolveId(user);
+		const dmChannel = this.dmChannel(id);
+		if (!dmChannel) throw new DiscordjsError(ErrorCodes.UserNoDMChannel);
+		await this.client.rest.delete(Routes.channel(dmChannel.id));
+		this.client.channels._remove(dmChannel.id);
+		return dmChannel;
+	}
 
-  /**
-   * Obtains a user from Discord, or the user cache if it's already available.
-   *
-   * @param {UserResolvable} user The user to fetch
-   * @param {BaseFetchOptions} [options] Additional options for this fetch
-   * @returns {Promise<User>}
-   */
-  async fetch(user: any, { cache = true, force = false } = {}) {
-    const id = this.resolveId(user);
-    if (!force) {
-      const existing = this.cache.get(id);
-      if (existing && !existing.partial) return existing;
-    }
+	/**
+	 * Obtains a user from Discord, or the user cache if it's already available.
+	 *
+	 * @param {UserResolvable} user The user to fetch
+	 * @param {BaseFetchOptions} [options] Additional options for this fetch
+	 * @returns {Promise<User>}
+	 */
+	async fetch(user: any, { cache = true, force = false } = {}) {
+		const id = this.resolveId(user);
+		if (!force) {
+			const existing = this.cache.get(id);
+			if (existing && !existing.partial) return existing;
+		}
 
-    const data = await this.client.rest.get(Routes.user(id));
-    return this._add(data, cache);
-  }
+		const data = await this.client.rest.get(Routes.user(id));
+		return this._add(data, cache);
+	}
 
-  /**
-   * Sends a message to a user.
-   *
-   * @param {UserResolvable} user The UserResolvable to identify
-   * @param {string|MessagePayload|MessageCreateOptions} options The options to provide
-   * @returns {Promise<Message>}
-   */
-  async send(user: any, options: any) {
-    return (await this.createDM(user)).send(options);
-  }
+	/**
+	 * Sends a message to a user.
+	 *
+	 * @param {UserResolvable} user The UserResolvable to identify
+	 * @param {string|MessagePayload|MessageCreateOptions} options The options to provide
+	 * @returns {Promise<Message>}
+	 */
+	async send(user: any, options: any) {
+		return (await this.createDM(user)).send(options);
+	}
 
-  /**
-   * Resolves a {@link UserResolvable} to a {@link User} object.
-   *
-   * @param {UserResolvable} user The UserResolvable to identify
-   * @returns {?User}
-   */
-  resolve(user: any) {
-    if (user instanceof GuildMember || user instanceof ThreadMember) return user.user;
-    if (user instanceof Message) return user.author;
-    return super.resolve(user);
-  }
+	/**
+	 * Resolves a {@link UserResolvable} to a {@link User} object.
+	 *
+	 * @param {UserResolvable} user The UserResolvable to identify
+	 * @returns {?User}
+	 */
+	resolve(user: any) {
+		if (user instanceof GuildMember || user instanceof ThreadMember) return user.user;
+		if (user instanceof Message) return user.author;
+		return super.resolve(user);
+	}
 
-  /**
-   * Resolves a {@link UserResolvable} to a {@link User} id.
-   *
-   * @param {UserResolvable} user The UserResolvable to identify
-   * @returns {?Snowflake}
-   */
-  resolveId(user: any) {
-    if (user instanceof ThreadMember) return user.id;
-    if (user instanceof GuildMember) return user.user.id;
-    if (user instanceof Message) return user.author.id;
-    return super.resolveId(user);
-  }
+	/**
+	 * Resolves a {@link UserResolvable} to a {@link User} id.
+	 *
+	 * @param {UserResolvable} user The UserResolvable to identify
+	 * @returns {?Snowflake}
+	 */
+	resolveId(user: any) {
+		if (user instanceof ThreadMember) return user.id;
+		if (user instanceof GuildMember) return user.user.id;
+		if (user instanceof Message) return user.author.id;
+		return super.resolveId(user);
+	}
 }

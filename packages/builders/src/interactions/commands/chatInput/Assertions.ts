@@ -1,8 +1,8 @@
 import {
-	ApplicationIntegrationType,
-	InteractionContextType,
 	ApplicationCommandOptionType,
 	ApplicationCommandType,
+	ApplicationIntegrationType,
+	InteractionContextType,
 } from 'discord-api-types/v10';
 import { z } from 'zod';
 import { localeMapPredicate, memberPermissionsPredicate } from '../../../Assertions.js';
@@ -34,7 +34,10 @@ const numericMixinIntegerOptionPredicate = z.object({
 });
 
 const channelMixinOptionPredicate = z.object({
-	channel_types: z.union(ApplicationCommandOptionAllowedChannelTypes.map(type => z.literal(type)) as any).array().optional(),
+	channel_types: z
+		.union(ApplicationCommandOptionAllowedChannelTypes.map((type) => z.literal(type)) as any)
+		.array()
+		.optional(),
 });
 
 const autocompleteMixinOptionPredicate = z.object({
@@ -155,7 +158,10 @@ const basicOptionPredicates = [
 export const chatInputCommandSubcommandPredicate = z.object({
 	...sharedNameAndDescriptionPredicate.shape,
 	type: z.literal(ApplicationCommandOptionType.Subcommand),
-	options: z.array(z.union(basicOptionPredicates as any)).max(25).optional(),
+	options: z
+		.array(z.union(basicOptionPredicates as any))
+		.max(25)
+		.optional(),
 });
 
 export const chatInputCommandSubcommandGroupPredicate = z.object({

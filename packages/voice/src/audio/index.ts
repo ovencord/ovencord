@@ -1,14 +1,14 @@
 export {
 	AudioPlayer,
-	AudioPlayerStatus,
-	type AudioPlayerState,
-	NoSubscriberBehavior,
-	createAudioPlayer,
 	type AudioPlayerBufferingState,
 	type AudioPlayerIdleState,
 	type AudioPlayerPausedState,
 	type AudioPlayerPlayingState,
+	type AudioPlayerState,
+	AudioPlayerStatus,
 	type CreateAudioPlayerOptions,
+	createAudioPlayer,
+	NoSubscriberBehavior,
 } from './AudioPlayer';
 
 export { AudioPlayerError } from './AudioPlayerError';
@@ -17,4 +17,4 @@ export { AudioResource, type CreateAudioResourceOptions, createAudioResource } f
 
 export { PlayerSubscription } from './PlayerSubscription';
 
-export { StreamType, type Edge, TransformerType, Node } from './TransformerGraph';
+export { type Edge, Node, StreamType, TransformerType } from './TransformerGraph';

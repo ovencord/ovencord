@@ -1,6 +1,6 @@
-import { Collection  } from '@ovencord/collection';
-import { ComponentType  } from 'discord-api-types/v10';
-import { DiscordjsTypeError, ErrorCodes  } from '../errors/index.js';
+import { Collection } from '@ovencord/collection';
+import { ComponentType } from 'discord-api-types/v10';
+import { DiscordjsTypeError, ErrorCodes } from '../errors/index.js';
 
 /**
  * @typedef {Object} ModalSelectedMentionables
@@ -13,226 +13,226 @@ import { DiscordjsTypeError, ErrorCodes  } from '../errors/index.js';
  * A resolver for modal submit components
  */
 export class ModalComponentResolver {
-  public data: any;
-  public hoistedComponents: any;
-  constructor(client: any, components: any, resolved: any) {
-    /**
-     * The client that instantiated this.
-     *
-     * @name ModalComponentResolver#client
-     * @type {Client}
-     * @readonly
-     */
-    Object.defineProperty(this, 'client', { value: client });
+	public data: any;
+	public hoistedComponents: any;
+	constructor(client: any, components: any, resolved: any) {
+		/**
+		 * The client that instantiated this.
+		 *
+		 * @name ModalComponentResolver#client
+		 * @type {Client}
+		 * @readonly
+		 */
+		Object.defineProperty(this, 'client', { value: client });
 
-    /**
-     * The interaction resolved data
-     *
-     * @name ModalComponentResolver#resolved
-     * @type {?Readonly<BaseInteractionResolvedData>}
-     */
-    Object.defineProperty(this, 'resolved', { value: resolved ? Object.freeze(resolved) : null });
+		/**
+		 * The interaction resolved data
+		 *
+		 * @name ModalComponentResolver#resolved
+		 * @type {?Readonly<BaseInteractionResolvedData>}
+		 */
+		Object.defineProperty(this, 'resolved', { value: resolved ? Object.freeze(resolved) : null });
 
-    /**
-     * The components within the modal
-     *
-     * @type {Array<ActionRowModalData|LabelModalData|TextDisplayModalData>}
-     */
-    this.data = components;
+		/**
+		 * The components within the modal
+		 *
+		 * @type {Array<ActionRowModalData|LabelModalData|TextDisplayModalData>}
+		 */
+		this.data = components;
 
-    /**
-     * The bottom-level components of the interaction
-     *
-     * @type {Collection<string, ModalData>}
-     */
-    this.hoistedComponents = components.reduce((accumulator: any, next: any) => {
-      // For legacy support of action rows
-      if ('components' in next) {
-        for (const component of next.components) accumulator.set(component.customId, component);
-      }
+		/**
+		 * The bottom-level components of the interaction
+		 *
+		 * @type {Collection<string, ModalData>}
+		 */
+		this.hoistedComponents = components.reduce((accumulator: any, next: any) => {
+			// For legacy support of action rows
+			if ('components' in next) {
+				for (const component of next.components) accumulator.set(component.customId, component);
+			}
 
-      // For label components
-      if ('component' in next) {
-        accumulator.set(next.component.customId, next.component);
-      }
+			// For label components
+			if ('component' in next) {
+				accumulator.set(next.component.customId, next.component);
+			}
 
-      return accumulator;
-    }, new Collection());
-  }
+			return accumulator;
+		}, new Collection());
+	}
 
-  /**
-   * Gets a component by custom id.
-   *
-   * @property {string} customId The custom id of the component.
-   * @returns {ModalData}
-   */
-  getComponent(customId: any) {
-    const component = this.hoistedComponents.get(customId);
+	/**
+	 * Gets a component by custom id.
+	 *
+	 * @property {string} customId The custom id of the component.
+	 * @returns {ModalData}
+	 */
+	getComponent(customId: any) {
+		const component = this.hoistedComponents.get(customId);
 
-    if (!component) throw new DiscordjsTypeError(ErrorCodes.ModalSubmitInteractionComponentNotFound, customId);
+		if (!component) throw new DiscordjsTypeError(ErrorCodes.ModalSubmitInteractionComponentNotFound, customId);
 
-    return component;
-  }
+		return component;
+	}
 
-  /**
-   * Gets a component by custom id and property and checks its type.
-   *
-   * @param {string} customId The custom id of the component.
-   * @param {ComponentType[]} allowedTypes The allowed types of the component.
-   * @param {string[]} properties The properties to check for for `required`.
-   * @param {boolean} required Whether to throw an error if the component value(s) are not found.
-   * @returns {ModalData} The option, if found.
-   * @private
-   */
-  _getTypedComponent(customId: any, allowedTypes: any, properties: any, required: any) {
-    const component = this.getComponent(customId);
-    if (!allowedTypes.includes(component.type)) {
-      throw new DiscordjsTypeError(
-        ErrorCodes.ModalSubmitInteractionComponentType,
-        customId,
-        component.type,
-        allowedTypes.join(', '),
-      );
-    // @ts-ignore
-    } else if (required && properties.every(prop => component[prop] === null || component[prop] === undefined)) {
-      throw new DiscordjsTypeError(ErrorCodes.ModalSubmitInteractionComponentEmpty, customId, component.type);
-    }
+	/**
+	 * Gets a component by custom id and property and checks its type.
+	 *
+	 * @param {string} customId The custom id of the component.
+	 * @param {ComponentType[]} allowedTypes The allowed types of the component.
+	 * @param {string[]} properties The properties to check for for `required`.
+	 * @param {boolean} required Whether to throw an error if the component value(s) are not found.
+	 * @returns {ModalData} The option, if found.
+	 * @private
+	 */
+	_getTypedComponent(customId: any, allowedTypes: any, properties: any, required: any) {
+		const component = this.getComponent(customId);
+		if (!allowedTypes.includes(component.type)) {
+			throw new DiscordjsTypeError(
+				ErrorCodes.ModalSubmitInteractionComponentType,
+				customId,
+				component.type,
+				allowedTypes.join(', '),
+			);
+			// @ts-expect-error
+		} else if (required && properties.every((prop) => component[prop] === null || component[prop] === undefined)) {
+			throw new DiscordjsTypeError(ErrorCodes.ModalSubmitInteractionComponentEmpty, customId, component.type);
+		}
 
-    return component;
-  }
+		return component;
+	}
 
-  /**
-   * Gets the value of a text input component
-   *
-   * @param {string} customId The custom id of the text input component
-   * @returns {string}
-   */
-  getTextInputValue(customId: any, required: boolean = false) {
-    return this._getTypedComponent(customId, [ComponentType.TextInput], ['value'], required).value;
-  }
+	/**
+	 * Gets the value of a text input component
+	 *
+	 * @param {string} customId The custom id of the text input component
+	 * @returns {string}
+	 */
+	getTextInputValue(customId: any, required: boolean = false) {
+		return this._getTypedComponent(customId, [ComponentType.TextInput], ['value'], required).value;
+	}
 
-  /**
-   * Gets the values of a string select component
-   *
-   * @param {string} customId The custom id of the string select component
-   * @returns {string[]}
-   */
-  getStringSelectValues(customId: any, required: boolean = false) {
-    return this._getTypedComponent(customId, [ComponentType.StringSelect], ['values'], required).values;
-  }
+	/**
+	 * Gets the values of a string select component
+	 *
+	 * @param {string} customId The custom id of the string select component
+	 * @returns {string[]}
+	 */
+	getStringSelectValues(customId: any, required: boolean = false) {
+		return this._getTypedComponent(customId, [ComponentType.StringSelect], ['values'], required).values;
+	}
 
-  /**
-   * Gets users component
-   *
-   * @param {string} customId The custom id of the component
-   * @param {boolean} [required=false] Whether to throw an error if the component value is not found or empty
-   * @returns {?Collection<Snowflake, User>} The selected users, or null if none were selected and not required
-   */
-  getSelectedUsers(customId: any, required = false) {
-    const component = this._getTypedComponent(
-      customId,
-      [ComponentType.UserSelect, ComponentType.MentionableSelect],
-      ['users'],
-      required,
-    );
-    return component.users ?? null;
-  }
+	/**
+	 * Gets users component
+	 *
+	 * @param {string} customId The custom id of the component
+	 * @param {boolean} [required=false] Whether to throw an error if the component value is not found or empty
+	 * @returns {?Collection<Snowflake, User>} The selected users, or null if none were selected and not required
+	 */
+	getSelectedUsers(customId: any, required = false) {
+		const component = this._getTypedComponent(
+			customId,
+			[ComponentType.UserSelect, ComponentType.MentionableSelect],
+			['users'],
+			required,
+		);
+		return component.users ?? null;
+	}
 
-  /**
-   * Gets roles component
-   *
-   * @param {string} customId The custom id of the component
-   * @param {boolean} [required=false] Whether to throw an error if the component value is not found or empty
-   * @returns {?Collection<Snowflake, Role|APIRole>} The selected roles, or null if none were selected and not required
-   */
-  getSelectedRoles(customId: any, required = false) {
-    const component = this._getTypedComponent(
-      customId,
-      [ComponentType.RoleSelect, ComponentType.MentionableSelect],
-      ['roles'],
-      required,
-    );
-    return component.roles ?? null;
-  }
+	/**
+	 * Gets roles component
+	 *
+	 * @param {string} customId The custom id of the component
+	 * @param {boolean} [required=false] Whether to throw an error if the component value is not found or empty
+	 * @returns {?Collection<Snowflake, Role|APIRole>} The selected roles, or null if none were selected and not required
+	 */
+	getSelectedRoles(customId: any, required = false) {
+		const component = this._getTypedComponent(
+			customId,
+			[ComponentType.RoleSelect, ComponentType.MentionableSelect],
+			['roles'],
+			required,
+		);
+		return component.roles ?? null;
+	}
 
-  /**
-   * Gets channels component
-   *
-   * @param {string} customId The custom id of the component
-   * @param {boolean} [required=false] Whether to throw an error if the component value is not found or empty
-   * @param {ChannelType[]} [channelTypes=[]] The allowed types of channels. If empty, all channel types are allowed.
-   * @returns {?Collection<Snowflake, GuildChannel|ThreadChannel|APIChannel>} The selected channels, or null if none were selected and not required
-   */
-  // @ts-ignore
-  getSelectedChannels(customId: any, required = false, channelTypes: any[] = []) {
-    const component = this._getTypedComponent(customId, [ComponentType.ChannelSelect], ['channels'], required);
-    const channels = component.channels;
-    if (channels && channelTypes.length > 0) {
-      for (const channel of channels.values()) {
-        if (!channelTypes.includes(channel.type)) {
-          throw new DiscordjsTypeError(
-            ErrorCodes.ModalSubmitInteractionComponentInvalidChannelType,
-            customId,
-            channel.type,
-            channelTypes.join(', '),
-          );
-        }
-      }
-    }
+	/**
+	 * Gets channels component
+	 *
+	 * @param {string} customId The custom id of the component
+	 * @param {boolean} [required=false] Whether to throw an error if the component value is not found or empty
+	 * @param {ChannelType[]} [channelTypes=[]] The allowed types of channels. If empty, all channel types are allowed.
+	 * @returns {?Collection<Snowflake, GuildChannel|ThreadChannel|APIChannel>} The selected channels, or null if none were selected and not required
+	 */
+	// @ts-expect-error
+	getSelectedChannels(customId: any, required = false, channelTypes: any[] = []) {
+		const component = this._getTypedComponent(customId, [ComponentType.ChannelSelect], ['channels'], required);
+		const channels = component.channels;
+		if (channels && channelTypes.length > 0) {
+			for (const channel of channels.values()) {
+				if (!channelTypes.includes(channel.type)) {
+					throw new DiscordjsTypeError(
+						ErrorCodes.ModalSubmitInteractionComponentInvalidChannelType,
+						customId,
+						channel.type,
+						channelTypes.join(', '),
+					);
+				}
+			}
+		}
 
-    return channels ?? null;
-  }
+		return channels ?? null;
+	}
 
-  /**
-   * Gets members component
-   *
-   * @param {string} customId The custom id of the component
-   * @returns {?Collection<Snowflake, GuildMember|APIGuildMember>} The selected members, or null if none were selected or the users were not present in the guild
-   */
-  getSelectedMembers(customId: any) {
-    const component = this._getTypedComponent(
-      customId,
-      [ComponentType.UserSelect, ComponentType.MentionableSelect],
-      ['members'],
-      false,
-    );
-    return component.members ?? null;
-  }
+	/**
+	 * Gets members component
+	 *
+	 * @param {string} customId The custom id of the component
+	 * @returns {?Collection<Snowflake, GuildMember|APIGuildMember>} The selected members, or null if none were selected or the users were not present in the guild
+	 */
+	getSelectedMembers(customId: any) {
+		const component = this._getTypedComponent(
+			customId,
+			[ComponentType.UserSelect, ComponentType.MentionableSelect],
+			['members'],
+			false,
+		);
+		return component.members ?? null;
+	}
 
-  /**
-   * Gets mentionables component
-   *
-   * @param {string} customId The custom id of the component
-   * @param {boolean} [required=false] Whether to throw an error if the component value is not found or empty
-   * @returns {?ModalSelectedMentionables} The selected mentionables, or null if none were selected and not required
-   */
-  getSelectedMentionables(customId: any, required = false) {
-    const component = this._getTypedComponent(
-      customId,
-      [ComponentType.MentionableSelect],
-      ['users', 'members', 'roles'],
-      required,
-    );
+	/**
+	 * Gets mentionables component
+	 *
+	 * @param {string} customId The custom id of the component
+	 * @param {boolean} [required=false] Whether to throw an error if the component value is not found or empty
+	 * @returns {?ModalSelectedMentionables} The selected mentionables, or null if none were selected and not required
+	 */
+	getSelectedMentionables(customId: any, required = false) {
+		const component = this._getTypedComponent(
+			customId,
+			[ComponentType.MentionableSelect],
+			['users', 'members', 'roles'],
+			required,
+		);
 
-    if (component.users || component.members || component.roles) {
-      return {
-        users: component.users ?? new Collection(),
-        members: component.members ?? new Collection(),
-        roles: component.roles ?? new Collection(),
-      };
-    }
+		if (component.users || component.members || component.roles) {
+			return {
+				users: component.users ?? new Collection(),
+				members: component.members ?? new Collection(),
+				roles: component.roles ?? new Collection(),
+			};
+		}
 
-    return null;
-  }
+		return null;
+	}
 
-  /**
-   * Gets file upload component
-   *
-   * @param {string} customId The custom id of the component
-   * @param {boolean} [required=false] Whether to throw an error if the component value is not found or empty
-   * @returns {?Collection<Snowflake, Attachment>} The uploaded files, or null if none were uploaded and not required
-   */
-  getUploadedFiles(customId: any, required = false) {
-    return this._getTypedComponent(customId, [ComponentType.FileUpload], ['attachments'], required).attachments ?? null;
-  }
+	/**
+	 * Gets file upload component
+	 *
+	 * @param {string} customId The custom id of the component
+	 * @param {boolean} [required=false] Whether to throw an error if the component value is not found or empty
+	 * @returns {?Collection<Snowflake, Attachment>} The uploaded files, or null if none were uploaded and not required
+	 */
+	getUploadedFiles(customId: any, required = false) {
+		return this._getTypedComponent(customId, [ComponentType.FileUpload], ['attachments'], required).attachments ?? null;
+	}
 }

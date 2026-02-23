@@ -1,24 +1,21 @@
 import type {
-	APITextInputComponent,
 	APIActionRowComponent,
-	APIComponentInActionRow,
-	APIChannelSelectComponent,
-	APIMentionableSelectComponent,
-	APIRoleSelectComponent,
-	APIStringSelectComponent,
-	APIUserSelectComponent,
 	APIButtonComponentWithCustomId,
 	APIButtonComponentWithSKUId,
 	APIButtonComponentWithURL,
+	APIChannelSelectComponent,
+	APIComponentInActionRow,
+	APIMentionableSelectComponent,
+	APIRoleSelectComponent,
+	APIStringSelectComponent,
+	APITextInputComponent,
+	APIUserSelectComponent,
 } from 'discord-api-types/v10';
 import { ComponentType } from 'discord-api-types/v10';
 import { normalizeArray, type RestOrArray } from '../util/normalizeArray.js';
 import { resolveBuilder } from '../util/resolveBuilder.js';
 import { validate } from '../util/validation.js';
 import { actionRowPredicate } from './Assertions.js';
-import { ComponentBuilder } from './Component.js';
-import type { AnyActionRowComponentBuilder } from './Components.js';
-import { createComponentBuilder } from './Components.js';
 import {
 	DangerButtonBuilder,
 	PrimaryButtonBuilder,
@@ -27,6 +24,9 @@ import {
 } from './button/CustomIdButton.js';
 import { LinkButtonBuilder } from './button/LinkButton.js';
 import { PremiumButtonBuilder } from './button/PremiumButton.js';
+import { ComponentBuilder } from './Component.js';
+import type { AnyActionRowComponentBuilder } from './Components.js';
+import { createComponentBuilder } from './Components.js';
 import { ChannelSelectMenuBuilder } from './selectMenu/ChannelSelectMenu.js';
 import { MentionableSelectMenuBuilder } from './selectMenu/MentionableSelectMenu.js';
 import { RoleSelectMenuBuilder } from './selectMenu/RoleSelectMenu.js';
@@ -34,16 +34,17 @@ import { StringSelectMenuBuilder } from './selectMenu/StringSelectMenu.js';
 import { UserSelectMenuBuilder } from './selectMenu/UserSelectMenu.js';
 import { TextInputBuilder } from './textInput/TextInput.js';
 
-export interface ActionRowBuilderData<T extends AnyActionRowComponentBuilder = AnyActionRowComponentBuilder> extends Partial<
-	Omit<APIActionRowComponent<APIComponentInActionRow>, 'components'>
-> {
+export interface ActionRowBuilderData<T extends AnyActionRowComponentBuilder = AnyActionRowComponentBuilder>
+	extends Partial<Omit<APIActionRowComponent<APIComponentInActionRow>, 'components'>> {
 	components: T[];
 }
 
 /**
  * A builder that creates API-compatible JSON data for action rows.
  */
-export class ActionRowBuilder<T extends AnyActionRowComponentBuilder = AnyActionRowComponentBuilder> extends ComponentBuilder<APIActionRowComponent<APIComponentInActionRow>> {
+export class ActionRowBuilder<
+	T extends AnyActionRowComponentBuilder = AnyActionRowComponentBuilder,
+> extends ComponentBuilder<APIActionRowComponent<APIComponentInActionRow>> {
 	/**
 	 * @internal
 	 */

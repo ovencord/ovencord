@@ -1,5 +1,5 @@
-import { Presence  } from '../structures/Presence.js';
-import { CachedManager  } from './CachedManager.js';
+import { Presence } from '../structures/Presence.js';
+import { CachedManager } from './CachedManager.js';
 
 /**
  * Manages API methods for Presences and holds their cache.
@@ -7,53 +7,53 @@ import { CachedManager  } from './CachedManager.js';
  * @extends {CachedManager}
  */
 export class PresenceManager extends CachedManager {
-  constructor(client: any, iterable?: any) {
-    super(client, Presence, iterable);
-  }
+	constructor(client: any, iterable?: any) {
+		super(client, Presence, iterable);
+	}
 
-  /**
-   * The cache of Presences
-   *
-   * @type {Collection<Snowflake, Presence>}
-   * @name PresenceManager#cache
-   */
+	/**
+	 * The cache of Presences
+	 *
+	 * @type {Collection<Snowflake, Presence>}
+	 * @name PresenceManager#cache
+	 */
 
-  _add(data: any, cache: any) {
-    return super._add(data, cache, { id: data.user.id });
-  }
+	_add(data: any, cache: any) {
+		return super._add(data, cache, { id: data.user.id });
+	}
 
-  /**
-   * Data that can be resolved to a Presence object. This can be:
-   * - A Presence
-   * - A UserResolvable
-   * - A Snowflake
-   *
-   * @typedef {Presence|UserResolvable|Snowflake} PresenceResolvable
-   */
+	/**
+	 * Data that can be resolved to a Presence object. This can be:
+	 * - A Presence
+	 * - A UserResolvable
+	 * - A Snowflake
+	 *
+	 * @typedef {Presence|UserResolvable|Snowflake} PresenceResolvable
+	 */
 
-  /**
-   * Resolves a {@link PresenceResolvable} to a {@link Presence} object.
-   *
-   * @param {PresenceResolvable} presence The presence resolvable to resolve
-   * @returns {?Presence}
-   */
-  resolve(presence: any) {
-    const presenceResolvable = super.resolve(presence);
-    if (presenceResolvable) return presenceResolvable;
-    const userId = this.client.users.resolveId(presence);
-    return super.cache.get(userId) ?? null;
-  }
+	/**
+	 * Resolves a {@link PresenceResolvable} to a {@link Presence} object.
+	 *
+	 * @param {PresenceResolvable} presence The presence resolvable to resolve
+	 * @returns {?Presence}
+	 */
+	resolve(presence: any) {
+		const presenceResolvable = super.resolve(presence);
+		if (presenceResolvable) return presenceResolvable;
+		const userId = this.client.users.resolveId(presence);
+		return super.cache.get(userId) ?? null;
+	}
 
-  /**
-   * Resolves a {@link PresenceResolvable} to a {@link Presence} id.
-   *
-   * @param {PresenceResolvable} presence The presence resolvable to resolve
-   * @returns {?Snowflake}
-   */
-  resolveId(presence: any) {
-    const presenceResolvable = super.resolveId(presence);
-    if (presenceResolvable) return presenceResolvable;
-    const userId = this.client.users.resolveId(presence);
-    return this.cache.has(userId) ? userId : null;
-  }
+	/**
+	 * Resolves a {@link PresenceResolvable} to a {@link Presence} id.
+	 *
+	 * @param {PresenceResolvable} presence The presence resolvable to resolve
+	 * @returns {?Snowflake}
+	 */
+	resolveId(presence: any) {
+		const presenceResolvable = super.resolveId(presence);
+		if (presenceResolvable) return presenceResolvable;
+		const userId = this.client.users.resolveId(presence);
+		return this.cache.has(userId) ? userId : null;
+	}
 }

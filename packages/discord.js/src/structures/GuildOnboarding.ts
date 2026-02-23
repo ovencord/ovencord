@@ -1,6 +1,6 @@
-import { Collection  } from '@ovencord/collection';
-import { Base  } from './Base.js';
-import { GuildOnboardingPrompt  } from './GuildOnboardingPrompt.js';
+import { Collection } from '@ovencord/collection';
+import { Base } from './Base.js';
+import { GuildOnboardingPrompt } from './GuildOnboardingPrompt.js';
 
 /**
  * Represents the onboarding data of a guild.
@@ -8,65 +8,65 @@ import { GuildOnboardingPrompt  } from './GuildOnboardingPrompt.js';
  * @extends {Base}
  */
 export class GuildOnboarding extends Base {
-  public guildId: any;
-  public prompts: any;
-  public defaultChannels: any;
-  public enabled: any;
-  public mode: any;
-  constructor(client: any, data: any) {
-    super(client);
+	public guildId: any;
+	public prompts: any;
+	public defaultChannels: any;
+	public enabled: any;
+	public mode: any;
+	constructor(client: any, data: any) {
+		super(client);
 
-    /**
-     * The id of the guild this onboarding data is for
-     *
-     * @type {Snowflake}
-     */
-    this.guildId = data.guild_id;
+		/**
+		 * The id of the guild this onboarding data is for
+		 *
+		 * @type {Snowflake}
+		 */
+		this.guildId = data.guild_id;
 
-    const guild = this.guild;
+		const guild = this.guild;
 
-    /**
-     * The prompts shown during onboarding and in customize community
-     *
-     * @type {Collection<Snowflake, GuildOnboardingPrompt>}
-     */
-    this.prompts = data.prompts.reduce(
-      (prompts: any, prompt: any) => prompts.set(prompt.id, new GuildOnboardingPrompt(client, prompt, this.guildId)),
-      new Collection(),
-    );
+		/**
+		 * The prompts shown during onboarding and in customize community
+		 *
+		 * @type {Collection<Snowflake, GuildOnboardingPrompt>}
+		 */
+		this.prompts = data.prompts.reduce(
+			(prompts: any, prompt: any) => prompts.set(prompt.id, new GuildOnboardingPrompt(client, prompt, this.guildId)),
+			new Collection(),
+		);
 
-    /**
-     * The ids of the channels that new members get opted into automatically
-     *
-     * @type {Collection<Snowflake, GuildChannel>}
-     */
-    this.defaultChannels = data.default_channel_ids.reduce(
-      (channels: any, channelId: any) => channels.set(channelId, guild.channels.cache.get(channelId)),
-      new Collection(),
-    );
+		/**
+		 * The ids of the channels that new members get opted into automatically
+		 *
+		 * @type {Collection<Snowflake, GuildChannel>}
+		 */
+		this.defaultChannels = data.default_channel_ids.reduce(
+			(channels: any, channelId: any) => channels.set(channelId, guild.channels.cache.get(channelId)),
+			new Collection(),
+		);
 
-    /**
-     * Whether onboarding is enabled
-     *
-     * @type {boolean}
-     */
-    this.enabled = data.enabled;
+		/**
+		 * Whether onboarding is enabled
+		 *
+		 * @type {boolean}
+		 */
+		this.enabled = data.enabled;
 
-    /**
-     * The mode of this onboarding
-     *
-     * @type {GuildOnboardingMode}
-     */
-    this.mode = data.mode;
-  }
+		/**
+		 * The mode of this onboarding
+		 *
+		 * @type {GuildOnboardingMode}
+		 */
+		this.mode = data.mode;
+	}
 
-  /**
-   * The guild this onboarding is from
-   *
-   * @type {Guild}
-   * @readonly
-   */
-  get guild() {
-    return this.client.guilds.cache.get(this.guildId);
-  }
+	/**
+	 * The guild this onboarding is from
+	 *
+	 * @type {Guild}
+	 * @readonly
+	 */
+	get guild() {
+		return this.client.guilds.cache.get(this.guildId);
+	}
 }

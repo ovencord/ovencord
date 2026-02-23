@@ -1,4 +1,5 @@
 import { AsyncEventEmitter } from '@ovencord/util';
+
 type UDPSocket = Awaited<ReturnType<typeof Bun.udpSocket>>;
 
 /**
@@ -104,19 +105,25 @@ export class VoiceUDPSocket extends AsyncEventEmitter {
 		this.remote = remote;
 		this.keepAliveBuffer = new Uint8Array(8);
 		this.keepAliveView = new DataView(this.keepAliveBuffer.buffer);
-		
+
 		Bun.udpSocket({
 			socket: {
-				data: (_socket, buf) => { void this.onMessage(buf); },
-				error: (_socket, error) => { this.emit('error', error); },
+				data: (_socket, buf) => {
+					void this.onMessage(buf);
+				},
+				error: (_socket, error) => {
+					this.emit('error', error);
+				},
 			},
-		}).then(socket => {
-			this.socket = socket;
-			this.keepAliveInterval = setInterval(() => this.keepAlive(), KEEP_ALIVE_INTERVAL);
-			this.keepAlive();
-		}).catch(error => {
-			this.emit('error', error);
-		});
+		})
+			.then((socket) => {
+				this.socket = socket;
+				this.keepAliveInterval = setInterval(() => this.keepAlive(), KEEP_ALIVE_INTERVAL);
+				this.keepAlive();
+			})
+			.catch((error) => {
+				this.emit('error', error);
+			});
 	}
 
 	/**
@@ -167,7 +174,7 @@ export class VoiceUDPSocket extends AsyncEventEmitter {
 	 * @param ssrc - The SSRC received from Discord
 	 */
 	public async performIPDiscovery(ssrc: number): Promise<SocketConfig> {
-		while(!this.socket) {
+		while (!this.socket) {
 			await Bun.sleep(5);
 		}
 

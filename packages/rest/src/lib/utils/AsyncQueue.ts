@@ -26,32 +26,32 @@ export class AsyncQueue {
 
 		this.#promises.push({ promise, resolve });
 
-        // If no signal, just return the promise we wait on
-        if (!options?.signal) {
-            return next;
-        }
+		// If no signal, just return the promise we wait on
+		if (!options?.signal) {
+			return next;
+		}
 
-        return new Promise((res, rej) => {
-            if (options.signal!.aborted) {
-                // Bridge immediately: when next resolves, we resolve our token
-                next.then(() => resolve());
-                rej(new Error('AbortError')); // TODO: Use DOMException or standard AbortError if available
-                return;
-            }
+		return new Promise((res, rej) => {
+			if (options.signal!.aborted) {
+				// Bridge immediately: when next resolves, we resolve our token
+				next.then(() => resolve());
+				rej(new Error('AbortError')); // TODO: Use DOMException or standard AbortError if available
+				return;
+			}
 
-            const abortHandler = () => {
-                // Bridge: when next resolves, we resolve our token
-                next.then(() => resolve());
-                rej(new Error('AbortError'));
-            };
+			const abortHandler = () => {
+				// Bridge: when next resolves, we resolve our token
+				next.then(() => resolve());
+				rej(new Error('AbortError'));
+			};
 
-            options.signal!.addEventListener('abort', abortHandler, { once: true });
+			options.signal!.addEventListener('abort', abortHandler, { once: true });
 
-            next.then(() => {
-                options.signal!.removeEventListener('abort', abortHandler);
-                res();
-            });
-        });
+			next.then(() => {
+				options.signal!.removeEventListener('abort', abortHandler);
+				res();
+			});
+		});
 	}
 
 	/**

@@ -94,14 +94,14 @@ export class ThumbnailBuilder extends ComponentBuilder<APIThumbnailComponent> {
 	public override toJSON(validationOverride?: boolean): APIThumbnailComponent {
 		const clone = structuredClone(this.data);
 
-        // Enforce Type 11 structure: { type: 11, media: { url: ... } }
-        // We ignore description and spoiler for now as per V2 accessory specs
-        const data: APIThumbnailComponent = {
-            type: ComponentType.Thumbnail,
-            media: {
-                url: clone.media!.url,
-            },
-        };
+		// Enforce Type 11 structure: { type: 11, media: { url: ... } }
+		// We ignore description and spoiler for now as per V2 accessory specs
+		const data: APIThumbnailComponent = {
+			type: ComponentType.Thumbnail,
+			media: {
+				url: clone.media!.url,
+			},
+		};
 
 		validate(thumbnailPredicate, data, validationOverride);
 

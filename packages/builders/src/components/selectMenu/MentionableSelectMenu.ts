@@ -1,11 +1,11 @@
 import {
 	type APIMentionableSelectComponent,
 	type APISelectMenuDefaultValue,
-	type Snowflake,
 	ComponentType,
 	SelectMenuDefaultValueType,
+	type Snowflake,
 } from 'discord-api-types/v10';
-import { type RestOrArray, normalizeArray } from '../../util/normalizeArray.js';
+import { normalizeArray, type RestOrArray } from '../../util/normalizeArray.js';
 import { validate } from '../../util/validation.js';
 import { selectMenuMentionablePredicate } from '../Assertions.js';
 import { BaseSelectMenuBuilder } from './BaseSelectMenu.js';

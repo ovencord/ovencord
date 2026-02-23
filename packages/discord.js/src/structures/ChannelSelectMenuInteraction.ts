@@ -1,5 +1,5 @@
-import { Collection  } from '@ovencord/collection';
-import { MessageComponentInteraction  } from './MessageComponentInteraction.js';
+import { Collection } from '@ovencord/collection';
+import { MessageComponentInteraction } from './MessageComponentInteraction.js';
 
 /**
  * Represents a {@link ComponentType.ChannelSelect} select menu interaction.
@@ -7,28 +7,28 @@ import { MessageComponentInteraction  } from './MessageComponentInteraction.js';
  * @extends {MessageComponentInteraction}
  */
 export class ChannelSelectMenuInteraction extends MessageComponentInteraction {
-  public channels: any;
-  public values: any;
-  constructor(client: any, data: any) {
-    super(client, data);
-    const { resolved, values } = data.data;
+	public channels: any;
+	public values: any;
+	constructor(client: any, data: any) {
+		super(client, data);
+		const { resolved, values } = data.data;
 
-    /**
-     * An array of the selected channel ids
-     *
-     * @type {Snowflake[]}
-     */
-    this.values = values ?? [];
+		/**
+		 * An array of the selected channel ids
+		 *
+		 * @type {Snowflake[]}
+		 */
+		this.values = values ?? [];
 
-    /**
-     * Collection of the selected channels
-     *
-     * @type {Collection<Snowflake, BaseChannel|APIChannel>}
-     */
-    this.channels = new Collection();
+		/**
+		 * Collection of the selected channels
+		 *
+		 * @type {Collection<Snowflake, BaseChannel|APIChannel>}
+		 */
+		this.channels = new Collection();
 
-    for (const channel of Object.values(resolved?.channels ?? {}) as any[]) {
-      this.channels.set(channel.id, this.client.channels._add(channel, this.guild) ?? channel);
-    }
-  }
+		for (const channel of Object.values(resolved?.channels ?? {}) as any[]) {
+			this.channels.set(channel.id, this.client.channels._add(channel, this.guild) ?? channel);
+		}
+	}
 }

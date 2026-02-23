@@ -1,12 +1,12 @@
-import { ApplicationCommandOptionType, type APIApplicationCommandStringOption } from 'discord-api-types/v10';
+import { type APIApplicationCommandStringOption, ApplicationCommandOptionType } from 'discord-api-types/v10';
 import { Mixin } from 'ts-mixer';
 import { stringOptionPredicate } from '../Assertions.js';
 import type { ApplicationCommandOptionWithAutocompleteData } from '../mixins/ApplicationCommandOptionWithAutocompleteMixin.js';
 import { ApplicationCommandOptionWithAutocompleteMixin } from '../mixins/ApplicationCommandOptionWithAutocompleteMixin.js';
 import type { ApplicationCommandOptionWithChoicesData } from '../mixins/ApplicationCommandOptionWithChoicesMixin.js';
 import { ApplicationCommandOptionWithChoicesMixin } from '../mixins/ApplicationCommandOptionWithChoicesMixin.js';
-import { ApplicationCommandOptionBase } from './ApplicationCommandOptionBase.js';
 import type { ApplicationCommandOptionBaseData } from './ApplicationCommandOptionBase.js';
+import { ApplicationCommandOptionBase } from './ApplicationCommandOptionBase.js';
 
 export class ChatInputCommandStringOption extends Mixin(
 	ApplicationCommandOptionBase,
@@ -21,7 +21,7 @@ export class ChatInputCommandStringOption extends Mixin(
 	/**
 	 * @internal
 	 */
-	declare protected readonly data: ApplicationCommandOptionBaseData &
+	protected declare readonly data: ApplicationCommandOptionBaseData &
 		ApplicationCommandOptionWithAutocompleteData &
 		ApplicationCommandOptionWithChoicesData &
 		Partial<Pick<APIApplicationCommandStringOption, 'max_length' | 'min_length'>>;

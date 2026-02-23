@@ -1,4 +1,3 @@
-
 import { AsyncEventEmitter } from '@ovencord/util';
 import Davey from '@snazzah/davey';
 import type { VoiceDavePrepareEpochData, VoiceDavePrepareTransitionData } from 'discord-api-types/voice/v8';
@@ -162,7 +161,11 @@ export class DAVESession extends AsyncEventEmitter {
 				this.session.reinit(this.protocolVersion, this.userId, this.channelId);
 				this.emit('debug', `Session reinitialized for protocol version ${this.protocolVersion}`);
 			} else {
-				this.session = new Davey.DAVESession(this.protocolVersion, this.userId, this.channelId) as unknown as SessionMethods;
+				this.session = new Davey.DAVESession(
+					this.protocolVersion,
+					this.userId,
+					this.channelId,
+				) as unknown as SessionMethods;
 				this.emit('debug', `Session initialized for protocol version ${this.protocolVersion}`);
 			}
 
@@ -355,7 +358,15 @@ export class DAVESession extends AsyncEventEmitter {
 	 * @param packet - The packet to encrypt
 	 */
 	public encrypt(packet: Uint8Array) {
-		if (this.protocolVersion === 0 || !this.session?.ready || (packet.length === SILENCE_FRAME.length && packet[0] === SILENCE_FRAME[0] && packet[1] === SILENCE_FRAME[1] && packet[2] === SILENCE_FRAME[2])) return packet;
+		if (
+			this.protocolVersion === 0 ||
+			!this.session?.ready ||
+			(packet.length === SILENCE_FRAME.length &&
+				packet[0] === SILENCE_FRAME[0] &&
+				packet[1] === SILENCE_FRAME[1] &&
+				packet[2] === SILENCE_FRAME[2])
+		)
+			return packet;
 		return this.session.encryptOpus(packet);
 	}
 
@@ -368,7 +379,15 @@ export class DAVESession extends AsyncEventEmitter {
 	 */
 	public decrypt(packet: Uint8Array, userId: string) {
 		const canDecrypt = this.session?.ready && (this.protocolVersion !== 0 || this.session?.canPassthrough(userId));
-		if ((packet.length === SILENCE_FRAME.length && packet[0] === SILENCE_FRAME[0] && packet[1] === SILENCE_FRAME[1] && packet[2] === SILENCE_FRAME[2]) || !canDecrypt || !this.session) return packet;
+		if (
+			(packet.length === SILENCE_FRAME.length &&
+				packet[0] === SILENCE_FRAME[0] &&
+				packet[1] === SILENCE_FRAME[1] &&
+				packet[2] === SILENCE_FRAME[2]) ||
+			!canDecrypt ||
+			!this.session
+		)
+			return packet;
 		try {
 			// @ts-expect-error - const enum is exported and works (todo: drop const modifier on Davey end)
 			const buffer = this.session.decrypt(userId, Davey.MediaType.AUDIO, packet);

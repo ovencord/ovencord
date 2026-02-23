@@ -2,32 +2,32 @@
  * Represents a media item in a component
  */
 export class UnfurledMediaItem {
-  public data: any;
-  constructor(data: any) {
-    /**
-     * The API data associated with this media item
-     *
-     * @type {APIUnfurledMediaItem}
-     */
-    this.data = data;
-  }
+	public data: any;
+	constructor(data: any) {
+		/**
+		 * The API data associated with this media item
+		 *
+		 * @type {APIUnfurledMediaItem}
+		 */
+		this.data = data;
+	}
 
-  /**
-   * The URL of this media item
-   *
-   * @type {string}
-   * @readonly
-   */
-  get url() {
-    return this.data.url;
-  }
+	/**
+	 * The URL of this media item
+	 *
+	 * @type {string}
+	 * @readonly
+	 */
+	get url() {
+		return this.data.url;
+	}
 
-  /**
-   * Returns the API-compatible JSON for this media item
-   *
-   * @returns {APIUnfurledMediaItem}
-   */
-  toJSON() {
-    return { ...this.data };
-  }
+	/**
+	 * Returns the API-compatible JSON for this media item
+	 *
+	 * @returns {APIUnfurledMediaItem}
+	 */
+	toJSON() {
+		return { ...this.data };
+	}
 }

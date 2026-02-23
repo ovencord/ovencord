@@ -1,4 +1,4 @@
-import { ThreadOnlyChannel  } from './ThreadOnlyChannel.js';
+import { ThreadOnlyChannel } from './ThreadOnlyChannel.js';
 
 /**
  * Represents a forum channel.
@@ -6,26 +6,26 @@ import { ThreadOnlyChannel  } from './ThreadOnlyChannel.js';
  * @extends {ThreadOnlyChannel}
  */
 export class ForumChannel extends ThreadOnlyChannel {
-  public defaultForumLayout: any;
-  _patch(data: any) {
-    super._patch(data);
+	public defaultForumLayout: any;
+	_patch(data: any) {
+		super._patch(data);
 
-    /**
-     * The default layout type used to display posts
-     *
-     * @type {ForumLayoutType}
-     */
-    this.defaultForumLayout = data.default_forum_layout;
-  }
+		/**
+		 * The default layout type used to display posts
+		 *
+		 * @type {ForumLayoutType}
+		 */
+		this.defaultForumLayout = data.default_forum_layout;
+	}
 
-  /**
-   * Sets the default forum layout type used to display posts
-   *
-   * @param {ForumLayoutType} defaultForumLayout The default forum layout type to set on this channel
-   * @param {string} [reason] Reason for changing the default forum layout
-   * @returns {Promise<ForumChannel>}
-   */
-  async setDefaultForumLayout(defaultForumLayout: any, reason: any) {
-    return this.edit({ defaultForumLayout, reason });
-  }
+	/**
+	 * Sets the default forum layout type used to display posts
+	 *
+	 * @param {ForumLayoutType} defaultForumLayout The default forum layout type to set on this channel
+	 * @param {string} [reason] Reason for changing the default forum layout
+	 * @returns {Promise<ForumChannel>}
+	 */
+	async setDefaultForumLayout(defaultForumLayout: any, reason: any) {
+		return this.edit({ defaultForumLayout, reason });
+	}
 }

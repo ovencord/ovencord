@@ -3,9 +3,19 @@ import { z } from 'zod';
 
 const namePredicate = z.string().max(256);
 
-const URLPredicate = z.string().url().refine((url) => url.startsWith('http:') || url.startsWith('https:'), { message: 'URL must use http or https protocol' });
+const URLPredicate = z
+	.string()
+	.url()
+	.refine((url) => url.startsWith('http:') || url.startsWith('https:'), {
+		message: 'URL must use http or https protocol',
+	});
 
-const URLWithAttachmentProtocolPredicate = z.string().url().refine((url) => url.startsWith('http:') || url.startsWith('https:') || url.startsWith('attachment:'), { message: 'URL must use http, https, or attachment protocol' });
+const URLWithAttachmentProtocolPredicate = z
+	.string()
+	.url()
+	.refine((url) => url.startsWith('http:') || url.startsWith('https:') || url.startsWith('attachment:'), {
+		message: 'URL must use http, https, or attachment protocol',
+	});
 
 export const embedFieldPredicate = z.object({
 	name: namePredicate,
@@ -50,4 +60,6 @@ export const embedPredicate = z
 			message: 'Embed must have at least a title, description, a field, a footer, an author, an image, OR a thumbnail.',
 		},
 	)
-	.refine((embed) => embedLength(embed as any) <= 6_000, { message: 'Embeds must not exceed 6000 characters in total.' });
+	.refine((embed) => embedLength(embed as any) <= 6_000, {
+		message: 'Embeds must not exceed 6000 characters in total.',
+	});

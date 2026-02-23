@@ -1,4 +1,3 @@
-
 /**
  * @typedef {Object} ShardEvents
  * @property {string} Death death
@@ -16,11 +15,11 @@
  * @ignore
  */
 export const ShardEvents = {
-  Death: 'death',
-  Disconnect: 'disconnect',
-  Error: 'error',
-  Message: 'message',
-  Ready: 'ready',
-  Resume: 'resume',
-  Spawn: 'spawn',
+	Death: 'death',
+	Disconnect: 'disconnect',
+	Error: 'error',
+	Message: 'message',
+	Ready: 'ready',
+	Resume: 'resume',
+	Spawn: 'spawn',
 };

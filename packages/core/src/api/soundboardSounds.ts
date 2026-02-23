@@ -1,5 +1,5 @@
-import type { RequestData, REST } from '@ovencord/rest';
-import { Routes, type RESTGetAPISoundboardDefaultSoundsResult } from 'discord-api-types/v10';
+import type { REST, RequestData } from '@ovencord/rest';
+import { type RESTGetAPISoundboardDefaultSoundsResult, Routes } from 'discord-api-types/v10';
 
 export class SoundboardSoundsAPI {
 	public constructor(private readonly rest: REST) {}

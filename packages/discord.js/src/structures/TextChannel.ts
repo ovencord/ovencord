@@ -1,4 +1,4 @@
-import { BaseGuildTextChannel  } from './BaseGuildTextChannel.js';
+import { BaseGuildTextChannel } from './BaseGuildTextChannel.js';
 
 /**
  * Represents a guild text channel on Discord.
@@ -6,28 +6,28 @@ import { BaseGuildTextChannel  } from './BaseGuildTextChannel.js';
  * @extends {BaseGuildTextChannel}
  */
 export class TextChannel extends BaseGuildTextChannel {
-  public rateLimitPerUser: any;
-  _patch(data: any) {
-    super._patch(data);
+	public rateLimitPerUser: any;
+	_patch(data: any) {
+		super._patch(data);
 
-    if ('rate_limit_per_user' in data) {
-      /**
-       * The rate limit per user (slowmode) for this channel in seconds
-       *
-       * @type {number}
-       */
-      this.rateLimitPerUser = data.rate_limit_per_user;
-    }
-  }
+		if ('rate_limit_per_user' in data) {
+			/**
+			 * The rate limit per user (slowmode) for this channel in seconds
+			 *
+			 * @type {number}
+			 */
+			this.rateLimitPerUser = data.rate_limit_per_user;
+		}
+	}
 
-  /**
-   * Sets the rate limit per user (slowmode) for this channel.
-   *
-   * @param {number} rateLimitPerUser The new rate limit in seconds
-   * @param {string} [reason] Reason for changing the channel's rate limit
-   * @returns {Promise<TextChannel>}
-   */
-  async setRateLimitPerUser(...args: any[]): Promise<any> {
-    return this.edit({ rateLimitPerUser: args[0], reason: args[1] });
-  }
+	/**
+	 * Sets the rate limit per user (slowmode) for this channel.
+	 *
+	 * @param {number} rateLimitPerUser The new rate limit in seconds
+	 * @param {string} [reason] Reason for changing the channel's rate limit
+	 * @returns {Promise<TextChannel>}
+	 */
+	async setRateLimitPerUser(...args: any[]): Promise<any> {
+		return this.edit({ rateLimitPerUser: args[0], reason: args[1] });
+	}
 }

@@ -18,7 +18,7 @@ export class ApplicationCommandOptionWithAutocompleteMixin {
 	/**
 	 * @internal
 	 */
-	declare protected readonly data: ApplicationCommandOptionWithAutocompleteData;
+	protected declare readonly data: ApplicationCommandOptionWithAutocompleteData;
 
 	/**
 	 * Whether this option uses autocomplete.

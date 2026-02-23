@@ -6,8 +6,9 @@ export class AbortError extends Error {
 		this.name = 'AbortError';
 	}
 }
-import type { VoiceConnection, VoiceConnectionStatus } from '../VoiceConnection';
+
 import type { AudioPlayer, AudioPlayerStatus } from '../audio/AudioPlayer';
+import type { VoiceConnection, VoiceConnectionStatus } from '../VoiceConnection';
 import { abortAfter } from './abortAfter';
 
 /**

@@ -1,16 +1,16 @@
-import { Events  } from '../../util/Events.js';
-import { Action  } from './Action.js';
+import { Events } from '../../util/Events.js';
+import { Action } from './Action.js';
 
 export class GuildEmojiDeleteAction extends Action {
-  override handle(emoji: any) {
-    emoji.guild.emojis.cache.delete(emoji.id);
-    /**
-     * Emitted whenever a custom emoji is deleted in a guild.
-     *
-     * @event Client#emojiDelete
-     * @param {GuildEmoji} emoji The emoji that was deleted
-     */
-    this.client.emit(Events.GuildEmojiDelete, emoji);
-    return { emoji };
-  }
+	override handle(emoji: any) {
+		emoji.guild.emojis.cache.delete(emoji.id);
+		/**
+		 * Emitted whenever a custom emoji is deleted in a guild.
+		 *
+		 * @event Client#emojiDelete
+		 * @param {GuildEmoji} emoji The emoji that was deleted
+		 */
+		this.client.emit(Events.GuildEmojiDelete, emoji);
+		return { emoji };
+	}
 }

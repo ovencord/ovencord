@@ -1,5 +1,5 @@
-import { ApplicationCommandManager  } from './ApplicationCommandManager.js';
-import { ApplicationCommandPermissionsManager  } from './ApplicationCommandPermissionsManager.js';
+import { ApplicationCommandManager } from './ApplicationCommandManager.js';
+import { ApplicationCommandPermissionsManager } from './ApplicationCommandPermissionsManager.js';
 
 /**
  * An extension for guild-specific application commands.
@@ -7,23 +7,23 @@ import { ApplicationCommandPermissionsManager  } from './ApplicationCommandPermi
  * @extends {ApplicationCommandManager}
  */
 export class GuildApplicationCommandManager extends ApplicationCommandManager {
-  public guild: any;
-  public permissions: any;
-  constructor(guild: any, iterable?: any) {
-    super(guild.client, iterable);
+	public guild: any;
+	public permissions: any;
+	constructor(guild: any, iterable?: any) {
+		super(guild.client, iterable);
 
-    /**
-     * The guild that this manager belongs to
-     *
-     * @type {Guild}
-     */
-    this.guild = guild;
+		/**
+		 * The guild that this manager belongs to
+		 *
+		 * @type {Guild}
+		 */
+		this.guild = guild;
 
-    /**
-     * The manager for permissions of arbitrary commands on this guild
-     *
-     * @type {ApplicationCommandPermissionsManager}
-     */
-    this.permissions = new ApplicationCommandPermissionsManager(this);
-  }
+		/**
+		 * The manager for permissions of arbitrary commands on this guild
+		 *
+		 * @type {ApplicationCommandPermissionsManager}
+		 */
+		this.permissions = new ApplicationCommandPermissionsManager(this);
+	}
 }

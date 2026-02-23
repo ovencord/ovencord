@@ -1,5 +1,5 @@
-import { ThreadMemberFlagsBitField  } from '../util/ThreadMemberFlagsBitField.js';
-import { Base  } from './Base.js';
+import { ThreadMemberFlagsBitField } from '../util/ThreadMemberFlagsBitField.js';
+import { Base } from './Base.js';
 
 /**
  * Represents a Member for a Thread.
@@ -7,120 +7,120 @@ import { Base  } from './Base.js';
  * @extends {Base}
  */
 export class ThreadMember extends Base {
-  public thread: any;
-  public joinedTimestamp: any;
-  public flags: any;
-  public id: any;
-  public member: any;
-  constructor(thread: any, data: any, extra = {}) {
-    super(thread.client);
+	public thread: any;
+	public joinedTimestamp: any;
+	public flags: any;
+	public id: any;
+	public member: any;
+	constructor(thread: any, data: any, extra = {}) {
+		super(thread.client);
 
-    /**
-     * The thread that this member is a part of
-     *
-     * @type {ThreadChannel}
-     */
-    this.thread = thread;
+		/**
+		 * The thread that this member is a part of
+		 *
+		 * @type {ThreadChannel}
+		 */
+		this.thread = thread;
 
-    /**
-     * The timestamp the member last joined the thread at
-     *
-     * @type {?number}
-     */
-    this.joinedTimestamp = null;
+		/**
+		 * The timestamp the member last joined the thread at
+		 *
+		 * @type {?number}
+		 */
+		this.joinedTimestamp = null;
 
-    /**
-     * The flags for this thread member. This will be `null` if partial.
-     *
-     * @type {?ThreadMemberFlagsBitField}
-     */
-    this.flags = null;
+		/**
+		 * The flags for this thread member. This will be `null` if partial.
+		 *
+		 * @type {?ThreadMemberFlagsBitField}
+		 */
+		this.flags = null;
 
-    /**
-     * The id of the thread member
-     *
-     * @type {Snowflake}
-     */
-    this.id = data.user_id;
+		/**
+		 * The id of the thread member
+		 *
+		 * @type {Snowflake}
+		 */
+		this.id = data.user_id;
 
-    this._patch(data, extra);
-  }
+		this._patch(data, extra);
+	}
 
-  _patch(data: any, extra = {}) {
-    if ('join_timestamp' in data) this.joinedTimestamp = Date.parse(data.join_timestamp);
-    if ('flags' in data) this.flags = new ThreadMemberFlagsBitField(data.flags).freeze();
+	_patch(data: any, extra = {}) {
+		if ('join_timestamp' in data) this.joinedTimestamp = Date.parse(data.join_timestamp);
+		if ('flags' in data) this.flags = new ThreadMemberFlagsBitField(data.flags).freeze();
 
-    if ('member' in data) {
-      /**
-       * The guild member associated with this thread member.
-       *
-       * @type {?GuildMember}
-       * @private
-       */
-      // @ts-ignore
-      this.member = this.thread.guild.members._add(data.member, extra.cache);
-    } else {
-      this.member ??= null;
-    }
-  }
+		if ('member' in data) {
+			/**
+			 * The guild member associated with this thread member.
+			 *
+			 * @type {?GuildMember}
+			 * @private
+			 */
+			// @ts-expect-error
+			this.member = this.thread.guild.members._add(data.member, extra.cache);
+		} else {
+			this.member ??= null;
+		}
+	}
 
-  /**
-   * Whether this thread member is a partial
-   *
-   * @type {boolean}
-   * @readonly
-   */
-  get partial() {
-    return this.flags === null;
-  }
+	/**
+	 * Whether this thread member is a partial
+	 *
+	 * @type {boolean}
+	 * @readonly
+	 */
+	get partial() {
+		return this.flags === null;
+	}
 
-  /**
-   * The guild member associated with this thread member
-   *
-   * @type {?GuildMember}
-   * @readonly
-   */
-  get guildMember() {
-    return this.member ?? this.thread.guild.members.cache.get(this.id) ?? null;
-  }
+	/**
+	 * The guild member associated with this thread member
+	 *
+	 * @type {?GuildMember}
+	 * @readonly
+	 */
+	get guildMember() {
+		return this.member ?? this.thread.guild.members.cache.get(this.id) ?? null;
+	}
 
-  /**
-   * The last time this member joined the thread
-   *
-   * @type {?Date}
-   * @readonly
-   */
-  get joinedAt() {
-    return this.joinedTimestamp && new Date(this.joinedTimestamp);
-  }
+	/**
+	 * The last time this member joined the thread
+	 *
+	 * @type {?Date}
+	 * @readonly
+	 */
+	get joinedAt() {
+		return this.joinedTimestamp && new Date(this.joinedTimestamp);
+	}
 
-  /**
-   * The user associated with this thread member
-   *
-   * @type {?User}
-   * @readonly
-   */
-  get user() {
-    return this.client.users.cache.get(this.id) ?? null;
-  }
+	/**
+	 * The user associated with this thread member
+	 *
+	 * @type {?User}
+	 * @readonly
+	 */
+	get user() {
+		return this.client.users.cache.get(this.id) ?? null;
+	}
 
-  /**
-   * Whether the client user can manage this thread member
-   *
-   * @type {boolean}
-   * @readonly
-   */
-  get manageable() {
-    return !this.thread.archived && this.thread.editable;
-  }
+	/**
+	 * Whether the client user can manage this thread member
+	 *
+	 * @type {boolean}
+	 * @readonly
+	 */
+	get manageable() {
+		return !this.thread.archived && this.thread.editable;
+	}
 
-  /**
-   * Removes this member from the thread.
-   *
-   * @returns {Promise<ThreadMember>}
-   */
-  async remove() {
-    await this.thread.members.remove(this.id);
-    return this;
-  }
+	/**
+	 * Removes this member from the thread.
+	 *
+	 * @returns {Promise<ThreadMember>}
+	 */
+	async remove() {
+		await this.thread.members.remove(this.id);
+		return this;
+	}
 }

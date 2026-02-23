@@ -110,14 +110,10 @@ export class ModalBuilder implements JSONEncodable<APIModalInteractionResponseCa
 	 * @param components - The action rows to add
 	 */
 	public addActionRowComponents(
-		...components: RestOrArray<
-			ActionRowBuilder | APIActionRowComponent<APIComponentInActionRow>
-		>
+		...components: RestOrArray<ActionRowBuilder | APIActionRowComponent<APIComponentInActionRow>>
 	) {
 		const normalized = normalizeArray(components);
-		const resolved = normalized.map((row) =>
-			row instanceof ActionRowBuilder ? row : new ActionRowBuilder(row),
-		);
+		const resolved = normalized.map((row) => (row instanceof ActionRowBuilder ? row : new ActionRowBuilder(row)));
 
 		this.data.components.push(...resolved);
 
@@ -130,9 +126,7 @@ export class ModalBuilder implements JSONEncodable<APIModalInteractionResponseCa
 	 *
 	 * @param components - The components to add
 	 */
-	public addComponents(
-		...components: RestOrArray<ActionRowBuilder | AnyModalComponentBuilder>
-	) {
+	public addComponents(...components: RestOrArray<ActionRowBuilder | AnyModalComponentBuilder>) {
 		const normalized = normalizeArray(components);
 		this.data.components.push(...normalized);
 

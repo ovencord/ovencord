@@ -1,6 +1,6 @@
-import { transformResolved  } from '../util/Util.js';
-import { CommandInteraction  } from './CommandInteraction.js';
-import { CommandInteractionOptionResolver  } from './CommandInteractionOptionResolver.js';
+import { transformResolved } from '../util/Util.js';
+import { CommandInteraction } from './CommandInteraction.js';
+import { CommandInteractionOptionResolver } from './CommandInteractionOptionResolver.js';
 
 /**
  * Represents a command interaction.
@@ -8,37 +8,37 @@ import { CommandInteractionOptionResolver  } from './CommandInteractionOptionRes
  * @extends {CommandInteraction}
  */
 export class ChatInputCommandInteraction extends CommandInteraction {
-  public options: any;
-  constructor(client: any, data: any) {
-    super(client, data);
+	public options: any;
+	constructor(client: any, data: any) {
+		super(client, data);
 
-    /**
-     * The options passed to the command.
-     *
-     * @type {CommandInteractionOptionResolver}
-     */
-    this.options = new CommandInteractionOptionResolver(
-      this.client,
-      // @ts-ignore
-      data.data.options?.map(option => this.transformOption(option, data.data.resolved)) ?? [],
-      transformResolved({ client: this.client, guild: this.guild, channel: this.channel }, data.data.resolved),
-    );
-  }
+		/**
+		 * The options passed to the command.
+		 *
+		 * @type {CommandInteractionOptionResolver}
+		 */
+		this.options = new CommandInteractionOptionResolver(
+			this.client,
+			// @ts-expect-error
+			data.data.options?.map((option) => this.transformOption(option, data.data.resolved)) ?? [],
+			transformResolved({ client: this.client, guild: this.guild, channel: this.channel }, data.data.resolved),
+		);
+	}
 
-  /**
-   * Returns a string representation of the command interaction.
-   * This can then be copied by a user and executed again in a new command while keeping the option order.
-   *
-   * @returns {string}
-   */
-  toString() {
-    const properties = [
-      this.commandName,
-      this.options._group,
-      this.options._subcommand,
-      // @ts-ignore
-      ...this.options._hoistedOptions.map(option => `${option.name}:${option.value}`),
-    ];
-    return `/${properties.filter(Boolean).join(' ')}`;
-  }
+	/**
+	 * Returns a string representation of the command interaction.
+	 * This can then be copied by a user and executed again in a new command while keeping the option order.
+	 *
+	 * @returns {string}
+	 */
+	toString() {
+		const properties = [
+			this.commandName,
+			this.options._group,
+			this.options._subcommand,
+			// @ts-expect-error
+			...this.options._hoistedOptions.map((option) => `${option.name}:${option.value}`),
+		];
+		return `/${properties.filter(Boolean).join(' ')}`;
+	}
 }

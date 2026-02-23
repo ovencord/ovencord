@@ -1,5 +1,5 @@
-import { Component  } from './Component.js';
-import { UnfurledMediaItem  } from './UnfurledMediaItem.js';
+import { Component } from './Component.js';
+import { UnfurledMediaItem } from './UnfurledMediaItem.js';
 
 /**
  * Represents a thumbnail component
@@ -7,45 +7,45 @@ import { UnfurledMediaItem  } from './UnfurledMediaItem.js';
  * @extends {Component}
  */
 export class ThumbnailComponent extends Component {
-  public media: any;
-  constructor({ media, ...data }: any) {
-    super(data);
+	public media: any;
+	constructor({ media, ...data }: any) {
+		super(data);
 
-    /**
-     * The media associated with this thumbnail
-     *
-     * @type {UnfurledMediaItem}
-     * @readonly
-     */
-    this.media = new UnfurledMediaItem(media);
-  }
+		/**
+		 * The media associated with this thumbnail
+		 *
+		 * @type {UnfurledMediaItem}
+		 * @readonly
+		 */
+		this.media = new UnfurledMediaItem(media);
+	}
 
-  /**
-   * The description of this thumbnail
-   *
-   * @type {?string}
-   * @readonly
-   */
-  get description() {
-    return this.data.description ?? null;
-  }
+	/**
+	 * The description of this thumbnail
+	 *
+	 * @type {?string}
+	 * @readonly
+	 */
+	get description() {
+		return this.data.description ?? null;
+	}
 
-  /**
-   * Whether this thumbnail is spoilered
-   *
-   * @type {boolean}
-   * @readonly
-   */
-  get spoiler() {
-    return this.data.spoiler ?? false;
-  }
+	/**
+	 * Whether this thumbnail is spoilered
+	 *
+	 * @type {boolean}
+	 * @readonly
+	 */
+	get spoiler() {
+		return this.data.spoiler ?? false;
+	}
 
-  /**
-   * Returns the API-compatible JSON for this component
-   *
-   * @returns {APIThumbnailComponent}
-   */
-  toJSON() {
-    return { ...this.data, media: this.media.toJSON() };
-  }
+	/**
+	 * Returns the API-compatible JSON for this component
+	 *
+	 * @returns {APIThumbnailComponent}
+	 */
+	toJSON() {
+		return { ...this.data, media: this.media.toJSON() };
+	}
 }

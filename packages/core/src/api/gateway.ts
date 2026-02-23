@@ -1,5 +1,5 @@
-import type { RequestData, REST } from '@ovencord/rest';
-import { Routes, type RESTGetAPIGatewayBotResult, type RESTGetAPIGatewayResult } from 'discord-api-types/v10';
+import type { REST, RequestData } from '@ovencord/rest';
+import { type RESTGetAPIGatewayBotResult, type RESTGetAPIGatewayResult, Routes } from 'discord-api-types/v10';
 
 export class GatewayAPI {
 	public constructor(private readonly rest: REST) {}

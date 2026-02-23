@@ -1,4 +1,4 @@
-import { CommandInteraction  } from './CommandInteraction.js';
+import { CommandInteraction } from './CommandInteraction.js';
 
 /**
  * Represents a primary entry point command interaction.

@@ -1,6 +1,5 @@
-import { makeURLSearchParams, type REST, type RawFile, type RequestData } from '@ovencord/rest';
+import { makeURLSearchParams, type RawFile, type REST, type RequestData } from '@ovencord/rest';
 import {
-	Routes,
 	type GuildWidgetStyle,
 	type RESTGetAPIAuditLogQuery,
 	type RESTGetAPIAuditLogResult,
@@ -30,10 +29,10 @@ import {
 	type RESTGetAPIGuildRolesResult,
 	type RESTGetAPIGuildScheduledEventQuery,
 	type RESTGetAPIGuildScheduledEventResult,
-	type RESTGetAPIGuildScheduledEventUsersQuery,
-	type RESTGetAPIGuildScheduledEventUsersResult,
 	type RESTGetAPIGuildScheduledEventsQuery,
 	type RESTGetAPIGuildScheduledEventsResult,
+	type RESTGetAPIGuildScheduledEventUsersQuery,
+	type RESTGetAPIGuildScheduledEventUsersResult,
 	type RESTGetAPIGuildSoundboardSoundResult,
 	type RESTGetAPIGuildSoundboardSoundsResult,
 	type RESTGetAPIGuildStickerResult,
@@ -101,6 +100,7 @@ import {
 	type RESTPutAPIGuildOnboardingJSONBody,
 	type RESTPutAPIGuildOnboardingResult,
 	type RESTPutAPIGuildTemplateSyncResult,
+	Routes,
 	type Snowflake,
 } from 'discord-api-types/v10';
 

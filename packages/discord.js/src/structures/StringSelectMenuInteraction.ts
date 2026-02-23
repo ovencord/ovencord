@@ -1,4 +1,4 @@
-import { MessageComponentInteraction  } from './MessageComponentInteraction.js';
+import { MessageComponentInteraction } from './MessageComponentInteraction.js';
 
 /**
  * Represents a {@link ComponentType.StringSelect} select menu interaction.
@@ -6,15 +6,15 @@ import { MessageComponentInteraction  } from './MessageComponentInteraction.js';
  * @extends {MessageComponentInteraction}
  */
 export class StringSelectMenuInteraction extends MessageComponentInteraction {
-  public values: any;
-  constructor(client: any, data: any) {
-    super(client, data);
+	public values: any;
+	constructor(client: any, data: any) {
+		super(client, data);
 
-    /**
-     * The values selected
-     *
-     * @type {string[]}
-     */
-    this.values = data.data.values ?? [];
-  }
+		/**
+		 * The values selected
+		 *
+		 * @type {string[]}
+		 */
+		this.values = data.data.values ?? [];
+	}
 }

@@ -1,17 +1,17 @@
-import { type RequestData, type REST, makeURLSearchParams } from '@ovencord/rest';
+import { makeURLSearchParams, type REST, type RequestData } from '@ovencord/rest';
 import {
-	Routes,
-	RouteBases,
-	type RESTOAuth2AuthorizationQuery,
-	type RESTPostOAuth2RefreshTokenURLEncodedData,
-	type RESTPostOAuth2RefreshTokenResult,
-	type RESTPostOAuth2ClientCredentialsURLEncodedData,
-	type RESTPostOAuth2ClientCredentialsResult,
-	type RESTGetAPIOAuth2CurrentAuthorizationResult,
 	type RESTGetAPIOAuth2CurrentApplicationResult,
-	type RESTPostOAuth2AccessTokenURLEncodedData,
+	type RESTGetAPIOAuth2CurrentAuthorizationResult,
+	type RESTOAuth2AuthorizationQuery,
 	type RESTPostOAuth2AccessTokenResult,
+	type RESTPostOAuth2AccessTokenURLEncodedData,
+	type RESTPostOAuth2ClientCredentialsResult,
+	type RESTPostOAuth2ClientCredentialsURLEncodedData,
+	type RESTPostOAuth2RefreshTokenResult,
+	type RESTPostOAuth2RefreshTokenURLEncodedData,
 	type RESTPostOAuth2TokenRevocationQuery,
+	RouteBases,
+	Routes,
 	type Snowflake,
 } from 'discord-api-types/v10';
 

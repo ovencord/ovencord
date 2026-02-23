@@ -1,6 +1,6 @@
 /**
  * Type Shims for Bun Native Environment
- * 
+ *
  * This file provides type declarations to eliminate conflicts between
  * @types/node and @types/bun, allowing clean TypeScript compilation
  * in a pure Bun environment.
@@ -47,9 +47,9 @@ declare global {
 			platform: string;
 		}
 
-		interface Timeout extends Number {}
+		interface Timeout extends number {}
 	}
-	
+
 	// Global declarations
 	var process: NodeJS.Process;
 	var __dirname: string;

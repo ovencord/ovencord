@@ -1,35 +1,35 @@
-import { Events  } from '../../util/Events.js';
-import { Action  } from './Action.js';
+import { Events } from '../../util/Events.js';
+import { Action } from './Action.js';
 
 export class MessagePollVoteRemoveAction extends Action {
-  override handle(data: any) {
-    const channel = this.getChannel({ id: data.channel_id, ...('guild_id' in data && { guild_id: data.guild_id }) });
-    if (!channel?.isTextBased()) return false;
+	override handle(data: any) {
+		const channel = this.getChannel({ id: data.channel_id, ...('guild_id' in data && { guild_id: data.guild_id }) });
+		if (!channel?.isTextBased()) return false;
 
-    const message = this.getMessage(data, channel, undefined);
-    if (!message) return false;
+		const message = this.getMessage(data, channel, undefined);
+		if (!message) return false;
 
-    const poll = this.getPoll(data, message, channel);
-    if (!poll) return false;
+		const poll = this.getPoll(data, message, channel);
+		if (!poll) return false;
 
-    const answer = poll.answers.get(data.answer_id);
-    if (!answer) return false;
+		const answer = poll.answers.get(data.answer_id);
+		if (!answer) return false;
 
-    answer.voters.cache.delete(data.user_id);
+		answer.voters.cache.delete(data.user_id);
 
-    if (answer.voteCount > 0) {
-      answer.voteCount--;
-    }
+		if (answer.voteCount > 0) {
+			answer.voteCount--;
+		}
 
-    /**
-     * Emitted whenever a user removes their vote in a poll.
-     *
-     * @event Client#messagePollVoteRemove
-     * @param {PollAnswer} pollAnswer The answer where the vote was removed
-     * @param {Snowflake} userId The id of the user that removed their vote
-     */
-    this.client.emit(Events.MessagePollVoteRemove, answer, data.user_id);
+		/**
+		 * Emitted whenever a user removes their vote in a poll.
+		 *
+		 * @event Client#messagePollVoteRemove
+		 * @param {PollAnswer} pollAnswer The answer where the vote was removed
+		 * @param {Snowflake} userId The id of the user that removed their vote
+		 */
+		this.client.emit(Events.MessagePollVoteRemove, answer, data.user_id);
 
-    return { poll };
-  }
+		return { poll };
+	}
 }

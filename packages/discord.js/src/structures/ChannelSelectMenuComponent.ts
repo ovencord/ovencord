@@ -1,4 +1,4 @@
-import { BaseSelectMenuComponent  } from './BaseSelectMenuComponent.js';
+import { BaseSelectMenuComponent } from './BaseSelectMenuComponent.js';
 
 /**
  * Represents a channel select menu component
@@ -6,13 +6,13 @@ import { BaseSelectMenuComponent  } from './BaseSelectMenuComponent.js';
  * @extends {BaseSelectMenuComponent}
  */
 export class ChannelSelectMenuComponent extends BaseSelectMenuComponent {
-  /**
-   * The options in this select menu
-   *
-   * @type {?(ChannelType[])}
-   * @readonly
-   */
-  get channelTypes() {
-    return this.data.channel_types ?? null;
-  }
+	/**
+	 * The options in this select menu
+	 *
+	 * @type {?(ChannelType[])}
+	 * @readonly
+	 */
+	get channelTypes() {
+		return this.data.channel_types ?? null;
+	}
 }

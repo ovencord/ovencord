@@ -1,12 +1,12 @@
-import type { RequestData, REST } from '@ovencord/rest';
+import type { REST, RequestData } from '@ovencord/rest';
 import {
-	type Snowflake,
 	type RESTGetAPIStageInstanceResult,
 	type RESTPatchAPIStageInstanceJSONBody,
 	type RESTPatchAPIStageInstanceResult,
 	type RESTPostAPIStageInstanceJSONBody,
 	type RESTPostAPIStageInstanceResult,
 	Routes,
+	type Snowflake,
 } from 'discord-api-types/v10';
 
 export class StageInstancesAPI {

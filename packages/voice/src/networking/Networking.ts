@@ -18,7 +18,7 @@ const MAX_NONCE_SIZE = 2 ** 32 - 1;
 
 export const SUPPORTED_ENCRYPTION_MODES: VoiceEncryptionMode[] = [
 	VoiceEncryptionMode.AeadAes256GcmRtpSize,
-	VoiceEncryptionMode.AeadXChaCha20Poly1305RtpSize
+	VoiceEncryptionMode.AeadXChaCha20Poly1305RtpSize,
 ];
 
 /**
@@ -579,7 +579,10 @@ export class Networking extends AsyncEventEmitter {
 			if (message.op === VoiceOpcodes.DaveMlsExternalSender) {
 				this.state.dave.setExternalSender(message.payload as any);
 			} else if (message.op === VoiceOpcodes.DaveMlsProposals) {
-				const payload = this.state.dave.processProposals(message.payload as any, this.state.connectionData.connectedClients);
+				const payload = this.state.dave.processProposals(
+					message.payload as any,
+					this.state.connectionData.connectedClients,
+				);
 				if (payload) this.state.ws.sendBinaryMessage(VoiceOpcodes.DaveMlsCommitWelcome, payload as any);
 			} else if (message.op === VoiceOpcodes.DaveMlsAnnounceCommitTransition) {
 				const { transitionId, success } = this.state.dave.processCommit(message.payload as any);
@@ -748,14 +751,14 @@ export class Networking extends AsyncEventEmitter {
 		view.setUint32(8, ssrc, false);
 
 		nonce.set(rtpHeader.subarray(0, 12));
-		
+
 		const [encrypted, noncePadding] = this.encryptOpusPacket(opusPacket, connectionData, rtpHeader, daveSession);
 
 		const result = new Uint8Array(12 + encrypted.length + noncePadding.length);
 		result.set(rtpHeader, 0);
 		result.set(encrypted, 12);
 		result.set(noncePadding, 12 + encrypted.length);
-		
+
 		return result;
 	}
 
@@ -774,12 +777,13 @@ export class Networking extends AsyncEventEmitter {
 	): [Uint8Array, Uint8Array] {
 		const { secretKey, encryptionMode } = connectionData;
 
-		const packet = daveSession?.encrypt(opusPacket instanceof Buffer ? opusPacket : Buffer.from(opusPacket)) ?? opusPacket;
+		const packet =
+			daveSession?.encrypt(opusPacket instanceof Buffer ? opusPacket : Buffer.from(opusPacket)) ?? opusPacket;
 
 		// Both supported encryption methods want the nonce to be an incremental integer
 		connectionData.nonce++;
 		if (connectionData.nonce > MAX_NONCE_SIZE) connectionData.nonce = 0;
-		
+
 		const nonceView = new DataView(connectionData.nonceBuffer.buffer);
 		nonceView.setUint32(0, connectionData.nonce, false);
 

@@ -1,6 +1,6 @@
-import type { SKUFlags, APISKU } from 'discord-api-types/v10';
-import { Structure } from '../Structure.js';
+import type { APISKU, SKUFlags } from 'discord-api-types/v10';
 import { SKUFlagsBitField } from '../bitfields/SKUFlagsBitField.js';
+import { Structure } from '../Structure.js';
 import { kData } from '../utils/symbols.js';
 import { isFieldSet } from '../utils/type-guards.js';
 import type { Partialize } from '../utils/types.js';

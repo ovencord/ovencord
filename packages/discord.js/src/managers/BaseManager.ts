@@ -1,13 +1,12 @@
-
 /**
  * Manages the API methods of a data model.
  *
  * @abstract
  */
 export abstract class BaseManager {
-  public client: any;
+	public client: any;
 
-  constructor(client: any) {
-    this.client = client;
-  }
+	constructor(client: any) {
+		this.client = client;
+	}
 }

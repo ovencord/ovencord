@@ -1,5 +1,4 @@
-
-import { createEnum  } from './Enums.js';
+import { createEnum } from './Enums.js';
 
 /**
  * The enumeration for partials.
@@ -37,14 +36,14 @@ import { createEnum  } from './Enums.js';
  * @ignore
  */
 export const Partials = createEnum([
-  'User',
-  'Channel',
-  'GuildMember',
-  'Message',
-  'Reaction',
-  'GuildScheduledEvent',
-  'ThreadMember',
-  'Poll',
-  'PollAnswer',
-  'SoundboardSound',
+	'User',
+	'Channel',
+	'GuildMember',
+	'Message',
+	'Reaction',
+	'GuildScheduledEvent',
+	'ThreadMember',
+	'Poll',
+	'PollAnswer',
+	'SoundboardSound',
 ]) as any;

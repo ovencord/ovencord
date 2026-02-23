@@ -1,43 +1,40 @@
-export * from './joinVoiceChannel';
 export * from './audio/index';
-export * from './util/index';
-export * from './receive/index';
-
+export { getGroups, getVoiceConnection, getVoiceConnections, type JoinConfig } from './DataStore';
+export * from './joinVoiceChannel';
 export {
-	Networking,
 	type ConnectionData,
 	type ConnectionOptions,
-	type NetworkingState,
-	type NetworkingResumingState,
-	type NetworkingSelectingProtocolState,
-	type NetworkingUdpHandshakingState,
+	DAVESession,
+	Networking,
 	type NetworkingClosedState,
 	type NetworkingIdentifyingState,
 	type NetworkingOpeningWsState,
 	type NetworkingReadyState,
+	type NetworkingResumingState,
+	type NetworkingSelectingProtocolState,
+	type NetworkingState,
 	NetworkingStatusCode,
+	type NetworkingUdpHandshakingState,
+	type SocketConfig,
 	VoiceUDPSocket,
 	VoiceWebSocket,
-	type SocketConfig,
-	DAVESession,
 } from './networking/index.js';
-
+export * from './receive/index';
+export * from './util/index';
 export {
 	VoiceConnection,
-	type VoiceConnectionState,
-	VoiceConnectionStatus,
 	type VoiceConnectionConnectingState,
 	type VoiceConnectionDestroyedState,
-	type VoiceConnectionDisconnectedState,
 	type VoiceConnectionDisconnectedBaseState,
 	type VoiceConnectionDisconnectedOtherState,
+	type VoiceConnectionDisconnectedState,
 	type VoiceConnectionDisconnectedWebSocketState,
 	VoiceConnectionDisconnectReason,
 	type VoiceConnectionReadyState,
 	type VoiceConnectionSignallingState,
+	type VoiceConnectionState,
+	VoiceConnectionStatus,
 } from './VoiceConnection';
-
-export { type JoinConfig, getVoiceConnection, getVoiceConnections, getGroups } from './DataStore';
 
 /**
  * The {@link https://github.com/ovencord/ovencord/blob/main/packages/voice#readme | @ovencord/voice} version

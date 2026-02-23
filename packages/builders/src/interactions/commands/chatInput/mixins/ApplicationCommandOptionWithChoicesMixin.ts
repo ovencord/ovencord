@@ -15,7 +15,7 @@ export class ApplicationCommandOptionWithChoicesMixin<ChoiceType extends number 
 	/**
 	 * @internal
 	 */
-	declare protected readonly data: ApplicationCommandOptionWithChoicesData;
+	protected declare readonly data: ApplicationCommandOptionWithChoicesData;
 
 	/**
 	 * Adds multiple choices to this option.

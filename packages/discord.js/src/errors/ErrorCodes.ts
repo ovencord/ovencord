@@ -134,137 +134,137 @@
  */
 
 const keys = [
-  'ClientInvalidOption',
-  'ClientInvalidProvidedShards',
-  'ClientMissingIntents',
-  'ClientNotReady',
+	'ClientInvalidOption',
+	'ClientInvalidProvidedShards',
+	'ClientMissingIntents',
+	'ClientNotReady',
 
-  'TokenInvalid',
-  'TokenMissing',
-  'ApplicationCommandPermissionsTokenMissing',
+	'TokenInvalid',
+	'TokenMissing',
+	'ApplicationCommandPermissionsTokenMissing',
 
-  'BitFieldInvalid',
+	'BitFieldInvalid',
 
-  'ShardingNoShards',
-  'ShardingInProcess',
-  'ShardingInvalidEvalBroadcast',
-  'ShardingShardNotFound',
-  'ShardingAlreadySpawned',
-  'ShardingProcessExists',
-  'ShardingWorkerExists',
-  'ShardingReadyTimeout',
-  'ShardingReadyDisconnected',
-  'ShardingReadyDied',
-  'ShardingNoChildExists',
-  'ShardingShardMiscalculation',
+	'ShardingNoShards',
+	'ShardingInProcess',
+	'ShardingInvalidEvalBroadcast',
+	'ShardingShardNotFound',
+	'ShardingAlreadySpawned',
+	'ShardingProcessExists',
+	'ShardingWorkerExists',
+	'ShardingReadyTimeout',
+	'ShardingReadyDisconnected',
+	'ShardingReadyDied',
+	'ShardingNoChildExists',
+	'ShardingShardMiscalculation',
 
-  'ColorRange',
-  'ColorConvert',
+	'ColorRange',
+	'ColorConvert',
 
-  'InviteOptionsMissingChannel',
+	'InviteOptionsMissingChannel',
 
-  'InteractionCollectorError',
+	'InteractionCollectorError',
 
-  'FileNotFound',
+	'FileNotFound',
 
-  'UserNoDMChannel',
+	'UserNoDMChannel',
 
-  'VoiceNotStageChannel',
+	'VoiceNotStageChannel',
 
-  'VoiceStateNotOwn',
-  'VoiceStateInvalidType',
+	'VoiceStateNotOwn',
+	'VoiceStateInvalidType',
 
-  'ReqResourceType',
+	'ReqResourceType',
 
-  'MessageBulkDeleteType',
-  'MessageContentType',
-  'MessageNonceRequired',
-  'MessageNonceType',
+	'MessageBulkDeleteType',
+	'MessageContentType',
+	'MessageNonceRequired',
+	'MessageNonceType',
 
-  'BanResolveId',
-  'FetchBanResolveId',
+	'BanResolveId',
+	'FetchBanResolveId',
 
-  'PruneDaysType',
+	'PruneDaysType',
 
-  'GuildChannelResolve',
-  'GuildVoiceChannelResolve',
-  'GuildChannelOrphan',
-  'GuildChannelUnowned',
-  'GuildMembersTimeout',
-  'GuildSoundboardSoundsTimeout',
-  'GuildUncachedMe',
-  'ChannelNotCached',
-  'StageChannelResolve',
-  'GuildScheduledEventResolve',
-  'FetchOwnerId',
+	'GuildChannelResolve',
+	'GuildVoiceChannelResolve',
+	'GuildChannelOrphan',
+	'GuildChannelUnowned',
+	'GuildMembersTimeout',
+	'GuildSoundboardSoundsTimeout',
+	'GuildUncachedMe',
+	'ChannelNotCached',
+	'StageChannelResolve',
+	'GuildScheduledEventResolve',
+	'FetchOwnerId',
 
-  'InvalidType',
-  'InvalidElement',
+	'InvalidType',
+	'InvalidElement',
 
-  'MessageThreadParent',
-  'MessageExistingThread',
-  'ThreadInvitableType',
-  'NotAThreadOfParent',
+	'MessageThreadParent',
+	'MessageExistingThread',
+	'ThreadInvitableType',
+	'NotAThreadOfParent',
 
-  'WebhookMessage',
-  'WebhookTokenUnavailable',
-  'WebhookApplication',
+	'WebhookMessage',
+	'WebhookTokenUnavailable',
+	'WebhookApplication',
 
-  'MessageReferenceMissing',
+	'MessageReferenceMissing',
 
-  'EmojiType',
-  'EmojiManaged',
-  'MissingGuildExpressionsPermission',
+	'EmojiType',
+	'EmojiManaged',
+	'MissingGuildExpressionsPermission',
 
-  'NotGuildSoundboardSound',
-  'NotGuildSticker',
+	'NotGuildSoundboardSound',
+	'NotGuildSticker',
 
-  'ReactionResolveUser',
+	'ReactionResolveUser',
 
-  'InviteResolveCode',
-  'InviteNotFound',
+	'InviteResolveCode',
+	'InviteNotFound',
 
-  'DeleteGroupDMChannel',
-  'FetchGroupDMChannel',
+	'DeleteGroupDMChannel',
+	'FetchGroupDMChannel',
 
-  'MemberFetchNonceLength',
+	'MemberFetchNonceLength',
 
-  'GlobalCommandPermissions',
-  'GuildUncachedEntityResolve',
+	'GlobalCommandPermissions',
+	'GuildUncachedEntityResolve',
 
-  'InteractionAlreadyReplied',
-  'InteractionNotReplied',
+	'InteractionAlreadyReplied',
+	'InteractionNotReplied',
 
-  'CommandInteractionOptionNotFound',
-  'CommandInteractionOptionType',
-  'CommandInteractionOptionEmpty',
-  'CommandInteractionOptionNoSubcommand',
-  'CommandInteractionOptionNoSubcommandGroup',
-  'CommandInteractionOptionInvalidChannelType',
-  'AutocompleteInteractionOptionNoFocusedOption',
+	'CommandInteractionOptionNotFound',
+	'CommandInteractionOptionType',
+	'CommandInteractionOptionEmpty',
+	'CommandInteractionOptionNoSubcommand',
+	'CommandInteractionOptionNoSubcommandGroup',
+	'CommandInteractionOptionInvalidChannelType',
+	'AutocompleteInteractionOptionNoFocusedOption',
 
-  'ModalSubmitInteractionComponentNotFound',
-  'ModalSubmitInteractionComponentType',
-  'ModalSubmitInteractionComponentEmpty',
-  'ModalSubmitInteractionComponentInvalidChannelType',
+	'ModalSubmitInteractionComponentNotFound',
+	'ModalSubmitInteractionComponentType',
+	'ModalSubmitInteractionComponentEmpty',
+	'ModalSubmitInteractionComponentInvalidChannelType',
 
-  'InvalidMissingScopes',
-  'InvalidScopesWithPermissions',
+	'InvalidMissingScopes',
+	'InvalidScopesWithPermissions',
 
-  'NotImplemented',
+	'NotImplemented',
 
-  'SweepFilterReturn',
+	'SweepFilterReturn',
 
-  'GuildForumMessageRequired',
+	'GuildForumMessageRequired',
 
-  'EntitlementCreateInvalidOwner',
+	'EntitlementCreateInvalidOwner',
 
-  'BulkBanUsersOptionEmpty',
+	'BulkBanUsersOptionEmpty',
 
-  'PollAlreadyExpired',
+	'PollAlreadyExpired',
 
-  'PermissionOverwritesTypeMandatory',
-  'PermissionOverwritesTypeMismatch',
+	'PermissionOverwritesTypeMandatory',
+	'PermissionOverwritesTypeMismatch',
 ];
 
 // JSDoc for IntelliSense purposes
@@ -272,4 +272,4 @@ const keys = [
  * @type {DiscordjsErrorCodes}
  * @ignore
  */
-export const ErrorCodes = Object.fromEntries(keys.map(key => [key, key]));
+export const ErrorCodes = Object.fromEntries(keys.map((key) => [key, key]));

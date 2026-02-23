@@ -3,21 +3,21 @@ import { AsyncEventEmitter, AsyncQueue, shouldUseGlobalFetchAndWebSocket } from 
 import {
 	GatewayCloseCodes,
 	GatewayDispatchEvents,
-	GatewayOpcodes,
 	type GatewayDispatchPayload,
 	type GatewayIdentifyData,
+	GatewayOpcodes,
 	type GatewayReadyDispatchData,
 	type GatewayReceivePayload,
 	type GatewaySendPayload,
 } from 'discord-api-types/v10';
 import type { IContextFetchingStrategy } from '../strategies/context/IContextFetchingStrategy.js';
+import { BunInflateHandler } from '../utils/BunCompression.js';
 import {
 	CompressionMethod,
 	CompressionParameterMap,
-	ImportantGatewayOpcodes,
 	getInitialSendRateLimitState,
+	ImportantGatewayOpcodes,
 } from '../utils/constants.js';
-import { BunInflateHandler } from '../utils/BunCompression.js';
 import type { SessionInfo } from './WebSocketManager.js';
 
 export enum WebSocketShardEvents {
@@ -83,8 +83,6 @@ export class WebSocketShard extends AsyncEventEmitter<WebSocketShardEventsMap> {
 	 * Bun-native compression handler for Discord gateway
 	 */
 	private bunInflate: BunInflateHandler = new BunInflateHandler();
-
-
 
 	private replayedEvents = 0;
 
@@ -238,7 +236,6 @@ export class WebSocketShard extends AsyncEventEmitter<WebSocketShardEventsMap> {
 			return;
 		}
 
-		 
 		if (!options.code) {
 			options.code = options.recover === WebSocketShardDestroyRecovery.Resume ? CloseCodes.Resuming : CloseCodes.Normal;
 		}
@@ -482,7 +479,7 @@ export class WebSocketShard extends AsyncEventEmitter<WebSocketShardEventsMap> {
 
 		await this.send({
 			op: GatewayOpcodes.Identify,
-			 
+
 			d: data,
 		});
 
@@ -501,7 +498,7 @@ export class WebSocketShard extends AsyncEventEmitter<WebSocketShardEventsMap> {
 		this.replayedEvents = 0;
 		return this.send({
 			op: GatewayOpcodes.Resume,
-			 
+
 			d: {
 				token: this.strategy.options.token,
 				seq: session.sequence,
@@ -521,15 +518,13 @@ export class WebSocketShard extends AsyncEventEmitter<WebSocketShardEventsMap> {
 
 		await this.send({
 			op: GatewayOpcodes.Heartbeat,
-			 
+
 			d: session?.sequence ?? null,
 		});
 
 		this.lastHeartbeatAt = Date.now();
 		this.isAck = false;
 	}
-
-
 
 	private async unpackMessage(data: ArrayBuffer | string, isBinary: boolean): Promise<GatewayReceivePayload | null> {
 		// Deal with no compression
@@ -700,7 +695,7 @@ export class WebSocketShard extends AsyncEventEmitter<WebSocketShardEventsMap> {
 				const ackAt = Date.now();
 				const latency = Math.round((Number(Bun.nanoseconds()) - this.lastPingTimestamp) / 1_000_000);
 				this.ping = latency;
-				
+
 				this.emit(WebSocketShardEvents.HeartbeatComplete, {
 					ackAt,
 					heartbeatAt: this.lastHeartbeatAt,
@@ -860,7 +855,7 @@ export class WebSocketShard extends AsyncEventEmitter<WebSocketShardEventsMap> {
 			const listener = (...args: any[]) => {
 				resolve(args);
 			};
-			
+
 			if (options?.signal) {
 				const { signal } = options;
 				if (signal.aborted) {

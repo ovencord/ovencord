@@ -1,4 +1,4 @@
-import { MessageComponentInteraction  } from './MessageComponentInteraction.js';
+import { MessageComponentInteraction } from './MessageComponentInteraction.js';
 
 /**
  * Represents a button interaction.

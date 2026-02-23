@@ -1,5 +1,5 @@
-import { Collection  } from '@ovencord/collection';
-import { DiscordjsTypeError, ErrorCodes  } from '../errors/index.js';
+import { Collection } from '@ovencord/collection';
+import { DiscordjsTypeError, ErrorCodes } from '../errors/index.js';
 
 /**
  * Options for defining the behavior of a LimitedCollection
@@ -18,58 +18,58 @@ import { DiscordjsTypeError, ErrorCodes  } from '../errors/index.js';
  * @param {Iterable} [iterable=null] Optional entries passed to the Map constructor.
  */
 export class LimitedCollection<K, V> extends Collection<K, V> {
-  public maxSize: any;
-  public keepOverLimit: any;
-  // @ts-ignore
-  constructor(options = {}, iterable = undefined) {
-    if (typeof options !== 'object' || options === null) {
-      throw new DiscordjsTypeError(ErrorCodes.InvalidType, 'options', 'object', true);
-    }
+	public maxSize: any;
+	public keepOverLimit: any;
+	// @ts-expect-error
+	constructor(options = {}, iterable = undefined) {
+		if (typeof options !== 'object' || options === null) {
+			throw new DiscordjsTypeError(ErrorCodes.InvalidType, 'options', 'object', true);
+		}
 
-    // @ts-ignore
-    const { maxSize = Infinity, keepOverLimit = null } = options;
+		// @ts-expect-error
+		const { maxSize = Infinity, keepOverLimit = null } = options;
 
-    if (typeof maxSize !== 'number') {
-      throw new DiscordjsTypeError(ErrorCodes.InvalidType, 'maxSize', 'number');
-    }
+		if (typeof maxSize !== 'number') {
+			throw new DiscordjsTypeError(ErrorCodes.InvalidType, 'maxSize', 'number');
+		}
 
-    if (keepOverLimit !== null && typeof keepOverLimit !== 'function') {
-      throw new DiscordjsTypeError(ErrorCodes.InvalidType, 'keepOverLimit', 'function');
-    }
+		if (keepOverLimit !== null && typeof keepOverLimit !== 'function') {
+			throw new DiscordjsTypeError(ErrorCodes.InvalidType, 'keepOverLimit', 'function');
+		}
 
-    super(iterable);
+		super(iterable);
 
-    /**
-     * The max size of the Collection.
-     *
-     * @type {number}
-     */
-    this.maxSize = maxSize;
+		/**
+		 * The max size of the Collection.
+		 *
+		 * @type {number}
+		 */
+		this.maxSize = maxSize;
 
-    /**
-     * A function called to check if an entry should be kept when the Collection is at max size.
-     *
-     * @type {?Function}
-     */
-    this.keepOverLimit = keepOverLimit;
-  }
+		/**
+		 * A function called to check if an entry should be kept when the Collection is at max size.
+		 *
+		 * @type {?Function}
+		 */
+		this.keepOverLimit = keepOverLimit;
+	}
 
-  set(key: any, value: any) {
-    if (this.maxSize === 0 && !this.keepOverLimit?.(value, key, this)) return this;
-    if (this.size >= this.maxSize && !this.has(key)) {
-      for (const [iteratedKey, iteratedValue] of this.entries()) {
-        const keep = this.keepOverLimit?.(iteratedValue, iteratedKey, this) ?? false;
-        if (!keep) {
-          this.delete(iteratedKey);
-          break;
-        }
-      }
-    }
+	set(key: any, value: any) {
+		if (this.maxSize === 0 && !this.keepOverLimit?.(value, key, this)) return this;
+		if (this.size >= this.maxSize && !this.has(key)) {
+			for (const [iteratedKey, iteratedValue] of this.entries()) {
+				const keep = this.keepOverLimit?.(iteratedValue, iteratedKey, this) ?? false;
+				if (!keep) {
+					this.delete(iteratedKey);
+					break;
+				}
+			}
+		}
 
-    return super.set(key, value);
-  }
+		return super.set(key, value);
+	}
 
-  static get [Symbol.species]() {
-    return Collection;
-  }
+	static get [Symbol.species]() {
+		return Collection;
+	}
 }

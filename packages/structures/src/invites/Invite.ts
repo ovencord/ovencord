@@ -1,7 +1,7 @@
-import { type APIInvite, type APIExtendedInvite, RouteBases } from 'discord-api-types/v10';
+import { type APIExtendedInvite, type APIInvite, RouteBases } from 'discord-api-types/v10';
 import { Structure } from '../Structure.js';
 import { dateToDiscordISOTimestamp } from '../utils/optimization.js';
-import { kData, kExpiresTimestamp, kCreatedTimestamp } from '../utils/symbols.js';
+import { kCreatedTimestamp, kData, kExpiresTimestamp } from '../utils/symbols.js';
 import type { Partialize } from '../utils/types.js';
 
 export interface APIActualInvite extends APIInvite, Partial<Omit<APIExtendedInvite, keyof APIInvite>> {}

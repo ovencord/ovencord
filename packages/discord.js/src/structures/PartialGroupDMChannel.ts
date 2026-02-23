@@ -1,7 +1,7 @@
-import { DiscordjsError, ErrorCodes  } from '../errors/index.js';
-import { PartialGroupDMMessageManager  } from '../managers/PartialGroupDMMessageManager.js';
-import { BaseChannel  } from './BaseChannel.js';
-import { TextBasedChannel  } from './interfaces/TextBasedChannel.js';
+import { DiscordjsError, ErrorCodes } from '../errors/index.js';
+import { PartialGroupDMMessageManager } from '../managers/PartialGroupDMMessageManager.js';
+import { BaseChannel } from './BaseChannel.js';
+import { TextBasedChannel } from './interfaces/TextBasedChannel.js';
 
 /**
  * Represents a Partial Group DM Channel on Discord.
@@ -10,140 +10,144 @@ import { TextBasedChannel  } from './interfaces/TextBasedChannel.js';
  * @implements {TextBasedChannel}
  */
 export class PartialGroupDMChannel extends BaseChannel {
-  public flags: any;
-  public name: any;
-  public icon: any;
-  public recipients: any;
-  public messages: any;
-  public ownerId: any;
-  public lastMessageId: any;
-  public lastPinTimestamp: any;
-  constructor(client: any, data: any) {
-    super(client, data);
+	public flags: any;
+	public name: any;
+	public icon: any;
+	public recipients: any;
+	public messages: any;
+	public ownerId: any;
+	public lastMessageId: any;
+	public lastPinTimestamp: any;
+	constructor(client: any, data: any) {
+		super(client, data);
 
-    // No flags are present when fetching partial group DM channels.
-    this.flags = null;
+		// No flags are present when fetching partial group DM channels.
+		this.flags = null;
 
-    /**
-     * The name of this Group DM Channel
-     *
-     * @type {?string}
-     */
-    this.name = data.name;
+		/**
+		 * The name of this Group DM Channel
+		 *
+		 * @type {?string}
+		 */
+		this.name = data.name;
 
-    /**
-     * The hash of the channel icon
-     *
-     * @type {?string}
-     */
-    this.icon = data.icon ?? null;
+		/**
+		 * The hash of the channel icon
+		 *
+		 * @type {?string}
+		 */
+		this.icon = data.icon ?? null;
 
-    /**
-     * Recipient data received in a {@link PartialGroupDMChannel}.
-     *
-     * @typedef {Object} PartialRecipient
-     * @property {string} username The username of the recipient
-     */
+		/**
+		 * Recipient data received in a {@link PartialGroupDMChannel}.
+		 *
+		 * @typedef {Object} PartialRecipient
+		 * @property {string} username The username of the recipient
+		 */
 
-    /**
-     * The recipients of this Group DM Channel.
-     *
-     * @type {PartialRecipient[]}
-     */
-    this.recipients = data.recipients ?? [];
+		/**
+		 * The recipients of this Group DM Channel.
+		 *
+		 * @type {PartialRecipient[]}
+		 */
+		this.recipients = data.recipients ?? [];
 
-    /**
-     * A manager of the messages belonging to this channel
-     *
-     * @type {PartialGroupDMMessageManager}
-     */
-    this.messages = new PartialGroupDMMessageManager(this);
+		/**
+		 * A manager of the messages belonging to this channel
+		 *
+		 * @type {PartialGroupDMMessageManager}
+		 */
+		this.messages = new PartialGroupDMMessageManager(this);
 
-    if ('owner_id' in data) {
-      /**
-       * The user id of the owner of this Group DM Channel
-       *
-       * @type {?Snowflake}
-       */
-      this.ownerId = data.owner_id;
-    } else {
-      this.ownerId ??= null;
-    }
+		if ('owner_id' in data) {
+			/**
+			 * The user id of the owner of this Group DM Channel
+			 *
+			 * @type {?Snowflake}
+			 */
+			this.ownerId = data.owner_id;
+		} else {
+			this.ownerId ??= null;
+		}
 
-    if ('last_message_id' in data) {
-      /**
-       * The channel's last message id, if one was sent
-       *
-       * @type {?Snowflake}
-       */
-      this.lastMessageId = data.last_message_id;
-    } else {
-      this.lastMessageId ??= null;
-    }
+		if ('last_message_id' in data) {
+			/**
+			 * The channel's last message id, if one was sent
+			 *
+			 * @type {?Snowflake}
+			 */
+			this.lastMessageId = data.last_message_id;
+		} else {
+			this.lastMessageId ??= null;
+		}
 
-    if ('last_pin_timestamp' in data) {
-      /**
-       * The timestamp when the last pinned message was pinned, if there was one
-       *
-       * @type {?number}
-       */
-      this.lastPinTimestamp = data.last_pin_timestamp ? Date.parse(data.last_pin_timestamp) : null;
-    } else {
-      this.lastPinTimestamp ??= null;
-    }
-  }
+		if ('last_pin_timestamp' in data) {
+			/**
+			 * The timestamp when the last pinned message was pinned, if there was one
+			 *
+			 * @type {?number}
+			 */
+			this.lastPinTimestamp = data.last_pin_timestamp ? Date.parse(data.last_pin_timestamp) : null;
+		} else {
+			this.lastPinTimestamp ??= null;
+		}
+	}
 
-  /**
-   * The URL to this channel's icon.
-   *
-   * @param {ImageURLOptions} [options={}] Options for the image URL
-   * @returns {?string}
-   */
-  iconURL(options = {}) {
-    return this.icon && this.client.rest.cdn.channelIcon(this.id, this.icon, options);
-  }
+	/**
+	 * The URL to this channel's icon.
+	 *
+	 * @param {ImageURLOptions} [options={}] Options for the image URL
+	 * @returns {?string}
+	 */
+	iconURL(options = {}) {
+		return this.icon && this.client.rest.cdn.channelIcon(this.id, this.icon, options);
+	}
 
-  /**
-   * Fetches the owner of this Group DM Channel.
-   *
-   * @param {BaseFetchOptions} [options] The options for fetching the user
-   * @returns {Promise<User>}
-   */
-  async fetchOwner(options: any) {
-    if (!this.ownerId) {
-      throw new DiscordjsError(ErrorCodes.FetchOwnerId, 'group DM');
-    }
+	/**
+	 * Fetches the owner of this Group DM Channel.
+	 *
+	 * @param {BaseFetchOptions} [options] The options for fetching the user
+	 * @returns {Promise<User>}
+	 */
+	async fetchOwner(options: any) {
+		if (!this.ownerId) {
+			throw new DiscordjsError(ErrorCodes.FetchOwnerId, 'group DM');
+		}
 
-    return this.client.users.fetch(this.ownerId, options);
-  }
+		return this.client.users.fetch(this.ownerId, options);
+	}
 
-  delete(): any {
-    throw new DiscordjsError(ErrorCodes.DeleteGroupDMChannel);
-  }
+	delete(): any {
+		throw new DiscordjsError(ErrorCodes.DeleteGroupDMChannel);
+	}
 
-  async fetch() {
-    throw new DiscordjsError(ErrorCodes.FetchGroupDMChannel);
-  }
+	async fetch() {
+		throw new DiscordjsError(ErrorCodes.FetchGroupDMChannel);
+	}
 
-  // These are here only for documentation purposes - they are implemented by TextBasedChannel
+	// These are here only for documentation purposes - they are implemented by TextBasedChannel
 
-  get lastMessage(): any { return undefined; }
+	get lastMessage(): any {
+		return undefined;
+	}
 
-  get lastPinAt(): any { return undefined; }
+	get lastPinAt(): any {
+		return undefined;
+	}
 
-  createMessageComponentCollector() {}
+	createMessageComponentCollector() {}
 
-  awaitMessageComponent() {}
+	awaitMessageComponent() {}
 }
 
 TextBasedChannel.applyToClass(PartialGroupDMChannel, [
-  'bulkDelete',
-  'send',
-  'sendTyping',
-  'createMessageCollector',
-  'awaitMessages',
-  'fetchWebhooks',
-  'createWebhook',
-  'setRateLimitPerUser',
-  'setNSFW',
+	'bulkDelete',
+	'send',
+	'sendTyping',
+	'createMessageCollector',
+	'awaitMessages',
+	'fetchWebhooks',
+	'createWebhook',
+	'setRateLimitPerUser',
+	'setNSFW',
 ] as any);

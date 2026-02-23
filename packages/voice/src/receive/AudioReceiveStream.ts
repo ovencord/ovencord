@@ -81,7 +81,7 @@ export class AudioReceiveStream {
 				this.isClosed = true;
 				if (rest.cancel) rest.cancel(reason);
 				if (this.onClose) this.onClose();
-			}
+			},
 		});
 	}
 
@@ -92,7 +92,13 @@ export class AudioReceiveStream {
 			buffer &&
 			(this.end.behavior === EndBehaviorType.AfterInactivity ||
 				(this.end.behavior === EndBehaviorType.AfterSilence &&
-					(!(buffer.length === SILENCE_FRAME.length && buffer[0] === SILENCE_FRAME[0] && buffer[1] === SILENCE_FRAME[1] && buffer[2] === SILENCE_FRAME[2]) || this.endTimeout === undefined)))
+					(!(
+						buffer.length === SILENCE_FRAME.length &&
+						buffer[0] === SILENCE_FRAME[0] &&
+						buffer[1] === SILENCE_FRAME[1] &&
+						buffer[2] === SILENCE_FRAME[2]
+					) ||
+						this.endTimeout === undefined)))
 		) {
 			this.renewEndTimeout(this.end);
 		}

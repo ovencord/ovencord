@@ -3,7 +3,12 @@ import { lazy } from '@ovencord/util';
 import { APIVersion, GatewayOpcodes, type GatewayPresenceUpdateData } from 'discord-api-types/v10';
 import { SimpleShardingStrategy } from '../strategies/sharding/SimpleShardingStrategy.js';
 import { SimpleIdentifyThrottler } from '../throttling/SimpleIdentifyThrottler.js';
-import type { SessionInfo, OptionalWebSocketManagerOptions, WebSocketManager, ShardRange } from '../ws/WebSocketManager.js';
+import type {
+	OptionalWebSocketManagerOptions,
+	SessionInfo,
+	ShardRange,
+	WebSocketManager,
+} from '../ws/WebSocketManager.js';
 import type { SendRateLimitState } from '../ws/WebSocketShard.js';
 
 /**

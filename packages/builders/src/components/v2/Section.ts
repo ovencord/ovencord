@@ -1,18 +1,16 @@
 import type {
-	APITextDisplayComponent,
-	APISectionComponent,
 	APIButtonComponentWithCustomId,
-	APIThumbnailComponent,
 	APIButtonComponentWithSKUId,
 	APIButtonComponentWithURL,
+	APISectionComponent,
+	APITextDisplayComponent,
+	APIThumbnailComponent,
 	ButtonStyle,
 } from 'discord-api-types/v10';
 import { ComponentType } from 'discord-api-types/v10';
 import { normalizeArray, type RestOrArray } from '../../util/normalizeArray.js';
 import { resolveBuilder } from '../../util/resolveBuilder.js';
 import { validate } from '../../util/validation.js';
-import { ComponentBuilder } from '../Component.js';
-import { resolveAccessoryComponent, type ButtonBuilder } from '../Components.js';
 import {
 	DangerButtonBuilder,
 	PrimaryButtonBuilder,
@@ -21,6 +19,8 @@ import {
 } from '../button/CustomIdButton.js';
 import { LinkButtonBuilder } from '../button/LinkButton.js';
 import { PremiumButtonBuilder } from '../button/PremiumButton.js';
+import { ComponentBuilder } from '../Component.js';
+import { type ButtonBuilder, resolveAccessoryComponent } from '../Components.js';
 import { sectionPredicate } from './Assertions.js';
 import { TextDisplayBuilder } from './TextDisplay.js';
 import { ThumbnailBuilder } from './Thumbnail.js';
@@ -93,7 +93,6 @@ export class SectionBuilder extends ComponentBuilder<APISectionComponent> {
 	 */
 	public constructor(data: Partial<APISectionComponent> = {}) {
 		super();
-
 
 		const { components = [], accessory, ...rest } = data;
 
@@ -266,14 +265,14 @@ export class SectionBuilder extends ComponentBuilder<APISectionComponent> {
 		const { components, accessory, ...rest } = this.data;
 
 		// Resolve accessory if it exists
-        if (accessory) {
-            console.log("DEBUG: Section.toJSON accessory:", accessory);
-            console.log("DEBUG: Constructor:", (accessory as any).constructor.name);
-            console.log("DEBUG: Has toJSON?", 'toJSON' in accessory);
-            if ('toJSON' in accessory) {
-                 console.log("DEBUG: calling toJSON result:", (accessory as any).toJSON(validationOverride));
-            }
-        }
+		if (accessory) {
+			console.log('DEBUG: Section.toJSON accessory:', accessory);
+			console.log('DEBUG: Constructor:', (accessory as any).constructor.name);
+			console.log('DEBUG: Has toJSON?', 'toJSON' in accessory);
+			if ('toJSON' in accessory) {
+				console.log('DEBUG: calling toJSON result:', (accessory as any).toJSON(validationOverride));
+			}
+		}
 
 		const accessoryData = accessory
 			? (accessory as any).toJSON
@@ -287,8 +286,6 @@ export class SectionBuilder extends ComponentBuilder<APISectionComponent> {
 			components: components.map((component) => component.toJSON(validationOverride)),
 			accessory: accessoryData,
 		} as APISectionComponent;
-
-
 
 		validate(sectionPredicate, data, validationOverride);
 

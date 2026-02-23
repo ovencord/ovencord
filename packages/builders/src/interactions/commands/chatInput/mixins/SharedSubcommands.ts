@@ -2,8 +2,8 @@ import type { RestOrArray } from '../../../../util/normalizeArray.js';
 import { normalizeArray } from '../../../../util/normalizeArray.js';
 import { resolveBuilder } from '../../../../util/resolveBuilder.js';
 import {
-	ChatInputCommandSubcommandGroupBuilder,
 	ChatInputCommandSubcommandBuilder,
+	ChatInputCommandSubcommandGroupBuilder,
 } from '../ChatInputCommandSubcommands.js';
 
 export interface SharedChatInputCommandSubcommandsData {
@@ -17,7 +17,7 @@ export class SharedChatInputCommandSubcommands {
 	/**
 	 * @internal
 	 */
-	declare protected readonly data: SharedChatInputCommandSubcommandsData;
+	protected declare readonly data: SharedChatInputCommandSubcommandsData;
 
 	/**
 	 * Adds subcommand groups to this command.

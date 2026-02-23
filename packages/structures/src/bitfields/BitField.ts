@@ -35,7 +35,7 @@ export abstract class BitField<Flags extends string> {
 	 */
 	public bitField: bigint;
 
-	declare public ['constructor']: NonAbstract<typeof BitField<Flags>>;
+	public declare ['constructor']: NonAbstract<typeof BitField<Flags>>;
 
 	/**
 	 * @param bits - Bit(s) to read from
@@ -185,17 +185,17 @@ export abstract class BitField<Flags extends string> {
 	 * @returns the numeric value of the bit fields
 	 */
 	public static resolve<Flags extends string = string>(bit: BitFieldResolvable<Flags>): bigint {
-		const DefaultBit = this.DefaultBit;
+		const DefaultBit = BitField.DefaultBit;
 		if (typeof bit === 'bigint' && bit >= DefaultBit) return bit;
 		if (typeof bit === 'number' && BigInt(bit) >= DefaultBit) return BigInt(bit);
 		if (bit instanceof BitField) return bit.bitField;
 		if (Array.isArray(bit)) {
-			return bit.map((bit_) => this.resolve(bit_)).reduce((prev, bit_) => prev | bit_, DefaultBit);
+			return bit.map((bit_) => BitField.resolve(bit_)).reduce((prev, bit_) => prev | bit_, DefaultBit);
 		}
 
 		if (typeof bit === 'string') {
 			if (!Number.isNaN(Number(bit))) return BigInt(bit);
-			if (bit in this.Flags) return this.Flags[bit as keyof typeof this.Flags];
+			if (bit in BitField.Flags) return BitField.Flags[bit as keyof typeof this.Flags];
 		}
 
 		throw new Error(`BitFieldInvalid: ${JSON.stringify(bit)}`);

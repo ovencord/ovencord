@@ -1,4 +1,4 @@
-import { ButtonStyle, ComponentType, type APIButtonComponent } from 'discord-api-types/v10';
+import { type APIButtonComponent, type ButtonStyle, ComponentType } from 'discord-api-types/v10';
 import { Mixin } from 'ts-mixer';
 import { BaseButtonBuilder } from './Button.js';
 import { EmojiOrLabelButtonMixin } from './mixins/EmojiOrLabelButtonMixin.js';
@@ -9,7 +9,7 @@ import { EmojiOrLabelButtonMixin } from './mixins/EmojiOrLabelButtonMixin.js';
  * @mixes {@link BaseButtonBuilder}\<{@link discord-api-types/v10#(APIButtonComponent:interface)}\>
  * @mixes {@link EmojiOrLabelButtonMixin}
  */
-// @ts-ignore
+// @ts-expect-error
 export interface ButtonBuilder extends BaseButtonBuilder<APIButtonComponent>, EmojiOrLabelButtonMixin {}
 
 export class ButtonBuilder extends Mixin(BaseButtonBuilder<APIButtonComponent>, EmojiOrLabelButtonMixin) {

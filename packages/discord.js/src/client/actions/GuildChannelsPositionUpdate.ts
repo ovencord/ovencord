@@ -1,17 +1,17 @@
-import { Action  } from './Action.js';
+import { Action } from './Action.js';
 
 export class GuildChannelsPositionUpdateAction extends Action {
-  override handle(data: any) {
-    const client = this.client;
+	override handle(data: any) {
+		const client = this.client;
 
-    const guild = client.guilds.cache.get(data.guild_id);
-    if (guild) {
-      for (const partialChannel of data.channels) {
-        const channel = guild.channels.cache.get(partialChannel.id);
-        if (channel) channel.rawPosition = partialChannel.position;
-      }
-    }
+		const guild = client.guilds.cache.get(data.guild_id);
+		if (guild) {
+			for (const partialChannel of data.channels) {
+				const channel = guild.channels.cache.get(partialChannel.id);
+				if (channel) channel.rawPosition = partialChannel.position;
+			}
+		}
 
-    return { guild };
-  }
+		return { guild };
+	}
 }

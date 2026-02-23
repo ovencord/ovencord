@@ -1,37 +1,37 @@
-import { Events  } from '../../util/Events.js';
-import { Action  } from './Action.js';
+import { Events } from '../../util/Events.js';
+import { Action } from './Action.js';
 
 export class MessagePollVoteAddAction extends Action {
-  override handle(data: any) {
-    const channel = this.getChannel({ id: data.channel_id, ...('guild_id' in data && { guild_id: data.guild_id }) });
-    if (!channel?.isTextBased()) return false;
+	override handle(data: any) {
+		const channel = this.getChannel({ id: data.channel_id, ...('guild_id' in data && { guild_id: data.guild_id }) });
+		if (!channel?.isTextBased()) return false;
 
-    const message = this.getMessage(data, channel, undefined);
-    if (!message) return false;
+		const message = this.getMessage(data, channel, undefined);
+		if (!message) return false;
 
-    const poll = this.getPoll(data, message, channel);
-    if (!poll) return false;
+		const poll = this.getPoll(data, message, channel);
+		if (!poll) return false;
 
-    const answer = poll.answers.get(data.answer_id);
-    if (!answer) return false;
+		const answer = poll.answers.get(data.answer_id);
+		if (!answer) return false;
 
-    const user = this.getUser(data);
+		const user = this.getUser(data);
 
-    if (user) {
-      answer.voters._add(user);
-    }
+		if (user) {
+			answer.voters._add(user);
+		}
 
-    answer.voteCount++;
+		answer.voteCount++;
 
-    /**
-     * Emitted whenever a user votes in a poll.
-     *
-     * @event Client#messagePollVoteAdd
-     * @param {PollAnswer} pollAnswer The answer that was voted on
-     * @param {Snowflake} userId The id of the user that voted
-     */
-    this.client.emit(Events.MessagePollVoteAdd, answer, data.user_id);
+		/**
+		 * Emitted whenever a user votes in a poll.
+		 *
+		 * @event Client#messagePollVoteAdd
+		 * @param {PollAnswer} pollAnswer The answer that was voted on
+		 * @param {Snowflake} userId The id of the user that voted
+		 */
+		this.client.emit(Events.MessagePollVoteAdd, answer, data.user_id);
 
-    return { poll };
-  }
+		return { poll };
+	}
 }

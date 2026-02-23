@@ -1,4 +1,4 @@
-import { Application  } from './interfaces/Application.js';
+import { Application } from './interfaces/Application.js';
 
 /**
  * Represents an Integration's OAuth2 Application.
@@ -6,79 +6,79 @@ import { Application  } from './interfaces/Application.js';
  * @extends {Application}
  */
 export class IntegrationApplication extends Application {
-  public bot: any;
-  public declare termsOfServiceURL: any;
-  public declare privacyPolicyURL: any;
-  public declare rpcOrigins: any;
-  public declare cover: any;
-  public declare verifyKey: any;
-  _patch(data: any) {
-    super._patch(data);
+	public bot: any;
+	public declare termsOfServiceURL: any;
+	public declare privacyPolicyURL: any;
+	public declare rpcOrigins: any;
+	public declare cover: any;
+	public declare verifyKey: any;
+	_patch(data: any) {
+		super._patch(data);
 
-    if ('bot' in data) {
-      /**
-       * The bot user for this application
-       *
-       * @type {?User}
-       */
-      this.bot = this.client.users._add(data.bot);
-    } else {
-      this.bot ??= null;
-    }
+		if ('bot' in data) {
+			/**
+			 * The bot user for this application
+			 *
+			 * @type {?User}
+			 */
+			this.bot = this.client.users._add(data.bot);
+		} else {
+			this.bot ??= null;
+		}
 
-    if ('terms_of_service_url' in data) {
-      /**
-       * The URL of the application's terms of service
-       *
-       * @type {?string}
-       */
-      this.termsOfServiceURL = data.terms_of_service_url;
-    } else {
-      this.termsOfServiceURL ??= null;
-    }
+		if ('terms_of_service_url' in data) {
+			/**
+			 * The URL of the application's terms of service
+			 *
+			 * @type {?string}
+			 */
+			this.termsOfServiceURL = data.terms_of_service_url;
+		} else {
+			this.termsOfServiceURL ??= null;
+		}
 
-    if ('privacy_policy_url' in data) {
-      /**
-       * The URL of the application's privacy policy
-       *
-       * @type {?string}
-       */
-      this.privacyPolicyURL = data.privacy_policy_url;
-    } else {
-      this.privacyPolicyURL ??= null;
-    }
+		if ('privacy_policy_url' in data) {
+			/**
+			 * The URL of the application's privacy policy
+			 *
+			 * @type {?string}
+			 */
+			this.privacyPolicyURL = data.privacy_policy_url;
+		} else {
+			this.privacyPolicyURL ??= null;
+		}
 
-    if ('rpc_origins' in data) {
-      /**
-       * The Array of RPC origin URLs
-       *
-       * @type {string[]}
-       */
-      this.rpcOrigins = data.rpc_origins;
-    } else {
-      this.rpcOrigins ??= [];
-    }
+		if ('rpc_origins' in data) {
+			/**
+			 * The Array of RPC origin URLs
+			 *
+			 * @type {string[]}
+			 */
+			this.rpcOrigins = data.rpc_origins;
+		} else {
+			this.rpcOrigins ??= [];
+		}
 
-    if ('cover_image' in data) {
-      /**
-       * The hash of the application's cover image
-       *
-       * @type {?string}
-       */
-      this.cover = data.cover_image;
-    } else {
-      this.cover ??= null;
-    }
+		if ('cover_image' in data) {
+			/**
+			 * The hash of the application's cover image
+			 *
+			 * @type {?string}
+			 */
+			this.cover = data.cover_image;
+		} else {
+			this.cover ??= null;
+		}
 
-    if ('verify_key' in data) {
-      /**
-       * The hex-encoded key for verification in interactions and the GameSDK's GetTicket
-       *
-       * @type {?string}
-       */
-      this.verifyKey = data.verify_key;
-    } else {
-      this.verifyKey ??= null;
-    }
-  }
+		if ('verify_key' in data) {
+			/**
+			 * The hex-encoded key for verification in interactions and the GameSDK's GetTicket
+			 *
+			 * @type {?string}
+			 */
+			this.verifyKey = data.verify_key;
+		} else {
+			this.verifyKey ??= null;
+		}
+	}
 }

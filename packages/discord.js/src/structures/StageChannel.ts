@@ -1,4 +1,4 @@
-import { BaseGuildVoiceChannel  } from './BaseGuildVoiceChannel.js';
+import { BaseGuildVoiceChannel } from './BaseGuildVoiceChannel.js';
 
 /**
  * Represents a guild stage channel on Discord.
@@ -6,56 +6,56 @@ import { BaseGuildVoiceChannel  } from './BaseGuildVoiceChannel.js';
  * @extends {BaseGuildVoiceChannel}
  */
 export class StageChannel extends BaseGuildVoiceChannel {
-  public declare topic: any;
-  _patch(data: any) {
-    super._patch(data);
+	public declare topic: any;
+	_patch(data: any) {
+		super._patch(data);
 
-    if ('topic' in data) {
-      /**
-       * The topic of the stage channel
-       *
-       * @type {?string}
-       */
-      this.topic = data.topic;
-    }
-  }
+		if ('topic' in data) {
+			/**
+			 * The topic of the stage channel
+			 *
+			 * @type {?string}
+			 */
+			this.topic = data.topic;
+		}
+	}
 
-  /**
-   * The stage instance of this stage channel, if it exists
-   *
-   * @type {?StageInstance}
-   * @readonly
-   */
-  get stageInstance() {
-    // @ts-ignore
-    return this.guild.stageInstances.cache.find(stageInstance => stageInstance.channelId === this.id) ?? null;
-  }
+	/**
+	 * The stage instance of this stage channel, if it exists
+	 *
+	 * @type {?StageInstance}
+	 * @readonly
+	 */
+	get stageInstance() {
+		// @ts-expect-error
+		return this.guild.stageInstances.cache.find((stageInstance) => stageInstance.channelId === this.id) ?? null;
+	}
 
-  /**
-   * Creates a stage instance associated with this stage channel.
-   *
-   * @param {StageInstanceCreateOptions} options The options to create the stage instance
-   * @returns {Promise<StageInstance>}
-   */
-  async createStageInstance(options: any) {
-    return this.guild.stageInstances.create(this.id, options);
-  }
+	/**
+	 * Creates a stage instance associated with this stage channel.
+	 *
+	 * @param {StageInstanceCreateOptions} options The options to create the stage instance
+	 * @returns {Promise<StageInstance>}
+	 */
+	async createStageInstance(options: any) {
+		return this.guild.stageInstances.create(this.id, options);
+	}
 
-  /**
-   * Sets a new topic for the guild channel.
-   *
-   * @param {?string} topic The new topic for the guild channel
-   * @param {string} [reason] Reason for changing the guild channel's topic
-   * @returns {Promise<StageChannel>}
-   * @example
-   * // Set a new channel topic
-   * stageChannel.setTopic('needs more rate limiting')
-   *   .then(channel => console.log(`Channel's new topic is ${channel.topic}`))
-   *   .catch(console.error);
-   */
-  async setTopic(topic: any, reason: any) {
-    return this.edit({ topic, reason });
-  }
+	/**
+	 * Sets a new topic for the guild channel.
+	 *
+	 * @param {?string} topic The new topic for the guild channel
+	 * @param {string} [reason] Reason for changing the guild channel's topic
+	 * @returns {Promise<StageChannel>}
+	 * @example
+	 * // Set a new channel topic
+	 * stageChannel.setTopic('needs more rate limiting')
+	 *   .then(channel => console.log(`Channel's new topic is ${channel.topic}`))
+	 *   .catch(console.error);
+	 */
+	async setTopic(topic: any, reason: any) {
+		return this.edit({ topic, reason });
+	}
 }
 
 /**

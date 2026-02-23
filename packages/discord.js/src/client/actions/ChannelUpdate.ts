@@ -1,38 +1,38 @@
-import { createChannel  } from '../../util/Channels.js';
-import { Action  } from './Action.js';
+import { createChannel } from '../../util/Channels.js';
+import { Action } from './Action.js';
 
 export class ChannelUpdateAction extends Action {
-  override handle(data: any) {
-    const client = this.client;
-    let channel = client.channels.cache.get(data.id);
+	override handle(data: any) {
+		const client = this.client;
+		let channel = client.channels.cache.get(data.id);
 
-    if (channel) {
-      const old = channel._update(data);
+		if (channel) {
+			const old = channel._update(data);
 
-      if (channel.type !== data.type) {
-        const newChannel = createChannel(this.client, data, channel.guild);
+			if (channel.type !== data.type) {
+				const newChannel = createChannel(this.client, data, channel.guild);
 
-        if (!newChannel) {
-          this.client.channels.cache.delete(channel.id);
-          return {};
-        }
+				if (!newChannel) {
+					this.client.channels.cache.delete(channel.id);
+					return {};
+				}
 
-        if (channel.isTextBased() && newChannel.isTextBased()) {
-          for (const [id, message] of channel.messages.cache) newChannel.messages.cache.set(id, message);
-        }
+				if (channel.isTextBased() && newChannel.isTextBased()) {
+					for (const [id, message] of channel.messages.cache) newChannel.messages.cache.set(id, message);
+				}
 
-        channel = newChannel;
-        this.client.channels.cache.set(channel.id, channel);
-      }
+				channel = newChannel;
+				this.client.channels.cache.set(channel.id, channel);
+			}
 
-      return {
-        old,
-        updated: channel,
-      };
-    } else {
-      client.channels._add(data, client.guilds.cache.get(data.guild_id) ?? null);
-    }
+			return {
+				old,
+				updated: channel,
+			};
+		} else {
+			client.channels._add(data, client.guilds.cache.get(data.guild_id) ?? null);
+		}
 
-    return {};
-  }
+		return {};
+	}
 }

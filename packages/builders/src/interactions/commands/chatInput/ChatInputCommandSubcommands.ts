@@ -1,7 +1,7 @@
 import type { JSONEncodable } from '@ovencord/util';
 import type {
-	APIApplicationCommandSubcommandOption,
 	APIApplicationCommandSubcommandGroupOption,
+	APIApplicationCommandSubcommandOption,
 } from 'discord-api-types/v10';
 import { ApplicationCommandOptionType } from 'discord-api-types/v10';
 import { Mixin } from 'ts-mixer';
@@ -31,7 +31,7 @@ export class ChatInputCommandSubcommandGroupBuilder
 	 *
 	 * @internal
 	 */
-	declare protected readonly data: ChatInputCommandSubcommandGroupData & SharedNameAndDescriptionData;
+	protected declare readonly data: ChatInputCommandSubcommandGroupData & SharedNameAndDescriptionData;
 
 	/**
 	 * The options within this subcommand group.
@@ -52,7 +52,7 @@ export class ChatInputCommandSubcommandGroupBuilder
 		>
 	) {
 		const normalized = normalizeArray(input);
-		 
+
 		const result = normalized.map((builder) => resolveBuilder(builder, ChatInputCommandSubcommandBuilder));
 
 		this.data.options ??= [];

@@ -1,26 +1,26 @@
-import type { Client } from '../../Client.js';
 import type { GatewayThreadMemberUpdateDispatch } from 'discord-api-types/v10';
-import { Events  } from '../../../util/Events.js';
+import { Events } from '../../../util/Events.js';
+import type { Client } from '../../Client.js';
 
 export default (client: Client, { d: data }: GatewayThreadMemberUpdateDispatch) => {
-  // Discord sends the thread id as id in this object
-  const thread = client.channels.cache.get(data.id);
-  if (!thread) return;
+	// Discord sends the thread id as id in this object
+	const thread = client.channels.cache.get(data.id);
+	if (!thread) return;
 
-  const member = thread.members.cache.get(data.user_id);
-  if (!member) {
-    thread.members._add(data);
-    return;
-  }
+	const member = thread.members.cache.get(data.user_id);
+	if (!member) {
+		thread.members._add(data);
+		return;
+	}
 
-  const old = member._update(data);
+	const old = member._update(data);
 
-  /**
-   * Emitted whenever the client user's thread member is updated.
-   *
-   * @event Client#threadMemberUpdate
-   * @param {ThreadMember} oldMember The member before the update
-   * @param {ThreadMember} newMember The member after the update
-   */
-  client.emit(Events.ThreadMemberUpdate, old, member);
+	/**
+	 * Emitted whenever the client user's thread member is updated.
+	 *
+	 * @event Client#threadMemberUpdate
+	 * @param {ThreadMember} oldMember The member before the update
+	 * @param {ThreadMember} newMember The member after the update
+	 */
+	client.emit(Events.ThreadMemberUpdate, old, member);
 };

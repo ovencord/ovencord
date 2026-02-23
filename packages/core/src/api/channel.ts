@@ -1,6 +1,5 @@
-import { makeURLSearchParams, type RawFile, type RequestData, type REST } from '@ovencord/rest';
+import { makeURLSearchParams, type RawFile, type REST, type RequestData } from '@ovencord/rest';
 import {
-	Routes,
 	type RESTDeleteAPIChannelResult,
 	type RESTGetAPIChannelInvitesResult,
 	type RESTGetAPIChannelMessageReactionUsersQuery,
@@ -33,6 +32,7 @@ import {
 	type RESTPostAPISoundboardSendSoundJSONBody,
 	type RESTPutAPIChannelPermissionJSONBody,
 	type RESTPutAPIChannelRecipientJSONBody,
+	Routes,
 	type Snowflake,
 } from 'discord-api-types/v10';
 

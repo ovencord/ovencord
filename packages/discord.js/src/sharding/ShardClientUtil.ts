@@ -12,267 +12,267 @@ declare var self: Worker;
  * Utilizes IPC to send and receive data to/from the master process and other shards.
  */
 export class ShardClientUtil {
-  public client: any;
-  public mode: any;
+	public client: any;
+	public mode: any;
 
-  private static _singleton: ShardClientUtil | null = null;
-  
-  constructor(client: any, mode: any) {
-    /**
-     * Client for the shard
-     *
-     * @type {Client}
-     */
-    this.client = client;
+	private static _singleton: ShardClientUtil | null = null;
 
-    /**
-     * Mode the shard was spawned with
-     *
-     * @type {ShardingManagerMode}
-     */
-    this.mode = mode;
+	constructor(client: any, mode: any) {
+		/**
+		 * Client for the shard
+		 *
+		 * @type {Client}
+		 */
+		this.client = client;
 
-    switch (mode) {
-      case 'process':
-        process.on('message', this._handleMessage.bind(this));
-        client.on(Events.ClientReady, () => {
-          process.send!({ _ready: true });
-        });
-        client.ws.on(WebSocketShardEvents.Closed, () => {
-          process.send!({ _disconnect: true });
-        });
-        client.ws.on(WebSocketShardEvents.Resumed, () => {
-          process.send!({ _resume: true });
-        });
-        break;
-      case 'worker':
-        self.onmessage = (event: MessageEvent) => {
-          this._handleMessage(event.data);
-        };
-        client.on(Events.ClientReady, () => {
-          self.postMessage({ _ready: true });
-        });
-        client.ws.on(WebSocketShardEvents.Closed, () => {
-          self.postMessage({ _disconnect: true });
-        });
-        client.ws.on(WebSocketShardEvents.Resumed, () => {
-          self.postMessage({ _resume: true });
-        });
-        break;
-      default:
-        break;
-    }
-  }
+		/**
+		 * Mode the shard was spawned with
+		 *
+		 * @type {ShardingManagerMode}
+		 */
+		this.mode = mode;
 
-  /**
-   * Sends a message to the master process.
-   *
-   * @param {*} message Message to send
-   * @returns {Promise<void>}
-   * @emits Shard#message
-   */
-  async send(message: any): Promise<void> {
-    return new Promise((resolve, reject) => {
-      switch (this.mode) {
-        case 'process':
-          process.send!(message, (err: Error | null) => {
-            if (err) reject(err);
-            else resolve(undefined);
-          });
-          break;
-        case 'worker':
-          self.postMessage(message);
-          resolve(undefined);
-          break;
-        default:
-          break;
-      }
-    });
-  }
+		switch (mode) {
+			case 'process':
+				process.on('message', this._handleMessage.bind(this));
+				client.on(Events.ClientReady, () => {
+					process.send!({ _ready: true });
+				});
+				client.ws.on(WebSocketShardEvents.Closed, () => {
+					process.send!({ _disconnect: true });
+				});
+				client.ws.on(WebSocketShardEvents.Resumed, () => {
+					process.send!({ _resume: true });
+				});
+				break;
+			case 'worker':
+				self.onmessage = (event: MessageEvent) => {
+					this._handleMessage(event.data);
+				};
+				client.on(Events.ClientReady, () => {
+					self.postMessage({ _ready: true });
+				});
+				client.ws.on(WebSocketShardEvents.Closed, () => {
+					self.postMessage({ _disconnect: true });
+				});
+				client.ws.on(WebSocketShardEvents.Resumed, () => {
+					self.postMessage({ _resume: true });
+				});
+				break;
+			default:
+				break;
+		}
+	}
 
-  /**
-   * Fetches a client property value of each shard, or a given shard.
-   *
-   * @param {string} prop Name of the client property to get, using periods for nesting
-   * @param {number} [shard] Shard to fetch property from, all if undefined
-   * @returns {Promise<*|Array<*>>}
-   * @example
-   * client.shard.fetchClientValues('guilds.cache.size')
-   *   .then(results => console.log(`${results.reduce((prev, val) => prev + val, 0)} total guilds`))
-   *   .catch(console.error);
-   * @see {@link ShardingManager#fetchClientValues}
-   */
-  async fetchClientValues(prop: any, shard: any): Promise<any> {
-    return new Promise((resolve, reject) => {
-      if (this.mode === 'worker') {
-        const originalOnMessage = self.onmessage;
-        self.onmessage = (event: MessageEvent) => {
-          const message = event.data;
-          if (message?._sFetchProp === prop && message._sFetchPropShard === shard) {
-            self.onmessage = originalOnMessage;
-            if (message._error) reject(makeError(message._error));
-            else resolve(message._result);
-          } else if (originalOnMessage) {
-            originalOnMessage.call(self, event);
-          }
-        };
-      } else {
-        const listener = (message: any) => {
-          if (message?._sFetchProp !== prop || message._sFetchPropShard !== shard) return;
-          process.removeListener('message', listener);
-          if (message._error) reject(makeError(message._error));
-          else resolve(message._result);
-        };
-        process.on('message', listener);
-      }
+	/**
+	 * Sends a message to the master process.
+	 *
+	 * @param {*} message Message to send
+	 * @returns {Promise<void>}
+	 * @emits Shard#message
+	 */
+	async send(message: any): Promise<void> {
+		return new Promise((resolve, reject) => {
+			switch (this.mode) {
+				case 'process':
+					process.send!(message, (err: Error | null) => {
+						if (err) reject(err);
+						else resolve(undefined);
+					});
+					break;
+				case 'worker':
+					self.postMessage(message);
+					resolve(undefined);
+					break;
+				default:
+					break;
+			}
+		});
+	}
 
-      this.send({ _sFetchProp: prop, _sFetchPropShard: shard }).catch(error => {
-        reject(error);
-      });
-    });
-  }
+	/**
+	 * Fetches a client property value of each shard, or a given shard.
+	 *
+	 * @param {string} prop Name of the client property to get, using periods for nesting
+	 * @param {number} [shard] Shard to fetch property from, all if undefined
+	 * @returns {Promise<*|Array<*>>}
+	 * @example
+	 * client.shard.fetchClientValues('guilds.cache.size')
+	 *   .then(results => console.log(`${results.reduce((prev, val) => prev + val, 0)} total guilds`))
+	 *   .catch(console.error);
+	 * @see {@link ShardingManager#fetchClientValues}
+	 */
+	async fetchClientValues(prop: any, shard: any): Promise<any> {
+		return new Promise((resolve, reject) => {
+			if (this.mode === 'worker') {
+				const originalOnMessage = self.onmessage;
+				self.onmessage = (event: MessageEvent) => {
+					const message = event.data;
+					if (message?._sFetchProp === prop && message._sFetchPropShard === shard) {
+						self.onmessage = originalOnMessage;
+						if (message._error) reject(makeError(message._error));
+						else resolve(message._result);
+					} else if (originalOnMessage) {
+						originalOnMessage.call(self, event);
+					}
+				};
+			} else {
+				const listener = (message: any) => {
+					if (message?._sFetchProp !== prop || message._sFetchPropShard !== shard) return;
+					process.removeListener('message', listener);
+					if (message._error) reject(makeError(message._error));
+					else resolve(message._result);
+				};
+				process.on('message', listener);
+			}
 
-  /**
-   * Evaluates a script or function on all shards, or a given shard, in the context of the {@link Client}s.
-   *
-   * @param {Function} script JavaScript to run on each shard
-   * @param {BroadcastEvalOptions} [options={}] The options for the broadcast
-   * @returns {Promise<*|Array<*>>} Results of the script execution
-   * @example
-   * client.shard.broadcastEval(client => client.guilds.cache.size)
-   *   .then(results => console.log(`${results.reduce((prev, val) => prev + val, 0)} total guilds`))
-   *   .catch(console.error);
-   * @see {@link ShardingManager#broadcastEval}
-   */
-  async broadcastEval(script: any, options = {}): Promise<any> {
-    return new Promise((resolve, reject) => {
-      if (typeof script !== 'function') {
-        reject(new DiscordjsTypeError(ErrorCodes.ShardingInvalidEvalBroadcast));
-        return;
-      }
+			this.send({ _sFetchProp: prop, _sFetchPropShard: shard }).catch((error) => {
+				reject(error);
+			});
+		});
+	}
 
-      // @ts-ignore
-      const evalScript = `(${script})(this, ${JSON.stringify(options.context)})`;
+	/**
+	 * Evaluates a script or function on all shards, or a given shard, in the context of the {@link Client}s.
+	 *
+	 * @param {Function} script JavaScript to run on each shard
+	 * @param {BroadcastEvalOptions} [options={}] The options for the broadcast
+	 * @returns {Promise<*|Array<*>>} Results of the script execution
+	 * @example
+	 * client.shard.broadcastEval(client => client.guilds.cache.size)
+	 *   .then(results => console.log(`${results.reduce((prev, val) => prev + val, 0)} total guilds`))
+	 *   .catch(console.error);
+	 * @see {@link ShardingManager#broadcastEval}
+	 */
+	async broadcastEval(script: any, options = {}): Promise<any> {
+		return new Promise((resolve, reject) => {
+			if (typeof script !== 'function') {
+				reject(new DiscordjsTypeError(ErrorCodes.ShardingInvalidEvalBroadcast));
+				return;
+			}
 
-      if (this.mode === 'worker') {
-        const originalOnMessage = self.onmessage;
-        self.onmessage = (event: MessageEvent) => {
-          const message = event.data;
-          // @ts-ignore
-          if (message?._sEval === evalScript && message._sEvalShard === options.shard) {
-            self.onmessage = originalOnMessage;
-            if (message._error) reject(makeError(message._error));
-            else resolve(message._result);
-          } else if (originalOnMessage) {
-            originalOnMessage.call(self, event);
-          }
-        };
-      } else {
-        const listener = (message: any) => {
-          // @ts-ignore
-          if (message?._sEval !== evalScript || message._sEvalShard !== options.shard) return;
-          process.removeListener('message', listener);
-          if (message._error) reject(makeError(message._error));
-          else resolve(message._result);
-        };
-        process.on('message', listener);
-      }
+			// @ts-expect-error
+			const evalScript = `(${script})(this, ${JSON.stringify(options.context)})`;
 
-      // @ts-ignore
-      this.send({ _sEval: evalScript, _sEvalShard: options.shard }).catch(error => {
-        reject(error);
-      });
-    });
-  }
+			if (this.mode === 'worker') {
+				const originalOnMessage = self.onmessage;
+				self.onmessage = (event: MessageEvent) => {
+					const message = event.data;
+					// @ts-expect-error
+					if (message?._sEval === evalScript && message._sEvalShard === options.shard) {
+						self.onmessage = originalOnMessage;
+						if (message._error) reject(makeError(message._error));
+						else resolve(message._result);
+					} else if (originalOnMessage) {
+						originalOnMessage.call(self, event);
+					}
+				};
+			} else {
+				const listener = (message: any) => {
+					// @ts-expect-error
+					if (message?._sEval !== evalScript || message._sEvalShard !== options.shard) return;
+					process.removeListener('message', listener);
+					if (message._error) reject(makeError(message._error));
+					else resolve(message._result);
+				};
+				process.on('message', listener);
+			}
 
-  /**
-   * Requests a respawn of all shards.
-   *
-   * @param {MultipleShardRespawnOptions} [options] Options for respawning shards
-   * @returns {Promise<void>} Resolves upon the message being sent
-   * @see {@link ShardingManager#respawnAll}
-   */
-  async respawnAll({ shardDelay = 5_000, respawnDelay = 500, timeout = 30_000 } = {}): Promise<void> {
-    return this.send({ _sRespawnAll: { shardDelay, respawnDelay, timeout } });
-  }
+			// @ts-expect-error
+			this.send({ _sEval: evalScript, _sEvalShard: options.shard }).catch((error) => {
+				reject(error);
+			});
+		});
+	}
 
-  /**
-   * Handles an IPC message.
-   *
-   * @param {*} message Message received
-   * @private
-   */
-  async _handleMessage(message: any): Promise<void> {
-    if (!message) return;
-    if (message._fetchProp) {
-      try {
-        const props = message._fetchProp.split('.');
-        let value = this.client;
-        for (const prop of props) value = value[prop];
-        this._respond('fetchProp', { _fetchProp: message._fetchProp, _result: value });
-      } catch (error) {
-        this._respond('fetchProp', { _fetchProp: message._fetchProp, _error: makePlainError(error as Error) });
-      }
-    } else if (message._eval) {
-      try {
-        this._respond('eval', { _eval: message._eval, _result: await this.client._eval(message._eval) });
-      } catch (error) {
-        this._respond('eval', { _eval: message._eval, _error: makePlainError(error as Error) });
-      }
-    }
-  }
+	/**
+	 * Requests a respawn of all shards.
+	 *
+	 * @param {MultipleShardRespawnOptions} [options] Options for respawning shards
+	 * @returns {Promise<void>} Resolves upon the message being sent
+	 * @see {@link ShardingManager#respawnAll}
+	 */
+	async respawnAll({ shardDelay = 5_000, respawnDelay = 500, timeout = 30_000 } = {}): Promise<void> {
+		return this.send({ _sRespawnAll: { shardDelay, respawnDelay, timeout } });
+	}
 
-  /**
-   * Sends a message to the master process, emitting an error from the client upon failure.
-   *
-   * @param {string} type Type of response to send
-   * @param {*} message Message to send
-   * @private
-   */
-  _respond(type: string, message: any): void {
-    this.send(message).catch(error_ => {
-      const error = new Error(`Error when sending ${type} response to master process: ${error_.message}`);
-      error.stack = error_.stack;
-      /**
-       * Emitted when the client encounters an error.
-       *
-       * @event Client#error
-       * @param {Error} error The error encountered
-       */
-      this.client.emit(Events.Error, error);
-    });
-  }
+	/**
+	 * Handles an IPC message.
+	 *
+	 * @param {*} message Message received
+	 * @private
+	 */
+	async _handleMessage(message: any): Promise<void> {
+		if (!message) return;
+		if (message._fetchProp) {
+			try {
+				const props = message._fetchProp.split('.');
+				let value = this.client;
+				for (const prop of props) value = value[prop];
+				this._respond('fetchProp', { _fetchProp: message._fetchProp, _result: value });
+			} catch (error) {
+				this._respond('fetchProp', { _fetchProp: message._fetchProp, _error: makePlainError(error as Error) });
+			}
+		} else if (message._eval) {
+			try {
+				this._respond('eval', { _eval: message._eval, _result: await this.client._eval(message._eval) });
+			} catch (error) {
+				this._respond('eval', { _eval: message._eval, _error: makePlainError(error as Error) });
+			}
+		}
+	}
 
-  /**
-   * Creates/gets the singleton of this class.
-   *
-   * @param {Client} client The client to use
-   * @param {ShardingManagerMode} mode Mode the shard was spawned with
-   * @returns {ShardClientUtil}
-   */
-  static singleton(client: any, mode: any): ShardClientUtil {
-    if (this._singleton) {
-      client.emit(
-        Events.Warn,
-        'Multiple clients created in child process/worker; only the first will handle sharding helpers.',
-      );
-    } else {
-      this._singleton = new this(client, mode);
-    }
+	/**
+	 * Sends a message to the master process, emitting an error from the client upon failure.
+	 *
+	 * @param {string} type Type of response to send
+	 * @param {*} message Message to send
+	 * @private
+	 */
+	_respond(type: string, message: any): void {
+		this.send(message).catch((error_) => {
+			const error = new Error(`Error when sending ${type} response to master process: ${error_.message}`);
+			error.stack = error_.stack;
+			/**
+			 * Emitted when the client encounters an error.
+			 *
+			 * @event Client#error
+			 * @param {Error} error The error encountered
+			 */
+			this.client.emit(Events.Error, error);
+		});
+	}
 
-    return this._singleton;
-  }
+	/**
+	 * Creates/gets the singleton of this class.
+	 *
+	 * @param {Client} client The client to use
+	 * @param {ShardingManagerMode} mode Mode the shard was spawned with
+	 * @returns {ShardClientUtil}
+	 */
+	static singleton(client: any, mode: any): ShardClientUtil {
+		if (ShardClientUtil._singleton) {
+			client.emit(
+				Events.Warn,
+				'Multiple clients created in child process/worker; only the first will handle sharding helpers.',
+			);
+		} else {
+			ShardClientUtil._singleton = new ShardClientUtil(client, mode);
+		}
 
-  /**
-   * Get the shard id for a given guild id.
-   *
-   * @param {Snowflake} guildId Snowflake guild id to get shard id for
-   * @param {number} shardCount Number of shards
-   * @returns {number}
-   */
-  static shardIdForGuildId(guildId: string, shardCount: number): number {
-    const shard = calculateShardId(guildId, shardCount);
-    if (shard < 0) throw new DiscordjsError(ErrorCodes.ShardingShardMiscalculation, shard, guildId, shardCount);
-    return shard;
-  }
+		return ShardClientUtil._singleton;
+	}
+
+	/**
+	 * Get the shard id for a given guild id.
+	 *
+	 * @param {Snowflake} guildId Snowflake guild id to get shard id for
+	 * @param {number} shardCount Number of shards
+	 * @returns {number}
+	 */
+	static shardIdForGuildId(guildId: string, shardCount: number): number {
+		const shard = calculateShardId(guildId, shardCount);
+		if (shard < 0) throw new DiscordjsError(ErrorCodes.ShardingShardMiscalculation, shard, guildId, shardCount);
+		return shard;
+	}
 }

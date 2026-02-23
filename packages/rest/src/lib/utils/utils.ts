@@ -1,8 +1,6 @@
-
 import type { RESTPatchAPIChannelJSONBody, Snowflake } from 'discord-api-types/v10';
-import type { REST } from '../REST.js';
 import { RateLimitError } from '../errors/RateLimitError.js';
-import { RequestMethod } from './types.js';
+import type { REST } from '../REST.js';
 import type {
 	GetRateLimitOffsetFunction,
 	GetRetryBackoffFunction,
@@ -10,6 +8,7 @@ import type {
 	RateLimitData,
 	ResponseLike,
 } from './types.js';
+import { RequestMethod } from './types.js';
 
 function serializeSearchParam(value: unknown): string | null {
 	switch (typeof value) {
@@ -203,44 +202,44 @@ export function normalizeTimeout(timeout: GetTimeoutFunction | number, route: st
  * @param namespace - The namespace UUID
  */
 export function uuidv5(value: string | Uint8Array, namespace: string): string {
-    // 1. Verify namespace is a valid UUID
-    if (!/^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$/i.test(namespace)) {
-        throw new TypeError('Invalid namespace UUID');
-    }
+	// 1. Verify namespace is a valid UUID
+	if (!/^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$/i.test(namespace)) {
+		throw new TypeError('Invalid namespace UUID');
+	}
 
-    // 2. Parse namespace UUID into bytes
-    const namespaceBytes = new Uint8Array(16);
-    const hex = namespace.replace(/-/g, '');
-    for (let i = 0; i < 16; i++) {
-        namespaceBytes[i] = Number.parseInt(hex.slice(i * 2, i * 2 + 2), 16);
-    }
+	// 2. Parse namespace UUID into bytes
+	const namespaceBytes = new Uint8Array(16);
+	const hex = namespace.replace(/-/g, '');
+	for (let i = 0; i < 16; i++) {
+		namespaceBytes[i] = Number.parseInt(hex.slice(i * 2, i * 2 + 2), 16);
+	}
 
-    // 3. Convert value to bytes if string
-    const valueBytes = typeof value === 'string' ? new TextEncoder().encode(value) : value;
+	// 3. Convert value to bytes if string
+	const valueBytes = typeof value === 'string' ? new TextEncoder().encode(value) : value;
 
-    // 4. Concatenate namespace and value
-    const data = new Uint8Array(namespaceBytes.length + valueBytes.length);
-    data.set(namespaceBytes);
-    data.set(valueBytes, namespaceBytes.length);
+	// 4. Concatenate namespace and value
+	const data = new Uint8Array(namespaceBytes.length + valueBytes.length);
+	data.set(namespaceBytes);
+	data.set(valueBytes, namespaceBytes.length);
 
-    // 5. Hash with SHA-1
-    const buffer = new Bun.CryptoHasher('sha1').update(data).digest();
-    const hash = new Uint8Array(buffer);
+	// 5. Hash with SHA-1
+	const buffer = new Bun.CryptoHasher('sha1').update(data).digest();
+	const hash = new Uint8Array(buffer);
 
-    // 6. Set version to 5 (0101)
-    hash[6] = (hash[6]! & 0x0f) | 0x50;
+	// 6. Set version to 5 (0101)
+	hash[6] = (hash[6]! & 0x0f) | 0x50;
 
-    // 7. Set variant to RFC 4122 (10xx)
-    hash[8] = (hash[8]! & 0x3f) | 0x80;
+	// 7. Set variant to RFC 4122 (10xx)
+	hash[8] = (hash[8]! & 0x3f) | 0x80;
 
-    // 8. Convert to hex string with dashes
-    const hexHash = Array.from(hash, (byte) => byte.toString(16).padStart(2, '0'));
-    
-    return [
-        hexHash.slice(0, 4).join(''),
-        hexHash.slice(4, 6).join(''),
-        hexHash.slice(6, 8).join(''),
-        hexHash.slice(8, 10).join(''),
-        hexHash.slice(10, 16).join('')
-    ].join('-');
+	// 8. Convert to hex string with dashes
+	const hexHash = Array.from(hash, (byte) => byte.toString(16).padStart(2, '0'));
+
+	return [
+		hexHash.slice(0, 4).join(''),
+		hexHash.slice(4, 6).join(''),
+		hexHash.slice(6, 8).join(''),
+		hexHash.slice(8, 10).join(''),
+		hexHash.slice(10, 16).join(''),
+	].join('-');
 }

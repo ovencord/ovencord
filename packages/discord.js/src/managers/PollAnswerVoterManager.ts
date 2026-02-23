@@ -1,8 +1,8 @@
-import { Collection  } from '@ovencord/collection';
-import { makeURLSearchParams  } from '@ovencord/rest';
-import { Routes  } from 'discord-api-types/v10';
-import { User  } from '../structures/User.js';
-import { CachedManager  } from './CachedManager.js';
+import { Collection } from '@ovencord/collection';
+import { makeURLSearchParams } from '@ovencord/rest';
+import { Routes } from 'discord-api-types/v10';
+import { User } from '../structures/User.js';
+import { CachedManager } from './CachedManager.js';
 
 /**
  * Manages API methods for users who voted on a poll and stores their cache.
@@ -10,50 +10,50 @@ import { CachedManager  } from './CachedManager.js';
  * @extends {CachedManager}
  */
 export class PollAnswerVoterManager extends CachedManager {
-  public answer: any;
-  constructor(answer: any) {
-    super(answer.client, User);
+	public answer: any;
+	constructor(answer: any) {
+		super(answer.client, User);
 
-    /**
-     * The poll answer that this manager belongs to
-     *
-     * @type {PollAnswer}
-     */
-    this.answer = answer;
-  }
+		/**
+		 * The poll answer that this manager belongs to
+		 *
+		 * @type {PollAnswer}
+		 */
+		this.answer = answer;
+	}
 
-  /**
-   * The cache of this manager
-   *
-   * @type {Collection<Snowflake, User>}
-   * @name PollAnswerVoterManager#cache
-   */
+	/**
+	 * The cache of this manager
+	 *
+	 * @type {Collection<Snowflake, User>}
+	 * @name PollAnswerVoterManager#cache
+	 */
 
-  /**
-   * Options used for fetching voters of a poll answer.
-   *
-   * @typedef {Object} BaseFetchPollAnswerVotersOptions
-   * @property {number} [limit] The maximum number of voters to fetch
-   * @property {Snowflake} [after] The user id to fetch voters after
-   */
+	/**
+	 * Options used for fetching voters of a poll answer.
+	 *
+	 * @typedef {Object} BaseFetchPollAnswerVotersOptions
+	 * @property {number} [limit] The maximum number of voters to fetch
+	 * @property {Snowflake} [after] The user id to fetch voters after
+	 */
 
-  /**
-   * Fetches the users that voted on this poll answer. Resolves with a collection of users, mapped by their ids.
-   *
-   * @param {BaseFetchPollAnswerVotersOptions} [options={}] Options for fetching the users
-   * @returns {Promise<Collection<Snowflake, User>>}
-   */
-  async fetch({ after, limit }: any = {}) {
-    const poll = this.answer.poll;
-    const query = makeURLSearchParams({ limit, after });
-    const data = await this.client.rest.get(Routes.pollAnswerVoters(poll.channelId, poll.messageId, this.answer.id), {
-      query,
-    });
+	/**
+	 * Fetches the users that voted on this poll answer. Resolves with a collection of users, mapped by their ids.
+	 *
+	 * @param {BaseFetchPollAnswerVotersOptions} [options={}] Options for fetching the users
+	 * @returns {Promise<Collection<Snowflake, User>>}
+	 */
+	async fetch({ after, limit }: any = {}) {
+		const poll = this.answer.poll;
+		const query = makeURLSearchParams({ limit, after });
+		const data = await this.client.rest.get(Routes.pollAnswerVoters(poll.channelId, poll.messageId, this.answer.id), {
+			query,
+		});
 
-    return data.users.reduce((coll: any, rawUser: any) => {
-      const user = this.client.users._add(rawUser);
-      this.cache.set(user.id, user);
-      return coll.set(user.id, user);
-    }, new Collection());
-  }
+		return data.users.reduce((coll: any, rawUser: any) => {
+			const user = this.client.users._add(rawUser);
+			this.cache.set(user.id, user);
+			return coll.set(user.id, user);
+		}, new Collection());
+	}
 }

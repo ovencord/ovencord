@@ -1,4 +1,3 @@
-
 import { isJSONEncodable } from '@ovencord/util';
 import { AuthorizingIntegrationOwners } from '../structures/AuthorizingIntegrationOwners.js';
 
@@ -8,7 +7,7 @@ import { AuthorizingIntegrationOwners } from '../structures/AuthorizingIntegrati
  * @param {string} str The string to transform
  * @returns {string}
  */
-const snakeCase = (str: string): string => str.replace(/[A-Z]/g, letter => `_${letter.toLowerCase()}`);
+const snakeCase = (str: string): string => str.replace(/[A-Z]/g, (letter) => `_${letter.toLowerCase()}`);
 
 /**
  * Transforms camel-cased keys into snake cased keys
@@ -17,11 +16,11 @@ const snakeCase = (str: string): string => str.replace(/[A-Z]/g, letter => `_${l
  * @returns {*}
  */
 export function toSnakeCase(obj: any): any {
-  if (typeof obj !== 'object' || !obj) return obj;
-  if (obj instanceof Date) return obj;
-  if (isJSONEncodable(obj)) return toSnakeCase(obj.toJSON());
-  if (Array.isArray(obj)) return obj.map(toSnakeCase);
-  return Object.fromEntries(Object.entries(obj).map(([key, value]) => [snakeCase(key), toSnakeCase(value)]));
+	if (typeof obj !== 'object' || !obj) return obj;
+	if (obj instanceof Date) return obj;
+	if (isJSONEncodable(obj)) return toSnakeCase(obj.toJSON());
+	if (Array.isArray(obj)) return obj.map(toSnakeCase);
+	return Object.fromEntries(Object.entries(obj).map(([key, value]) => [snakeCase(key), toSnakeCase(value)]));
 }
 
 /**
@@ -32,14 +31,14 @@ export function toSnakeCase(obj: any): any {
  * @ignore
  */
 export function _transformAPIAutoModerationAction(autoModerationAction: any): any {
-  return {
-    type: autoModerationAction.type,
-    metadata: {
-      durationSeconds: autoModerationAction.metadata.duration_seconds ?? null,
-      channelId: autoModerationAction.metadata.channel_id ?? null,
-      customMessage: autoModerationAction.metadata.custom_message ?? null,
-    },
-  };
+	return {
+		type: autoModerationAction.type,
+		metadata: {
+			durationSeconds: autoModerationAction.metadata.duration_seconds ?? null,
+			channelId: autoModerationAction.metadata.channel_id ?? null,
+			customMessage: autoModerationAction.metadata.custom_message ?? null,
+		},
+	};
 }
 
 /**
@@ -51,20 +50,20 @@ export function _transformAPIAutoModerationAction(autoModerationAction: any): an
  * @ignore
  */
 export function _transformAPIMessageInteractionMetadata(client: any, messageInteractionMetadata: any): any {
-  return {
-    id: messageInteractionMetadata.id,
-    type: messageInteractionMetadata.type,
-    user: client.users._add(messageInteractionMetadata.user),
-    authorizingIntegrationOwners: new AuthorizingIntegrationOwners(
-      client,
-      messageInteractionMetadata.authorizing_integration_owners,
-    ),
-    originalResponseMessageId: messageInteractionMetadata.original_response_message_id ?? null,
-    interactedMessageId: messageInteractionMetadata.interacted_message_id ?? null,
-    triggeringInteractionMetadata: messageInteractionMetadata.triggering_interaction_metadata
-      ? _transformAPIMessageInteractionMetadata(client, messageInteractionMetadata.triggering_interaction_metadata)
-      : null,
-  };
+	return {
+		id: messageInteractionMetadata.id,
+		type: messageInteractionMetadata.type,
+		user: client.users._add(messageInteractionMetadata.user),
+		authorizingIntegrationOwners: new AuthorizingIntegrationOwners(
+			client,
+			messageInteractionMetadata.authorizing_integration_owners,
+		),
+		originalResponseMessageId: messageInteractionMetadata.original_response_message_id ?? null,
+		interactedMessageId: messageInteractionMetadata.interacted_message_id ?? null,
+		triggeringInteractionMetadata: messageInteractionMetadata.triggering_interaction_metadata
+			? _transformAPIMessageInteractionMetadata(client, messageInteractionMetadata.triggering_interaction_metadata)
+			: null,
+	};
 }
 
 /**
@@ -75,15 +74,15 @@ export function _transformAPIMessageInteractionMetadata(client: any, messageInte
  * @ignore
  */
 export function _transformGuildScheduledEventRecurrenceRule(recurrenceRule: any): any {
-  return {
-    start: new Date(recurrenceRule.startAt).toISOString(),
-    frequency: recurrenceRule.frequency,
-    interval: recurrenceRule.interval,
-    by_weekday: recurrenceRule.byWeekday,
-    by_n_weekday: recurrenceRule.byNWeekday,
-    by_month: recurrenceRule.byMonth,
-    by_month_day: recurrenceRule.byMonthDay,
-  };
+	return {
+		start: new Date(recurrenceRule.startAt).toISOString(),
+		frequency: recurrenceRule.frequency,
+		interval: recurrenceRule.interval,
+		by_weekday: recurrenceRule.byWeekday,
+		by_n_weekday: recurrenceRule.byNWeekday,
+		by_month: recurrenceRule.byMonth,
+		by_month_day: recurrenceRule.byMonthDay,
+	};
 }
 
 /**
@@ -94,12 +93,12 @@ export function _transformGuildScheduledEventRecurrenceRule(recurrenceRule: any)
  * @ignore
  */
 export function _transformAPIIncidentsData(data: any): any {
-  return {
-    invitesDisabledUntil: data.invites_disabled_until ? new Date(data.invites_disabled_until) : null,
-    dmsDisabledUntil: data.dms_disabled_until ? new Date(data.dms_disabled_until) : null,
-    dmSpamDetectedAt: data.dm_spam_detected_at ? new Date(data.dm_spam_detected_at) : null,
-    raidDetectedAt: data.raid_detected_at ? new Date(data.raid_detected_at) : null,
-  };
+	return {
+		invitesDisabledUntil: data.invites_disabled_until ? new Date(data.invites_disabled_until) : null,
+		dmsDisabledUntil: data.dms_disabled_until ? new Date(data.dms_disabled_until) : null,
+		dmSpamDetectedAt: data.dm_spam_detected_at ? new Date(data.dm_spam_detected_at) : null,
+		raidDetectedAt: data.raid_detected_at ? new Date(data.raid_detected_at) : null,
+	};
 }
 
 /**
@@ -110,14 +109,14 @@ export function _transformAPIIncidentsData(data: any): any {
  * @ignore
  */
 export function _transformCollectibles(collectibles: any): any {
-  if (!collectibles.nameplate) return { nameplate: null };
+	if (!collectibles.nameplate) return { nameplate: null };
 
-  return {
-    nameplate: {
-      skuId: collectibles.nameplate.sku_id,
-      asset: collectibles.nameplate.asset,
-      label: collectibles.nameplate.label,
-      palette: collectibles.nameplate.palette,
-    },
-  };
+	return {
+		nameplate: {
+			skuId: collectibles.nameplate.sku_id,
+			asset: collectibles.nameplate.asset,
+			label: collectibles.nameplate.label,
+			palette: collectibles.nameplate.palette,
+		},
+	};
 }

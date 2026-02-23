@@ -1,24 +1,24 @@
-import { Events  } from '../../util/Events.js';
-import { Action  } from './Action.js';
+import { Events } from '../../util/Events.js';
+import { Action } from './Action.js';
 
 export class MessageReactionRemoveAllAction extends Action {
-  override handle(data: any) {
-    // Verify channel
-    const channel = this.getChannel({ id: data.channel_id, ...('guild_id' in data && { guild_id: data.guild_id }) });
-    if (!channel?.isTextBased()) return false;
+	override handle(data: any) {
+		// Verify channel
+		const channel = this.getChannel({ id: data.channel_id, ...('guild_id' in data && { guild_id: data.guild_id }) });
+		if (!channel?.isTextBased()) return false;
 
-    // Verify message
-    const message = this.getMessage(data, channel);
-    if (!message) return false;
+		// Verify message
+		const message = this.getMessage(data, channel);
+		if (!message) return false;
 
-    // Copy removed reactions to emit for the event.
-    const removed = message.reactions.cache.clone();
+		// Copy removed reactions to emit for the event.
+		const removed = message.reactions.cache.clone();
 
-    message.reactions.cache.clear();
-    this.client.emit(Events.MessageReactionRemoveAll, message, removed);
+		message.reactions.cache.clear();
+		this.client.emit(Events.MessageReactionRemoveAll, message, removed);
 
-    return { message };
-  }
+		return { message };
+	}
 }
 
 /**

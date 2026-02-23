@@ -1,17 +1,17 @@
-import type { Client } from '../../Client.js';
 import type { GatewayMessageUpdateDispatch } from 'discord-api-types/v10';
-import { Events  } from '../../../util/Events.js';
+import { Events } from '../../../util/Events.js';
+import type { Client } from '../../Client.js';
 
 export default (client: Client, packet: GatewayMessageUpdateDispatch) => {
-  const { old, updated } = client.actions.MessageUpdate.handle(packet.d);
-  if (old && updated) {
-    /**
-     * Emitted whenever a message is updated - e.g. embed or content change.
-     *
-     * @event Client#messageUpdate
-     * @param {Message} oldMessage The message before the update
-     * @param {Message} newMessage The message after the update
-     */
-    client.emit(Events.MessageUpdate, old, updated);
-  }
+	const { old, updated } = client.actions.MessageUpdate.handle(packet.d);
+	if (old && updated) {
+		/**
+		 * Emitted whenever a message is updated - e.g. embed or content change.
+		 *
+		 * @event Client#messageUpdate
+		 * @param {Message} oldMessage The message before the update
+		 * @param {Message} newMessage The message after the update
+		 */
+		client.emit(Events.MessageUpdate, old, updated);
+	}
 };

@@ -10,7 +10,7 @@ export abstract class BaseButtonBuilder<ButtonData extends APIButtonComponent> e
 	/**
 	 * @internal
 	 */
-	declare protected readonly data: Partial<ButtonData>;
+	protected declare readonly data: Partial<ButtonData>;
 
 	/**
 	 * Sets whether this button is disabled.

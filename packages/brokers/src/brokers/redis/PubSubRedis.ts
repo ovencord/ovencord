@@ -36,7 +36,12 @@ export class PubSubRedisBroker<TEvents extends Record<string, any>>
 	 * {@inheritDoc IPubSubBroker.publish}
 	 */
 	public async publish<Event extends keyof TEvents>(event: Event, data: TEvents[Event]): Promise<void> {
-		await this.redisClient.xadd(event as string, '*', BaseRedisBroker.STREAM_DATA_KEY, this.options.encode(data) as any);
+		await this.redisClient.xadd(
+			event as string,
+			'*',
+			BaseRedisBroker.STREAM_DATA_KEY,
+			this.options.encode(data) as any,
+		);
 	}
 
 	protected emitEvent(id: Uint8Array, group: string, event: string, data: unknown) {

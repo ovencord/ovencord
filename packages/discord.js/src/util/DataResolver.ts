@@ -1,4 +1,3 @@
-
 import { lazy } from '@ovencord/util';
 import { DiscordjsError, DiscordjsTypeError, ErrorCodes } from '../errors/index.js';
 import { BaseInvite } from '../structures/BaseInvite.js';
@@ -30,7 +29,7 @@ const getGuildTemplate = lazy(() => require('../structures/GuildTemplate.js').Gu
  * @returns {string}
  */
 export function resolveCode(data: any, regex: any) {
-  return regex.exec(data)?.[1] ?? data;
+	return regex.exec(data)?.[1] ?? data;
 }
 
 /**
@@ -40,7 +39,7 @@ export function resolveCode(data: any, regex: any) {
  * @returns {string}
  */
 export function resolveInviteCode(data: any) {
-  return resolveCode(data, BaseInvite.InvitesPattern);
+	return resolveCode(data, BaseInvite.InvitesPattern);
 }
 
 /**
@@ -50,7 +49,7 @@ export function resolveInviteCode(data: any) {
  * @returns {string}
  */
 export function resolveGuildTemplateCode(data: any) {
-  return resolveCode(data, getGuildTemplate().GuildTemplatesPattern);
+	return resolveCode(data, getGuildTemplate().GuildTemplatesPattern);
 }
 
 /**
@@ -82,51 +81,51 @@ export function resolveGuildTemplateCode(data: any) {
  * @returns {Promise<ResolvedFile>}
  */
 export async function resolveFile(resource: any) {
-  if (Buffer.isBuffer(resource)) return { data: resource };
+	if (Buffer.isBuffer(resource)) return { data: resource };
 
-  // Uint8Array (non-Buffer) — from image generators, canvas, etc.
-  if (resource instanceof Uint8Array) return { data: Buffer.from(resource) };
+	// Uint8Array (non-Buffer) — from image generators, canvas, etc.
+	if (resource instanceof Uint8Array) return { data: Buffer.from(resource) };
 
-  // ArrayBuffer
-  if (resource instanceof ArrayBuffer) return { data: Buffer.from(resource) };
+	// ArrayBuffer
+	if (resource instanceof ArrayBuffer) return { data: Buffer.from(resource) };
 
-  // Blob / File (Web API)
-  if (resource instanceof Blob) {
-    return {
-      data: Buffer.from(await resource.arrayBuffer()),
-      contentType: resource.type || undefined,
-    };
-  }
+	// Blob / File (Web API)
+	if (resource instanceof Blob) {
+		return {
+			data: Buffer.from(await resource.arrayBuffer()),
+			contentType: resource.type || undefined,
+		};
+	}
 
-  if (typeof resource[Symbol.asyncIterator] === 'function') {
-    const chunks: Uint8Array[] = [];
-    let totalLen = 0;
-    for await (const data of resource) {
-      const chunk = data instanceof Uint8Array ? data : new Uint8Array(data);
-      chunks.push(chunk);
-      totalLen += chunk.byteLength;
-    }
-    const merged = new Uint8Array(totalLen);
-    let offset = 0;
-    for (const chunk of chunks) {
-      merged.set(chunk, offset);
-      offset += chunk.byteLength;
-    }
-    return { data: merged };
-  }
+	if (typeof resource[Symbol.asyncIterator] === 'function') {
+		const chunks: Uint8Array[] = [];
+		let totalLen = 0;
+		for await (const data of resource) {
+			const chunk = data instanceof Uint8Array ? data : new Uint8Array(data);
+			chunks.push(chunk);
+			totalLen += chunk.byteLength;
+		}
+		const merged = new Uint8Array(totalLen);
+		let offset = 0;
+		for (const chunk of chunks) {
+			merged.set(chunk, offset);
+			offset += chunk.byteLength;
+		}
+		return { data: merged };
+	}
 
-  if (typeof resource === 'string') {
-    if (/^https?:\/\//.test(resource)) {
-      const res = await fetch(resource);
-      return { data: Buffer.from(await res.arrayBuffer()), contentType: res.headers.get('content-type') };
-    }
+	if (typeof resource === 'string') {
+		if (/^https?:\/\//.test(resource)) {
+			const res = await fetch(resource);
+			return { data: Buffer.from(await res.arrayBuffer()), contentType: res.headers.get('content-type') };
+		}
 
-    const bunFile = Bun.file(resource);
-    if (!await bunFile.exists()) throw new DiscordjsError(ErrorCodes.FileNotFound, resource);
-    return { data: Buffer.from(await bunFile.arrayBuffer()) };
-  }
+		const bunFile = Bun.file(resource);
+		if (!(await bunFile.exists())) throw new DiscordjsError(ErrorCodes.FileNotFound, resource);
+		return { data: Buffer.from(await bunFile.arrayBuffer()) };
+	}
 
-  throw new DiscordjsTypeError(ErrorCodes.ReqResourceType);
+	throw new DiscordjsTypeError(ErrorCodes.ReqResourceType);
 }
 
 /**
@@ -145,8 +144,8 @@ export async function resolveFile(resource: any) {
  * @returns {string}
  */
 export function resolveBase64(data: any, contentType = 'image/jpg') {
-  if (Buffer.isBuffer(data)) return `data:${contentType};base64,${data.toString('base64')}`;
-  return data;
+	if (Buffer.isBuffer(data)) return `data:${contentType};base64,${data.toString('base64')}`;
+	return data;
 }
 
 /**
@@ -156,11 +155,11 @@ export function resolveBase64(data: any, contentType = 'image/jpg') {
  * @returns {Promise<?string>}
  */
 export async function resolveImage(image: any) {
-  if (!image) return null;
-  if (typeof image === 'string' && image.startsWith('data:')) {
-    return image;
-  }
+	if (!image) return null;
+	if (typeof image === 'string' && image.startsWith('data:')) {
+		return image;
+	}
 
-  const file = await resolveFile(image);
-  return resolveBase64(file.data);
+	const file = await resolveFile(image);
+	return resolveBase64(file.data);
 }

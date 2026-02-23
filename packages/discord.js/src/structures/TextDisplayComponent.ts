@@ -1,4 +1,4 @@
-import { Component  } from './Component.js';
+import { Component } from './Component.js';
 
 /**
  * Represents a text display component
@@ -6,13 +6,13 @@ import { Component  } from './Component.js';
  * @extends {Component}
  */
 export class TextDisplayComponent extends Component {
-  /**
-   * The content of this text display
-   *
-   * @type {string}
-   * @readonly
-   */
-  get content() {
-    return this.data.content;
-  }
+	/**
+	 * The content of this text display
+	 *
+	 * @type {string}
+	 * @readonly
+	 */
+	get content() {
+		return this.data.content;
+	}
 }

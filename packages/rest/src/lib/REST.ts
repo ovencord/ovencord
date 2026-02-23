@@ -1,33 +1,31 @@
 import { Collection } from '@ovencord/collection';
 import { DiscordSnowflake } from '@ovencord/util';
-import { AsyncEventEmitter } from './utils/AsyncEventEmitter.js';
-import { uuidv5 as uuidV5 } from './utils/utils.js';
 import { CDN } from './CDN.js';
 import { BurstHandler } from './handlers/BurstHandler.js';
 import { SequentialHandler } from './handlers/SequentialHandler.js';
 import type { IHandler } from './interfaces/Handler.js';
+import { AsyncEventEmitter } from './utils/AsyncEventEmitter.js';
 import {
 	AUTH_UUID_NAMESPACE,
 	BurstHandlerMajorIdKey,
 	DefaultRestOptions,
 	DefaultUserAgent,
-
 	RESTEvents,
 } from './utils/constants.js';
-import { RequestMethod } from './utils/types.js';
 import type {
-	RESTOptions,
-	ResponseLike,
-	RestEvents,
+	AuthData,
 	HashData,
 	InternalRequest,
-	RouteLike,
-	RequestHeaders,
-	RouteData,
+	RESTOptions,
 	RequestData,
-	AuthData,
+	RequestHeaders,
+	ResponseLike,
+	RestEvents,
+	RouteData,
+	RouteLike,
 } from './utils/types.js';
-import { isBufferLike, parseResponse } from './utils/utils.js';
+import { RequestMethod } from './utils/types.js';
+import { isBufferLike, parseResponse, uuidv5 as uuidV5 } from './utils/utils.js';
 
 /**
  * Represents the class that manages handlers for endpoints
@@ -380,15 +378,12 @@ export class REST extends AsyncEventEmitter<RestEvents> {
 
 			// Set the final body to the form data
 			finalBody = formData;
-
 		} else if (request.body != null) {
 			if (request.passThroughBody) {
 				finalBody = request.body as any;
 			} else {
 				// Stringify the JSON data
-				finalBody = JSON.stringify(request.body, (_, value) =>
-					typeof value === 'bigint' ? value.toString() : value,
-				);
+				finalBody = JSON.stringify(request.body, (_, value) => (typeof value === 'bigint' ? value.toString() : value));
 				// Set the additional headers to specify the content-type
 				additionalHeaders = { 'Content-Type': 'application/json' };
 			}

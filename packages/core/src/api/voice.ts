@@ -1,14 +1,14 @@
-import type { RequestData, REST } from '@ovencord/rest';
+import type { REST, RequestData } from '@ovencord/rest';
 import {
+	type RESTGetAPIGuildVoiceStateCurrentMemberResult,
+	type RESTGetAPIGuildVoiceStateUserResult,
+	type RESTGetAPIVoiceRegionsResult,
+	type RESTPatchAPIGuildVoiceStateCurrentMemberJSONBody,
+	type RESTPatchAPIGuildVoiceStateCurrentMemberResult,
+	type RESTPatchAPIGuildVoiceStateUserJSONBody,
+	type RESTPatchAPIGuildVoiceStateUserResult,
 	Routes,
 	type Snowflake,
-	type RESTGetAPIVoiceRegionsResult,
-	type RESTGetAPIGuildVoiceStateUserResult,
-	type RESTGetAPIGuildVoiceStateCurrentMemberResult,
-	type RESTPatchAPIGuildVoiceStateUserJSONBody,
-	type RESTPatchAPIGuildVoiceStateCurrentMemberResult,
-	type RESTPatchAPIGuildVoiceStateCurrentMemberJSONBody,
-	type RESTPatchAPIGuildVoiceStateUserResult,
 } from 'discord-api-types/v10';
 
 export class VoiceAPI {

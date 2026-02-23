@@ -1,5 +1,5 @@
-import { SKUFlagsBitField  } from '../util/SKUFlagsBitField.js';
-import { Base  } from './Base.js';
+import { SKUFlagsBitField } from '../util/SKUFlagsBitField.js';
+import { Base } from './Base.js';
 
 /**
  * Represents a premium application SKU.
@@ -7,55 +7,55 @@ import { Base  } from './Base.js';
  * @extends {Base}
  */
 export class SKU extends Base {
-  public id: any;
-  public type: any;
-  public applicationId: any;
-  public name: any;
-  public slug: any;
-  public flags: any;
-  constructor(client: any, data: any) {
-    super(client);
+	public id: any;
+	public type: any;
+	public applicationId: any;
+	public name: any;
+	public slug: any;
+	public flags: any;
+	constructor(client: any, data: any) {
+		super(client);
 
-    /**
-     * The id of the SKU
-     *
-     * @type {Snowflake}
-     */
-    this.id = data.id;
+		/**
+		 * The id of the SKU
+		 *
+		 * @type {Snowflake}
+		 */
+		this.id = data.id;
 
-    /**
-     * The type of the SKU
-     *
-     * @type {SKUType}
-     */
-    this.type = data.type;
+		/**
+		 * The type of the SKU
+		 *
+		 * @type {SKUType}
+		 */
+		this.type = data.type;
 
-    /**
-     * The id of the parent application
-     *
-     * @type {Snowflake}
-     */
-    this.applicationId = data.application_id;
+		/**
+		 * The id of the parent application
+		 *
+		 * @type {Snowflake}
+		 */
+		this.applicationId = data.application_id;
 
-    /**
-     * The customer-facing name of the premium offering
-     *
-     * @type {string}
-     */
-    this.name = data.name;
+		/**
+		 * The customer-facing name of the premium offering
+		 *
+		 * @type {string}
+		 */
+		this.name = data.name;
 
-    /**
-     * The system-generated URL slug based on this SKU's name
-     *
-     * @type {string}
-     */
-    this.slug = data.slug;
+		/**
+		 * The system-generated URL slug based on this SKU's name
+		 *
+		 * @type {string}
+		 */
+		this.slug = data.slug;
 
-    /**
-     * Flags that describe the SKU
-     *
-     * @type {Readonly<SKUFlagsBitField>}
-     */
-    this.flags = new SKUFlagsBitField(data.flags).freeze();
-  }
+		/**
+		 * Flags that describe the SKU
+		 *
+		 * @type {Readonly<SKUFlagsBitField>}
+		 */
+		this.flags = new SKUFlagsBitField(data.flags).freeze();
+	}
 }

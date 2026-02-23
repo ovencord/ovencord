@@ -1,6 +1,6 @@
-import { Collection  } from '@ovencord/collection';
-import { Base  } from './Base.js';
-import { GuildOnboardingPromptOption  } from './GuildOnboardingPromptOption.js';
+import { Collection } from '@ovencord/collection';
+import { Base } from './Base.js';
+import { GuildOnboardingPromptOption } from './GuildOnboardingPromptOption.js';
 
 /**
  * Represents the data of a prompt of a guilds onboarding.
@@ -8,85 +8,85 @@ import { GuildOnboardingPromptOption  } from './GuildOnboardingPromptOption.js';
  * @extends {Base}
  */
 export class GuildOnboardingPrompt extends Base {
-  public guildId: any;
-  public id: any;
-  public options: any;
-  public title: any;
-  public singleSelect: any;
-  public required: any;
-  public inOnboarding: any;
-  public type: any;
-  constructor(client: any, data: any, guildId: any) {
-    super(client);
+	public guildId: any;
+	public id: any;
+	public options: any;
+	public title: any;
+	public singleSelect: any;
+	public required: any;
+	public inOnboarding: any;
+	public type: any;
+	constructor(client: any, data: any, guildId: any) {
+		super(client);
 
-    /**
-     * The id of the guild this onboarding prompt is from
-     *
-     * @type {Snowflake}
-     */
-    this.guildId = guildId;
+		/**
+		 * The id of the guild this onboarding prompt is from
+		 *
+		 * @type {Snowflake}
+		 */
+		this.guildId = guildId;
 
-    /**
-     * The id of the prompt
-     *
-     * @type {Snowflake}
-     */
-    this.id = data.id;
+		/**
+		 * The id of the prompt
+		 *
+		 * @type {Snowflake}
+		 */
+		this.id = data.id;
 
-    /**
-     * The options available within the prompt
-     *
-     * @type {Collection<Snowflake, GuildOnboardingPromptOption>}
-     */
-    this.options = data.options.reduce(
-      (options: any, option: any) => options.set(option.id, new GuildOnboardingPromptOption(client, option, guildId)),
-      new Collection(),
-    );
+		/**
+		 * The options available within the prompt
+		 *
+		 * @type {Collection<Snowflake, GuildOnboardingPromptOption>}
+		 */
+		this.options = data.options.reduce(
+			(options: any, option: any) => options.set(option.id, new GuildOnboardingPromptOption(client, option, guildId)),
+			new Collection(),
+		);
 
-    /**
-     * The title of the prompt
-     *
-     * @type {string}
-     */
-    this.title = data.title;
+		/**
+		 * The title of the prompt
+		 *
+		 * @type {string}
+		 */
+		this.title = data.title;
 
-    /**
-     * Whether users are limited to selecting one option for the prompt
-     *
-     * @type {boolean}
-     */
-    this.singleSelect = data.single_select;
+		/**
+		 * Whether users are limited to selecting one option for the prompt
+		 *
+		 * @type {boolean}
+		 */
+		this.singleSelect = data.single_select;
 
-    /**
-     * Whether the prompt is required before a user completes the onboarding flow
-     *
-     * @type {boolean}
-     */
-    this.required = data.required;
+		/**
+		 * Whether the prompt is required before a user completes the onboarding flow
+		 *
+		 * @type {boolean}
+		 */
+		this.required = data.required;
 
-    /**
-     * Whether the prompt is present in the onboarding flow.
-     * If `false`, the prompt will only appear in the Channels & Roles tab
-     *
-     * @type {boolean}
-     */
-    this.inOnboarding = data.in_onboarding;
+		/**
+		 * Whether the prompt is present in the onboarding flow.
+		 * If `false`, the prompt will only appear in the Channels & Roles tab
+		 *
+		 * @type {boolean}
+		 */
+		this.inOnboarding = data.in_onboarding;
 
-    /**
-     * The type of the prompt
-     *
-     * @type {GuildOnboardingPromptType}
-     */
-    this.type = data.type;
-  }
+		/**
+		 * The type of the prompt
+		 *
+		 * @type {GuildOnboardingPromptType}
+		 */
+		this.type = data.type;
+	}
 
-  /**
-   * The guild this onboarding prompt is from
-   *
-   * @type {Guild}
-   * @readonly
-   */
-  get guild() {
-    return this.client.guilds.cache.get(this.guildId);
-  }
+	/**
+	 * The guild this onboarding prompt is from
+	 *
+	 * @type {Guild}
+	 * @readonly
+	 */
+	get guild() {
+		return this.client.guilds.cache.get(this.guildId);
+	}
 }

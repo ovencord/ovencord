@@ -1,12 +1,12 @@
-import { AsyncQueue } from '../utils/AsyncQueue.js';
-import type { REST } from '../REST.js';
 import type { IHandler } from '../interfaces/Handler.js';
+import type { REST } from '../REST.js';
+import { AsyncQueue } from '../utils/AsyncQueue.js';
 import { RESTEvents } from '../utils/constants.js';
-import type { RateLimitData, ResponseLike, HandlerRequestData, RouteData } from '../utils/types.js';
+import type { HandlerRequestData, RateLimitData, ResponseLike, RouteData } from '../utils/types.js';
 import { hasSublimit, normalizeRateLimitOffset, onRateLimit, sleep } from '../utils/utils.js';
 import { handleErrors, incrementInvalidCount, makeNetworkRequest } from './Shared.js';
 
-const enum QueueType {
+enum QueueType {
 	Standard,
 	Sublimit,
 }

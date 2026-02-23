@@ -1,21 +1,21 @@
-import type { Client } from '../../Client.js';
 import type { GatewayGuildSoundboardSoundUpdateDispatch } from 'discord-api-types/v10';
-import { Events  } from '../../../util/Events.js';
+import { Events } from '../../../util/Events.js';
+import type { Client } from '../../Client.js';
 
 export default (client: Client, { d: data }: GatewayGuildSoundboardSoundUpdateDispatch) => {
-  const guild = client.guilds.cache.get(data.guild_id);
+	const guild = client.guilds.cache.get(data.guild_id);
 
-  if (!guild) return;
+	if (!guild) return;
 
-  const oldGuildSoundboardSound = guild.soundboardSounds.cache.get(data.sound_id)?._clone() ?? null;
-  const newGuildSoundboardSound = guild.soundboardSounds._add(data);
+	const oldGuildSoundboardSound = guild.soundboardSounds.cache.get(data.sound_id)?._clone() ?? null;
+	const newGuildSoundboardSound = guild.soundboardSounds._add(data);
 
-  /**
-   * Emitted whenever a guild soundboard sound is updated.
-   *
-   * @event Client#guildSoundboardSoundUpdate
-   * @param {?SoundboardSound} oldGuildSoundboardSound The guild soundboard sound before the update
-   * @param {SoundboardSound} newGuildSoundboardSound The guild soundboard sound after the update
-   */
-  client.emit(Events.GuildSoundboardSoundUpdate, oldGuildSoundboardSound, newGuildSoundboardSound);
+	/**
+	 * Emitted whenever a guild soundboard sound is updated.
+	 *
+	 * @event Client#guildSoundboardSoundUpdate
+	 * @param {?SoundboardSound} oldGuildSoundboardSound The guild soundboard sound before the update
+	 * @param {SoundboardSound} newGuildSoundboardSound The guild soundboard sound after the update
+	 */
+	client.emit(Events.GuildSoundboardSoundUpdate, oldGuildSoundboardSound, newGuildSoundboardSound);
 };

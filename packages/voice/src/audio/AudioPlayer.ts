@@ -1,7 +1,7 @@
 import { AsyncEventEmitter } from '@ovencord/util';
 import { addAudioPlayer, deleteAudioPlayer } from '../DataStore';
-import { VoiceConnectionStatus, type VoiceConnection } from '../VoiceConnection';
 import { noop } from '../util/util';
+import { type VoiceConnection, VoiceConnectionStatus } from '../VoiceConnection';
 import { AudioPlayerError } from './AudioPlayerError';
 import type { AudioResource } from './AudioResource';
 import { PlayerSubscription } from './PlayerSubscription';
@@ -266,7 +266,7 @@ export class AudioPlayer extends AsyncEventEmitter {
 	 * @param connection - The connection to subscribe
 	 * @returns The new subscription if the voice connection is not yet subscribed, otherwise the existing subscription
 	 */
-	// @ts-ignore
+	// @ts-expect-error
 	private subscribe(connection: VoiceConnection) {
 		const existingSubscription = this.subscribers.find((subscription) => subscription.connection === connection);
 		if (!existingSubscription) {
@@ -287,7 +287,7 @@ export class AudioPlayer extends AsyncEventEmitter {
 	 * @param subscription - The subscription to remove
 	 * @returns Whether or not the subscription existed on the player and was removed
 	 */
-	// @ts-ignore
+	// @ts-expect-error
 	private unsubscribe(subscription: PlayerSubscription) {
 		const index = this.subscribers.indexOf(subscription);
 		const exists = index !== -1;
@@ -524,7 +524,7 @@ export class AudioPlayer extends AsyncEventEmitter {
 	 * Called roughly every 20ms by the global audio player timer. Dispatches any audio packets that are buffered
 	 * by the active connections of this audio player.
 	 */
-	// @ts-ignore
+	// @ts-expect-error
 	private _stepDispatch() {
 		const state = this._state;
 
@@ -542,7 +542,7 @@ export class AudioPlayer extends AsyncEventEmitter {
 	 * underlying resource of the stream, and then has all the active connections of the audio player prepare it
 	 * (encrypt it, append header data) so that it is ready to play at the start of the next cycle.
 	 */
-	// @ts-ignore
+	// @ts-expect-error
 	private _stepPrepare() {
 		const state = this._state;
 

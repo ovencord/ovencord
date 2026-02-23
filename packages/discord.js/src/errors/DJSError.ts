@@ -1,6 +1,6 @@
 // Heavily inspired by node's `internal/errors` module
-import { ErrorCodes  } from './ErrorCodes.js';
-import { Messages  } from './Messages.js';
+import { ErrorCodes } from './ErrorCodes.js';
+import { Messages } from './Messages.js';
 
 /**
  * Extend an error of some sort into a DiscordjsError.
@@ -10,21 +10,21 @@ import { Messages  } from './Messages.js';
  * @ignore
  */
 export function makeDiscordjsError(Base: any) {
-  return class extends Base {
-    static {
-      Object.defineProperty(this, 'name', { value: `Discordjs${Base.name}` });
-    }
+	return class extends Base {
+		static {
+			Object.defineProperty(this, 'name', { value: `Discordjs${Base.name}` });
+		}
 
-    constructor(code: any, ...args: any[]) {
-      super(message(code, args));
-      this.code = code;
-      Error.captureStackTrace(this, this.constructor);
-    }
+		constructor(code: any, ...args: any[]) {
+			super(message(code, args));
+			this.code = code;
+			Error.captureStackTrace(this, this.constructor);
+		}
 
-    get name() {
-      return `${this.constructor.name} [${this.code}]`;
-    }
-  };
+		get name() {
+			return `${this.constructor.name} [${this.code}]`;
+		}
+	};
 }
 
 /**
@@ -36,13 +36,13 @@ export function makeDiscordjsError(Base: any) {
  * @ignore
  */
 export function message(code: any, args: any[]) {
-  if (!(code in ErrorCodes)) throw new Error('Error code must be a valid DiscordjsErrorCodes');
-  const msg = Messages[code];
-  if (!msg) throw new Error(`No message associated with error code: ${code}.`);
-  if (typeof msg === 'function') return (msg as any).apply(null, args);
-  if (!args?.length) return msg;
-  args.unshift(msg);
-  return String(...args);
+	if (!(code in ErrorCodes)) throw new Error('Error code must be a valid DiscordjsErrorCodes');
+	const msg = Messages[code];
+	if (!msg) throw new Error(`No message associated with error code: ${code}.`);
+	if (typeof msg === 'function') return (msg as any).apply(null, args);
+	if (!args?.length) return msg;
+	args.unshift(msg);
+	return String(...args);
 }
 
 export const DiscordjsError = makeDiscordjsError(Error);

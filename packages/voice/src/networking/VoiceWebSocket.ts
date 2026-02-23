@@ -2,7 +2,6 @@ import { AsyncEventEmitter } from '@ovencord/util';
 import type { VoiceSendPayload } from 'discord-api-types/voice/v8';
 import { VoiceOpcodes } from 'discord-api-types/voice/v8';
 
-
 /**
  * A binary WebSocket message.
  */
@@ -125,10 +124,13 @@ export class VoiceWebSocket extends AsyncEventEmitter {
 	 */
 	public onMessage(event: MessageEvent) {
 		if (event.data instanceof Buffer || event.data instanceof ArrayBuffer || event.data instanceof Uint8Array) {
-			const buffer = event.data instanceof ArrayBuffer 
-                ? new Uint8Array(event.data) 
-                : (event.data instanceof Uint8Array ? event.data : new Uint8Array(event.data));
-			
+			const buffer =
+				event.data instanceof ArrayBuffer
+					? new Uint8Array(event.data)
+					: event.data instanceof Uint8Array
+						? event.data
+						: new Uint8Array(event.data);
+
 			const view = new DataView(buffer.buffer, buffer.byteOffset, buffer.byteLength);
 			const seq = view.getUint16(0, false);
 			const op = view.getUint8(2);

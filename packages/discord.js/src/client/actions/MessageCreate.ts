@@ -1,38 +1,38 @@
-import { Events  } from '../../util/Events.js';
-import { Action  } from './Action.js';
+import { Events } from '../../util/Events.js';
+import { Action } from './Action.js';
 
 export class MessageCreateAction extends Action {
-  override handle(data: any) {
-    const client = this.client;
-    const channel = this.getChannel({
-      id: data.channel_id,
-      author: data.author,
-      ...('guild_id' in data && { guild_id: data.guild_id }),
-    });
-    if (channel) {
-      if (!channel.isTextBased()) return {};
+	override handle(data: any) {
+		const client = this.client;
+		const channel = this.getChannel({
+			id: data.channel_id,
+			author: data.author,
+			...('guild_id' in data && { guild_id: data.guild_id }),
+		});
+		if (channel) {
+			if (!channel.isTextBased()) return {};
 
-      if (channel.isThread()) {
-        channel.messageCount++;
-        channel.totalMessageSent++;
-      }
+			if (channel.isThread()) {
+				channel.messageCount++;
+				channel.totalMessageSent++;
+			}
 
-      const existing = channel.messages.cache.get(data.id);
-      if (existing && existing.author?.id !== this.client.user?.id) return { message: existing };
-      const message = existing ?? channel.messages._add(data);
-      channel.lastMessageId = data.id;
+			const existing = channel.messages.cache.get(data.id);
+			if (existing && existing.author?.id !== this.client.user?.id) return { message: existing };
+			const message = existing ?? channel.messages._add(data);
+			channel.lastMessageId = data.id;
 
-      /**
-       * Emitted whenever a message is created.
-       *
-       * @event Client#messageCreate
-       * @param {Message} message The created message
-       */
-      client.emit(Events.MessageCreate, message);
+			/**
+			 * Emitted whenever a message is created.
+			 *
+			 * @event Client#messageCreate
+			 * @param {Message} message The created message
+			 */
+			client.emit(Events.MessageCreate, message);
 
-      return { message };
-    }
+			return { message };
+		}
 
-    return {};
-  }
+		return {};
+	}
 }

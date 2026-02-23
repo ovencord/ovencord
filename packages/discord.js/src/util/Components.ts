@@ -1,11 +1,11 @@
-import { lazy  } from '@ovencord/util';
-import { ComponentType  } from 'discord-api-types/v10';
+import { lazy } from '@ovencord/util';
+import { ComponentType } from 'discord-api-types/v10';
 
 // Fixes circular dependencies.
 const getActionRow = lazy(() => require('../structures/ActionRow.js').ActionRow);
 const getButtonComponent = lazy(() => require('../structures/ButtonComponent.js').ButtonComponent);
 const getChannelSelectMenuComponent = lazy(
-  () => require('../structures/ChannelSelectMenuComponent.js').ChannelSelectMenuComponent,
+	() => require('../structures/ChannelSelectMenuComponent.js').ChannelSelectMenuComponent,
 );
 const getComponent = lazy(() => require('../structures/Component.js').Component);
 const getContainerComponent = lazy(() => require('../structures/ContainerComponent.js').ContainerComponent);
@@ -13,21 +13,21 @@ const getFileComponent = lazy(() => require('../structures/FileComponent.js').Fi
 const getLabelComponent = lazy(() => require('../structures/LabelComponent.js').LabelComponent);
 const getMediaGalleryComponent = lazy(() => require('../structures/MediaGalleryComponent.js').MediaGalleryComponent);
 const getMentionableSelectMenuComponent = lazy(
-  () => require('../structures/MentionableSelectMenuComponent.js').MentionableSelectMenuComponent,
+	() => require('../structures/MentionableSelectMenuComponent.js').MentionableSelectMenuComponent,
 );
 const getRoleSelectMenuComponent = lazy(
-  () => require('../structures/RoleSelectMenuComponent.js').RoleSelectMenuComponent,
+	() => require('../structures/RoleSelectMenuComponent.js').RoleSelectMenuComponent,
 );
 const getSectionComponent = lazy(() => require('../structures/SectionComponent.js').SectionComponent);
 const getSeparatorComponent = lazy(() => require('../structures/SeparatorComponent.js').SeparatorComponent);
 const getStringSelectMenuComponent = lazy(
-  () => require('../structures/StringSelectMenuComponent.js').StringSelectMenuComponent,
+	() => require('../structures/StringSelectMenuComponent.js').StringSelectMenuComponent,
 );
 const getTextDisplayComponent = lazy(() => require('../structures/TextDisplayComponent.js').TextDisplayComponent);
 const getTextInputComponent = lazy(() => require('../structures/TextInputComponent.js').TextInputComponent);
 const getThumbnailComponent = lazy(() => require('../structures/ThumbnailComponent.js').ThumbnailComponent);
 const getUserSelectMenuComponent = lazy(
-  () => require('../structures/UserSelectMenuComponent.js').UserSelectMenuComponent,
+	() => require('../structures/UserSelectMenuComponent.js').UserSelectMenuComponent,
 );
 
 /**
@@ -219,22 +219,22 @@ const getUserSelectMenuComponent = lazy(
  */
 
 const ComponentTypeToClass = {
-  [ComponentType.ActionRow]: getActionRow,
-  [ComponentType.Button]: getButtonComponent,
-  [ComponentType.StringSelect]: getStringSelectMenuComponent,
-  [ComponentType.TextInput]: getTextInputComponent,
-  [ComponentType.UserSelect]: getUserSelectMenuComponent,
-  [ComponentType.RoleSelect]: getRoleSelectMenuComponent,
-  [ComponentType.MentionableSelect]: getMentionableSelectMenuComponent,
-  [ComponentType.ChannelSelect]: getChannelSelectMenuComponent,
-  [ComponentType.Container]: getContainerComponent,
-  [ComponentType.TextDisplay]: getTextDisplayComponent,
-  [ComponentType.File]: getFileComponent,
-  [ComponentType.MediaGallery]: getMediaGalleryComponent,
-  [ComponentType.Section]: getSectionComponent,
-  [ComponentType.Separator]: getSeparatorComponent,
-  [ComponentType.Thumbnail]: getThumbnailComponent,
-  [ComponentType.Label]: getLabelComponent,
+	[ComponentType.ActionRow]: getActionRow,
+	[ComponentType.Button]: getButtonComponent,
+	[ComponentType.StringSelect]: getStringSelectMenuComponent,
+	[ComponentType.TextInput]: getTextInputComponent,
+	[ComponentType.UserSelect]: getUserSelectMenuComponent,
+	[ComponentType.RoleSelect]: getRoleSelectMenuComponent,
+	[ComponentType.MentionableSelect]: getMentionableSelectMenuComponent,
+	[ComponentType.ChannelSelect]: getChannelSelectMenuComponent,
+	[ComponentType.Container]: getContainerComponent,
+	[ComponentType.TextDisplay]: getTextDisplayComponent,
+	[ComponentType.File]: getFileComponent,
+	[ComponentType.MediaGallery]: getMediaGalleryComponent,
+	[ComponentType.Section]: getSectionComponent,
+	[ComponentType.Separator]: getSeparatorComponent,
+	[ComponentType.Thumbnail]: getThumbnailComponent,
+	[ComponentType.Label]: getLabelComponent,
 };
 
 /**
@@ -245,8 +245,8 @@ const ComponentTypeToClass = {
  * @ignore
  */
 export function createComponent(data: any) {
-  // @ts-ignore
-  return data instanceof getComponent() ? data : new (ComponentTypeToClass[data.type]?.() ?? getComponent())(data);
+	// @ts-expect-error
+	return data instanceof getComponent() ? data : new (ComponentTypeToClass[data.type]?.() ?? getComponent())(data);
 }
 
 /**
@@ -257,16 +257,16 @@ export function createComponent(data: any) {
  * @ignore
  */
 export function extractInteractiveComponents(component: any) {
-  switch (component.type) {
-    case ComponentType.ActionRow:
-      return component.components;
-    case ComponentType.Section:
-      return [...component.components, component.accessory];
-    case ComponentType.Container:
-      return component.components.flatMap(extractInteractiveComponents);
-    default:
-      return [component];
-  }
+	switch (component.type) {
+		case ComponentType.ActionRow:
+			return component.components;
+		case ComponentType.Section:
+			return [...component.components, component.accessory];
+		case ComponentType.Container:
+			return component.components.flatMap(extractInteractiveComponents);
+		default:
+			return [component];
+	}
 }
 
 /**
@@ -278,10 +278,10 @@ export function extractInteractiveComponents(component: any) {
  * @ignore
  */
 export function findComponentByCustomId(components: any, customId: any) {
-  return (
-    components
-      .flatMap(extractInteractiveComponents)
-      // @ts-ignore
-      .find(component => (component.customId ?? component.custom_id) === customId) ?? null
-  );
+	return (
+		components
+			.flatMap(extractInteractiveComponents)
+			// @ts-expect-error
+			.find((component) => (component.customId ?? component.custom_id) === customId) ?? null
+	);
 }

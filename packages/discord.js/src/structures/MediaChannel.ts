@@ -1,4 +1,4 @@
-import { ThreadOnlyChannel  } from './ThreadOnlyChannel.js';
+import { ThreadOnlyChannel } from './ThreadOnlyChannel.js';
 
 /**
  * Represents a media channel.

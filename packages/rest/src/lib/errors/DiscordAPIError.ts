@@ -77,7 +77,7 @@ export class DiscordAPIError extends Error {
 		let flattened = '';
 		if ('code' in error) {
 			if (error.errors) {
-				flattened = [...this.flattenDiscordError(error.errors)].join('\n');
+				flattened = [...DiscordAPIError.flattenDiscordError(error.errors)].join('\n');
 			}
 
 			return error.message && flattened
@@ -106,10 +106,10 @@ export class DiscordAPIError extends Error {
 				yield val;
 			} else if (isErrorGroupWrapper(val)) {
 				for (const error of val._errors) {
-					yield* this.flattenDiscordError(error, nextKey);
+					yield* DiscordAPIError.flattenDiscordError(error, nextKey);
 				}
 			} else {
-				yield* this.flattenDiscordError(val, nextKey);
+				yield* DiscordAPIError.flattenDiscordError(val, nextKey);
 			}
 		}
 	}

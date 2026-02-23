@@ -1,5 +1,4 @@
-
-import type { HandlerRequestData, RouteData, ResponseLike } from '../utils/types.js';
+import type { HandlerRequestData, ResponseLike, RouteData } from '../utils/types.js';
 
 export interface IHandler {
 	/**

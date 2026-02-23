@@ -1072,7 +1072,7 @@ export class Collection<Key, Value> extends Map<Key, Value> {
 		entries: Iterable<[Key, Value]>,
 		combine: (firstValue: Value, secondValue: Value, key: Key) => Value,
 	): Collection<Key, Value> {
-		const coll = new this[Symbol.species]<Key, Value>();
+		const coll = new Collection[Symbol.species]<Key, Value>();
 		for (const { 0: key, 1: value } of entries) {
 			if (coll.has(key)) {
 				coll.set(key, combine(coll.get(key)!, value, key));
@@ -1092,13 +1092,13 @@ export class Collection<Key, Value> extends Map<Key, Value> {
 		items: Iterable<Item>,
 		keySelector: (item: Item, index: number) => Key,
 	): Collection<Key, Item[]> {
-		return new this[Symbol.species]<Key, Item[]>(Map.groupBy(items, keySelector));
+		return new Collection[Symbol.species]<Key, Item[]>(Map.groupBy(items, keySelector));
 	}
 
 	/**
 	 * @internal
 	 */
-	declare public static readonly [Symbol.species]: typeof Collection;
+	public declare static readonly [Symbol.species]: typeof Collection;
 }
 
 export type Keep<Value> = { keep: false } | { keep: true; value: Value };

@@ -126,9 +126,12 @@ const allTopLevelComponentsPredicate = z
 
 const messageComponentsV2Predicate = baseMessagePredicate.extend({
 	components: allTopLevelComponentsPredicate,
-	flags: z.number().int().refine((flags) => (flags & MessageFlags.IsComponentsV2) === MessageFlags.IsComponentsV2, {
-		message: 'Must set IsComponentsV2 flag to use Components V2',
-	}),
+	flags: z
+		.number()
+		.int()
+		.refine((flags) => (flags & MessageFlags.IsComponentsV2) === MessageFlags.IsComponentsV2, {
+			message: 'Must set IsComponentsV2 flag to use Components V2',
+		}),
 	// These fields cannot be set
 	content: z.string().length(0).nullish(),
 	embeds: z.array(z.never()).nullish(),

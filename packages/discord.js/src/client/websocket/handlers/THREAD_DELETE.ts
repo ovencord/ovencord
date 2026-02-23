@@ -1,18 +1,18 @@
-import type { Client } from '../../Client.js';
 import type { GatewayThreadDeleteDispatch } from 'discord-api-types/v10';
-import { Events  } from '../../../util/Events.js';
+import { Events } from '../../../util/Events.js';
+import type { Client } from '../../Client.js';
 
 export default (client: Client, { d: data }: GatewayThreadDeleteDispatch) => {
-  const thread = client.channels.cache.get(data.id);
-  if (!thread) return;
+	const thread = client.channels.cache.get(data.id);
+	if (!thread) return;
 
-  client.channels._remove(thread.id);
+	client.channels._remove(thread.id);
 
-  /**
-   * Emitted whenever a thread is deleted.
-   *
-   * @event Client#threadDelete
-   * @param {ThreadChannel} thread The thread that was deleted
-   */
-  client.emit(Events.ThreadDelete, thread);
+	/**
+	 * Emitted whenever a thread is deleted.
+	 *
+	 * @event Client#threadDelete
+	 * @param {ThreadChannel} thread The thread that was deleted
+	 */
+	client.emit(Events.ThreadDelete, thread);
 };

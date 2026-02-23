@@ -1,7 +1,7 @@
-import { InviteType  } from 'discord-api-types/v10';
-import { BaseInvite  } from '../structures/BaseInvite.js';
-import { GroupDMInvite  } from '../structures/GroupDMInvite.js';
-import { GuildInvite  } from '../structures/GuildInvite.js';
+import { InviteType } from 'discord-api-types/v10';
+import { BaseInvite } from '../structures/BaseInvite.js';
+import { GroupDMInvite } from '../structures/GroupDMInvite.js';
+import { GuildInvite } from '../structures/GuildInvite.js';
 
 /**
  * Any invite.
@@ -10,8 +10,8 @@ import { GuildInvite  } from '../structures/GuildInvite.js';
  */
 
 const InviteTypeToClass = {
-  [InviteType.Guild]: GuildInvite,
-  [InviteType.GroupDM]: GroupDMInvite,
+	[InviteType.Guild]: GuildInvite,
+	[InviteType.GroupDM]: GroupDMInvite,
 };
 
 /**
@@ -23,6 +23,6 @@ const InviteTypeToClass = {
  * @ignore
  */
 export function createInvite(client: any, data: any) {
-  // @ts-ignore
-  return new (InviteTypeToClass[data.type] ?? BaseInvite)(client, data);
+	// @ts-expect-error
+	return new (InviteTypeToClass[data.type] ?? BaseInvite)(client, data);
 }

@@ -1,15 +1,15 @@
-import { makeURLSearchParams, type RequestData, type REST } from '@ovencord/rest';
+import { makeURLSearchParams, type REST, type RequestData } from '@ovencord/rest';
 import {
-	Routes,
-	type RESTGetAPIEntitlementsQuery,
 	type RESTGetAPIEntitlementResult,
+	type RESTGetAPIEntitlementsQuery,
 	type RESTGetAPIEntitlementsResult,
-	type RESTGetAPISKUsResult,
 	type RESTGetAPISKUSubscriptionResult,
 	type RESTGetAPISKUSubscriptionsQuery,
 	type RESTGetAPISKUSubscriptionsResult,
+	type RESTGetAPISKUsResult,
 	type RESTPostAPIEntitlementJSONBody,
 	type RESTPostAPIEntitlementResult,
+	Routes,
 	type Snowflake,
 } from 'discord-api-types/v10';
 

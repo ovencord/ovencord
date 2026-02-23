@@ -1,8 +1,7 @@
+export * from './brokers/Broker.js';
 export * from './brokers/redis/BaseRedis.js';
 export * from './brokers/redis/PubSubRedis.js';
 export * from './brokers/redis/RPCRedis.js';
-
-export * from './brokers/Broker.js';
 
 /**
  * The {@link https://github.com/ovencord/ovencord/blob/main/packages/brokers#readme | @ovencord/brokers} version

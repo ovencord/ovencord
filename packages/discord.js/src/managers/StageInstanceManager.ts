@@ -1,7 +1,7 @@
-import { Routes  } from 'discord-api-types/v10';
-import { DiscordjsTypeError, DiscordjsError, ErrorCodes  } from '../errors/index.js';
-import { StageInstance  } from '../structures/StageInstance.js';
-import { CachedManager  } from './CachedManager.js';
+import { Routes } from 'discord-api-types/v10';
+import { DiscordjsError, DiscordjsTypeError, ErrorCodes } from '../errors/index.js';
+import { StageInstance } from '../structures/StageInstance.js';
+import { CachedManager } from './CachedManager.js';
 
 /**
  * Manages API methods for {@link StageInstance} objects and holds their cache.
@@ -9,159 +9,159 @@ import { CachedManager  } from './CachedManager.js';
  * @extends {CachedManager}
  */
 export class StageInstanceManager extends CachedManager {
-  public guild: any;
-  constructor(guild: any, iterable?: any) {
-    super(guild.client, StageInstance, iterable);
+	public guild: any;
+	constructor(guild: any, iterable?: any) {
+		super(guild.client, StageInstance, iterable);
 
-    /**
-     * The guild this manager belongs to
-     *
-     * @type {Guild}
-     */
-    this.guild = guild;
-  }
+		/**
+		 * The guild this manager belongs to
+		 *
+		 * @type {Guild}
+		 */
+		this.guild = guild;
+	}
 
-  /**
-   * The cache of this Manager
-   *
-   * @type {Collection<Snowflake, StageInstance>}
-   * @name StageInstanceManager#cache
-   */
+	/**
+	 * The cache of this Manager
+	 *
+	 * @type {Collection<Snowflake, StageInstance>}
+	 * @name StageInstanceManager#cache
+	 */
 
-  /**
-   * Options used to create a stage instance.
-   *
-   * @typedef {Object} StageInstanceCreateOptions
-   * @property {string} topic The topic of the stage instance
-   * @property {StageInstancePrivacyLevel} [privacyLevel] The privacy level of the stage instance
-   * @property {boolean} [sendStartNotification] Whether to notify `@everyone` that the stage instance has started
-   * @property {GuildScheduledEventResolvable} [guildScheduledEvent]
-   * The guild scheduled event associated with the stage instance
-   */
+	/**
+	 * Options used to create a stage instance.
+	 *
+	 * @typedef {Object} StageInstanceCreateOptions
+	 * @property {string} topic The topic of the stage instance
+	 * @property {StageInstancePrivacyLevel} [privacyLevel] The privacy level of the stage instance
+	 * @property {boolean} [sendStartNotification] Whether to notify `@everyone` that the stage instance has started
+	 * @property {GuildScheduledEventResolvable} [guildScheduledEvent]
+	 * The guild scheduled event associated with the stage instance
+	 */
 
-  /**
-   * Data that can be resolved to a Stage Channel object. This can be:
-   * - A StageChannel
-   * - A Snowflake
-   *
-   * @typedef {StageChannel|Snowflake} StageChannelResolvable
-   */
+	/**
+	 * Data that can be resolved to a Stage Channel object. This can be:
+	 * - A StageChannel
+	 * - A Snowflake
+	 *
+	 * @typedef {StageChannel|Snowflake} StageChannelResolvable
+	 */
 
-  /**
-   * Creates a new stage instance.
-   *
-   * @param {StageChannelResolvable} channel The stage channel to associate the created stage instance to
-   * @param {StageInstanceCreateOptions} options The options to create the stage instance
-   * @returns {Promise<StageInstance>}
-   * @example
-   * // Create a stage instance
-   * guild.stageInstances.create('1234567890123456789', {
-   *  topic: 'A very creative topic',
-   *  privacyLevel: GuildPrivacyLevel.GuildOnly
-   * })
-   *  .then(stageInstance => console.log(stageInstance))
-   *  .catch(console.error);
-   */
-  async create(channel: any, options: any) {
-    const channelId = this.guild.channels.resolveId(channel);
-    if (!channelId) throw new DiscordjsError(ErrorCodes.StageChannelResolve);
-    if (typeof options !== 'object') throw new DiscordjsTypeError(ErrorCodes.InvalidType, 'options', 'object', true);
-    const { guildScheduledEvent, topic, privacyLevel, sendStartNotification } = options;
+	/**
+	 * Creates a new stage instance.
+	 *
+	 * @param {StageChannelResolvable} channel The stage channel to associate the created stage instance to
+	 * @param {StageInstanceCreateOptions} options The options to create the stage instance
+	 * @returns {Promise<StageInstance>}
+	 * @example
+	 * // Create a stage instance
+	 * guild.stageInstances.create('1234567890123456789', {
+	 *  topic: 'A very creative topic',
+	 *  privacyLevel: GuildPrivacyLevel.GuildOnly
+	 * })
+	 *  .then(stageInstance => console.log(stageInstance))
+	 *  .catch(console.error);
+	 */
+	async create(channel: any, options: any) {
+		const channelId = this.guild.channels.resolveId(channel);
+		if (!channelId) throw new DiscordjsError(ErrorCodes.StageChannelResolve);
+		if (typeof options !== 'object') throw new DiscordjsTypeError(ErrorCodes.InvalidType, 'options', 'object', true);
+		const { guildScheduledEvent, topic, privacyLevel, sendStartNotification } = options;
 
-    const guildScheduledEventId = guildScheduledEvent && this.resolveId(guildScheduledEvent);
+		const guildScheduledEventId = guildScheduledEvent && this.resolveId(guildScheduledEvent);
 
-    const data = await this.client.rest.post(Routes.stageInstances(), {
-      body: {
-        channel_id: channelId,
-        topic,
-        privacy_level: privacyLevel,
-        send_start_notification: sendStartNotification,
-        guild_scheduled_event_id: guildScheduledEventId,
-      },
-    });
+		const data = await this.client.rest.post(Routes.stageInstances(), {
+			body: {
+				channel_id: channelId,
+				topic,
+				privacy_level: privacyLevel,
+				send_start_notification: sendStartNotification,
+				guild_scheduled_event_id: guildScheduledEventId,
+			},
+		});
 
-    return this._add(data);
-  }
+		return this._add(data);
+	}
 
-  /**
-   * Fetches the stage instance associated with a stage channel, if it exists.
-   *
-   * @param {StageChannelResolvable} channel The stage channel whose associated stage instance is to be fetched
-   * @param {BaseFetchOptions} [options] Additional options for this fetch
-   * @returns {Promise<StageInstance>}
-   * @example
-   * // Fetch a stage instance
-   * guild.stageInstances.fetch('1234567890123456789')
-   *  .then(stageInstance => console.log(stageInstance))
-   *  .catch(console.error);
-   */
-  async fetch(channel: any, { cache = true, force = false } = {}) {
-    const channelId = this.guild.channels.resolveId(channel);
-    if (!channelId) throw new DiscordjsError(ErrorCodes.StageChannelResolve);
+	/**
+	 * Fetches the stage instance associated with a stage channel, if it exists.
+	 *
+	 * @param {StageChannelResolvable} channel The stage channel whose associated stage instance is to be fetched
+	 * @param {BaseFetchOptions} [options] Additional options for this fetch
+	 * @returns {Promise<StageInstance>}
+	 * @example
+	 * // Fetch a stage instance
+	 * guild.stageInstances.fetch('1234567890123456789')
+	 *  .then(stageInstance => console.log(stageInstance))
+	 *  .catch(console.error);
+	 */
+	async fetch(channel: any, { cache = true, force = false } = {}) {
+		const channelId = this.guild.channels.resolveId(channel);
+		if (!channelId) throw new DiscordjsError(ErrorCodes.StageChannelResolve);
 
-    if (!force) {
-      // @ts-ignore
-      const existing = this.cache.find(stageInstance => stageInstance.channelId === channelId);
-      if (existing) return existing;
-    }
+		if (!force) {
+			// @ts-expect-error
+			const existing = this.cache.find((stageInstance) => stageInstance.channelId === channelId);
+			if (existing) return existing;
+		}
 
-    const data = await this.client.rest.get(Routes.stageInstance(channelId));
-    return this._add(data, cache);
-  }
+		const data = await this.client.rest.get(Routes.stageInstance(channelId));
+		return this._add(data, cache);
+	}
 
-  /**
-   * Options used to edit an existing stage instance.
-   *
-   * @typedef {Object} StageInstanceEditOptions
-   * @property {string} [topic] The new topic of the stage instance
-   * @property {StageInstancePrivacyLevel} [privacyLevel] The new privacy level of the stage instance
-   */
+	/**
+	 * Options used to edit an existing stage instance.
+	 *
+	 * @typedef {Object} StageInstanceEditOptions
+	 * @property {string} [topic] The new topic of the stage instance
+	 * @property {StageInstancePrivacyLevel} [privacyLevel] The new privacy level of the stage instance
+	 */
 
-  /**
-   * Edits an existing stage instance.
-   *
-   * @param {StageChannelResolvable} channel The stage channel whose associated stage instance is to be edited
-   * @param {StageInstanceEditOptions} options The options to edit the stage instance
-   * @returns {Promise<StageInstance>}
-   * @example
-   * // Edit a stage instance
-   * guild.stageInstances.edit('1234567890123456789', { topic: 'new topic' })
-   *  .then(stageInstance => console.log(stageInstance))
-   *  .catch(console.error);
-   */
-  async edit(channel: any, options: any) {
-    if (typeof options !== 'object') throw new DiscordjsTypeError(ErrorCodes.InvalidType, 'options', 'object', true);
-    const channelId = this.guild.channels.resolveId(channel);
-    if (!channelId) throw new DiscordjsError(ErrorCodes.StageChannelResolve);
+	/**
+	 * Edits an existing stage instance.
+	 *
+	 * @param {StageChannelResolvable} channel The stage channel whose associated stage instance is to be edited
+	 * @param {StageInstanceEditOptions} options The options to edit the stage instance
+	 * @returns {Promise<StageInstance>}
+	 * @example
+	 * // Edit a stage instance
+	 * guild.stageInstances.edit('1234567890123456789', { topic: 'new topic' })
+	 *  .then(stageInstance => console.log(stageInstance))
+	 *  .catch(console.error);
+	 */
+	async edit(channel: any, options: any) {
+		if (typeof options !== 'object') throw new DiscordjsTypeError(ErrorCodes.InvalidType, 'options', 'object', true);
+		const channelId = this.guild.channels.resolveId(channel);
+		if (!channelId) throw new DiscordjsError(ErrorCodes.StageChannelResolve);
 
-    const { topic, privacyLevel } = options;
+		const { topic, privacyLevel } = options;
 
-    const data = await this.client.rest.patch(Routes.stageInstance(channelId), {
-      body: {
-        topic,
-        privacy_level: privacyLevel,
-      },
-    });
+		const data = await this.client.rest.patch(Routes.stageInstance(channelId), {
+			body: {
+				topic,
+				privacy_level: privacyLevel,
+			},
+		});
 
-    if (this.cache.has(data.id)) {
-      const clone = this.cache.get(data.id)._clone();
-      clone._patch(data);
-      return clone;
-    }
+		if (this.cache.has(data.id)) {
+			const clone = this.cache.get(data.id)._clone();
+			clone._patch(data);
+			return clone;
+		}
 
-    return this._add(data);
-  }
+		return this._add(data);
+	}
 
-  /**
-   * Deletes an existing stage instance.
-   *
-   * @param {StageChannelResolvable} channel The stage channel whose associated stage instance is to be deleted
-   * @returns {Promise<void>}
-   */
-  async delete(channel: any) {
-    const channelId = this.guild.channels.resolveId(channel);
-    if (!channelId) throw new DiscordjsError(ErrorCodes.StageChannelResolve);
+	/**
+	 * Deletes an existing stage instance.
+	 *
+	 * @param {StageChannelResolvable} channel The stage channel whose associated stage instance is to be deleted
+	 * @returns {Promise<void>}
+	 */
+	async delete(channel: any) {
+		const channelId = this.guild.channels.resolveId(channel);
+		if (!channelId) throw new DiscordjsError(ErrorCodes.StageChannelResolve);
 
-    await this.client.rest.delete(Routes.stageInstance(channelId));
-  }
+		await this.client.rest.delete(Routes.stageInstance(channelId));
+	}
 }

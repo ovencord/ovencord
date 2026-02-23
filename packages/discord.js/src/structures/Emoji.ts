@@ -1,7 +1,6 @@
-
-import { formatEmoji  } from '@ovencord/formatters';
+import { formatEmoji } from '@ovencord/formatters';
 import { DiscordSnowflake } from '@ovencord/util';
-import { Base  } from './Base.js';
+import { Base } from './Base.js';
 
 /**
  * Represents an emoji, see {@link ApplicationEmoji}, {@link GuildEmoji} and {@link ReactionEmoji}.
@@ -9,56 +8,62 @@ import { Base  } from './Base.js';
  * @extends {Base}
  */
 export class Emoji extends Base {
-  public animated: boolean | null;
-  public name: string | null;
-  public id: string | null;
+	public animated: boolean | null;
+	public name: string | null;
+	public id: string | null;
 
-  constructor(client: any, emoji: any) {
-    super(client);
-    this.animated = emoji.animated ?? null;
-    this.name = emoji.name ?? null;
-    this.id = emoji.id ?? null;
-  }
+	constructor(client: any, emoji: any) {
+		super(client);
+		this.animated = emoji.animated ?? null;
+		this.name = emoji.name ?? null;
+		this.id = emoji.id ?? null;
+	}
 
-  get identifier(): string {
-    if (this.id) return `${this.animated ? 'a:' : ''}${this.name}:${this.id}`;
-    return encodeURIComponent(this.name!);
-  }
+	get identifier(): string {
+		if (this.id) return `${this.animated ? 'a:' : ''}${this.name}:${this.id}`;
+		return encodeURIComponent(this.name!);
+	}
 
-  imageURL(options = {}): string | null {
-    if (!this.id) return null;
+	imageURL(options = {}): string | null {
+		if (!this.id) return null;
 
-    // @ts-ignore
-    const resolvedOptions = { extension: options.extension, size: options.size, animated: undefined as boolean | undefined };
+		// @ts-expect-error
+		const resolvedOptions = {
+			extension: options.extension,
+			size: options.size,
+			animated: undefined as boolean | undefined,
+		};
 
-    // @ts-ignore
-    if (!options.extension || options.extension === 'webp') {
-      // @ts-ignore
-      resolvedOptions.animated = options.animated ?? (this.animated || undefined);
-    }
+		// @ts-expect-error
+		if (!options.extension || options.extension === 'webp') {
+			// @ts-expect-error
+			resolvedOptions.animated = options.animated ?? (this.animated || undefined);
+		}
 
-    return (this.client as any).rest.cdn.emoji(this.id, resolvedOptions);
-  }
+		return (this.client as any).rest.cdn.emoji(this.id, resolvedOptions);
+	}
 
-  get createdTimestamp(): number | null {
-    return this.id ? DiscordSnowflake.timestampFrom(this.id) : null;
-  }
+	get createdTimestamp(): number | null {
+		return this.id ? DiscordSnowflake.timestampFrom(this.id) : null;
+	}
 
-  get createdAt(): Date | null {
-    return this.id ? new Date(this.createdTimestamp!) : null;
-  }
+	get createdAt(): Date | null {
+		return this.id ? new Date(this.createdTimestamp!) : null;
+	}
 
-  override toString(): string {
-    return this.id ? formatEmoji({ animated: this.animated as boolean, id: this.id, name: this.name as string }) : this.name!;
-  }
+	override toString(): string {
+		return this.id
+			? formatEmoji({ animated: this.animated as boolean, id: this.id, name: this.name as string })
+			: this.name!;
+	}
 
-  override toJSON(): any {
-    const json = super.toJSON({
-      guild: 'guildId',
-      createdTimestamp: true,
-      identifier: true,
-    });
-    json.imageURL = this.imageURL();
-    return json;
-  }
+	override toJSON(): any {
+		const json = super.toJSON({
+			guild: 'guildId',
+			createdTimestamp: true,
+			identifier: true,
+		});
+		json.imageURL = this.imageURL();
+		return json;
+	}
 }

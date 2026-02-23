@@ -1,5 +1,5 @@
-import { lazy  } from '@ovencord/util';
-import { ChannelType  } from 'discord-api-types/v10';
+import { lazy } from '@ovencord/util';
+import { ChannelType } from 'discord-api-types/v10';
 
 const getCategoryChannel = lazy(() => require('../structures/CategoryChannel.js').CategoryChannel);
 const getDMChannel = lazy(() => require('../structures/DMChannel.js').DMChannel);
@@ -32,67 +32,67 @@ const getMediaChannel = lazy(() => require('../structures/MediaChannel.js').Medi
  * @ignore
  */
 export function createChannel(client: any, data: any, guild: any, { allowUnknownGuild }: any = {}) {
-  let channel;
-  const resolvedGuild = guild ?? client.guilds.cache.get(data.guild_id);
+	let channel;
+	const resolvedGuild = guild ?? client.guilds.cache.get(data.guild_id);
 
-  if (!data.guild_id && !resolvedGuild) {
-    if ((data.recipients && data.type !== ChannelType.GroupDM) || data.type === ChannelType.DM) {
-      channel = new (getDMChannel())(client, data);
-    } else if (data.type === ChannelType.GroupDM) {
-      channel = new (getPartialGroupDMChannel())(client, data);
-    }
-  } else if (resolvedGuild || allowUnknownGuild) {
-    switch (data.type) {
-      case ChannelType.GuildText: {
-        channel = new (getTextChannel())(resolvedGuild, data, client);
-        break;
-      }
+	if (!data.guild_id && !resolvedGuild) {
+		if ((data.recipients && data.type !== ChannelType.GroupDM) || data.type === ChannelType.DM) {
+			channel = new (getDMChannel())(client, data);
+		} else if (data.type === ChannelType.GroupDM) {
+			channel = new (getPartialGroupDMChannel())(client, data);
+		}
+	} else if (resolvedGuild || allowUnknownGuild) {
+		switch (data.type) {
+			case ChannelType.GuildText: {
+				channel = new (getTextChannel())(resolvedGuild, data, client);
+				break;
+			}
 
-      case ChannelType.GuildVoice: {
-        channel = new (getVoiceChannel())(resolvedGuild, data, client);
-        break;
-      }
+			case ChannelType.GuildVoice: {
+				channel = new (getVoiceChannel())(resolvedGuild, data, client);
+				break;
+			}
 
-      case ChannelType.GuildCategory: {
-        channel = new (getCategoryChannel())(resolvedGuild, data, client);
-        break;
-      }
+			case ChannelType.GuildCategory: {
+				channel = new (getCategoryChannel())(resolvedGuild, data, client);
+				break;
+			}
 
-      case ChannelType.GuildAnnouncement: {
-        channel = new (getAnnouncementChannel())(resolvedGuild, data, client);
-        break;
-      }
+			case ChannelType.GuildAnnouncement: {
+				channel = new (getAnnouncementChannel())(resolvedGuild, data, client);
+				break;
+			}
 
-      case ChannelType.GuildStageVoice: {
-        channel = new (getStageChannel())(resolvedGuild, data, client);
-        break;
-      }
+			case ChannelType.GuildStageVoice: {
+				channel = new (getStageChannel())(resolvedGuild, data, client);
+				break;
+			}
 
-      case ChannelType.AnnouncementThread:
-      case ChannelType.PublicThread:
-      case ChannelType.PrivateThread: {
-        channel = new (getThreadChannel())(resolvedGuild, data, client);
-        if (!allowUnknownGuild) channel.parent?.threads.cache.set(channel.id, channel);
-        break;
-      }
+			case ChannelType.AnnouncementThread:
+			case ChannelType.PublicThread:
+			case ChannelType.PrivateThread: {
+				channel = new (getThreadChannel())(resolvedGuild, data, client);
+				if (!allowUnknownGuild) channel.parent?.threads.cache.set(channel.id, channel);
+				break;
+			}
 
-      case ChannelType.GuildDirectory:
-        channel = new (getDirectoryChannel())(resolvedGuild, data, client);
-        break;
-      case ChannelType.GuildForum:
-        channel = new (getForumChannel())(resolvedGuild, data, client);
-        break;
-      case ChannelType.GuildMedia:
-        channel = new (getMediaChannel())(resolvedGuild, data, client);
-        break;
-      default:
-        break;
-    }
+			case ChannelType.GuildDirectory:
+				channel = new (getDirectoryChannel())(resolvedGuild, data, client);
+				break;
+			case ChannelType.GuildForum:
+				channel = new (getForumChannel())(resolvedGuild, data, client);
+				break;
+			case ChannelType.GuildMedia:
+				channel = new (getMediaChannel())(resolvedGuild, data, client);
+				break;
+			default:
+				break;
+		}
 
-    if (channel && !allowUnknownGuild) resolvedGuild.channels?.cache.set(channel.id, channel);
-  }
+		if (channel && !allowUnknownGuild) resolvedGuild.channels?.cache.set(channel.id, channel);
+	}
 
-  return channel;
+	return channel;
 }
 
 /**
@@ -103,18 +103,18 @@ export function createChannel(client: any, data: any, guild: any, { allowUnknown
  * @ignore
  */
 export function transformAPIGuildForumTag(tag: any) {
-  return {
-    id: tag.id,
-    name: tag.name,
-    moderated: tag.moderated,
-    emoji:
-      (tag.emoji_id ?? tag.emoji_name)
-        ? {
-            id: tag.emoji_id,
-            name: tag.emoji_name,
-          }
-        : null,
-  };
+	return {
+		id: tag.id,
+		name: tag.name,
+		moderated: tag.moderated,
+		emoji:
+			(tag.emoji_id ?? tag.emoji_name)
+				? {
+						id: tag.emoji_id,
+						name: tag.emoji_name,
+					}
+				: null,
+	};
 }
 
 /**
@@ -125,13 +125,13 @@ export function transformAPIGuildForumTag(tag: any) {
  * @ignore
  */
 export function transformGuildForumTag(tag: any) {
-  return {
-    id: tag.id,
-    name: tag.name,
-    moderated: tag.moderated,
-    emoji_id: tag.emoji?.id ?? null,
-    emoji_name: tag.emoji?.name ?? null,
-  };
+	return {
+		id: tag.id,
+		name: tag.name,
+		moderated: tag.moderated,
+		emoji_id: tag.emoji?.id ?? null,
+		emoji_name: tag.emoji?.name ?? null,
+	};
 }
 
 /**
@@ -143,10 +143,10 @@ export function transformGuildForumTag(tag: any) {
  * @ignore
  */
 export function transformAPIGuildDefaultReaction(defaultReaction: any) {
-  return {
-    id: defaultReaction.emoji_id,
-    name: defaultReaction.emoji_name,
-  };
+	return {
+		id: defaultReaction.emoji_id,
+		name: defaultReaction.emoji_name,
+	};
 }
 
 /**
@@ -158,8 +158,8 @@ export function transformAPIGuildDefaultReaction(defaultReaction: any) {
  * @ignore
  */
 export function transformGuildDefaultReaction(defaultReaction: any) {
-  return {
-    emoji_id: defaultReaction.id,
-    emoji_name: defaultReaction.name,
-  };
+	return {
+		emoji_id: defaultReaction.id,
+		emoji_name: defaultReaction.name,
+	};
 }

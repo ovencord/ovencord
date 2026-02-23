@@ -1,6 +1,5 @@
-import type { RequestData, REST } from '@ovencord/rest';
+import type { REST, RequestData } from '@ovencord/rest';
 import {
-	Routes,
 	type RESTGetAPIApplicationEmojiResult,
 	type RESTGetAPIApplicationEmojisResult,
 	type RESTGetCurrentApplicationResult,
@@ -10,6 +9,7 @@ import {
 	type RESTPatchCurrentApplicationResult,
 	type RESTPostAPIApplicationEmojiJSONBody,
 	type RESTPostAPIApplicationEmojiResult,
+	Routes,
 	type Snowflake,
 } from 'discord-api-types/v10';
 

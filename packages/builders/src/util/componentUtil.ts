@@ -15,10 +15,10 @@ export function parseEmoji(text: string): APIMessageComponentEmoji {
 	if (/^\d{17,21}$/.test(decodedText)) return { id: decodedText, name: undefined, animated: false };
 	if (!decodedText.includes(':')) return { animated: false, name: decodedText.replace(/\uFE0F/g, ''), id: undefined };
 	const match = /<?(?:(?<animated>a):)?(?<name>\w{2,32}):(?<id>\d{17,19})?>?/.exec(decodedText);
-	
-    if (!match || !match.groups) {
-        return { animated: false, name: decodedText, id: undefined };
-    }
+
+	if (!match || !match.groups) {
+		return { animated: false, name: decodedText, id: undefined };
+	}
 
 	return {
 		animated: Boolean(match.groups.animated),

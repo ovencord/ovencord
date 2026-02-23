@@ -1,5 +1,5 @@
-import { ThreadMemberFlags  } from 'discord-api-types/v10';
-import { BitField  } from './BitField.js';
+import { ThreadMemberFlags } from 'discord-api-types/v10';
+import { BitField } from './BitField.js';
 
 /**
  * Data structure that makes it easy to interact with a {@link ThreadMember#flags} bitfield.
@@ -7,13 +7,13 @@ import { BitField  } from './BitField.js';
  * @extends {BitField}
  */
 export class ThreadMemberFlagsBitField extends BitField {
-  /**
-   * Numeric thread member flags. There are currently no bitflags relevant to bots for this.
-   *
-   * @type {ThreadMemberFlags}
-   * @memberof ThreadMemberFlagsBitField
-   */
-  static Flags = ThreadMemberFlags;
+	/**
+	 * Numeric thread member flags. There are currently no bitflags relevant to bots for this.
+	 *
+	 * @type {ThreadMemberFlags}
+	 * @memberof ThreadMemberFlagsBitField
+	 */
+	static Flags = ThreadMemberFlags;
 }
 
 /**

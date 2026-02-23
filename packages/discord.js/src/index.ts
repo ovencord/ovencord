@@ -1,25 +1,21 @@
-
+export { Collection } from '@ovencord/collection';
 // "Root" classes (starting points)
 export { Client } from './client/Client.js';
+// Errors
+export { DiscordjsError, DiscordjsRangeError, DiscordjsTypeError } from './errors/DJSError.js';
+export { ErrorCodes as DiscordjsErrorCodes } from './errors/ErrorCodes.js';
+export { BaseManager } from './managers/BaseManager.js';
 export { Shard } from './sharding/Shard.js';
 export { ShardClientUtil } from './sharding/ShardClientUtil.js';
 export { ShardingManager } from './sharding/ShardingManager.js';
-
-// Errors
-export { DiscordjsError } from './errors/DJSError.js';
-export { DiscordjsTypeError } from './errors/DJSError.js';
-export { DiscordjsRangeError } from './errors/DJSError.js';
-export { ErrorCodes as DiscordjsErrorCodes } from './errors/ErrorCodes.js';
-
 // Utilities
 export { ActivityFlagsBitField } from './util/ActivityFlagsBitField.js';
 export { ApplicationFlagsBitField } from './util/ApplicationFlagsBitField.js';
 export { AttachmentFlagsBitField } from './util/AttachmentFlagsBitField.js';
-export { BaseManager } from './managers/BaseManager.js';
 export { BitField } from './util/BitField.js';
 export { ChannelFlagsBitField } from './util/ChannelFlagsBitField.js';
-export { Collection } from '@ovencord/collection';
 export { Colors } from './util/Colors.js';
+
 import * as Constants from './util/Constants.js';
 export { Constants };
 export { Events } from './util/Events.js';
@@ -34,29 +30,19 @@ export { PermissionsBitField } from './util/PermissionsBitField.js';
 export { RoleFlagsBitField } from './util/RoleFlagsBitField.js';
 export { ShardEvents } from './util/ShardEvents.js';
 export { SKUFlagsBitField } from './util/SKUFlagsBitField.js';
+
 import { DiscordSnowflake as SnowflakeUtil } from '@ovencord/util';
 export { SnowflakeUtil };
-export { Status } from './util/Status.js';
-export { Sweepers } from './util/Sweepers.js';
-export { SystemChannelFlagsBitField } from './util/SystemChannelFlagsBitField.js';
-export { ThreadMemberFlagsBitField } from './util/ThreadMemberFlagsBitField.js';
-export { UserFlagsBitField } from './util/UserFlagsBitField.js';
-
-export * from './util/DataResolver.js';
-
-export { cleanCodeBlockContent } from './util/Util.js';
-export { cleanContent } from './util/Util.js';
-export { discordSort } from './util/Util.js';
-export { fetchRecommendedShardCount } from './util/Util.js';
-export { flatten } from './util/Util.js';
-export { parseEmoji } from './util/Util.js';
-export { parseWebhookURL } from './util/Util.js';
-export { resolveColor } from './util/Util.js';
-export { resolveSKUId } from './util/Util.js';
-export { verifyString } from './util/Util.js';
-
+export * from '@ovencord/builders';
+export { ButtonBuilder } from '@ovencord/builders';
+export * from '@ovencord/formatters';
+export * from '@ovencord/rest';
+export * from '@ovencord/util';
+export * from '@ovencord/ws';
+// External
+export * from 'discord-api-types/v10';
 export { version } from '../package.json' with { type: 'json' };
-
+export { ClientVoiceManager } from './client/voice/ClientVoiceManager.js';
 // Managers
 export { ApplicationCommandManager } from './managers/ApplicationCommandManager.js';
 export { ApplicationCommandPermissionsManager } from './managers/ApplicationCommandPermissionsManager.js';
@@ -64,7 +50,6 @@ export { ApplicationEmojiManager } from './managers/ApplicationEmojiManager.js';
 export { AutoModerationRuleManager } from './managers/AutoModerationRuleManager.js';
 export { CachedManager } from './managers/CachedManager.js';
 export { ChannelManager } from './managers/ChannelManager.js';
-export { ClientVoiceManager } from './client/voice/ClientVoiceManager.js';
 export { DataManager } from './managers/DataManager.js';
 export { DMMessageManager } from './managers/DMMessageManager.js';
 export { EntitlementManager } from './managers/EntitlementManager.js';
@@ -96,18 +81,15 @@ export { ThreadManager } from './managers/ThreadManager.js';
 export { ThreadMemberManager } from './managers/ThreadMemberManager.js';
 export { UserManager } from './managers/UserManager.js';
 export { VoiceStateManager } from './managers/VoiceStateManager.js';
-
 // Structures
 export { ActionRow } from './structures/ActionRow.js';
-export { Activity } from './structures/Presence.js';
 export { AnnouncementChannel } from './structures/AnnouncementChannel.js';
 export { AnonymousGuild } from './structures/AnonymousGuild.js';
-export { AuthorizingIntegrationOwners } from './structures/AuthorizingIntegrationOwners.js';
-export { Application } from './structures/interfaces/Application.js';
 export { ApplicationCommand } from './structures/ApplicationCommand.js';
 export { ApplicationEmoji } from './structures/ApplicationEmoji.js';
 export { ApplicationRoleConnectionMetadata } from './structures/ApplicationRoleConnectionMetadata.js';
 export { Attachment } from './structures/Attachment.js';
+export { AuthorizingIntegrationOwners } from './structures/AuthorizingIntegrationOwners.js';
 export { AutocompleteInteraction } from './structures/AutocompleteInteraction.js';
 export { AutoModerationActionExecution } from './structures/AutoModerationActionExecution.js';
 export { AutoModerationRule } from './structures/AutoModerationRule.js';
@@ -129,7 +111,6 @@ export { ChatInputCommandInteraction } from './structures/ChatInputCommandIntera
 export { ClientApplication } from './structures/ClientApplication.js';
 export { ClientPresence } from './structures/ClientPresence.js';
 export { ClientUser } from './structures/ClientUser.js';
-export { Collector } from './structures/interfaces/Collector.js';
 export { CommandInteraction } from './structures/CommandInteraction.js';
 export { CommandInteractionOptionResolver } from './structures/CommandInteractionOptionResolver.js';
 export { Component } from './structures/Component.js';
@@ -166,6 +147,8 @@ export { InteractionCallbackResponse } from './structures/InteractionCallbackRes
 export { InteractionCollector } from './structures/InteractionCollector.js';
 export { InteractionWebhook } from './structures/InteractionWebhook.js';
 export { InviteGuild } from './structures/InviteGuild.js';
+export { Application } from './structures/interfaces/Application.js';
+export { Collector } from './structures/interfaces/Collector.js';
 export { LabelComponent } from './structures/LabelComponent.js';
 export { MediaChannel } from './structures/MediaChannel.js';
 export { MediaGalleryComponent } from './structures/MediaGalleryComponent.js';
@@ -186,11 +169,10 @@ export { PartialGroupDMChannel } from './structures/PartialGroupDMChannel.js';
 export { PermissionOverwrites } from './structures/PermissionOverwrites.js';
 export { Poll } from './structures/Poll.js';
 export { PollAnswer } from './structures/PollAnswer.js';
+export { Activity, Presence, RichPresenceAssets } from './structures/Presence.js';
 export { PrimaryEntryPointCommandInteraction } from './structures/PrimaryEntryPointCommandInteraction.js';
-export { Presence } from './structures/Presence.js';
 export { ReactionCollector } from './structures/ReactionCollector.js';
 export { ReactionEmoji } from './structures/ReactionEmoji.js';
-export { RichPresenceAssets } from './structures/Presence.js';
 export { Role } from './structures/Role.js';
 export { RoleSelectMenuComponent } from './structures/RoleSelectMenuComponent.js';
 export { RoleSelectMenuInteraction } from './structures/RoleSelectMenuInteraction.js';
@@ -229,12 +211,21 @@ export { WelcomeChannel } from './structures/WelcomeChannel.js';
 export { WelcomeScreen } from './structures/WelcomeScreen.js';
 export { Widget } from './structures/Widget.js';
 export { WidgetMember } from './structures/WidgetMember.js';
-
-// External
-export * from 'discord-api-types/v10';
-export * from '@ovencord/builders';
-export { ButtonBuilder } from '@ovencord/builders';
-export * from '@ovencord/formatters';
-export * from '@ovencord/rest';
-export * from '@ovencord/util';
-export * from '@ovencord/ws';
+export * from './util/DataResolver.js';
+export { Status } from './util/Status.js';
+export { Sweepers } from './util/Sweepers.js';
+export { SystemChannelFlagsBitField } from './util/SystemChannelFlagsBitField.js';
+export { ThreadMemberFlagsBitField } from './util/ThreadMemberFlagsBitField.js';
+export { UserFlagsBitField } from './util/UserFlagsBitField.js';
+export {
+	cleanCodeBlockContent,
+	cleanContent,
+	discordSort,
+	fetchRecommendedShardCount,
+	flatten,
+	parseEmoji,
+	parseWebhookURL,
+	resolveColor,
+	resolveSKUId,
+	verifyString,
+} from './util/Util.js';

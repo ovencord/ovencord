@@ -1,4 +1,4 @@
-import { ContextMenuCommandInteraction  } from './ContextMenuCommandInteraction.js';
+import { ContextMenuCommandInteraction } from './ContextMenuCommandInteraction.js';
 
 /**
  * Represents a user context menu interaction.
@@ -6,23 +6,23 @@ import { ContextMenuCommandInteraction  } from './ContextMenuCommandInteraction.
  * @extends {ContextMenuCommandInteraction}
  */
 export class UserContextMenuCommandInteraction extends ContextMenuCommandInteraction {
-  /**
-   * The target user from this interaction
-   *
-   * @type {User}
-   * @readonly
-   */
-  get targetUser() {
-    return this.options.getUser('user');
-  }
+	/**
+	 * The target user from this interaction
+	 *
+	 * @type {User}
+	 * @readonly
+	 */
+	get targetUser() {
+		return this.options.getUser('user');
+	}
 
-  /**
-   * The target member from this interaction
-   *
-   * @type {?(GuildMember|APIGuildMember)}
-   * @readonly
-   */
-  get targetMember() {
-    return this.options.getMember('user');
-  }
+	/**
+	 * The target member from this interaction
+	 *
+	 * @type {?(GuildMember|APIGuildMember)}
+	 * @readonly
+	 */
+	get targetMember() {
+		return this.options.getMember('user');
+	}
 }

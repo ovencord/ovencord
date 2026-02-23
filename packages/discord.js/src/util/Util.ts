@@ -1,10 +1,8 @@
-
-
 import { Collection } from '@ovencord/collection';
 import { lazy } from '@ovencord/util';
 import { ChannelType, RouteBases, Routes } from 'discord-api-types/v10';
-import { Colors } from './Colors.js';
 import { DiscordjsError, DiscordjsRangeError, DiscordjsTypeError, ErrorCodes } from '../errors/index.js';
+import { Colors } from './Colors.js';
 
 // Fixes circular dependencies.
 const getAttachment = lazy(() => require('../structures/Attachment.js').Attachment);
@@ -21,62 +19,65 @@ const isObject = (data: any): boolean => typeof data === 'object' && data !== nu
  * @returns {Object}
  */
 export function flatten(obj: any, ...props: any[]): any {
-  return _flatten(obj, new WeakSet(), 0, ...props);
+	return _flatten(obj, new WeakSet(), 0, ...props);
 }
 
 const MAX_FLATTEN_DEPTH = 10;
 
 function _flatten(obj: any, seen: WeakSet<object>, depth: number, ...props: any[]): any {
-  if (!isObject(obj)) return obj;
+	if (!isObject(obj)) return obj;
 
-  // Depth guard — prevents stack overflow from deeply nested object trees
-  if (depth > MAX_FLATTEN_DEPTH) return {};
+	// Depth guard — prevents stack overflow from deeply nested object trees
+	if (depth > MAX_FLATTEN_DEPTH) return {};
 
-  // Circular reference guard
-  if (seen.has(obj)) return '[Circular]';
-  seen.add(obj);
+	// Circular reference guard
+	if (seen.has(obj)) return '[Circular]';
+	seen.add(obj);
 
-  const objProps = Object.keys(obj)
-    .filter(key => !key.startsWith('_'))
-    .map(key => ({ [key]: true }));
+	const objProps = Object.keys(obj)
+		.filter((key) => !key.startsWith('_'))
+		.map((key) => ({ [key]: true }));
 
-  const mergedProps = objProps.length ? Object.assign(Object.assign({}, ...objProps), ...props) : Object.assign({}, ...props);
+	const mergedProps = objProps.length
+		? Object.assign(Object.assign({}, ...objProps), ...props)
+		: Object.assign({}, ...props);
 
-  const out = {};
+	const out = {};
 
-  for (let [prop, newProp] of Object.entries(mergedProps)) {
-    if (!newProp) continue;
-    newProp = newProp === true ? prop : newProp;
+	for (let [prop, newProp] of Object.entries(mergedProps)) {
+		if (!newProp) continue;
+		newProp = newProp === true ? prop : newProp;
 
-    const element = obj[prop];
-    const elemIsObj = isObject(element);
-    const valueOf = elemIsObj && typeof element.valueOf === 'function' ? element.valueOf() : null;
-    const hasToJSON = elemIsObj && typeof element.toJSON === 'function';
+		const element = obj[prop];
+		const elemIsObj = isObject(element);
+		const valueOf = elemIsObj && typeof element.valueOf === 'function' ? element.valueOf() : null;
+		const hasToJSON = elemIsObj && typeof element.toJSON === 'function';
 
-    // If it's a Collection, make the array of keys
-    // @ts-ignore
-    if (element instanceof Collection) out[newProp as string] = Array.from(element.keys());
-    // If the valueOf is a Collection, use its array of keys
-    // @ts-ignore
-    else if (valueOf instanceof Collection) out[newProp as string] = Array.from(valueOf.keys());
-    // If it's an array, call toJSON function on each element if present, otherwise flatten each element
-    // @ts-ignore
-    else if (Array.isArray(element)) out[newProp as string] = element.map(elm => elm.toJSON?.() ?? _flatten(elm, seen, depth + 1));
-    // If it's an object with a primitive `valueOf`, use that value
-    // @ts-ignore
-    else if (typeof valueOf !== 'object') out[newProp as string] = valueOf;
-    // If it's an object with a toJSON function, use the return value of it
-    // @ts-ignore
-    else if (hasToJSON) out[newProp as string] = element.toJSON();
-    // If element is an object, use the flattened version of it
-    // @ts-ignore
-    else if (typeof element === 'object') out[newProp as string] = _flatten(element, seen, depth + 1);
-    // If it's a primitive
-    // @ts-ignore
-    else if (!elemIsObj) out[newProp as string] = element;
-  }
+		// If it's a Collection, make the array of keys
+		// @ts-expect-error
+		if (element instanceof Collection) out[newProp as string] = Array.from(element.keys());
+		// If the valueOf is a Collection, use its array of keys
+		// @ts-expect-error
+		else if (valueOf instanceof Collection) out[newProp as string] = Array.from(valueOf.keys());
+		// If it's an array, call toJSON function on each element if present, otherwise flatten each element
+		// @ts-expect-error
+		else if (Array.isArray(element))
+			out[newProp as string] = element.map((elm) => elm.toJSON?.() ?? _flatten(elm, seen, depth + 1));
+		// If it's an object with a primitive `valueOf`, use that value
+		// @ts-expect-error
+		else if (typeof valueOf !== 'object') out[newProp as string] = valueOf;
+		// If it's an object with a toJSON function, use the return value of it
+		// @ts-expect-error
+		else if (hasToJSON) out[newProp as string] = element.toJSON();
+		// If element is an object, use the flattened version of it
+		// @ts-expect-error
+		else if (typeof element === 'object') out[newProp as string] = _flatten(element, seen, depth + 1);
+		// If it's a primitive
+		// @ts-expect-error
+		else if (!elemIsObj) out[newProp as string] = element;
+	}
 
-  return out;
+	return out;
 }
 
 /**
@@ -92,19 +93,22 @@ function _flatten(obj: any, seen: WeakSet<object>, depth: number, ...props: any[
  * @param {FetchRecommendedShardCountOptions} [options] Options for fetching the recommended shard count
  * @returns {Promise<number>} The recommended number of shards
  */
-export async function fetchRecommendedShardCount(token: string, { guildsPerShard = 1_000, multipleOf = 1 } = {}): Promise<number> {
-  if (!token) throw new DiscordjsError(ErrorCodes.TokenMissing);
-  const response = await fetch(RouteBases.api + Routes.gatewayBot(), {
-    method: 'GET',
-    headers: { Authorization: `Bot ${token.replace(/^bot\s*/i, '')}` },
-  });
-  if (!response.ok) {
-    if (response.status === 401) throw new DiscordjsError(ErrorCodes.TokenInvalid);
-    throw response;
-  }
+export async function fetchRecommendedShardCount(
+	token: string,
+	{ guildsPerShard = 1_000, multipleOf = 1 } = {},
+): Promise<number> {
+	if (!token) throw new DiscordjsError(ErrorCodes.TokenMissing);
+	const response = await fetch(RouteBases.api + Routes.gatewayBot(), {
+		method: 'GET',
+		headers: { Authorization: `Bot ${token.replace(/^bot\s*/i, '')}` },
+	});
+	if (!response.ok) {
+		if (response.status === 401) throw new DiscordjsError(ErrorCodes.TokenInvalid);
+		throw response;
+	}
 
-  const { shards }: any = await response.json();
-  return Math.ceil((shards * (1_000 / guildsPerShard)) / multipleOf) * multipleOf;
+	const { shards }: any = await response.json();
+	return Math.ceil((shards * (1_000 / guildsPerShard)) / multipleOf) * multipleOf;
 }
 
 /**
@@ -126,10 +130,10 @@ export async function fetchRecommendedShardCount(token: string, { guildsPerShard
  * @returns {?PartialEmoji}
  */
 export function parseEmoji(text: string): any {
-  const decodedText = text.includes('%') ? decodeURIComponent(text) : text;
-  if (!decodedText.includes(':')) return { animated: false, name: decodedText, id: undefined };
-  const match = /<?(?:(?<animated>a):)?(?<name>\w{2,32}):(?<id>\d{17,19})?>?/.exec(decodedText);
-  return match && { animated: Boolean(match.groups!.animated), name: match.groups!.name, id: match.groups!.id };
+	const decodedText = text.includes('%') ? decodeURIComponent(text) : text;
+	if (!decodedText.includes(':')) return { animated: false, name: decodedText, id: undefined };
+	const match = /<?(?:(?<animated>a):)?(?<name>\w{2,32}):(?<id>\d{17,19})?>?/.exec(decodedText);
+	return match && { animated: Boolean(match.groups!.animated), name: match.groups!.name, id: match.groups!.id };
 }
 
 /**
@@ -146,11 +150,11 @@ export function parseEmoji(text: string): any {
  * @returns {?(PartialEmoji|PartialEmojiOnlyId)} Supplying a snowflake yields `PartialEmojiOnlyId`.
  */
 export function resolvePartialEmoji(emoji: any): any {
-  if (!emoji) return null;
-  if (typeof emoji === 'string') return /^\d{17,19}$/.test(emoji) ? { id: emoji } : parseEmoji(emoji);
-  const { id, name, animated } = emoji;
-  if (!id && !name) return null;
-  return { id, name, animated: Boolean(animated) };
+	if (!emoji) return null;
+	if (typeof emoji === 'string') return /^\d{17,19}$/.test(emoji) ? { id: emoji } : parseEmoji(emoji);
+	const { id, name, animated } = emoji;
+	if (!id && !name) return null;
+	return { id, name, animated: Boolean(animated) };
 }
 
 /**
@@ -162,19 +166,19 @@ export function resolvePartialEmoji(emoji: any): any {
  * @private
  */
 export function resolveGuildEmoji(client: any, emojiId: string): any {
-  for (const guild of client.guilds.cache.values()) {
-    if (!guild.available) {
-      continue;
-    }
+	for (const guild of client.guilds.cache.values()) {
+		if (!guild.available) {
+			continue;
+		}
 
-    const emoji = guild.emojis.cache.get(emojiId);
+		const emoji = guild.emojis.cache.get(emojiId);
 
-    if (emoji) {
-      return emoji;
-    }
-  }
+		if (emoji) {
+			return emoji;
+		}
+	}
 
-  return null;
+	return null;
 }
 
 /**
@@ -195,10 +199,10 @@ export function resolveGuildEmoji(client: any, emojiId: string): any {
  * @private
  */
 export function makeError(obj: any): Error {
-  const err = new Error(obj.message);
-  err.name = obj.name;
-  err.stack = obj.stack;
-  return err;
+	const err = new Error(obj.message);
+	err.name = obj.name;
+	err.stack = obj.stack;
+	return err;
 }
 
 /**
@@ -209,18 +213,18 @@ export function makeError(obj: any): Error {
  * @private
  */
 export function makePlainError(err: Error): any {
-  return {
-    name: err.name,
-    message: err.message,
-    stack: err.stack,
-  };
+	return {
+		name: err.name,
+		message: err.message,
+		stack: err.stack,
+	};
 }
 
 const TextSortableGroupTypes = [
-  ChannelType.GuildText,
-  ChannelType.GuildAnnouncement,
-  ChannelType.GuildForum,
-  ChannelType.GuildMedia,
+	ChannelType.GuildText,
+	ChannelType.GuildAnnouncement,
+	ChannelType.GuildForum,
+	ChannelType.GuildMedia,
 ];
 
 const VoiceSortableGroupTypes = [ChannelType.GuildVoice, ChannelType.GuildStageVoice];
@@ -237,20 +241,20 @@ const CategorySortableGroupTypes = [ChannelType.GuildCategory];
  * @private
  */
 export function getSortableGroupTypes(type: ChannelType): ChannelType[] {
-  switch (type) {
-    case ChannelType.GuildText:
-    case ChannelType.GuildAnnouncement:
-    case ChannelType.GuildForum:
-    case ChannelType.GuildMedia:
-      return TextSortableGroupTypes;
-    case ChannelType.GuildVoice:
-    case ChannelType.GuildStageVoice:
-      return VoiceSortableGroupTypes;
-    case ChannelType.GuildCategory:
-      return CategorySortableGroupTypes;
-    default:
-      return [type];
-  }
+	switch (type) {
+		case ChannelType.GuildText:
+		case ChannelType.GuildAnnouncement:
+		case ChannelType.GuildForum:
+		case ChannelType.GuildMedia:
+			return TextSortableGroupTypes;
+		case ChannelType.GuildVoice:
+		case ChannelType.GuildStageVoice:
+			return VoiceSortableGroupTypes;
+		case ChannelType.GuildCategory:
+			return CategorySortableGroupTypes;
+		default:
+			return [type];
+	}
 }
 
 /**
@@ -264,14 +268,14 @@ export function getSortableGroupTypes(type: ChannelType): ChannelType[] {
  * @private
  */
 export function moveElementInArray(array: any[], element: any, newIndex: number, offset = false): number {
-  const index = array.indexOf(element);
-  const targetIndex = (offset ? index : 0) + newIndex;
-  if (targetIndex > -1 && targetIndex < array.length) {
-    const removedElement = array.splice(index, 1)[0];
-    array.splice(targetIndex, 0, removedElement);
-  }
+	const index = array.indexOf(element);
+	const targetIndex = (offset ? index : 0) + newIndex;
+	if (targetIndex > -1 && targetIndex < array.length) {
+		const removedElement = array.splice(index, 1)[0];
+		array.splice(targetIndex, 0, removedElement);
+	}
 
-  return array.indexOf(element);
+	return array.indexOf(element);
 }
 
 /**
@@ -284,14 +288,14 @@ export function moveElementInArray(array: any[], element: any, newIndex: number,
  * @returns {string}
  */
 export function verifyString(
-  data: any,
-  error: any = Error,
-  errorMessage = `Expected a string, got ${data} instead.`,
-  allowEmpty = true,
+	data: any,
+	error: any = Error,
+	errorMessage = `Expected a string, got ${data} instead.`,
+	allowEmpty = true,
 ): string {
-  if (typeof data !== 'string') throw new error(errorMessage);
-  if (!allowEmpty && data.length === 0) throw new error(errorMessage);
-  return data;
+	if (typeof data !== 'string') throw new error(errorMessage);
+	if (!allowEmpty && data.length === 0) throw new error(errorMessage);
+	return data;
 }
 
 /**
@@ -301,28 +305,28 @@ export function verifyString(
  * @returns {number} A color
  */
 export function resolveColor(color: any): number {
-  let resolvedColor;
+	let resolvedColor;
 
-  if (typeof color === 'string') {
-    if (color === 'Random') return Math.floor(Math.random() * (0xffffff + 1));
-    if (color === 'Default') return 0;
-    if (/^#?[\da-f]{6}$/i.test(color)) return Number.parseInt(color.replace('#', ''), 16);
-    resolvedColor = Colors[color as keyof typeof Colors];
-  } else if (Array.isArray(color)) {
-    resolvedColor = (color[0] << 16) + (color[1] << 8) + color[2];
-  } else {
-    resolvedColor = color;
-  }
+	if (typeof color === 'string') {
+		if (color === 'Random') return Math.floor(Math.random() * (0xffffff + 1));
+		if (color === 'Default') return 0;
+		if (/^#?[\da-f]{6}$/i.test(color)) return Number.parseInt(color.replace('#', ''), 16);
+		resolvedColor = Colors[color as keyof typeof Colors];
+	} else if (Array.isArray(color)) {
+		resolvedColor = (color[0] << 16) + (color[1] << 8) + color[2];
+	} else {
+		resolvedColor = color;
+	}
 
-  if (!Number.isInteger(resolvedColor)) {
-    throw new DiscordjsTypeError(ErrorCodes.ColorConvert, color);
-  }
+	if (!Number.isInteger(resolvedColor)) {
+		throw new DiscordjsTypeError(ErrorCodes.ColorConvert, color);
+	}
 
-  if (resolvedColor < 0 || resolvedColor > 0xffffff) {
-    throw new DiscordjsRangeError(ErrorCodes.ColorRange);
-  }
+	if (resolvedColor < 0 || resolvedColor > 0xffffff) {
+		throw new DiscordjsRangeError(ErrorCodes.ColorRange);
+	}
 
-  return resolvedColor;
+	return resolvedColor;
 }
 
 /**
@@ -332,12 +336,12 @@ export function resolveColor(color: any): number {
  * @returns {Collection}
  */
 export function discordSort(collection: Collection<string, any>): Collection<string, any> {
-  const isGuildChannel = collection.first() instanceof getGuildChannel();
-  return collection.toSorted(
-    isGuildChannel
-      ? (a, b) => a.rawPosition - b.rawPosition || Number(BigInt(a.id) - BigInt(b.id))
-      : (a, b) => a.rawPosition - b.rawPosition || Number(BigInt(b.id) - BigInt(a.id)),
-  );
+	const isGuildChannel = collection.first() instanceof getGuildChannel();
+	return collection.toSorted(
+		isGuildChannel
+			? (a, b) => a.rawPosition - b.rawPosition || Number(BigInt(a.id) - BigInt(b.id))
+			: (a, b) => a.rawPosition - b.rawPosition || Number(BigInt(b.id) - BigInt(a.id)),
+	);
 }
 
 /**
@@ -353,12 +357,20 @@ export function discordSort(collection: Collection<string, any>): Collection<str
  * @returns {Promise<BaseChannel[]|Role[]>} Updated item list, with `id` and `position` properties
  * @private
  */
-export async function setPosition(item: any, position: number, relative: boolean, sorted: Collection<string, any>, client: any, route: string, reason?: string): Promise<any[]> {
-  let updatedItems = [...sorted.values()];
-  moveElementInArray(updatedItems, item, position, relative);
-  updatedItems = updatedItems.map((innerItem, index) => ({ id: innerItem.id, position: index }));
-  await client.rest.patch(route, { body: updatedItems, reason });
-  return updatedItems;
+export async function setPosition(
+	item: any,
+	position: number,
+	relative: boolean,
+	sorted: Collection<string, any>,
+	client: any,
+	route: string,
+	reason?: string,
+): Promise<any[]> {
+	let updatedItems = [...sorted.values()];
+	moveElementInArray(updatedItems, item, position, relative);
+	updatedItems = updatedItems.map((innerItem, index) => ({ id: innerItem.id, position: index }));
+	await client.rest.patch(route, { body: updatedItems, reason });
+	return updatedItems;
 }
 
 /**
@@ -370,10 +382,10 @@ export async function setPosition(item: any, position: number, relative: boolean
  * @private
  */
 export function basename(filePath: string, ext?: string): string {
-  const lastSlash = Math.max(filePath.lastIndexOf('/'), filePath.lastIndexOf('\\'));
-  const base = filePath.slice(lastSlash + 1).split('?')[0];
-  if (ext && base.endsWith(ext)) return base.slice(0, -ext.length);
-  return base;
+	const lastSlash = Math.max(filePath.lastIndexOf('/'), filePath.lastIndexOf('\\'));
+	const base = filePath.slice(lastSlash + 1).split('?')[0];
+	if (ext && base.endsWith(ext)) return base.slice(0, -ext.length);
+	return base;
 }
 
 /**
@@ -383,22 +395,22 @@ export function basename(filePath: string, ext?: string): string {
  * @returns {string} filename to use
  */
 export function findName(thing: any): string {
-  if (!thing) return 'file.bin';
+	if (!thing) return 'file.bin';
 
-  // Binary data types — no path available
-  if (Buffer.isBuffer(thing) || thing instanceof Uint8Array || thing instanceof ArrayBuffer || thing instanceof Blob) {
-    return 'file.bin';
-  }
+	// Binary data types — no path available
+	if (Buffer.isBuffer(thing) || thing instanceof Uint8Array || thing instanceof ArrayBuffer || thing instanceof Blob) {
+		return 'file.bin';
+	}
 
-  if (typeof thing === 'string') {
-    return basename(thing);
-  }
+	if (typeof thing === 'string') {
+		return basename(thing);
+	}
 
-  if (thing.path) {
-    return basename(thing.path);
-  }
+	if (thing.path) {
+		return basename(thing.path);
+	}
 
-  return 'file.jpg';
+	return 'file.jpg';
 }
 
 /**
@@ -409,42 +421,42 @@ export function findName(thing: any): string {
  * @returns {string}
  */
 export function cleanContent(str: string, channel: any): string {
-  return str.replaceAll(
-    /<(?:(?<type>@[!&]?|#)|(?:\/(?<commandName>[-_\p{L}\p{N}\p{sc=Deva}\p{sc=Thai} ]+):)|(?:a?:(?<emojiName>[\w]+):))(?<id>\d{17,19})>/gu,
-    (match, type, commandName, emojiName, id) => {
-      if (commandName) return `/${commandName}`;
+	return str.replaceAll(
+		/<(?:(?<type>@[!&]?|#)|(?:\/(?<commandName>[-_\p{L}\p{N}\p{sc=Deva}\p{sc=Thai} ]+):)|(?:a?:(?<emojiName>[\w]+):))(?<id>\d{17,19})>/gu,
+		(match, type, commandName, emojiName, id) => {
+			if (commandName) return `/${commandName}`;
 
-      if (emojiName) return `:${emojiName}:`;
+			if (emojiName) return `:${emojiName}:`;
 
-      switch (type) {
-        case '@':
-        case '@!': {
-          const member = channel.guild?.members.cache.get(id);
-          if (member) {
-            return `@${member.displayName}`;
-          }
+			switch (type) {
+				case '@':
+				case '@!': {
+					const member = channel.guild?.members.cache.get(id);
+					if (member) {
+						return `@${member.displayName}`;
+					}
 
-          const user = channel.client.users.cache.get(id);
-          return user ? `@${user.displayName}` : match;
-        }
+					const user = channel.client.users.cache.get(id);
+					return user ? `@${user.displayName}` : match;
+				}
 
-        case '@&': {
-          if (channel.type === ChannelType.DM) return match;
-          const role = channel.guild.roles.cache.get(id);
-          return role ? `@${role.name}` : match;
-        }
+				case '@&': {
+					if (channel.type === ChannelType.DM) return match;
+					const role = channel.guild.roles.cache.get(id);
+					return role ? `@${role.name}` : match;
+				}
 
-        case '#': {
-          const mentionedChannel = channel.client.channels.cache.get(id);
-          return mentionedChannel ? `#${mentionedChannel.name}` : match;
-        }
+				case '#': {
+					const mentionedChannel = channel.client.channels.cache.get(id);
+					return mentionedChannel ? `#${mentionedChannel.name}` : match;
+				}
 
-        default: {
-          return match;
-        }
-      }
-    },
-  );
+				default: {
+					return match;
+				}
+			}
+		},
+	);
 }
 
 /**
@@ -454,7 +466,7 @@ export function cleanContent(str: string, channel: any): string {
  * @returns {string}
  */
 export function cleanCodeBlockContent(text: string): string {
-  return text.replaceAll('```', '`\u200B``');
+	return text.replaceAll('```', '`\u200B``');
 }
 
 /**
@@ -464,12 +476,12 @@ export function cleanCodeBlockContent(text: string): string {
  * @returns {?WebhookDataIdWithToken} `null` if the URL is invalid, otherwise the id and the token
  */
 export function parseWebhookURL(url: string): any {
-  const matches =
-    /https?:\/\/(?:ptb\.|canary\.)?discord\.com\/api(?:\/v\d{1,2})?\/webhooks\/(?<id>\d{17,19})\/(?<token>[\w-]{68})/i.exec(
-      url,
-    );
+	const matches =
+		/https?:\/\/(?:ptb\.|canary\.)?discord\.com\/api(?:\/v\d{1,2})?\/webhooks\/(?<id>\d{17,19})\/(?<token>[\w-]{68})/i.exec(
+			url,
+		);
 
-  return matches && { id: matches.groups!.id, token: matches.groups!.token };
+	return matches && { id: matches.groups!.id, token: matches.groups!.token };
 }
 
 /**
@@ -481,68 +493,68 @@ export function parseWebhookURL(url: string): any {
  * @private
  */
 export function transformResolved(
-  { client, guild, channel }: any,
-  { members, users, channels, roles, messages, attachments }: any = {},
+	{ client, guild, channel }: any,
+	{ members, users, channels, roles, messages, attachments }: any = {},
 ): any {
-  const result = {};
+	const result = {};
 
-  if (members) {
-    // @ts-ignore
-    result.members = new Collection();
-    for (const [id, member] of Object.entries(members)) {
-      const user = (users as any)[id];
-      // @ts-ignore
-      result.members.set(id, guild?.members._add(Object.assign({ user }, member)) ?? member);
-    }
-  }
+	if (members) {
+		// @ts-expect-error
+		result.members = new Collection();
+		for (const [id, member] of Object.entries(members)) {
+			const user = (users as any)[id];
+			// @ts-expect-error
+			result.members.set(id, guild?.members._add(Object.assign({ user }, member)) ?? member);
+		}
+	}
 
-  if (users) {
-    // @ts-ignore
-    result.users = new Collection();
-    for (const user of Object.values(users)) {
-      // @ts-ignore
-      result.users.set((user as any).id, client.users._add(user));
-    }
-  }
+	if (users) {
+		// @ts-expect-error
+		result.users = new Collection();
+		for (const user of Object.values(users)) {
+			// @ts-expect-error
+			result.users.set((user as any).id, client.users._add(user));
+		}
+	}
 
-  if (roles) {
-    // @ts-ignore
-    result.roles = new Collection();
-    for (const role of Object.values(roles)) {
-      // @ts-ignore
-      result.roles.set((role as any).id, guild?.roles._add(role) ?? role);
-    }
-  }
+	if (roles) {
+		// @ts-expect-error
+		result.roles = new Collection();
+		for (const role of Object.values(roles)) {
+			// @ts-expect-error
+			result.roles.set((role as any).id, guild?.roles._add(role) ?? role);
+		}
+	}
 
-  if (channels) {
-    // @ts-ignore
-    result.channels = new Collection();
-    for (const apiChannel of Object.values(channels)) {
-      // @ts-ignore
-      result.channels.set((apiChannel as any).id, client.channels._add(apiChannel, guild) ?? apiChannel);
-    }
-  }
+	if (channels) {
+		// @ts-expect-error
+		result.channels = new Collection();
+		for (const apiChannel of Object.values(channels)) {
+			// @ts-expect-error
+			result.channels.set((apiChannel as any).id, client.channels._add(apiChannel, guild) ?? apiChannel);
+		}
+	}
 
-  if (messages) {
-    // @ts-ignore
-    result.messages = new Collection();
-    for (const message of Object.values(messages)) {
-      // @ts-ignore
-      result.messages.set((message as any).id, channel?.messages?._add(message) ?? message);
-    }
-  }
+	if (messages) {
+		// @ts-expect-error
+		result.messages = new Collection();
+		for (const message of Object.values(messages)) {
+			// @ts-expect-error
+			result.messages.set((message as any).id, channel?.messages?._add(message) ?? message);
+		}
+	}
 
-  if (attachments) {
-    // @ts-ignore
-    result.attachments = new Collection();
-    for (const attachment of Object.values(attachments)) {
-      const patched = new (getAttachment())(attachment);
-      // @ts-ignore
-      result.attachments.set((attachment as any).id, patched);
-    }
-  }
+	if (attachments) {
+		// @ts-expect-error
+		result.attachments = new Collection();
+		for (const attachment of Object.values(attachments)) {
+			const patched = new (getAttachment())(attachment);
+			// @ts-expect-error
+			result.attachments.set((attachment as any).id, patched);
+		}
+	}
 
-  return result;
+	return result;
 }
 
 /**
@@ -552,7 +564,7 @@ export function transformResolved(
  * @returns {?Snowflake} The resolved SKU id, or `null` if the resolvable was invalid
  */
 export function resolveSKUId(resolvable: any): string | null {
-  if (typeof resolvable === 'string') return resolvable;
-  if (resolvable instanceof getSKU()) return resolvable.id;
-  return null;
+	if (typeof resolvable === 'string') return resolvable;
+	if (resolvable instanceof getSKU()) return resolvable.id;
+	return null;
 }

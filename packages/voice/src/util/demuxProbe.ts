@@ -1,7 +1,6 @@
-
-import { Readable } from './stream';
 import prism from 'prism-media';
 import { StreamType } from '..';
+import { Readable } from './stream';
 import { noop } from './util';
 
 /**

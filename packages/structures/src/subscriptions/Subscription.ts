@@ -2,10 +2,10 @@ import { DiscordSnowflake } from '@ovencord/util';
 import type { APISubscription, SubscriptionStatus } from 'discord-api-types/v10';
 import { Structure } from '../Structure.js';
 import {
-	kData,
-	kCurrentPeriodStartTimestamp,
-	kCurrentPeriodEndTimestamp,
 	kCanceledTimestamp,
+	kCurrentPeriodEndTimestamp,
+	kCurrentPeriodStartTimestamp,
+	kData,
 } from '../utils/symbols.js';
 import { isIdSet } from '../utils/type-guards.js';
 import type { Partialize } from '../utils/types.js';

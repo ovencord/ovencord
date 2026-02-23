@@ -1,4 +1,4 @@
-import { Base  } from './Base.js';
+import { Base } from './Base.js';
 
 /**
  * Represents a typing state for a user in a channel.
@@ -6,76 +6,76 @@ import { Base  } from './Base.js';
  * @extends {Base}
  */
 export class Typing extends Base {
-  public channel: any;
-  public user: any;
-  public startedTimestamp: any;
-  constructor(channel: any, user: any, data: any) {
-    super(channel.client);
+	public channel: any;
+	public user: any;
+	public startedTimestamp: any;
+	constructor(channel: any, user: any, data: any) {
+		super(channel.client);
 
-    /**
-     * The channel the status is from
-     *
-     * @type {TextBasedChannels}
-     */
-    this.channel = channel;
+		/**
+		 * The channel the status is from
+		 *
+		 * @type {TextBasedChannels}
+		 */
+		this.channel = channel;
 
-    /**
-     * The user who is typing
-     *
-     * @type {User}
-     */
-    this.user = user;
+		/**
+		 * The user who is typing
+		 *
+		 * @type {User}
+		 */
+		this.user = user;
 
-    this._patch(data);
-  }
+		this._patch(data);
+	}
 
-  _patch(data: any) {
-    if ('timestamp' in data) {
-      /**
-       * The UNIX timestamp in milliseconds the user started typing at
-       *
-       * @type {number}
-       */
-      this.startedTimestamp = data.timestamp * 1_000;
-    }
-  }
+	_patch(data: any) {
+		if ('timestamp' in data) {
+			/**
+			 * The UNIX timestamp in milliseconds the user started typing at
+			 *
+			 * @type {number}
+			 */
+			this.startedTimestamp = data.timestamp * 1_000;
+		}
+	}
 
-  /**
-   * Indicates whether the status is received from a guild.
-   *
-   * @returns {boolean}
-   */
-  inGuild() {
-    return this.guild !== null;
-  }
+	/**
+	 * Indicates whether the status is received from a guild.
+	 *
+	 * @returns {boolean}
+	 */
+	inGuild() {
+		return this.guild !== null;
+	}
 
-  /**
-   * The time the user started typing at
-   *
-   * @type {Date}
-   * @readonly
-   */
-  get startedAt() {
-    return new Date(this.startedTimestamp);
-  }
+	/**
+	 * The time the user started typing at
+	 *
+	 * @type {Date}
+	 * @readonly
+	 */
+	get startedAt() {
+		return new Date(this.startedTimestamp);
+	}
 
-  /**
-   * The guild the status is from
-   *
-   * @type {?Guild}
-   * @readonly
-   */
-  get guild() {
-    return this.channel.guild ?? null;
-  }
+	/**
+	 * The guild the status is from
+	 *
+	 * @type {?Guild}
+	 * @readonly
+	 */
+	get guild() {
+		return this.channel.guild ?? null;
+	}
 
-  /**
-   * The member who is typing
-   *
-   * @type {?GuildMember}
-   * @readonly
-   */
-  get member() {
-    return this.guild?.members.resolve(this.user) ?? null;
-  }
+	/**
+	 * The member who is typing
+	 *
+	 * @type {?GuildMember}
+	 * @readonly
+	 */
+	get member() {
+		return this.guild?.members.resolve(this.user) ?? null;
+	}
 }

@@ -1,26 +1,26 @@
-import { Events  } from '../../util/Events.js';
-import { Action  } from './Action.js';
+import { Events } from '../../util/Events.js';
+import { Action } from './Action.js';
 
 export class GuildSoundboardSoundDeleteAction extends Action {
-  override handle(data: any) {
-    const guild = this.client.guilds.cache.get(data.guild_id);
+	override handle(data: any) {
+		const guild = this.client.guilds.cache.get(data.guild_id);
 
-    if (!guild) return {};
+		if (!guild) return {};
 
-    const soundboardSound = this.getSoundboardSound(data, guild);
+		const soundboardSound = this.getSoundboardSound(data, guild);
 
-    if (soundboardSound) {
-      guild.soundboardSounds.cache.delete(soundboardSound.soundId);
+		if (soundboardSound) {
+			guild.soundboardSounds.cache.delete(soundboardSound.soundId);
 
-      /**
-       * Emitted whenever a soundboard sound is deleted in a guild.
-       *
-       * @event Client#guildSoundboardSoundDelete
-       * @param {SoundboardSound} soundboardSound The soundboard sound that was deleted
-       */
-      this.client.emit(Events.GuildSoundboardSoundDelete, soundboardSound);
-    }
+			/**
+			 * Emitted whenever a soundboard sound is deleted in a guild.
+			 *
+			 * @event Client#guildSoundboardSoundDelete
+			 * @param {SoundboardSound} soundboardSound The soundboard sound that was deleted
+			 */
+			this.client.emit(Events.GuildSoundboardSoundDelete, soundboardSound);
+		}
 
-    return { soundboardSound };
-  }
+		return { soundboardSound };
+	}
 }

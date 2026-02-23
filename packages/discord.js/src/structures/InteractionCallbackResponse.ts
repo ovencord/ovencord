@@ -1,34 +1,34 @@
-import { InteractionCallback  } from './InteractionCallback.js';
-import { InteractionCallbackResource  } from './InteractionCallbackResource.js';
+import { InteractionCallback } from './InteractionCallback.js';
+import { InteractionCallbackResource } from './InteractionCallbackResource.js';
 
 /**
  * Represents an interaction's response
  */
 export class InteractionCallbackResponse {
-  public interaction: any;
-  public resource: any;
-  constructor(client: any, data: any) {
-    /**
-     * The client that instantiated this
-     *
-     * @name InteractionCallbackResponse#client
-     * @type {Client}
-     * @readonly
-     */
-    Object.defineProperty(this, 'client', { value: client });
+	public interaction: any;
+	public resource: any;
+	constructor(client: any, data: any) {
+		/**
+		 * The client that instantiated this
+		 *
+		 * @name InteractionCallbackResponse#client
+		 * @type {Client}
+		 * @readonly
+		 */
+		Object.defineProperty(this, 'client', { value: client });
 
-    /**
-     * The interaction object associated with the interaction callback response
-     *
-     * @type {InteractionCallback}
-     */
-    this.interaction = new InteractionCallback(client, data.interaction);
+		/**
+		 * The interaction object associated with the interaction callback response
+		 *
+		 * @type {InteractionCallback}
+		 */
+		this.interaction = new InteractionCallback(client, data.interaction);
 
-    /**
-     * The resource that was created by the interaction response
-     *
-     * @type {?InteractionCallbackResource}
-     */
-    this.resource = data.resource ? new InteractionCallbackResource(client, data.resource) : null;
-  }
+		/**
+		 * The resource that was created by the interaction response
+		 *
+		 * @type {?InteractionCallbackResource}
+		 */
+		this.resource = data.resource ? new InteractionCallbackResource(client, data.resource) : null;
+	}
 }

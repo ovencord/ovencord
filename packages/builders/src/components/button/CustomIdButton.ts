@@ -1,4 +1,4 @@
-import { ButtonStyle, ComponentType, type APIButtonComponentWithCustomId } from 'discord-api-types/v10';
+import { type APIButtonComponentWithCustomId, ButtonStyle, ComponentType } from 'discord-api-types/v10';
 import { Mixin } from 'ts-mixer';
 import { BaseButtonBuilder } from './Button.js';
 import { EmojiOrLabelButtonMixin } from './mixins/EmojiOrLabelButtonMixin.js';
@@ -11,7 +11,9 @@ export type CustomIdButtonStyle = APIButtonComponentWithCustomId['style'];
  * @mixes {@link BaseButtonBuilder}\<{@link discord-api-types/v10#(APIButtonComponentWithCustomId:interface)}\>
  * @mixes {@link EmojiOrLabelButtonMixin}
  */
-export interface CustomIdButtonBuilder extends BaseButtonBuilder<APIButtonComponentWithCustomId>, EmojiOrLabelButtonMixin {}
+export interface CustomIdButtonBuilder
+	extends BaseButtonBuilder<APIButtonComponentWithCustomId>,
+		EmojiOrLabelButtonMixin {}
 
 export abstract class CustomIdButtonBuilder extends Mixin(
 	BaseButtonBuilder<APIButtonComponentWithCustomId>,

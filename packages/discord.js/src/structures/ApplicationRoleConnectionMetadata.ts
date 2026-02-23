@@ -2,53 +2,53 @@
  * Role connection metadata object for an application.
  */
 export class ApplicationRoleConnectionMetadata {
-  public name: any;
-  public nameLocalizations: any;
-  public description: any;
-  public descriptionLocalizations: any;
-  public key: any;
-  public type: any;
-  constructor(data: any) {
-    /**
-     * The name of this metadata field
-     *
-     * @type {string}
-     */
-    this.name = data.name;
+	public name: any;
+	public nameLocalizations: any;
+	public description: any;
+	public descriptionLocalizations: any;
+	public key: any;
+	public type: any;
+	constructor(data: any) {
+		/**
+		 * The name of this metadata field
+		 *
+		 * @type {string}
+		 */
+		this.name = data.name;
 
-    /**
-     * The name localizations for this metadata field
-     *
-     * @type {?LocalizationMap}
-     */
-    this.nameLocalizations = data.name_localizations ?? null;
+		/**
+		 * The name localizations for this metadata field
+		 *
+		 * @type {?LocalizationMap}
+		 */
+		this.nameLocalizations = data.name_localizations ?? null;
 
-    /**
-     * The description of this metadata field
-     *
-     * @type {string}
-     */
-    this.description = data.description;
+		/**
+		 * The description of this metadata field
+		 *
+		 * @type {string}
+		 */
+		this.description = data.description;
 
-    /**
-     * The description localizations for this metadata field
-     *
-     * @type {?LocalizationMap}
-     */
-    this.descriptionLocalizations = data.description_localizations ?? null;
+		/**
+		 * The description localizations for this metadata field
+		 *
+		 * @type {?LocalizationMap}
+		 */
+		this.descriptionLocalizations = data.description_localizations ?? null;
 
-    /**
-     * The dictionary key for this metadata field
-     *
-     * @type {string}
-     */
-    this.key = data.key;
+		/**
+		 * The dictionary key for this metadata field
+		 *
+		 * @type {string}
+		 */
+		this.key = data.key;
 
-    /**
-     * The type of this metadata field
-     *
-     * @type {ApplicationRoleConnectionMetadataType}
-     */
-    this.type = data.type;
-  }
+		/**
+		 * The type of this metadata field
+		 *
+		 * @type {ApplicationRoleConnectionMetadataType}
+		 */
+		this.type = data.type;
+	}
 }

@@ -1,20 +1,20 @@
 import { AsyncEventEmitter } from '@ovencord/util';
 import type { GatewayVoiceServerUpdateDispatchData, GatewayVoiceStateUpdateDispatchData } from 'discord-api-types/v10';
+import type { AudioPlayer } from './audio/AudioPlayer';
+import type { PlayerSubscription } from './audio/PlayerSubscription';
 import type { JoinConfig } from './DataStore';
 import {
-	getVoiceConnection,
 	createJoinVoiceChannelPayload,
+	getVoiceConnection,
 	trackVoiceConnection,
 	untrackVoiceConnection,
 } from './DataStore';
-import type { AudioPlayer } from './audio/AudioPlayer';
-import type { PlayerSubscription } from './audio/PlayerSubscription';
-import type { VoiceWebSocket, VoiceUDPSocket } from './networking';
-import { Networking, NetworkingStatusCode, type NetworkingState } from './networking/Networking';
+import type { CreateVoiceConnectionOptions } from './index';
+import type { VoiceUDPSocket, VoiceWebSocket } from './networking';
+import { Networking, type NetworkingState, NetworkingStatusCode } from './networking/Networking';
 import { VoiceReceiver } from './receive/index';
 import type { DiscordGatewayAdapterImplementerMethods } from './util/adapter';
 import { noop } from './util/util';
-import type { CreateVoiceConnectionOptions } from './index';
 
 /**
  * The various status codes a voice connection can hold at any one time.

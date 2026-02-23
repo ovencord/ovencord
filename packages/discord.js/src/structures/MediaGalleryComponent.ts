@@ -1,5 +1,5 @@
-import { Component  } from './Component.js';
-import { MediaGalleryItem  } from './MediaGalleryItem.js';
+import { Component } from './Component.js';
+import { MediaGalleryItem } from './MediaGalleryItem.js';
 
 /**
  * Represents a media gallery component
@@ -7,27 +7,27 @@ import { MediaGalleryItem  } from './MediaGalleryItem.js';
  * @extends {Component}
  */
 export class MediaGalleryComponent extends Component {
-  public items: any;
-  constructor({ items, ...data }: any) {
-    super(data);
+	public items: any;
+	constructor({ items, ...data }: any) {
+		super(data);
 
-    /**
-     * The items in this media gallery
-     *
-     * @type {MediaGalleryItem[]}
-     * @readonly
-     */
-    // @ts-ignore
-    this.items = items.map(item => new MediaGalleryItem(item));
-  }
+		/**
+		 * The items in this media gallery
+		 *
+		 * @type {MediaGalleryItem[]}
+		 * @readonly
+		 */
+		// @ts-expect-error
+		this.items = items.map((item) => new MediaGalleryItem(item));
+	}
 
-  /**
-   * Returns the API-compatible JSON for this component
-   *
-   * @returns {APIMediaGalleryComponent}
-   */
-  toJSON() {
-    // @ts-ignore
-    return { ...this.data, items: this.items.map(item => item.toJSON()) };
-  }
+	/**
+	 * Returns the API-compatible JSON for this component
+	 *
+	 * @returns {APIMediaGalleryComponent}
+	 */
+	toJSON() {
+		// @ts-expect-error
+		return { ...this.data, items: this.items.map((item) => item.toJSON()) };
+	}
 }

@@ -1,8 +1,8 @@
-import { lazy  } from '@ovencord/util';
-import { findComponentByCustomId  } from '../util/Components.js';
-import { BaseInteraction  } from './BaseInteraction.js';
-import { InteractionWebhook  } from './InteractionWebhook.js';
-import { InteractionResponses  } from './interfaces/InteractionResponses.js';
+import { lazy } from '@ovencord/util';
+import { findComponentByCustomId } from '../util/Components.js';
+import { BaseInteraction } from './BaseInteraction.js';
+import { InteractionWebhook } from './InteractionWebhook.js';
+import { InteractionResponses } from './interfaces/InteractionResponses.js';
 
 const getMessage = lazy(() => require('./Message.js').Message);
 
@@ -13,119 +13,119 @@ const getMessage = lazy(() => require('./Message.js').Message);
  * @implements {InteractionResponses}
  */
 export class MessageComponentInteraction extends BaseInteraction {
-  public message: any;
-  public customId: any;
-  public componentType: any;
-  public deferred: any;
-  public ephemeral: any;
-  public replied: any;
-  public webhook: any;
-  constructor(client: any, data: any) {
-    super(client, data);
+	public message: any;
+	public customId: any;
+	public componentType: any;
+	public deferred: any;
+	public ephemeral: any;
+	public replied: any;
+	public webhook: any;
+	constructor(client: any, data: any) {
+		super(client, data);
 
-    /**
-     * The id of the channel this interaction was sent in
-     *
-     * @type {Snowflake}
-     * @name MessageComponentInteraction#channelId
-     */
+		/**
+		 * The id of the channel this interaction was sent in
+		 *
+		 * @type {Snowflake}
+		 * @name MessageComponentInteraction#channelId
+		 */
 
-    /**
-     * The message to which the component was attached
-     *
-     * @type {Message}
-     */
-    this.message = this.channel?.messages._add(data.message) ?? new (getMessage())(client, data.message);
+		/**
+		 * The message to which the component was attached
+		 *
+		 * @type {Message}
+		 */
+		this.message = this.channel?.messages._add(data.message) ?? new (getMessage())(client, data.message);
 
-    /**
-     * The custom id of the component which was interacted with
-     *
-     * @type {string}
-     */
-    this.customId = data.data.custom_id;
+		/**
+		 * The custom id of the component which was interacted with
+		 *
+		 * @type {string}
+		 */
+		this.customId = data.data.custom_id;
 
-    /**
-     * The type of component which was interacted with
-     *
-     * @type {ComponentType}
-     */
-    this.componentType = data.data.component_type;
+		/**
+		 * The type of component which was interacted with
+		 *
+		 * @type {ComponentType}
+		 */
+		this.componentType = data.data.component_type;
 
-    /**
-     * Whether the reply to this interaction has been deferred
-     *
-     * @type {boolean}
-     */
-    this.deferred = false;
+		/**
+		 * Whether the reply to this interaction has been deferred
+		 *
+		 * @type {boolean}
+		 */
+		this.deferred = false;
 
-    /**
-     * Whether the reply to this interaction is ephemeral
-     *
-     * @type {?boolean}
-     */
-    this.ephemeral = null;
+		/**
+		 * Whether the reply to this interaction is ephemeral
+		 *
+		 * @type {?boolean}
+		 */
+		this.ephemeral = null;
 
-    /**
-     * Whether this interaction has already been replied to
-     *
-     * @type {boolean}
-     */
-    this.replied = false;
+		/**
+		 * Whether this interaction has already been replied to
+		 *
+		 * @type {boolean}
+		 */
+		this.replied = false;
 
-    /**
-     * An associated interaction webhook, can be used to further interact with this interaction
-     *
-     * @type {InteractionWebhook}
-     */
-    this.webhook = new InteractionWebhook(this.client, this.applicationId, this.token);
-  }
+		/**
+		 * An associated interaction webhook, can be used to further interact with this interaction
+		 *
+		 * @type {InteractionWebhook}
+		 */
+		this.webhook = new InteractionWebhook(this.client, this.applicationId, this.token);
+	}
 
-  /**
-   * Components that can be placed in an action row for messages.
-   * - ButtonComponent
-   * - StringSelectMenuComponent
-   * - UserSelectMenuComponent
-   * - RoleSelectMenuComponent
-   * - MentionableSelectMenuComponent
-   * - ChannelSelectMenuComponent
-   *
-   * @typedef {ButtonComponent|StringSelectMenuComponent|UserSelectMenuComponent|
-   * RoleSelectMenuComponent|MentionableSelectMenuComponent|ChannelSelectMenuComponent} MessageActionRowComponent
-   */
+	/**
+	 * Components that can be placed in an action row for messages.
+	 * - ButtonComponent
+	 * - StringSelectMenuComponent
+	 * - UserSelectMenuComponent
+	 * - RoleSelectMenuComponent
+	 * - MentionableSelectMenuComponent
+	 * - ChannelSelectMenuComponent
+	 *
+	 * @typedef {ButtonComponent|StringSelectMenuComponent|UserSelectMenuComponent|
+	 * RoleSelectMenuComponent|MentionableSelectMenuComponent|ChannelSelectMenuComponent} MessageActionRowComponent
+	 */
 
-  /**
-   * The component which was interacted with
-   *
-   * @type {MessageActionRowComponent|APIComponentInMessageActionRow}
-   * @readonly
-   */
-  get component() {
-    return findComponentByCustomId(this.message.components, this.customId);
-  }
+	/**
+	 * The component which was interacted with
+	 *
+	 * @type {MessageActionRowComponent|APIComponentInMessageActionRow}
+	 * @readonly
+	 */
+	get component() {
+		return findComponentByCustomId(this.message.components, this.customId);
+	}
 
-  // These are here only for documentation purposes - they are implemented by InteractionResponses
+	// These are here only for documentation purposes - they are implemented by InteractionResponses
 
-  deferReply(options?: any): any {}
+	deferReply(options?: any): any {}
 
-  reply(options?: any): any {}
+	reply(options?: any): any {}
 
-  fetchReply(options?: any): any {}
+	fetchReply(options?: any): any {}
 
-  editReply(options?: any): any {}
+	editReply(options?: any): any {}
 
-  deleteReply(options?: any): any {}
+	deleteReply(options?: any): any {}
 
-  followUp(options?: any): any {}
+	followUp(options?: any): any {}
 
-  deferUpdate(options?: any): any {}
+	deferUpdate(options?: any): any {}
 
-  update(options?: any): any {}
+	update(options?: any): any {}
 
-  launchActivity(options?: any): any {}
+	launchActivity(options?: any): any {}
 
-  showModal(modal?: any, options?: any): any {}
+	showModal(modal?: any, options?: any): any {}
 
-  awaitModalSubmit(options?: any): any {}
+	awaitModalSubmit(options?: any): any {}
 }
 
 InteractionResponses.applyToClass(MessageComponentInteraction);

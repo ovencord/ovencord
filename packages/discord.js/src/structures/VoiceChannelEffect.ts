@@ -1,92 +1,92 @@
-import { Emoji  } from './Emoji.js';
+import { Emoji } from './Emoji.js';
 
 /**
  * Represents an effect used in a {@link VoiceChannel}.
  */
 export class VoiceChannelEffect {
-  public guild: any;
-  public channelId: any;
-  public userId: any;
-  public emoji: any;
-  public animationType: any;
-  public animationId: any;
-  public soundId: any;
-  public soundVolume: any;
-  constructor(data: any, guild: any) {
-    /**
-     * The guild where the effect was sent from.
-     *
-     * @type {Guild}
-     */
-    this.guild = guild;
+	public guild: any;
+	public channelId: any;
+	public userId: any;
+	public emoji: any;
+	public animationType: any;
+	public animationId: any;
+	public soundId: any;
+	public soundVolume: any;
+	constructor(data: any, guild: any) {
+		/**
+		 * The guild where the effect was sent from.
+		 *
+		 * @type {Guild}
+		 */
+		this.guild = guild;
 
-    /**
-     * The id of the channel the effect was sent in.
-     *
-     * @type {Snowflake}
-     */
-    this.channelId = data.channel_id;
+		/**
+		 * The id of the channel the effect was sent in.
+		 *
+		 * @type {Snowflake}
+		 */
+		this.channelId = data.channel_id;
 
-    /**
-     * The id of the user that sent the effect.
-     *
-     * @type {Snowflake}
-     */
-    this.userId = data.user_id;
+		/**
+		 * The id of the user that sent the effect.
+		 *
+		 * @type {Snowflake}
+		 */
+		this.userId = data.user_id;
 
-    /**
-     * The emoji of the effect.
-     *
-     * @type {?Emoji}
-     */
-    this.emoji = data.emoji ? new Emoji(guild.client, data.emoji) : null;
+		/**
+		 * The emoji of the effect.
+		 *
+		 * @type {?Emoji}
+		 */
+		this.emoji = data.emoji ? new Emoji(guild.client, data.emoji) : null;
 
-    /**
-     * The animation type of the effect.
-     *
-     * @type {?VoiceChannelEffectSendAnimationType}
-     */
-    this.animationType = data.animation_type ?? null;
+		/**
+		 * The animation type of the effect.
+		 *
+		 * @type {?VoiceChannelEffectSendAnimationType}
+		 */
+		this.animationType = data.animation_type ?? null;
 
-    /**
-     * The animation id of the effect.
-     *
-     * @type {?number}
-     */
-    this.animationId = data.animation_id ?? null;
+		/**
+		 * The animation id of the effect.
+		 *
+		 * @type {?number}
+		 */
+		this.animationId = data.animation_id ?? null;
 
-    /**
-     * The id of the soundboard sound for soundboard effects.
-     *
-     * @type {?(Snowflake|number)}
-     */
-    this.soundId = data.sound_id ?? null;
+		/**
+		 * The id of the soundboard sound for soundboard effects.
+		 *
+		 * @type {?(Snowflake|number)}
+		 */
+		this.soundId = data.sound_id ?? null;
 
-    /**
-     * The volume of the soundboard sound [0-1] for soundboard effects.
-     *
-     * @type {?number}
-     */
-    this.soundVolume = data.sound_volume ?? null;
-  }
+		/**
+		 * The volume of the soundboard sound [0-1] for soundboard effects.
+		 *
+		 * @type {?number}
+		 */
+		this.soundVolume = data.sound_volume ?? null;
+	}
 
-  /**
-   * The channel the effect was sent in.
-   *
-   * @type {?VoiceChannel}
-   * @readonly
-   */
-  get channel() {
-    return this.guild.channels.cache.get(this.channelId) ?? null;
-  }
+	/**
+	 * The channel the effect was sent in.
+	 *
+	 * @type {?VoiceChannel}
+	 * @readonly
+	 */
+	get channel() {
+		return this.guild.channels.cache.get(this.channelId) ?? null;
+	}
 
-  /**
-   * The soundboard sound for soundboard effects.
-   *
-   * @type {?SoundboardSound}
-   * @readonly
-   */
-  get soundboardSound() {
-    return this.guild.soundboardSounds.cache.get(this.soundId) ?? null;
-  }
+	/**
+	 * The soundboard sound for soundboard effects.
+	 *
+	 * @type {?SoundboardSound}
+	 * @readonly
+	 */
+	get soundboardSound() {
+		return this.guild.soundboardSounds.cache.get(this.soundId) ?? null;
+	}
 }

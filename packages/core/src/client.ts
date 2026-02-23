@@ -1,10 +1,7 @@
 import type { REST } from '@ovencord/rest';
-import { calculateShardId, DiscordSnowflake, GatewayRateLimitError } from '@ovencord/util';
+import { AsyncEventEmitter, calculateShardId, DiscordSnowflake, GatewayRateLimitError } from '@ovencord/util';
 import { WebSocketShardEvents } from '@ovencord/ws';
-import { AsyncEventEmitter } from '@ovencord/util';
 import {
-	GatewayDispatchEvents,
-	GatewayOpcodes,
 	type GatewayApplicationCommandPermissionsUpdateDispatchData,
 	type GatewayAutoModerationActionExecutionDispatchData,
 	type GatewayAutoModerationRuleCreateDispatchData,
@@ -14,6 +11,7 @@ import {
 	type GatewayChannelDeleteDispatchData,
 	type GatewayChannelPinsUpdateDispatchData,
 	type GatewayChannelUpdateDispatchData,
+	GatewayDispatchEvents,
 	type GatewayEntitlementCreateDispatchData,
 	type GatewayEntitlementDeleteDispatchData,
 	type GatewayEntitlementUpdateDispatchData,
@@ -26,8 +24,8 @@ import {
 	type GatewayGuildIntegrationsUpdateDispatchData,
 	type GatewayGuildMemberAddDispatchData,
 	type GatewayGuildMemberRemoveDispatchData,
-	type GatewayGuildMemberUpdateDispatchData,
 	type GatewayGuildMembersChunkDispatchData,
+	type GatewayGuildMemberUpdateDispatchData,
 	type GatewayGuildRoleCreateDispatchData,
 	type GatewayGuildRoleDeleteDispatchData,
 	type GatewayGuildRoleUpdateDispatchData,
@@ -38,8 +36,8 @@ import {
 	type GatewayGuildScheduledEventUserRemoveDispatchData,
 	type GatewayGuildSoundboardSoundCreateDispatch,
 	type GatewayGuildSoundboardSoundDeleteDispatch,
-	type GatewayGuildSoundboardSoundUpdateDispatch,
 	type GatewayGuildSoundboardSoundsUpdateDispatch,
+	type GatewayGuildSoundboardSoundUpdateDispatch,
 	type GatewayGuildStickersUpdateDispatchData,
 	type GatewayGuildUpdateDispatchData,
 	type GatewayIntegrationCreateDispatchData,
@@ -57,11 +55,14 @@ import {
 	type GatewayMessageReactionRemoveDispatchData,
 	type GatewayMessageReactionRemoveEmojiDispatchData,
 	type GatewayMessageUpdateDispatchData,
+	GatewayOpcodes,
 	type GatewayPresenceUpdateData,
 	type GatewayPresenceUpdateDispatchData,
 	type GatewayRateLimitedDispatchData,
 	type GatewayReadyDispatchData,
 	type GatewayRequestGuildMembersData,
+	type GatewayRequestSoundboardSoundsData,
+	type GatewaySoundboardSoundsDispatchData,
 	type GatewayStageInstanceCreateDispatchData,
 	type GatewayStageInstanceDeleteDispatchData,
 	type GatewayStageInstanceUpdateDispatchData,
@@ -71,8 +72,8 @@ import {
 	type GatewayThreadCreateDispatchData,
 	type GatewayThreadDeleteDispatchData,
 	type GatewayThreadListSyncDispatchData,
-	type GatewayThreadMemberUpdateDispatchData,
 	type GatewayThreadMembersUpdateDispatchData,
+	type GatewayThreadMemberUpdateDispatchData,
 	type GatewayThreadUpdateDispatchData,
 	type GatewayTypingStartDispatchData,
 	type GatewayUserUpdateDispatchData,
@@ -80,11 +81,9 @@ import {
 	type GatewayVoiceStateUpdateData,
 	type GatewayVoiceStateUpdateDispatchData,
 	type GatewayWebhooksUpdateDispatchData,
-	type GatewayRequestSoundboardSoundsData,
-	type GatewaySoundboardSoundsDispatchData,
 } from 'discord-api-types/v10';
-import type { Gateway } from './Gateway.js';
 import { API } from './api/index.js';
+import type { Gateway } from './Gateway.js';
 
 export interface IntrinsicProps {
 	/**

@@ -1,20 +1,21 @@
-import { makeURLSearchParams, type RawFile, type RequestData, type REST } from '@ovencord/rest';
+import { makeURLSearchParams, type RawFile, type REST, type RequestData } from '@ovencord/rest';
 import {
-	InteractionResponseType,
-	Routes,
 	type APICommandAutocompleteInteractionResponseCallbackData,
 	type APIInteractionResponseCallbackData,
 	type APIInteractionResponseDeferredChannelMessageWithSource,
 	type APIModalInteractionResponseCallbackData,
+	InteractionResponseType,
 	type RESTGetAPIWebhookWithTokenMessageResult,
 	type RESTPostAPIInteractionCallbackQuery,
 	type RESTPostAPIInteractionCallbackWithResponseResult,
+	Routes,
 	type Snowflake,
 } from 'discord-api-types/v10';
 import type { WebhooksAPI } from './webhook.js';
 
 export interface CreateInteractionResponseOptions
-	extends APIInteractionResponseCallbackData, RESTPostAPIInteractionCallbackQuery {
+	extends APIInteractionResponseCallbackData,
+		RESTPostAPIInteractionCallbackQuery {
 	files?: RawFile[];
 }
 

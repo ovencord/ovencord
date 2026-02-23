@@ -1,7 +1,7 @@
 import { Collection } from '@ovencord/collection';
 import type { GatewaySendPayload } from 'discord-api-types/v10';
 import type { WebSocketManager } from '../../ws/WebSocketManager.js';
-import { WebSocketShard, WebSocketShardEvents, type WebSocketShardDestroyOptions } from '../../ws/WebSocketShard.js';
+import { WebSocketShard, type WebSocketShardDestroyOptions, WebSocketShardEvents } from '../../ws/WebSocketShard.js';
 import { managerToFetchingStrategyOptions } from '../context/IContextFetchingStrategy.js';
 import { SimpleContextFetchingStrategy } from '../context/SimpleContextFetchingStrategy.js';
 import type { IShardingStrategy } from './IShardingStrategy.js';
@@ -29,7 +29,9 @@ export class SimpleShardingStrategy implements IShardingStrategy {
 			const shard = new WebSocketShard(strategy, shardId);
 
 			for (const event of Object.values(WebSocketShardEvents)) {
-				shard.on(event, (...args) => { void this.manager.emit(event, ...args, shardId); });
+				shard.on(event, (...args) => {
+					void this.manager.emit(event, ...args, shardId);
+				});
 			}
 
 			this.shards.set(shardId, shard);

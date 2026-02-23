@@ -1,6 +1,5 @@
-
 export enum Status {
-  Ready,
-  Idle,
-  WaitingForGuilds,
+	Ready,
+	Idle,
+	WaitingForGuilds,
 }

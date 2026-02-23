@@ -1,4 +1,4 @@
-import { ChannelType, MessageType, ComponentType, ImageFormat, StickerFormatType  } from 'discord-api-types/v10';
+import { ChannelType, ComponentType, ImageFormat, MessageType, StickerFormatType } from 'discord-api-types/v10';
 
 /**
  * Max bulk deletable message age
@@ -6,7 +6,6 @@ import { ChannelType, MessageType, ComponentType, ImageFormat, StickerFormatType
  * @type {number}
  */
 export const MaxBulkDeletableMessageAge = 1_209_600_000;
-
 
 /**
  * The name of an item to be swept in Sweepers
@@ -30,22 +29,22 @@ export const MaxBulkDeletableMessageAge = 1_209_600_000;
  * @typedef {string} SweeperKey
  */
 export const SweeperKeys = [
-  'autoModerationRules',
-  'applicationCommands',
-  'bans',
-  'emojis',
-  'entitlements',
-  'invites',
-  'guildMembers',
-  'messages',
-  'presences',
-  'reactions',
-  'stageInstances',
-  'stickers',
-  'threadMembers',
-  'threads',
-  'users',
-  'voiceStates',
+	'autoModerationRules',
+	'applicationCommands',
+	'bans',
+	'emojis',
+	'entitlements',
+	'invites',
+	'guildMembers',
+	'messages',
+	'presences',
+	'reactions',
+	'stageInstances',
+	'stickers',
+	'threadMembers',
+	'threads',
+	'users',
+	'voiceStates',
 ];
 
 /**
@@ -58,10 +57,10 @@ export const SweeperKeys = [
  * @typedef {MessageType[]} NonSystemMessageTypes
  */
 export const NonSystemMessageTypes = [
-  MessageType.Default,
-  MessageType.Reply,
-  MessageType.ChatInputCommand,
-  MessageType.ContextMenuCommand,
+	MessageType.Default,
+	MessageType.Reply,
+	MessageType.ChatInputCommand,
+	MessageType.ContextMenuCommand,
 ];
 
 /**
@@ -88,13 +87,13 @@ export const NonSystemMessageTypes = [
  * @typedef {ChannelType[]} GuildTextBasedChannelTypes
  */
 export const GuildTextBasedChannelTypes = [
-  ChannelType.GuildText,
-  ChannelType.GuildAnnouncement,
-  ChannelType.AnnouncementThread,
-  ChannelType.PublicThread,
-  ChannelType.PrivateThread,
-  ChannelType.GuildVoice,
-  ChannelType.GuildStageVoice,
+	ChannelType.GuildText,
+	ChannelType.GuildAnnouncement,
+	ChannelType.AnnouncementThread,
+	ChannelType.PublicThread,
+	ChannelType.PrivateThread,
+	ChannelType.GuildVoice,
+	ChannelType.GuildStageVoice,
 ];
 
 /**
@@ -174,11 +173,11 @@ export const VoiceBasedChannelTypes = [ChannelType.GuildVoice, ChannelType.Guild
  * @typedef {ComponentType[]} SelectMenuTypes
  */
 export const SelectMenuTypes = [
-  ComponentType.StringSelect,
-  ComponentType.UserSelect,
-  ComponentType.RoleSelect,
-  ComponentType.MentionableSelect,
-  ComponentType.ChannelSelect,
+	ComponentType.StringSelect,
+	ComponentType.UserSelect,
+	ComponentType.RoleSelect,
+	ComponentType.MentionableSelect,
+	ComponentType.ChannelSelect,
 ];
 
 /**
@@ -193,12 +192,12 @@ export const SelectMenuTypes = [
  * @typedef {MessageType[]} UndeletableMessageTypes
  */
 export const UndeletableMessageTypes = [
-  MessageType.RecipientAdd,
-  MessageType.RecipientRemove,
-  MessageType.Call,
-  MessageType.ChannelNameChange,
-  MessageType.ChannelIconChange,
-  MessageType.ThreadStarterMessage,
+	MessageType.RecipientAdd,
+	MessageType.RecipientRemove,
+	MessageType.Call,
+	MessageType.ChannelNameChange,
+	MessageType.ChannelIconChange,
+	MessageType.ThreadStarterMessage,
 ];
 
 /**
@@ -215,10 +214,10 @@ export const UndeletableMessageTypes = [
  * @property {"gif"} 4 GIF
  */
 export const StickerFormatExtensionMap = {
-  [StickerFormatType.PNG]: ImageFormat.PNG,
-  [StickerFormatType.APNG]: ImageFormat.PNG,
-  [StickerFormatType.Lottie]: ImageFormat.Lottie,
-  [StickerFormatType.GIF]: ImageFormat.GIF,
+	[StickerFormatType.PNG]: ImageFormat.PNG,
+	[StickerFormatType.APNG]: ImageFormat.PNG,
+	[StickerFormatType.Lottie]: ImageFormat.Lottie,
+	[StickerFormatType.GIF]: ImageFormat.GIF,
 };
 
 /**
@@ -231,9 +230,9 @@ export const StickerFormatExtensionMap = {
  * @property {number} Tertiary 16761760 (0xFFE0A0)
  */
 export const HolographicStyle = {
-  Primary: 11_127_295,
-  Secondary: 16_759_788,
-  Tertiary: 16_761_760,
+	Primary: 11_127_295,
+	Secondary: 16_759_788,
+	Tertiary: 16_761_760,
 };
 
 /**

@@ -1,24 +1,24 @@
-import type { Client } from '../../Client.js';
 import type { GatewayInviteDeleteDispatch } from 'discord-api-types/v10';
-import { GuildInvite  } from '../../../structures/GuildInvite.js';
-import { Events  } from '../../../util/Events.js';
+import { GuildInvite } from '../../../structures/GuildInvite.js';
+import { Events } from '../../../util/Events.js';
+import type { Client } from '../../Client.js';
 
 export default (client: Client, { d: data }: GatewayInviteDeleteDispatch) => {
-  const channel = client.channels.cache.get(data.channel_id);
-  const guild = client.guilds.cache.get(data.guild_id);
-  if (!channel) return;
+	const channel = client.channels.cache.get(data.channel_id);
+	const guild = client.guilds.cache.get(data.guild_id);
+	if (!channel) return;
 
-  const inviteData = Object.assign(data, { channel, guild });
-  const invite = new GuildInvite(client, inviteData);
+	const inviteData = Object.assign(data, { channel, guild });
+	const invite = new GuildInvite(client, inviteData);
 
-  guild.invites.cache.delete(invite.code);
+	guild.invites.cache.delete(invite.code);
 
-  /**
-   * Emitted when an invite is deleted.
-   * <info>This event requires the {@link PermissionFlagsBits.ManageChannels} permission for the channel.</info>
-   *
-   * @event Client#inviteDelete
-   * @param {GuildInvite} invite The invite that was deleted
-   */
-  client.emit(Events.InviteDelete, invite);
+	/**
+	 * Emitted when an invite is deleted.
+	 * <info>This event requires the {@link PermissionFlagsBits.ManageChannels} permission for the channel.</info>
+	 *
+	 * @event Client#inviteDelete
+	 * @param {GuildInvite} invite The invite that was deleted
+	 */
+	client.emit(Events.InviteDelete, invite);
 };

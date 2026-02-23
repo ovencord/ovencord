@@ -1,5 +1,5 @@
-import { GatewayIntentBits  } from 'discord-api-types/v10';
-import { BitField  } from './BitField.js';
+import { GatewayIntentBits } from 'discord-api-types/v10';
+import { BitField } from './BitField.js';
 
 /**
  * Data structure that makes it easy to calculate intents.
@@ -7,13 +7,13 @@ import { BitField  } from './BitField.js';
  * @extends {BitField}
  */
 export class IntentsBitField extends BitField {
-  /**
-   * Numeric WebSocket intents
-   *
-   * @type {GatewayIntentBits}
-   * @memberof IntentsBitField
-   */
-  static Flags = GatewayIntentBits;
+	/**
+	 * Numeric WebSocket intents
+	 *
+	 * @type {GatewayIntentBits}
+	 * @memberof IntentsBitField
+	 */
+	static Flags = GatewayIntentBits;
 }
 
 /**

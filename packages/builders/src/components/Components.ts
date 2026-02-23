@@ -7,15 +7,16 @@ import type {
 } from 'discord-api-types/v10';
 import { ButtonStyle, ComponentType } from 'discord-api-types/v10';
 import { ActionRowBuilder } from './ActionRow.js';
-import { ComponentBuilder } from './Component.js';
+import { ButtonBuilder } from './button/ButtonBuilder.js';
 import {
 	DangerButtonBuilder,
 	PrimaryButtonBuilder,
 	SecondaryButtonBuilder,
 	SuccessButtonBuilder,
 } from './button/CustomIdButton.js';
-import { ButtonBuilder } from './button/ButtonBuilder.js';
+import { ComponentBuilder } from './Component.js';
 export { ButtonBuilder };
+
 import { LinkButtonBuilder } from './button/LinkButton.js';
 import { PremiumButtonBuilder } from './button/PremiumButton.js';
 import { FileUploadBuilder } from './fileUpload/FileUpload.js';
@@ -178,7 +179,6 @@ export interface MappedComponentTypes {
  * @param data - The API data to transform to a component class
  */
 export function createComponentBuilder<ComponentType extends keyof MappedComponentTypes>(
-	 
 	data: (APIModalComponent | APIMessageComponent) & { type: ComponentType },
 ): MappedComponentTypes[ComponentType];
 

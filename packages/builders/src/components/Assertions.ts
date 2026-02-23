@@ -1,6 +1,6 @@
 import { ButtonStyle, ChannelType, ComponentType, SelectMenuDefaultValueType } from 'discord-api-types/v10';
 import { z } from 'zod';
-import { idPredicate, customIdPredicate, snowflakePredicate } from '../Assertions.js';
+import { customIdPredicate, idPredicate, snowflakePredicate } from '../Assertions.js';
 
 export const emojiPredicate = z
 	.strictObject({
@@ -19,37 +19,52 @@ const buttonPredicateBase = z.strictObject({
 
 const buttonLabelPredicate = z.string().min(1).max(80);
 
-const buttonCustomIdPredicateBase = buttonPredicateBase
-	.extend({
-		custom_id: customIdPredicate,
-		emoji: emojiPredicate.optional(),
-		label: buttonLabelPredicate.optional(),
-	});
-
-
+const buttonCustomIdPredicateBase = buttonPredicateBase.extend({
+	custom_id: customIdPredicate,
+	emoji: emojiPredicate.optional(),
+	label: buttonLabelPredicate.optional(),
+});
 
 const buttonPrimaryPredicate = buttonCustomIdPredicateBase.extend({ style: z.literal(ButtonStyle.Primary) });
 const buttonSecondaryPredicate = buttonCustomIdPredicateBase.extend({ style: z.literal(ButtonStyle.Secondary) });
 const buttonSuccessPredicate = buttonCustomIdPredicateBase.extend({ style: z.literal(ButtonStyle.Success) });
 const buttonDangerPredicate = buttonCustomIdPredicateBase.extend({ style: z.literal(ButtonStyle.Danger) });
 
-const buttonPrimaryRefinedPredicate = buttonPrimaryPredicate.refine((data) => data.emoji !== undefined || data.label !== undefined, {
-	message: 'Buttons with a custom id must have either an emoji or a label.',
-});
-const buttonSecondaryRefinedPredicate = buttonSecondaryPredicate.refine((data) => data.emoji !== undefined || data.label !== undefined, {
-	message: 'Buttons with a custom id must have either an emoji or a label.',
-});
-const buttonSuccessRefinedPredicate = buttonSuccessPredicate.refine((data) => data.emoji !== undefined || data.label !== undefined, {
-	message: 'Buttons with a custom id must have either an emoji or a label.',
-});
-const buttonDangerRefinedPredicate = buttonDangerPredicate.refine((data) => data.emoji !== undefined || data.label !== undefined, {
-	message: 'Buttons with a custom id must have either an emoji or a label.',
-});
+const buttonPrimaryRefinedPredicate = buttonPrimaryPredicate.refine(
+	(data) => data.emoji !== undefined || data.label !== undefined,
+	{
+		message: 'Buttons with a custom id must have either an emoji or a label.',
+	},
+);
+const buttonSecondaryRefinedPredicate = buttonSecondaryPredicate.refine(
+	(data) => data.emoji !== undefined || data.label !== undefined,
+	{
+		message: 'Buttons with a custom id must have either an emoji or a label.',
+	},
+);
+const buttonSuccessRefinedPredicate = buttonSuccessPredicate.refine(
+	(data) => data.emoji !== undefined || data.label !== undefined,
+	{
+		message: 'Buttons with a custom id must have either an emoji or a label.',
+	},
+);
+const buttonDangerRefinedPredicate = buttonDangerPredicate.refine(
+	(data) => data.emoji !== undefined || data.label !== undefined,
+	{
+		message: 'Buttons with a custom id must have either an emoji or a label.',
+	},
+);
 
 const buttonLinkPredicate = buttonPredicateBase
 	.extend({
 		style: z.literal(ButtonStyle.Link),
-		url: z.string().url().max(512).refine((url) => url.startsWith('http:') || url.startsWith('https:') || url.startsWith('discord:'), { message: 'URL must use http, https, or discord protocol' }),
+		url: z
+			.string()
+			.url()
+			.max(512)
+			.refine((url) => url.startsWith('http:') || url.startsWith('https:') || url.startsWith('discord:'), {
+				message: 'URL must use http, https, or discord protocol',
+			}),
 		emoji: emojiPredicate.optional(),
 		label: buttonLabelPredicate.optional(),
 	})
@@ -140,11 +155,7 @@ export const selectMenuStringPredicate = selectMenuBasePredicate
 			addIssue('min_values', value.min_values);
 		}
 
-		if (
-			value.min_values !== undefined &&
-			value.max_values !== undefined &&
-			value.min_values > value.max_values
-		) {
+		if (value.min_values !== undefined && value.max_values !== undefined && value.min_values > value.max_values) {
 			ctx.addIssue({
 				code: z.ZodIssueCode.too_big,
 				message: `The maximum amount of options must be greater than or equal to the minimum amount of options`,

@@ -1,4 +1,4 @@
-import { ChannelType, type APIApplicationCommandChannelOption } from 'discord-api-types/v10';
+import { type APIApplicationCommandChannelOption, ChannelType } from 'discord-api-types/v10';
 import { normalizeArray, type RestOrArray } from '../../../../util/normalizeArray';
 
 export const ApplicationCommandOptionAllowedChannelTypes = [
@@ -19,10 +19,8 @@ export const ApplicationCommandOptionAllowedChannelTypes = [
  */
 export type ApplicationCommandOptionAllowedChannelType = (typeof ApplicationCommandOptionAllowedChannelTypes)[number];
 
-export interface ApplicationCommandOptionChannelTypesData extends Pick<
-	APIApplicationCommandChannelOption,
-	'channel_types'
-> {}
+export interface ApplicationCommandOptionChannelTypesData
+	extends Pick<APIApplicationCommandChannelOption, 'channel_types'> {}
 
 /**
  * This mixin holds channel type symbols used for options.
@@ -31,7 +29,7 @@ export class ApplicationCommandOptionChannelTypesMixin {
 	/**
 	 * @internal
 	 */
-	declare protected readonly data: ApplicationCommandOptionChannelTypesData;
+	protected declare readonly data: ApplicationCommandOptionChannelTypesData;
 
 	/**
 	 * Adds channel types to this option.

@@ -1,8 +1,7 @@
 import type { Locale, RESTPostAPIApplicationCommandsJSONBody } from 'discord-api-types/v10';
 
-export interface SharedNameData extends Partial<
-	Pick<RESTPostAPIApplicationCommandsJSONBody, 'name_localizations' | 'name'>
-> {}
+export interface SharedNameData
+	extends Partial<Pick<RESTPostAPIApplicationCommandsJSONBody, 'name_localizations' | 'name'>> {}
 
 /**
  * This mixin holds name and description symbols for chat input commands.

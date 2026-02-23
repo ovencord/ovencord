@@ -2,16 +2,16 @@
 import { gcm } from '@noble/ciphers/aes';
 import type { VoiceReceivePayload } from 'discord-api-types/voice/v8';
 import { VoiceOpcodes } from 'discord-api-types/voice/v8';
-import { VoiceConnectionStatus, type VoiceConnection } from '../VoiceConnection';
-import { NetworkingStatusCode, type ConnectionData } from '../networking/Networking';
+import { type ConnectionData, NetworkingStatusCode } from '../networking/Networking';
 import { methods } from '../util/Secretbox';
+import { type VoiceConnection, VoiceConnectionStatus } from '../VoiceConnection';
 import {
 	AudioReceiveStream,
-	createDefaultAudioReceiveStreamOptions,
 	type AudioReceiveStreamOptions,
+	createDefaultAudioReceiveStreamOptions,
 } from './AudioReceiveStream';
-import { SSRCMap } from './SSRCMap';
 import { SpeakingMap } from './SpeakingMap';
+import { SSRCMap } from './SSRCMap';
 
 const UNPADDED_NONCE_LENGTH = 4;
 const AUTH_TAG_LENGTH = 16;
@@ -97,12 +97,7 @@ export class VoiceReceiver {
 
 			case 'aead_xchacha20_poly1305_rtpsize': {
 				// Combined mode expects authtag in the encrypted message
-				return methods.crypto_aead_xchacha20poly1305_ietf_decrypt(
-					encryptedWithAuthTag,
-					header,
-					nonce,
-					secretKey,
-				);
+				return methods.crypto_aead_xchacha20poly1305_ietf_decrypt(encryptedWithAuthTag, header, nonce, secretKey);
 			}
 
 			default: {
@@ -121,7 +116,13 @@ export class VoiceReceiver {
 	 * @param userId - The user id that sent the packet
 	 * @returns The parsed Opus packet
 	 */
-	private parsePacket(buffer: Uint8Array, mode: string, nonce: Uint8Array, secretKey: Uint8Array, userId: string): Uint8Array {
+	private parsePacket(
+		buffer: Uint8Array,
+		mode: string,
+		nonce: Uint8Array,
+		secretKey: Uint8Array,
+		userId: string,
+	): Uint8Array {
 		let packet = this.decrypt(buffer, mode, nonce, secretKey);
 		if (!packet) throw new Error('Failed to parse packet');
 
@@ -154,7 +155,7 @@ export class VoiceReceiver {
 	 */
 	public onUdpMessage(msg: Uint8Array) {
 		if (msg.length <= 8) return;
-		
+
 		const view = new DataView(msg.buffer, msg.byteOffset, msg.byteLength);
 		const ssrc = view.getUint32(8, false);
 

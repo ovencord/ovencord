@@ -1,5 +1,5 @@
-import { makeURLSearchParams, type RequestData, type REST } from '@ovencord/rest';
-import { Routes, type RESTGetAPIInviteQuery, type RESTGetAPIInviteResult } from 'discord-api-types/v10';
+import { makeURLSearchParams, type REST, type RequestData } from '@ovencord/rest';
+import { type RESTGetAPIInviteQuery, type RESTGetAPIInviteResult, Routes } from 'discord-api-types/v10';
 
 export class InvitesAPI {
 	public constructor(private readonly rest: REST) {}

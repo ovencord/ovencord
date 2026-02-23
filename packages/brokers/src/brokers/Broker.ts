@@ -1,4 +1,4 @@
-import { encode, decode } from '@msgpack/msgpack';
+import { decode, encode } from '@msgpack/msgpack';
 import type { AsyncEventEmitter } from '@ovencord/util';
 
 /**
@@ -50,7 +50,8 @@ export interface IBaseBroker<TEvents extends {}> {
 }
 
 export interface IPubSubBroker<TEvents extends {}>
-	extends IBaseBroker<TEvents>, AsyncEventEmitter<ToEventMap<TEvents>> {
+	extends IBaseBroker<TEvents>,
+		AsyncEventEmitter<ToEventMap<TEvents>> {
 	/**
 	 * Publishes an event
 	 */
@@ -58,7 +59,8 @@ export interface IPubSubBroker<TEvents extends {}>
 }
 
 export interface IRPCBroker<TEvents extends Record<string, any[]>, TResponses extends Record<keyof TEvents, any>>
-	extends IBaseBroker<TEvents>, AsyncEventEmitter<ToEventMap<TEvents, TResponses>> {
+	extends IBaseBroker<TEvents>,
+		AsyncEventEmitter<ToEventMap<TEvents, TResponses>> {
 	/**
 	 * Makes an RPC call
 	 */

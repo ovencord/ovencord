@@ -1,5 +1,5 @@
-import { SKUFlags  } from 'discord-api-types/v10';
-import { BitField  } from './BitField.js';
+import { SKUFlags } from 'discord-api-types/v10';
+import { BitField } from './BitField.js';
 
 /**
  * Data structure that makes it easy to interact with an {@link SKU#flags} bitfield.
@@ -7,13 +7,13 @@ import { BitField  } from './BitField.js';
  * @extends {BitField}
  */
 export class SKUFlagsBitField extends BitField {
-  /**
-   * Numeric SKU flags.
-   *
-   * @type {SKUFlags}
-   * @memberof SKUFlagsBitField
-   */
-  static Flags = SKUFlags;
+	/**
+	 * Numeric SKU flags.
+	 *
+	 * @type {SKUFlags}
+	 * @memberof SKUFlagsBitField
+	 */
+	static Flags = SKUFlags;
 }
 
 /**

@@ -1,52 +1,52 @@
-import type { Client } from '../../Client.js';
+import { Collection } from '@ovencord/collection';
 import type { GatewayThreadListSyncDispatch } from 'discord-api-types/v10';
-import { Collection  } from '@ovencord/collection';
-import { Events  } from '../../../util/Events.js';
+import { Events } from '../../../util/Events.js';
+import type { Client } from '../../Client.js';
 
 export default (client: Client, { d: data }: GatewayThreadListSyncDispatch) => {
-  const guild = client.guilds.cache.get(data.guild_id);
-  if (!guild) return;
+	const guild = client.guilds.cache.get(data.guild_id);
+	if (!guild) return;
 
-  if (data.channel_ids) {
-    for (const id of data.channel_ids) {
-      const channel = client.channels.cache.get(id);
-      if (channel) removeStaleThreads(client, channel);
-    }
-  } else {
-    for (const channel of guild.channels.cache.values()) {
-      removeStaleThreads(client, channel);
-    }
-  }
+	if (data.channel_ids) {
+		for (const id of data.channel_ids) {
+			const channel = client.channels.cache.get(id);
+			if (channel) removeStaleThreads(client, channel);
+		}
+	} else {
+		for (const channel of guild.channels.cache.values()) {
+			removeStaleThreads(client, channel);
+		}
+	}
 
-  const syncedThreads = data.threads.reduce((coll, rawThread) => {
-    const thread = client.channels._add(rawThread);
-    return coll.set(thread.id, thread);
-  }, new Collection());
+	const syncedThreads = data.threads.reduce((coll, rawThread) => {
+		const thread = client.channels._add(rawThread);
+		return coll.set(thread.id, thread);
+	}, new Collection());
 
-  for (const rawMember of Object.values(data.members) as any[]) {
-    // Discord sends the thread id as id in this object
-    const thread = client.channels.cache.get(rawMember.id);
-    if (thread) {
-      thread.members._add(rawMember);
-    }
-  }
+	for (const rawMember of Object.values(data.members) as any[]) {
+		// Discord sends the thread id as id in this object
+		const thread = client.channels.cache.get(rawMember.id);
+		if (thread) {
+			thread.members._add(rawMember);
+		}
+	}
 
-  /**
-   * Emitted whenever the client user gains access to a text or announcement channel that contains threads
-   *
-   * @event Client#threadListSync
-   * @param {Collection<Snowflake, ThreadChannel>} threads The threads that were synced
-   * @param {Guild} guild The guild that the threads were synced in
-   */
-  client.emit(Events.ThreadListSync, syncedThreads, guild);
+	/**
+	 * Emitted whenever the client user gains access to a text or announcement channel that contains threads
+	 *
+	 * @event Client#threadListSync
+	 * @param {Collection<Snowflake, ThreadChannel>} threads The threads that were synced
+	 * @param {Guild} guild The guild that the threads were synced in
+	 */
+	client.emit(Events.ThreadListSync, syncedThreads, guild);
 };
 
 function removeStaleThreads(client: any, channel: any) {
-  if (!channel.threads) return;
+	if (!channel.threads) return;
 
-  for (const thread of channel.threads.cache.values()) {
-    if (!thread.archived) {
-      client.channels._remove(thread.id);
-    }
-  }
+	for (const thread of channel.threads.cache.values()) {
+		if (!thread.archived) {
+			client.channels._remove(thread.id);
+		}
+	}
 }

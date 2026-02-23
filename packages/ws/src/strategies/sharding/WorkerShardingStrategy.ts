@@ -1,8 +1,8 @@
 import { Collection } from '@ovencord/collection';
 import type { GatewaySendPayload } from 'discord-api-types/v10';
 import type { SessionInfo, WebSocketManager } from '../../ws/WebSocketManager.js';
-import { IShardingStrategy } from './IShardingStrategy.js';
-import { WebSocketShardStatus } from '../../ws/WebSocketShard.js';
+import type { WebSocketShardStatus } from '../../ws/WebSocketShard.js';
+import type { IShardingStrategy } from './IShardingStrategy.js';
 
 export interface WorkerShardingStrategyOptions {
 	shardCount: number;
@@ -22,11 +22,10 @@ export class WorkerShardingStrategy implements IShardingStrategy {
 		this.options = options;
 	}
 
-	public async getShards(): Promise<Collection<number, { ping?: number; status: WebSocketShardStatus; }>> {
+	public async getShards(): Promise<Collection<number, { ping?: number; status: WebSocketShardStatus }>> {
 		const statuses = await this.fetchStatus();
 		return statuses.mapValues((status) => ({ status }));
 	}
-
 
 	public async spawn(shardIds: number[]) {
 		for (const shardId of shardIds) {
@@ -80,7 +79,7 @@ export class WorkerShardingStrategy implements IShardingStrategy {
 				d: { shardId: 0, options }, // shardId is ignored for destroy usually, or broadcast
 			};
 			worker.postMessage(payload);
-            // In Bun/Web Workers, we might want to terminate() if we are destroying everything
+			// In Bun/Web Workers, we might want to terminate() if we are destroying everything
 			worker.terminate();
 		}
 	}
@@ -106,91 +105,91 @@ export class WorkerShardingStrategy implements IShardingStrategy {
 			d: { shardId, nonce },
 		};
 
-		// We need a way to wait for response. 
-        // This is tricky with raw event listeners without a request/response correlation helper.
-        // For simplicity in this migration, we assume a fire-and-forget or need to implement a one-off listener.
-        // Since we are moving to Bun, we can use a temporary promise.
-        
-        return new Promise((resolve) => {
-            const listener = (event: MessageEvent) => {
-                const data = event.data as WorkerReceivePayload;
-                if (data.op === WorkerReceivePayloadOp.SessionInfoResponse && data.d.nonce === nonce) {
-                    worker.removeEventListener('message', listener);
-                    clearTimeout(timeout);
-                    resolve(data.d.session);
-                }
-            };
-            
-            // Timeout to prevent hanging
-            const timeout = setTimeout(() => {
-                worker.removeEventListener('message', listener);
-                resolve(null);
-            }, 5000);
+		// We need a way to wait for response.
+		// This is tricky with raw event listeners without a request/response correlation helper.
+		// For simplicity in this migration, we assume a fire-and-forget or need to implement a one-off listener.
+		// Since we are moving to Bun, we can use a temporary promise.
 
-            worker.addEventListener('message', listener);
-            worker.postMessage(payload);
-        });
+		return new Promise((resolve) => {
+			const listener = (event: MessageEvent) => {
+				const data = event.data as WorkerReceivePayload;
+				if (data.op === WorkerReceivePayloadOp.SessionInfoResponse && data.d.nonce === nonce) {
+					worker.removeEventListener('message', listener);
+					clearTimeout(timeout);
+					resolve(data.d.session);
+				}
+			};
+
+			// Timeout to prevent hanging
+			const timeout = setTimeout(() => {
+				worker.removeEventListener('message', listener);
+				resolve(null);
+			}, 5000);
+
+			worker.addEventListener('message', listener);
+			worker.postMessage(payload);
+		});
 	}
 
 	public async fetchShardIdentity(shardId: number): Promise<number | null> {
 		const worker = this.workers.get(shardId);
 		if (!worker) return null;
 
-        const nonce = Math.random();
+		const nonce = Math.random();
 		const payload: WorkerSendPayload = {
 			op: WorkerSendPayloadOp.FetchShardIdentity,
 			d: { shardId, nonce },
 		};
-        
-        return new Promise((resolve) => {
-            const listener = (event: MessageEvent) => {
-                const data = event.data as WorkerReceivePayload;
-                if (data.op === WorkerReceivePayloadOp.ShardIdentityResponse && data.d.nonce === nonce) {
-                    worker.removeEventListener('message', listener);
-                    resolve(data.d.shardId);
-                }
-            };
-            worker.addEventListener('message', listener);
-            worker.postMessage(payload);
-        });
+
+		return new Promise((resolve) => {
+			const listener = (event: MessageEvent) => {
+				const data = event.data as WorkerReceivePayload;
+				if (data.op === WorkerReceivePayloadOp.ShardIdentityResponse && data.d.nonce === nonce) {
+					worker.removeEventListener('message', listener);
+					resolve(data.d.shardId);
+				}
+			};
+			worker.addEventListener('message', listener);
+			worker.postMessage(payload);
+		});
 	}
 
 	public async fetchStatus(): Promise<Collection<number, WebSocketShardStatus>> {
-        const statuses = new Collection<number, WebSocketShardStatus>();
-        const promises: Promise<void>[] = [];
+		const statuses = new Collection<number, WebSocketShardStatus>();
+		const promises: Promise<void>[] = [];
 
-        for (const [shardId, worker] of this.workers) {
-            const nonce = Math.random();
-            const payload: WorkerSendPayload = {
-                op: WorkerSendPayloadOp.FetchStatus,
-                d: { shardId, nonce },
-            };
-            
-            const promise = new Promise<void>((resolve) => {
-                const listener = (event: MessageEvent) => {
-                    const data = event.data as WorkerReceivePayload;
-                    if (data.op === WorkerReceivePayloadOp.StatusResponse && data.d.nonce === nonce) {
-                        worker.removeEventListener('message', listener);
-                        statuses.set(shardId, data.d.status);
-                        resolve();
-                    }
-                };
-                
-                // Timeout to prevent hanging
-                setTimeout(() => {
-                    worker.removeEventListener('message', listener);
-                    resolve();
-                }, 5000);
+		for (const [shardId, worker] of this.workers) {
+			const nonce = Math.random();
+			const payload: WorkerSendPayload = {
+				op: WorkerSendPayloadOp.FetchStatus,
+				d: { shardId, nonce },
+			};
 
-                worker.addEventListener('message', listener);
-                worker.postMessage(payload);
-            });
-            
-            promises.push(promise);
-        }
+			const promise = new Promise<void>((resolve) => {
+				const listener = (event: MessageEvent) => {
+					const data = event.data as WorkerReceivePayload;
+					if (data.op === WorkerReceivePayloadOp.StatusResponse && data.d.nonce === nonce) {
+						worker.removeEventListener('message', listener);
+						statuses.set(shardId, data.d.status);
+						resolve();
+					}
+				};
 
-        await Promise.all(promises);
-        return statuses;
+				// Timeout to prevent hanging
+				setTimeout(() => {
+					worker.removeEventListener('message', listener);
+					resolve();
+				}, 5000);
+
+				worker.addEventListener('message', listener);
+				worker.postMessage(payload);
+			});
+
+			promises.push(promise);
+		}
+
+		await Promise.all(promises);
+		return statuses;
 	}
 
 	private onMessage(_shardId: number, payload: WorkerReceivePayload) {
@@ -205,20 +204,20 @@ export class WorkerShardingStrategy implements IShardingStrategy {
 				// handled by send
 				break;
 			case WorkerReceivePayloadOp.SessionInfoResponse:
-                // Handled by fetchSessionInfo promise
+				// Handled by fetchSessionInfo promise
 				break;
 			case WorkerReceivePayloadOp.ShardIdentityResponse:
-                // Handled by fetchShardIdentity promise
-				break; 
-            case WorkerReceivePayloadOp.Event:
-                this.manager.emit(payload.d.event, ...payload.d.args || []);
-                break;
+				// Handled by fetchShardIdentity promise
+				break;
+			case WorkerReceivePayloadOp.Event:
+				this.manager.emit(payload.d.event, ...(payload.d.args || []));
+				break;
 		}
 	}
 
 	private async waitForReady(_shardId: number) {
 		// Implementation depends on how we signal ready.
-        // Assuming we receive a 'Ready' event forwarded from the worker.
+		// Assuming we receive a 'Ready' event forwarded from the worker.
 	}
 }
 

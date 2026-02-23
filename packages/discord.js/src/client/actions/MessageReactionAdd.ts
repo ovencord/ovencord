@@ -1,6 +1,6 @@
-import { Events  } from '../../util/Events.js';
-import { Partials  } from '../../util/Partials.js';
-import { Action  } from './Action.js';
+import { Events } from '../../util/Events.js';
+import { Partials } from '../../util/Partials.js';
+import { Action } from './Action.js';
 
 /*
 { user_id: 'id',
@@ -14,55 +14,55 @@ import { Action  } from './Action.js';
 */
 
 export class MessageReactionAddAction extends Action {
-  override handle(data: any, fromStructure = false) {
-    if (!data.emoji) return false;
+	override handle(data: any, fromStructure = false) {
+		if (!data.emoji) return false;
 
-    const user = this.getUserFromMember(data);
-    if (!user) return false;
+		const user = this.getUserFromMember(data);
+		if (!user) return false;
 
-    // Verify channel
-    const channel = this.getChannel({
-      id: data.channel_id,
-      ...('guild_id' in data && { guild_id: data.guild_id }),
-      user_id: data.user_id,
-      ...this.spreadInjectedData(data),
-    });
+		// Verify channel
+		const channel = this.getChannel({
+			id: data.channel_id,
+			...('guild_id' in data && { guild_id: data.guild_id }),
+			user_id: data.user_id,
+			...this.spreadInjectedData(data),
+		});
 
-    if (!channel?.isTextBased()) return false;
+		if (!channel?.isTextBased()) return false;
 
-    // Verify message
-    const message = this.getMessage(data, channel, undefined);
-    if (!message) return false;
+		// Verify message
+		const message = this.getMessage(data, channel, undefined);
+		if (!message) return false;
 
-    // Verify reaction
-    const includePartial = this.client.options.partials.includes(Partials.Reaction);
-    if (message.partial && !includePartial) return false;
-    const reaction = message.reactions._add({
-      emoji: data.emoji,
-      count: message.partial ? null : 0,
-      me: user.id === this.client.user?.id,
-      burst_colors: data.burst_colors,
-    });
-    if (!reaction) return false;
-    reaction._add(user, data.burst);
-    if (fromStructure) return { message, reaction, user };
-    /**
-     * Provides additional information about altered reaction
-     *
-     * @typedef {Object} MessageReactionEventDetails
-     * @property {ReactionType} type The type of the reaction
-     * @property {boolean} burst Determines whether a super reaction was used
-     */
-    /**
-     * Emitted whenever a reaction is added to a cached message.
-     *
-     * @event Client#messageReactionAdd
-     * @param {MessageReaction} messageReaction The reaction object
-     * @param {User} user The user that applied the guild or reaction emoji
-     * @param {MessageReactionEventDetails} details Details of adding the reaction
-     */
-    this.client.emit(Events.MessageReactionAdd, reaction, user, { type: data.type, burst: data.burst });
+		// Verify reaction
+		const includePartial = this.client.options.partials.includes(Partials.Reaction);
+		if (message.partial && !includePartial) return false;
+		const reaction = message.reactions._add({
+			emoji: data.emoji,
+			count: message.partial ? null : 0,
+			me: user.id === this.client.user?.id,
+			burst_colors: data.burst_colors,
+		});
+		if (!reaction) return false;
+		reaction._add(user, data.burst);
+		if (fromStructure) return { message, reaction, user };
+		/**
+		 * Provides additional information about altered reaction
+		 *
+		 * @typedef {Object} MessageReactionEventDetails
+		 * @property {ReactionType} type The type of the reaction
+		 * @property {boolean} burst Determines whether a super reaction was used
+		 */
+		/**
+		 * Emitted whenever a reaction is added to a cached message.
+		 *
+		 * @event Client#messageReactionAdd
+		 * @param {MessageReaction} messageReaction The reaction object
+		 * @param {User} user The user that applied the guild or reaction emoji
+		 * @param {MessageReactionEventDetails} details Details of adding the reaction
+		 */
+		this.client.emit(Events.MessageReactionAdd, reaction, user, { type: data.type, burst: data.burst });
 
-    return { message, reaction, user };
-  }
+		return { message, reaction, user };
+	}
 }

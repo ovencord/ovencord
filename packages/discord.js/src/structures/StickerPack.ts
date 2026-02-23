@@ -1,7 +1,7 @@
-import { Collection  } from '@ovencord/collection';
+import { Collection } from '@ovencord/collection';
 import { DiscordSnowflake } from '@ovencord/util';
-import { Base  } from './Base.js';
-import { Sticker  } from './Sticker.js';
+import { Base } from './Base.js';
+import { Sticker } from './Sticker.js';
 
 /**
  * Represents a pack of standard stickers.
@@ -9,103 +9,103 @@ import { Sticker  } from './Sticker.js';
  * @extends {Base}
  */
 export class StickerPack extends Base {
-  public id: any;
-  public stickers: any;
-  public name: any;
-  public skuId: any;
-  public coverStickerId: any;
-  public description: any;
-  public bannerId: any;
-  constructor(client: any, pack: any) {
-    super(client);
-    /**
-     * The Sticker pack's id
-     *
-     * @type {Snowflake}
-     */
-    this.id = pack.id;
+	public id: any;
+	public stickers: any;
+	public name: any;
+	public skuId: any;
+	public coverStickerId: any;
+	public description: any;
+	public bannerId: any;
+	constructor(client: any, pack: any) {
+		super(client);
+		/**
+		 * The Sticker pack's id
+		 *
+		 * @type {Snowflake}
+		 */
+		this.id = pack.id;
 
-    /**
-     * The stickers in the pack
-     *
-     * @type {Collection<Snowflake, Sticker>}
-     */
-    // @ts-ignore
-    this.stickers = new Collection(pack.stickers.map(sticker => [sticker.id, new Sticker(client, sticker)]));
+		/**
+		 * The stickers in the pack
+		 *
+		 * @type {Collection<Snowflake, Sticker>}
+		 */
+		// @ts-expect-error
+		this.stickers = new Collection(pack.stickers.map((sticker) => [sticker.id, new Sticker(client, sticker)]));
 
-    /**
-     * The name of the sticker pack
-     *
-     * @type {string}
-     */
-    this.name = pack.name;
+		/**
+		 * The name of the sticker pack
+		 *
+		 * @type {string}
+		 */
+		this.name = pack.name;
 
-    /**
-     * The id of the pack's SKU
-     *
-     * @type {Snowflake}
-     */
-    this.skuId = pack.sku_id;
+		/**
+		 * The id of the pack's SKU
+		 *
+		 * @type {Snowflake}
+		 */
+		this.skuId = pack.sku_id;
 
-    /**
-     * The id of a sticker in the pack which is shown as the pack's icon
-     *
-     * @type {?Snowflake}
-     */
-    this.coverStickerId = pack.cover_sticker_id ?? null;
+		/**
+		 * The id of a sticker in the pack which is shown as the pack's icon
+		 *
+		 * @type {?Snowflake}
+		 */
+		this.coverStickerId = pack.cover_sticker_id ?? null;
 
-    /**
-     * The description of the sticker pack
-     *
-     * @type {string}
-     */
-    this.description = pack.description;
+		/**
+		 * The description of the sticker pack
+		 *
+		 * @type {string}
+		 */
+		this.description = pack.description;
 
-    /**
-     * The id of the sticker pack's banner image
-     *
-     * @type {?Snowflake}
-     */
-    this.bannerId = pack.banner_asset_id ?? null;
-  }
+		/**
+		 * The id of the sticker pack's banner image
+		 *
+		 * @type {?Snowflake}
+		 */
+		this.bannerId = pack.banner_asset_id ?? null;
+	}
 
-  /**
-   * The timestamp the sticker was created at
-   *
-   * @type {number}
-   * @readonly
-   */
-  get createdTimestamp() {
-    return DiscordSnowflake.timestampFrom(this.id);
-  }
+	/**
+	 * The timestamp the sticker was created at
+	 *
+	 * @type {number}
+	 * @readonly
+	 */
+	get createdTimestamp() {
+		return DiscordSnowflake.timestampFrom(this.id);
+	}
 
-  /**
-   * The time the sticker was created at
-   *
-   * @type {Date}
-   * @readonly
-   */
-  get createdAt() {
-    return new Date(this.createdTimestamp);
-  }
+	/**
+	 * The time the sticker was created at
+	 *
+	 * @type {Date}
+	 * @readonly
+	 */
+	get createdAt() {
+		return new Date(this.createdTimestamp);
+	}
 
-  /**
-   * The sticker which is shown as the pack's icon
-   *
-   * @type {?Sticker}
-   * @readonly
-   */
-  get coverSticker() {
-    return this.coverStickerId && this.stickers.get(this.coverStickerId);
-  }
+	/**
+	 * The sticker which is shown as the pack's icon
+	 *
+	 * @type {?Sticker}
+	 * @readonly
+	 */
+	get coverSticker() {
+		return this.coverStickerId && this.stickers.get(this.coverStickerId);
+	}
 
-  /**
-   * The URL to this sticker pack's banner.
-   *
-   * @param {ImageURLOptions} [options={}] Options for the image URL
-   * @returns {?string}
-   */
-  bannerURL(options = {}) {
-    return this.bannerId && this.client.rest.cdn.stickerPackBanner(this.bannerId, options);
-  }
+	/**
+	 * The URL to this sticker pack's banner.
+	 *
+	 * @param {ImageURLOptions} [options={}] Options for the image URL
+	 * @returns {?string}
+	 */
+	bannerURL(options = {}) {
+		return this.bannerId && this.client.rest.cdn.stickerPackBanner(this.bannerId, options);
+	}
 }

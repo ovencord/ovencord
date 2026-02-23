@@ -1,5 +1,5 @@
-import { MessageFlags  } from 'discord-api-types/v10';
-import { BitField  } from './BitField.js';
+import { MessageFlags } from 'discord-api-types/v10';
+import { BitField } from './BitField.js';
 
 /**
  * Data structure that makes it easy to interact with a {@link Message#flags} bitfield.
@@ -7,13 +7,13 @@ import { BitField  } from './BitField.js';
  * @extends {BitField}
  */
 export class MessageFlagsBitField extends BitField {
-  /**
-   * Numeric message flags.
-   *
-   * @type {MessageFlags}
-   * @memberof MessageFlagsBitField
-   */
-  static Flags = MessageFlags;
+	/**
+	 * Numeric message flags.
+	 *
+	 * @type {MessageFlags}
+	 * @memberof MessageFlagsBitField
+	 */
+	static Flags = MessageFlags;
 }
 
 /**

@@ -1,4 +1,4 @@
-import { BaseSelectMenuComponent  } from './BaseSelectMenuComponent.js';
+import { BaseSelectMenuComponent } from './BaseSelectMenuComponent.js';
 
 /**
  * Represents a role select menu component

@@ -56,3 +56,5 @@ bun.lockb
 /.agent
 /opus-main
 /scripts
+docs/
+CHANGELOG.md

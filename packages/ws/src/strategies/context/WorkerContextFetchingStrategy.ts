@@ -1,10 +1,10 @@
 import { Collection } from '@ovencord/collection';
 import type { SessionInfo } from '../../ws/WebSocketManager.js';
 import {
-	WorkerReceivePayloadOp,
-	WorkerSendPayloadOp,
 	type WorkerReceivePayload,
+	WorkerReceivePayloadOp,
 	type WorkerSendPayload,
+	WorkerSendPayloadOp,
 } from '../sharding/WorkerShardingStrategy.js';
 import type { FetchingStrategyOptions, IContextFetchingStrategy } from './IContextFetchingStrategy.js';
 
@@ -45,9 +45,9 @@ export class WorkerContextFetchingStrategy implements IContextFetchingStrategy {
 		const nonce = Math.random();
 		const payload: WorkerReceivePayload = {
 			op: WorkerReceivePayloadOp.RetrieveSessionInfo,
-			d: { shardId, nonce }
+			d: { shardId, nonce },
 		} as any;
-		 
+
 		const promise = new Promise<SessionInfo | null>((resolve) => this.sessionPromises.set(nonce, resolve));
 		self.postMessage(payload);
 		return promise;
@@ -56,7 +56,7 @@ export class WorkerContextFetchingStrategy implements IContextFetchingStrategy {
 	public updateSessionInfo(shardId: number, sessionInfo: SessionInfo | null) {
 		const payload: WorkerReceivePayload = {
 			op: WorkerReceivePayloadOp.UpdateSessionInfo,
-			d: { shardId, session: sessionInfo }
+			d: { shardId, session: sessionInfo },
 		} as any;
 		self.postMessage(payload);
 	}
@@ -66,10 +66,9 @@ export class WorkerContextFetchingStrategy implements IContextFetchingStrategy {
 
 		const payload: WorkerReceivePayload = {
 			op: WorkerReceivePayloadOp.WaitForIdentify,
-			d: { nonce, shardId }
+			d: { nonce, shardId },
 		} as any;
 		const promise = new Promise<void>((resolve, reject) =>
-			 
 			this.waitForIdentifyPromises.set(nonce, { signal, resolve, reject }),
 		);
 
@@ -78,7 +77,7 @@ export class WorkerContextFetchingStrategy implements IContextFetchingStrategy {
 		const listener = () => {
 			const payload: WorkerReceivePayload = {
 				op: WorkerReceivePayloadOp.CancelIdentify,
-				d: { nonce }
+				d: { nonce },
 			} as any;
 
 			self.postMessage(payload);

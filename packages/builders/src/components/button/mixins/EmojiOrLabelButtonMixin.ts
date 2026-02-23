@@ -1,10 +1,8 @@
 import type { APIButtonComponent, APIButtonComponentWithSKUId, APIMessageComponentEmoji } from 'discord-api-types/v10';
 import { parseEmoji } from '../../../util/componentUtil.js';
 
-export interface EmojiOrLabelButtonData extends Pick<
-	Exclude<APIButtonComponent, APIButtonComponentWithSKUId>,
-	'emoji' | 'label'
-> {}
+export interface EmojiOrLabelButtonData
+	extends Pick<Exclude<APIButtonComponent, APIButtonComponentWithSKUId>, 'emoji' | 'label'> {}
 
 /**
  * A mixin that adds emoji and label symbols to a button builder.
@@ -13,7 +11,7 @@ export class EmojiOrLabelButtonMixin {
 	/**
 	 * @internal
 	 */
-	declare protected readonly data: EmojiOrLabelButtonData;
+	protected declare readonly data: EmojiOrLabelButtonData;
 
 	/**
 	 * Sets the emoji to display on this button.

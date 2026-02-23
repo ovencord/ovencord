@@ -1,5 +1,3 @@
-
-
 /**
  * Resolves the user agent appendix string for the current environment.
  */
@@ -8,24 +6,24 @@ export function getUserAgentAppendix(): string {
 	if (typeof (globalThis as any).EdgeRuntime !== 'undefined') {
 		return 'Vercel-Edge-Functions';
 	}
- 
+
 	// Cloudflare Workers
 	if (typeof (globalThis as any).R2 !== 'undefined' && typeof (globalThis as any).WebSocketPair !== 'undefined') {
 		// https://developers.cloudflare.com/workers/runtime-apis/web-standards/#navigatoruseragent
 		return 'Cloudflare-Workers';
 	}
- 
+
 	// https://docs.netlify.com/edge-functions/api/#netlify-global-object
 	if (typeof (globalThis as any).Netlify !== 'undefined') {
 		return 'Netlify-Edge-Functions';
 	}
- 
+
 	// Most (if not all) edge environments will have `process` defined. Within a web browser we'll extract it using `navigator.userAgent`.
 	if (typeof (globalThis as any).process !== 'object') {
 		if (typeof (globalThis as any).navigator === 'object') {
 			return (globalThis as any).navigator.userAgent;
 		}
- 
+
 		return 'UnknownEnvironment';
 	}
 

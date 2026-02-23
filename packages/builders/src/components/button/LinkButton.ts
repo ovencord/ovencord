@@ -1,8 +1,8 @@
 import {
-	ButtonStyle,
-	ComponentType,
 	type APIButtonComponent,
 	type APIButtonComponentWithURL,
+	ButtonStyle,
+	ComponentType,
 } from 'discord-api-types/v10';
 import { Mixin } from 'ts-mixer';
 import { BaseButtonBuilder } from './Button.js';

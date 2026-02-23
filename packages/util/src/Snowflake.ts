@@ -181,7 +181,15 @@ export class Snowflake {
 		const typeA = typeof a;
 		if (typeA === typeof b) {
 			if (typeA === 'string') {
-				return a === b ? 0 : (a as string).length < (b as string).length ? -1 : (a as string).length > (b as string).length ? 1 : a < b ? -1 : 1;
+				return a === b
+					? 0
+					: (a as string).length < (b as string).length
+						? -1
+						: (a as string).length > (b as string).length
+							? 1
+							: a < b
+								? -1
+								: 1;
 			}
 
 			return a === b ? 0 : (a as bigint) < (b as bigint) ? -1 : 1;

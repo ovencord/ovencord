@@ -2,6 +2,7 @@ import { Collection } from '@ovencord/collection';
 import { AsyncQueue } from '@ovencord/util';
 
 const sleep = Bun.sleep;
+
 import type { IIdentifyThrottler } from './IIdentifyThrottler.js';
 
 /**

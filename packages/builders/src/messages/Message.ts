@@ -3,21 +3,21 @@ import type {
 	APIActionRowComponent,
 	APIAllowedMentions,
 	APIAttachment,
-	APIEmbed,
+	APIComponentInActionRow,
 	APIComponentInMessageActionRow,
-	APIMessageReference,
-	APIPoll,
-	RESTPostAPIChannelMessageJSONBody,
-	Snowflake,
-	MessageFlags,
 	APIContainerComponent,
+	APIEmbed,
 	APIFileComponent,
 	APIMediaGalleryComponent,
+	APIMessageReference,
+	APIMessageTopLevelComponent,
+	APIPoll,
 	APISectionComponent,
 	APISeparatorComponent,
 	APITextDisplayComponent,
-	APIMessageTopLevelComponent,
-	APIComponentInActionRow,
+	MessageFlags,
+	RESTPostAPIChannelMessageJSONBody,
+	Snowflake,
 } from 'discord-api-types/v10';
 import { ActionRowBuilder } from '../components/ActionRow.js';
 import { ComponentBuilder } from '../components/Component.js';
@@ -35,16 +35,17 @@ import { validate } from '../util/validation.js';
 import { AllowedMentionsBuilder } from './AllowedMentions.js';
 import { fileBodyMessagePredicate, messagePredicate } from './Assertions.js';
 import { AttachmentBuilder } from './Attachment.js';
-import { MessageReferenceBuilder } from './MessageReference.js';
 import { EmbedBuilder } from './embed/Embed.js';
+import { MessageReferenceBuilder } from './MessageReference.js';
 import { PollBuilder } from './poll/Poll.js';
 
-export interface MessageBuilderData extends Partial<
-	Omit<
-		RESTPostAPIChannelMessageJSONBody,
-		'allowed_mentions' | 'attachments' | 'components' | 'embeds' | 'message_reference' | 'poll'
-	>
-> {
+export interface MessageBuilderData
+	extends Partial<
+		Omit<
+			RESTPostAPIChannelMessageJSONBody,
+			'allowed_mentions' | 'attachments' | 'components' | 'embeds' | 'message_reference' | 'poll'
+		>
+	> {
 	allowed_mentions?: AllowedMentionsBuilder;
 	attachments: AttachmentBuilder[];
 	components: MessageTopLevelComponentBuilder[];
@@ -311,7 +312,12 @@ export class MessageBuilder
 	): this {
 		this.data.components ??= [];
 
-		const resolved = normalizeArray(components).map((component) => resolveBuilder<ActionRowBuilder, Partial<APIActionRowComponent<APIComponentInActionRow>>>(component, ActionRowBuilder));
+		const resolved = normalizeArray(components).map((component) =>
+			resolveBuilder<ActionRowBuilder, Partial<APIActionRowComponent<APIComponentInActionRow>>>(
+				component,
+				ActionRowBuilder,
+			),
+		);
 		this.data.components.push(...resolved);
 
 		return this;

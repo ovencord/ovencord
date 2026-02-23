@@ -1,13 +1,11 @@
-import { Collection  } from '@ovencord/collection';
-import { Events  } from '../util/Events.js';
+import { Collection } from '@ovencord/collection';
+import { Events } from '../util/Events.js';
 import { Collector, type CollectorOptions } from './interfaces/Collector.js';
 
-
-
 export interface ReactionCollectorOptions extends CollectorOptions {
-  max?: number;
-  maxEmojis?: number;
-  maxUsers?: number;
+	max?: number;
+	maxEmojis?: number;
+	maxUsers?: number;
 }
 
 /**
@@ -21,228 +19,228 @@ export interface ReactionCollectorOptions extends CollectorOptions {
  * @extends {Collector}
  */
 export class ReactionCollector extends Collector {
-  public message: any;
-  public users: any;
-  public total: any;
-  /**
-   * @param {Message} message The message upon which to collect reactions
-   * @param {ReactionCollectorOptions} [options={}] The options to apply to this collector
-   */
-  constructor(message: any, options = {}) {
-    super(message.client, options);
+	public message: any;
+	public users: any;
+	public total: any;
+	/**
+	 * @param {Message} message The message upon which to collect reactions
+	 * @param {ReactionCollectorOptions} [options={}] The options to apply to this collector
+	 */
+	constructor(message: any, options = {}) {
+		super(message.client, options);
 
-    /**
-     * The message upon which to collect reactions
-     *
-     * @type {Message}
-     */
-    this.message = message;
+		/**
+		 * The message upon which to collect reactions
+		 *
+		 * @type {Message}
+		 */
+		this.message = message;
 
-    /**
-     * The users that have reacted to this message
-     *
-     * @type {Collection}
-     */
-    this.users = new Collection();
+		/**
+		 * The users that have reacted to this message
+		 *
+		 * @type {Collection}
+		 */
+		this.users = new Collection();
 
-    /**
-     * The total number of reactions collected
-     *
-     * @type {number}
-     */
-    this.total = 0;
+		/**
+		 * The total number of reactions collected
+		 *
+		 * @type {number}
+		 */
+		this.total = 0;
 
-    this.empty = this.empty.bind(this);
-    this._handleChannelDeletion = this._handleChannelDeletion.bind(this);
-    this._handleThreadDeletion = this._handleThreadDeletion.bind(this);
-    this._handleGuildDeletion = this._handleGuildDeletion.bind(this);
-    this._handleMessageDeletion = this._handleMessageDeletion.bind(this);
+		this.empty = this.empty.bind(this);
+		this._handleChannelDeletion = this._handleChannelDeletion.bind(this);
+		this._handleThreadDeletion = this._handleThreadDeletion.bind(this);
+		this._handleGuildDeletion = this._handleGuildDeletion.bind(this);
+		this._handleMessageDeletion = this._handleMessageDeletion.bind(this);
 
-    // @ts-ignore
-    const bulkDeleteListener = messages => {
-      if (messages.has(this.message.id)) this.stop('messageDelete');
-    };
+		// @ts-expect-error
+		const bulkDeleteListener = (messages) => {
+			if (messages.has(this.message.id)) this.stop('messageDelete');
+		};
 
-    this.client.incrementMaxListeners();
-    this.client.on(Events.MessageReactionAdd, this.handleCollect);
-    this.client.on(Events.MessageReactionRemove, this.handleDispose);
-    this.client.on(Events.MessageReactionRemoveAll, this.empty);
-    this.client.on(Events.MessageDelete, this._handleMessageDeletion);
-    this.client.on(Events.MessageBulkDelete, bulkDeleteListener);
-    this.client.on(Events.ChannelDelete, this._handleChannelDeletion);
-    this.client.on(Events.ThreadDelete, this._handleThreadDeletion);
-    this.client.on(Events.GuildDelete, this._handleGuildDeletion);
+		this.client.incrementMaxListeners();
+		this.client.on(Events.MessageReactionAdd, this.handleCollect);
+		this.client.on(Events.MessageReactionRemove, this.handleDispose);
+		this.client.on(Events.MessageReactionRemoveAll, this.empty);
+		this.client.on(Events.MessageDelete, this._handleMessageDeletion);
+		this.client.on(Events.MessageBulkDelete, bulkDeleteListener);
+		this.client.on(Events.ChannelDelete, this._handleChannelDeletion);
+		this.client.on(Events.ThreadDelete, this._handleThreadDeletion);
+		this.client.on(Events.GuildDelete, this._handleGuildDeletion);
 
-    this.once('end', () => {
-      this.client.removeListener(Events.MessageReactionAdd, this.handleCollect);
-      this.client.removeListener(Events.MessageReactionRemove, this.handleDispose);
-      this.client.removeListener(Events.MessageReactionRemoveAll, this.empty);
-      this.client.removeListener(Events.MessageDelete, this._handleMessageDeletion);
-      this.client.removeListener(Events.MessageBulkDelete, bulkDeleteListener);
-      this.client.removeListener(Events.ChannelDelete, this._handleChannelDeletion);
-      this.client.removeListener(Events.ThreadDelete, this._handleThreadDeletion);
-      this.client.removeListener(Events.GuildDelete, this._handleGuildDeletion);
-      this.client.decrementMaxListeners();
-    });
+		this.once('end', () => {
+			this.client.removeListener(Events.MessageReactionAdd, this.handleCollect);
+			this.client.removeListener(Events.MessageReactionRemove, this.handleDispose);
+			this.client.removeListener(Events.MessageReactionRemoveAll, this.empty);
+			this.client.removeListener(Events.MessageDelete, this._handleMessageDeletion);
+			this.client.removeListener(Events.MessageBulkDelete, bulkDeleteListener);
+			this.client.removeListener(Events.ChannelDelete, this._handleChannelDeletion);
+			this.client.removeListener(Events.ThreadDelete, this._handleThreadDeletion);
+			this.client.removeListener(Events.GuildDelete, this._handleGuildDeletion);
+			this.client.decrementMaxListeners();
+		});
 
-    this.on('collect', (reaction, user) => {
-      /**
-       * Emitted whenever a reaction is newly created on a message. Will emit only when a new reaction is
-       * added to the message, as opposed to {@link Collector#event:collect} which will
-       * be emitted even when a reaction has already been added to the message.
-       *
-       * @event ReactionCollector#create
-       * @param {MessageReaction} reaction The reaction that was added
-       * @param {User} user The user that added the reaction
-       */
-      if (reaction.count === 1) {
-        this.emit('create', reaction, user);
-      }
+		this.on('collect', (reaction, user) => {
+			/**
+			 * Emitted whenever a reaction is newly created on a message. Will emit only when a new reaction is
+			 * added to the message, as opposed to {@link Collector#event:collect} which will
+			 * be emitted even when a reaction has already been added to the message.
+			 *
+			 * @event ReactionCollector#create
+			 * @param {MessageReaction} reaction The reaction that was added
+			 * @param {User} user The user that added the reaction
+			 */
+			if (reaction.count === 1) {
+				this.emit('create', reaction, user);
+			}
 
-      this.total++;
-      this.users.set(user.id, user);
-    });
+			this.total++;
+			this.users.set(user.id, user);
+		});
 
-    this.on('remove', (_reaction, user) => {
-      this.total--;
-      // @ts-ignore
-      if (!this.collected.some((reaction) => reaction.users.cache.has(user.id))) this.users.delete(user.id);
-    });
-  }
+		this.on('remove', (_reaction, user) => {
+			this.total--;
+			// @ts-expect-error
+			if (!this.collected.some((reaction) => reaction.users.cache.has(user.id))) this.users.delete(user.id);
+		});
+	}
 
-  /**
-   * Handles an incoming reaction for possible collection.
-   *
-   * @param {MessageReaction} reaction The reaction to possibly collect
-   * @returns {?(Snowflake|string)}
-   * @private
-   */
-  collect(reaction: any) {
-    /**
-     * Emitted whenever a reaction is collected.
-     *
-     * @event ReactionCollector#collect
-     * @param {MessageReaction} reaction The reaction that was collected
-     * @param {User} user The user that added the reaction
-     */
-    if (reaction.message.id !== this.message.id) return null;
+	/**
+	 * Handles an incoming reaction for possible collection.
+	 *
+	 * @param {MessageReaction} reaction The reaction to possibly collect
+	 * @returns {?(Snowflake|string)}
+	 * @private
+	 */
+	collect(reaction: any) {
+		/**
+		 * Emitted whenever a reaction is collected.
+		 *
+		 * @event ReactionCollector#collect
+		 * @param {MessageReaction} reaction The reaction that was collected
+		 * @param {User} user The user that added the reaction
+		 */
+		if (reaction.message.id !== this.message.id) return null;
 
-    return ReactionCollector.key(reaction);
-  }
+		return ReactionCollector.key(reaction);
+	}
 
-  /**
-   * Handles a reaction deletion for possible disposal.
-   *
-   * @param {MessageReaction} reaction The reaction to possibly dispose of
-   * @param {User} user The user that removed the reaction
-   * @returns {?(Snowflake|string)}
-   */
-  dispose(reaction: any, user: any) {
-    /**
-     * Emitted when the reaction had all the users removed and the `dispose` option is set to true.
-     *
-     * @event ReactionCollector#dispose
-     * @param {MessageReaction} reaction The reaction that was disposed of
-     * @param {User} user The user that removed the reaction
-     */
-    if (reaction.message.id !== this.message.id) return null;
+	/**
+	 * Handles a reaction deletion for possible disposal.
+	 *
+	 * @param {MessageReaction} reaction The reaction to possibly dispose of
+	 * @param {User} user The user that removed the reaction
+	 * @returns {?(Snowflake|string)}
+	 */
+	dispose(reaction: any, user: any) {
+		/**
+		 * Emitted when the reaction had all the users removed and the `dispose` option is set to true.
+		 *
+		 * @event ReactionCollector#dispose
+		 * @param {MessageReaction} reaction The reaction that was disposed of
+		 * @param {User} user The user that removed the reaction
+		 */
+		if (reaction.message.id !== this.message.id) return null;
 
-    /**
-     * Emitted when the reaction had one user removed and the `dispose` option is set to true.
-     *
-     * @event ReactionCollector#remove
-     * @param {MessageReaction} reaction The reaction that was removed
-     * @param {User} user The user that removed the reaction
-     */
-    if (this.collected.has(ReactionCollector.key(reaction)) && this.users.has(user.id)) {
-      this.emit('remove', reaction, user);
-    }
+		/**
+		 * Emitted when the reaction had one user removed and the `dispose` option is set to true.
+		 *
+		 * @event ReactionCollector#remove
+		 * @param {MessageReaction} reaction The reaction that was removed
+		 * @param {User} user The user that removed the reaction
+		 */
+		if (this.collected.has(ReactionCollector.key(reaction)) && this.users.has(user.id)) {
+			this.emit('remove', reaction, user);
+		}
 
-    return reaction.count ? null : ReactionCollector.key(reaction);
-  }
+		return reaction.count ? null : ReactionCollector.key(reaction);
+	}
 
-  /**
-   * Empties this reaction collector.
-   */
-  empty() {
-    this.total = 0;
-    this.collected.clear();
-    this.users.clear();
-    this.checkEnd();
-  }
+	/**
+	 * Empties this reaction collector.
+	 */
+	empty() {
+		this.total = 0;
+		this.collected.clear();
+		this.users.clear();
+		this.checkEnd();
+	}
 
-  /**
-   * The reason this collector has ended with, or null if it hasn't ended yet
-   *
-   * @type {?string}
-   * @readonly
-   */
-  get endReason() {
-    if ((this.options as any).max && this.total >= (this.options as any).max) return 'limit';
-    if ((this.options as any).maxEmojis && this.collected.size >= (this.options as any).maxEmojis) return 'emojiLimit';
-    if ((this.options as any).maxUsers && this.users.size >= (this.options as any).maxUsers) return 'userLimit';
-    return super.endReason;
-  }
+	/**
+	 * The reason this collector has ended with, or null if it hasn't ended yet
+	 *
+	 * @type {?string}
+	 * @readonly
+	 */
+	get endReason() {
+		if ((this.options as any).max && this.total >= (this.options as any).max) return 'limit';
+		if ((this.options as any).maxEmojis && this.collected.size >= (this.options as any).maxEmojis) return 'emojiLimit';
+		if ((this.options as any).maxUsers && this.users.size >= (this.options as any).maxUsers) return 'userLimit';
+		return super.endReason;
+	}
 
-  /**
-   * Handles checking if the message has been deleted, and if so, stops the collector with the reason 'messageDelete'.
-   *
-   * @private
-   * @param {Message} message The message that was deleted
-   * @returns {void}
-   */
-  _handleMessageDeletion(message: any) {
-    if (message.id === this.message.id) {
-      this.stop('messageDelete');
-    }
-  }
+	/**
+	 * Handles checking if the message has been deleted, and if so, stops the collector with the reason 'messageDelete'.
+	 *
+	 * @private
+	 * @param {Message} message The message that was deleted
+	 * @returns {void}
+	 */
+	_handleMessageDeletion(message: any) {
+		if (message.id === this.message.id) {
+			this.stop('messageDelete');
+		}
+	}
 
-  /**
-   * Handles checking if the channel has been deleted, and if so, stops the collector with the reason 'channelDelete'.
-   *
-   * @private
-   * @param {GuildChannel} channel The channel that was deleted
-   * @returns {void}
-   */
-  _handleChannelDeletion(channel: any) {
-    if (channel.id === this.message.channelId || channel.threads?.cache.has(this.message.channelId)) {
-      this.stop('channelDelete');
-    }
-  }
+	/**
+	 * Handles checking if the channel has been deleted, and if so, stops the collector with the reason 'channelDelete'.
+	 *
+	 * @private
+	 * @param {GuildChannel} channel The channel that was deleted
+	 * @returns {void}
+	 */
+	_handleChannelDeletion(channel: any) {
+		if (channel.id === this.message.channelId || channel.threads?.cache.has(this.message.channelId)) {
+			this.stop('channelDelete');
+		}
+	}
 
-  /**
-   * Handles checking if the thread has been deleted, and if so, stops the collector with the reason 'threadDelete'.
-   *
-   * @private
-   * @param {ThreadChannel} thread The thread that was deleted
-   * @returns {void}
-   */
-  _handleThreadDeletion(thread: any) {
-    if (thread.id === this.message.channelId) {
-      this.stop('threadDelete');
-    }
-  }
+	/**
+	 * Handles checking if the thread has been deleted, and if so, stops the collector with the reason 'threadDelete'.
+	 *
+	 * @private
+	 * @param {ThreadChannel} thread The thread that was deleted
+	 * @returns {void}
+	 */
+	_handleThreadDeletion(thread: any) {
+		if (thread.id === this.message.channelId) {
+			this.stop('threadDelete');
+		}
+	}
 
-  /**
-   * Handles checking if the guild has been deleted, and if so, stops the collector with the reason 'guildDelete'.
-   *
-   * @private
-   * @param {Guild} guild The guild that was deleted
-   * @returns {void}
-   */
-  _handleGuildDeletion(guild: any) {
-    if (guild.id === this.message.guild?.id) {
-      this.stop('guildDelete');
-    }
-  }
+	/**
+	 * Handles checking if the guild has been deleted, and if so, stops the collector with the reason 'guildDelete'.
+	 *
+	 * @private
+	 * @param {Guild} guild The guild that was deleted
+	 * @returns {void}
+	 */
+	_handleGuildDeletion(guild: any) {
+		if (guild.id === this.message.guild?.id) {
+			this.stop('guildDelete');
+		}
+	}
 
-  /**
-   * Gets the collector key for a reaction.
-   *
-   * @param {MessageReaction} reaction The message reaction to get the key for
-   * @returns {Snowflake|string}
-   */
-  static key(reaction: any) {
-    return reaction.emoji.id ?? reaction.emoji.name;
-  }
+	/**
+	 * Gets the collector key for a reaction.
+	 *
+	 * @param {MessageReaction} reaction The message reaction to get the key for
+	 * @returns {Snowflake|string}
+	 */
+	static key(reaction: any) {
+		return reaction.emoji.id ?? reaction.emoji.name;
+	}
 }

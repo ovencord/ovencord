@@ -1,4 +1,4 @@
-import { BaseGuildEmoji  } from './BaseGuildEmoji.js';
+import { BaseGuildEmoji } from './BaseGuildEmoji.js';
 
 /**
  * Represents an instance of an emoji belonging to a public guild obtained through Discord's preview endpoint.
@@ -6,22 +6,22 @@ import { BaseGuildEmoji  } from './BaseGuildEmoji.js';
  * @extends {BaseGuildEmoji}
  */
 export class GuildPreviewEmoji extends BaseGuildEmoji {
-  public roles: any;
-  /**
-   * The public guild this emoji is part of
-   *
-   * @type {GuildPreview}
-   * @name GuildPreviewEmoji#guild
-   */
+	public roles: any;
+	/**
+	 * The public guild this emoji is part of
+	 *
+	 * @type {GuildPreview}
+	 * @name GuildPreviewEmoji#guild
+	 */
 
-  constructor(client: any, data: any, guild: any) {
-    super(client, data, guild);
+	constructor(client: any, data: any, guild: any) {
+		super(client, data, guild);
 
-    /**
-     * The roles this emoji is active for
-     *
-     * @type {Snowflake[]}
-     */
-    this.roles = data.roles;
-  }
+		/**
+		 * The roles this emoji is active for
+		 *
+		 * @type {Snowflake[]}
+		 */
+		this.roles = data.roles;
+	}
 }

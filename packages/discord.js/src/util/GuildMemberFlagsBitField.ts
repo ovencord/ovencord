@@ -1,5 +1,5 @@
-import { GuildMemberFlags  } from 'discord-api-types/v10';
-import { BitField  } from './BitField.js';
+import { GuildMemberFlags } from 'discord-api-types/v10';
+import { BitField } from './BitField.js';
 
 /**
  * Data structure that makes it easy to interact with a {@link GuildMember#flags} bitfield.
@@ -7,13 +7,13 @@ import { BitField  } from './BitField.js';
  * @extends {BitField}
  */
 export class GuildMemberFlagsBitField extends BitField {
-  /**
-   * Numeric guild member flags.
-   *
-   * @type {GuildMemberFlags}
-   * @memberof GuildMemberFlagsBitField
-   */
-  static Flags = GuildMemberFlags;
+	/**
+	 * Numeric guild member flags.
+	 *
+	 * @type {GuildMemberFlags}
+	 * @memberof GuildMemberFlagsBitField
+	 */
+	static Flags = GuildMemberFlags;
 }
 
 /**

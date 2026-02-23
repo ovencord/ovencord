@@ -1,5 +1,5 @@
-import { ChannelFlags  } from 'discord-api-types/v10';
-import { BitField  } from './BitField.js';
+import { ChannelFlags } from 'discord-api-types/v10';
+import { BitField } from './BitField.js';
 
 /**
  * Data structure that makes it easy to interact with a {@link BaseChannel#flags} bitfield.
@@ -7,13 +7,13 @@ import { BitField  } from './BitField.js';
  * @extends {BitField}
  */
 export class ChannelFlagsBitField extends BitField {
-  /**
-   * Numeric guild channel flags.
-   *
-   * @type {ChannelFlags}
-   * @memberof ChannelFlagsBitField
-   */
-  static Flags = ChannelFlags;
+	/**
+	 * Numeric guild channel flags.
+	 *
+	 * @type {ChannelFlags}
+	 * @memberof ChannelFlagsBitField
+	 */
+	static Flags = ChannelFlags;
 }
 
 /**
