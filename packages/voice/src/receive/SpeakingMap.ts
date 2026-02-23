@@ -19,6 +19,7 @@ export interface SpeakingMap extends AsyncEventEmitter {
 /**
  * Tracks the speaking states of users in a voice channel.
  */
+// biome-ignore lint/suspicious/noUnsafeDeclarationMerging: Standard event typing pattern
 export class SpeakingMap extends AsyncEventEmitter {
 	/**
 	 * The delay after a packet is received from a user until they're marked as not speaking anymore.

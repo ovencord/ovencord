@@ -71,6 +71,7 @@ export interface DAVESession extends AsyncEventEmitter {
 /**
  * Manages the DAVE protocol group session.
  */
+// biome-ignore lint/suspicious/noUnsafeDeclarationMerging: Standard event typing pattern
 export class DAVESession extends AsyncEventEmitter {
 	/**
 	 * The channel id represented by this session.

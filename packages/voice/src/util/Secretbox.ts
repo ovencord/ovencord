@@ -14,6 +14,7 @@ interface Methods {
 }
 
 const libs = {
+	// biome-ignore lint/suspicious/noExplicitAny: Dynamic library imports
 	'sodium-native': (sodium: any): Methods => ({
 		crypto_aead_xchacha20poly1305_ietf_decrypt: (
 			cipherText: Uint8Array,
@@ -36,6 +37,7 @@ const libs = {
 			return cipherText;
 		},
 	}),
+	// biome-ignore lint/suspicious/noExplicitAny: Dynamic library imports
 	sodium: (sodium: any): Methods => ({
 		crypto_aead_xchacha20poly1305_ietf_decrypt: (
 			cipherText: Uint8Array,
@@ -50,6 +52,7 @@ const libs = {
 			key: Uint8Array,
 		) => sodium.api.crypto_aead_xchacha20poly1305_ietf_encrypt(plaintext, additionalData, null, nonce, key),
 	}),
+	// biome-ignore lint/suspicious/noExplicitAny: Dynamic library imports
 	'libsodium-wrappers': (sodium: any): Methods => ({
 		crypto_aead_xchacha20poly1305_ietf_decrypt: (
 			cipherText: Uint8Array,
@@ -64,6 +67,7 @@ const libs = {
 			key: Uint8Array,
 		) => sodium.crypto_aead_xchacha20poly1305_ietf_encrypt(plaintext, additionalData, null, nonce, key),
 	}),
+	// biome-ignore lint/suspicious/noExplicitAny: Dynamic library imports
 	'@stablelib/xchacha20poly1305': (stablelib: any): Methods => ({
 		crypto_aead_xchacha20poly1305_ietf_decrypt(plaintext, additionalData, nonce, key) {
 			const crypto = new stablelib.XChaCha20Poly1305(key);
@@ -74,6 +78,7 @@ const libs = {
 			return crypto.seal(nonce, cipherText, additionalData);
 		},
 	}),
+	// biome-ignore lint/suspicious/noExplicitAny: Dynamic library imports
 	'@noble/ciphers/chacha.js': (noble: any): Methods => ({
 		crypto_aead_xchacha20poly1305_ietf_decrypt(cipherText, additionalData, nonce, key) {
 			const chacha = noble.xchacha20poly1305(key, nonce, additionalData);
@@ -103,22 +108,24 @@ const methods: Methods = {
 	crypto_aead_xchacha20poly1305_ietf_decrypt: fallbackError,
 };
 
-export const secretboxLoadPromise = new Promise<void>(async (resolve) => {
-	for (const libName of Object.keys(libs) as (keyof typeof libs)[]) {
-		try {
-			const lib = await import(libName);
+export const secretboxLoadPromise = new Promise<void>((resolve) => {
+	(async () => {
+		for (const libName of Object.keys(libs) as (keyof typeof libs)[]) {
+			try {
+				const lib = await import(libName);
 
-			if (libName === 'libsodium-wrappers' && lib.ready) {
-				await lib.ready;
-			}
+				if (libName === 'libsodium-wrappers' && lib.ready) {
+					await lib.ready;
+				}
 
-			Object.assign(methods, libs[libName](lib));
+				Object.assign(methods, libs[libName](lib));
 
-			break;
-		} catch {}
-	}
+				break;
+			} catch {}
+		}
 
-	resolve();
+		resolve();
+	})();
 });
 
 export { methods };

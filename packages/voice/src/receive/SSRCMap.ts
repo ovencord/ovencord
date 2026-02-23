@@ -30,6 +30,7 @@ export interface SSRCMap extends AsyncEventEmitter {
 /**
  * Maps audio SSRCs to data of users in voice connections.
  */
+// biome-ignore lint/suspicious/noUnsafeDeclarationMerging: Standard event typing pattern
 export class SSRCMap extends AsyncEventEmitter {
 	/**
 	 * The underlying map.

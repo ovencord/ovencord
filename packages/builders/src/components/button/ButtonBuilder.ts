@@ -12,7 +12,7 @@ import { EmojiOrLabelButtonMixin } from './mixins/EmojiOrLabelButtonMixin.js';
 // @ts-expect-error - Structural mismatch from ts-mixer
 export interface ButtonBuilder extends BaseButtonBuilder<APIButtonComponent>, EmojiOrLabelButtonMixin {}
 
-// biome-ignore lint/suspicious/noExplicitAny: Structural any from ts-mixer
+// biome-ignore lint/suspicious/noUnsafeDeclarationMerging: Standard event typing pattern
 export class ButtonBuilder extends Mixin(BaseButtonBuilder<APIButtonComponent>, EmojiOrLabelButtonMixin) {
 	/**
 	 * @internal

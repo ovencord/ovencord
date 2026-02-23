@@ -28,6 +28,7 @@ export class WorkerBootstrapper {
 						// For now, satisfy the interface.
 						return message.data.gatewayInformation;
 					},
+					// biome-ignore lint/suspicious/noExplicitAny: Structural any for bootstrap
 				} as unknown as any);
 
 				await this.manager.connect();

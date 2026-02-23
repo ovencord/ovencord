@@ -224,6 +224,7 @@ function randomNBit(numberOfBits: number) {
 /**
  * Manages the networking required to maintain a voice connection and dispatch audio packets
  */
+// biome-ignore lint/suspicious/noUnsafeDeclarationMerging: Standard event typing pattern
 export class Networking extends AsyncEventEmitter {
 	private _state: NetworkingState;
 

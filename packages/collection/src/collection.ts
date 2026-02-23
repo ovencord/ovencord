@@ -36,6 +36,7 @@ export class Collection<Key, Value> extends Map<Key, Value> {
 	 * ```
 	 */
 	public ensure(key: Key, defaultValueGenerator: (key: Key, collection: this) => Value): Value {
+		// biome-ignore lint/style/noNonNullAssertion: has() check ensures this
 		if (this.has(key)) return this.get(key)!;
 		if (typeof defaultValueGenerator !== 'function') throw new TypeError(`${defaultValueGenerator} is not a function`);
 		const defaultValue = defaultValueGenerator(key, this);
@@ -79,6 +80,7 @@ export class Collection<Key, Value> extends Map<Key, Value> {
 		const iter = this.values();
 		const results: Value[] = new Array(amount);
 		for (let index = 0; index < amount; index++) {
+			// biome-ignore lint/style/noNonNullAssertion: size check above ensures this
 			results[index] = iter.next().value!;
 		}
 

@@ -334,6 +334,7 @@ export class VoiceConnection extends AsyncEventEmitter {
 
 		this.emit('stateChange', oldState, newState);
 		if (oldState.status !== newState.status) {
+			// biome-ignore lint/suspicious/noExplicitAny: Structural any for event emission
 			this.emit(newState.status, oldState, newState as any);
 		}
 	}

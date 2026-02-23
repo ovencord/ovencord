@@ -234,14 +234,6 @@ export class AudioPlayer extends AsyncEventEmitter {
 	 */
 	private readonly debug: ((message: string) => void) | null;
 
-	/**
-	 * The next audio frame to be played.
-	 */
-	private renderedFrame: Uint8Array | undefined;
-
-	/**
-	 * Creates a new AudioPlayer.
-	 */
 	public constructor(options: CreateAudioPlayerOptions = {}) {
 		super();
 		this._state = { status: AudioPlayerStatus.Idle };
@@ -316,6 +308,7 @@ export class AudioPlayer extends AsyncEventEmitter {
 
 		this.emit('stateChange', oldState, this._state);
 		if (oldState.status !== newState.status || didChangeResources) {
+			// biome-ignore lint/suspicious/noExplicitAny: Structural any for event emission
 			this.emit(newState.status, oldState, this._state as any);
 		}
 
@@ -514,16 +507,12 @@ export class AudioPlayer extends AsyncEventEmitter {
 	/**
 	 * Dispatches the rendered frame to all subscribers.
 	 *
+	 * @param frame - The frame to dispatch
 	 * @internal
 	 */
-	public _stepDispatch() {
-		const { renderedFrame } = this;
-		this.renderedFrame = undefined;
-
+	public _stepDispatch(frame: Uint8Array) {
 		for (const subscription of this.subscribers) {
-			if (renderedFrame) {
-				subscription.connection.playOpusPacket(renderedFrame);
-			}
+			subscription.connection.playOpusPacket(frame);
 		}
 	}
 
@@ -539,7 +528,7 @@ export class AudioPlayer extends AsyncEventEmitter {
 		if (state.status === AudioPlayerStatus.AutoPaused || state.status === AudioPlayerStatus.Paused) {
 			if (state.silencePacketsRemaining > 0) {
 				state.silencePacketsRemaining--;
-				this.renderedFrame = SILENCE_FRAME;
+				this._stepDispatch(SILENCE_FRAME);
 				return;
 			}
 			return;
@@ -549,7 +538,7 @@ export class AudioPlayer extends AsyncEventEmitter {
 		if (state.status === AudioPlayerStatus.Playing) {
 			const frame = state.resource.read();
 			if (frame) {
-				this.renderedFrame = frame;
+				this._stepDispatch(frame);
 				state.playbackDuration += 20; // 20ms frames
 				state.missedFrames = 0;
 			} else {

@@ -39,6 +39,7 @@ export interface VoiceWebSocket extends AsyncEventEmitter {
  * An extension of the WebSocket class to provide helper functionality when interacting
  * with the Discord Voice gateway.
  */
+// biome-ignore lint/suspicious/noUnsafeDeclarationMerging: Standard event typing pattern
 export class VoiceWebSocket extends AsyncEventEmitter {
 	/**
 	 * The current heartbeat interval, if any.
@@ -156,11 +157,11 @@ export class VoiceWebSocket extends AsyncEventEmitter {
 			return;
 		}
 
-		if (packet.seq) {
-			this.sequence = packet.seq;
+		if (packet && typeof packet === 'object' && 'seq' in packet) {
+			this.sequence = (packet as { seq: number }).seq;
 		}
 
-		if (packet.op === VoiceOpcodes.HeartbeatAck) {
+		if (packet && typeof packet === 'object' && 'op' in packet && packet.op === VoiceOpcodes.HeartbeatAck) {
 			this.lastHeartbeatAck = Date.now();
 			this.missedHeartbeats = 0;
 			this.ping = this.lastHeartbeatAck - this.lastHeartbeatSend;

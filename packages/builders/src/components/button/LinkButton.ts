@@ -16,6 +16,7 @@ import { EmojiOrLabelButtonMixin } from './mixins/EmojiOrLabelButtonMixin.js';
  */
 export interface LinkButtonBuilder extends BaseButtonBuilder<APIButtonComponentWithURL>, EmojiOrLabelButtonMixin {}
 
+// biome-ignore lint/suspicious/noUnsafeDeclarationMerging: Standard event typing pattern
 export class LinkButtonBuilder extends Mixin(BaseButtonBuilder<APIButtonComponentWithURL>, EmojiOrLabelButtonMixin) {
 	protected override readonly data: Partial<APIButtonComponentWithURL>;
 

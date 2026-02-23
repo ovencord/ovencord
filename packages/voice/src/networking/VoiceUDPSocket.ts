@@ -57,6 +57,7 @@ export interface VoiceUDPSocket extends AsyncEventEmitter {
 /**
  * Manages the UDP networking for a voice connection.
  */
+// biome-ignore lint/suspicious/noUnsafeDeclarationMerging: Standard event typing pattern
 export class VoiceUDPSocket extends AsyncEventEmitter {
 	/**
 	 * The underlying network Socket for the VoiceUDPSocket.
@@ -154,6 +155,7 @@ export class VoiceUDPSocket extends AsyncEventEmitter {
 	 * @param buffer - The buffer to send
 	 */
 	public send(buffer: Uint8Array) {
+		// biome-ignore lint/suspicious/noExplicitAny: Internal socket send
 		(this.socket as any)?.send(buffer, this.remote.port, this.remote.ip);
 	}
 

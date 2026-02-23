@@ -74,6 +74,7 @@ export class AudioReceiveStream {
 		this.stream = new ReadableStream<Uint8Array | null>({
 			...rest,
 			start: (controller) => {
+				// biome-ignore lint/suspicious/noExplicitAny: Internal stream controller
 				this.controller = controller as any;
 				if (rest.start) rest.start(controller);
 			},
