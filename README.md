@@ -49,6 +49,7 @@ We believe that **emulation is the enemy of performance**. Our mission is to eli
 
 ### Native-First
 > We don't just _support_ Bun; we **build FOR Bun**.
+<br>
 
 | Before | After | 
 |---------|-------------|
@@ -62,20 +63,16 @@ We believe that **emulation is the enemy of performance**. Our mission is to eli
 > If it's legacy and slow, it's gone.          
 <br>
 
-**Before (discord.js ecosystem)**:
-- 50+ dependencies
-- Heavy polyfills for `lodash`, `p-queue`, etc.
-- ~100MB `node_modules`
-- tsup/esbuild build step required
-
-**After (Ovencord)**:
-- <10 dependencies
-- ~8MB `node_modules`
-- **ZERO** build time (source-only)
+| Metric | Discord.js (Original - NPM) | Ovencord (Bun) | Result |
+| :--- | :--- | :--- | :--- |
+| **Size (Data)** | 16.6 MB | **9.20 MB** | **-44.5%** |
+| **Size on Disk** | 20.4 MB | **12.9 MB** | **-36.8%** |
+| **Contains (Files)** | 3,036 files | **2,261 files** | **-775 files** |
+| **Folders** | 144 folders | **122 folders** | **-22 folders** |
 
 ### Speed is a Feature
-
-We optimize for microseconds and megabytes.
+> We optimize for microseconds and megabytes.
+<br>
 
 | Metric | discord.js | Ovencord | Δ |
 |------|------------|----------|---|
