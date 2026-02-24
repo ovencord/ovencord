@@ -10,12 +10,14 @@ export interface DMChannelMixin<
 /**
  * @remarks has recipients, an array of sub-structures {@link User} that extending mixins should add to their DataTemplate and _optimizeData
  */
-export class DMChannelMixin<_Type extends ChannelType.DM | ChannelType.GroupDM = ChannelType.DM | ChannelType.GroupDM> {
+export class DMChannelMixinImpl<
+	_Type extends ChannelType.DM | ChannelType.GroupDM = ChannelType.DM | ChannelType.GroupDM,
+> {
 	/**
 	 * The URL to this channel.
 	 */
 	public get url() {
-		return channelLink(this.id);
+		return channelLink((this as any).id);
 	}
 
 	/**
@@ -25,3 +27,5 @@ export class DMChannelMixin<_Type extends ChannelType.DM | ChannelType.GroupDM =
 		return true;
 	}
 }
+
+export const DMChannelMixin: typeof DMChannelMixinImpl = DMChannelMixinImpl as any;

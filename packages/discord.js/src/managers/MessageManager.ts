@@ -234,7 +234,7 @@ export class MessageManager extends CachedManager {
 		const messageId = this.resolveId(message);
 		if (!messageId) throw new DiscordjsTypeError(ErrorCodes.InvalidType, 'message', 'MessageResolvable');
 
-		let payload;
+		let payload: any;
 		if (options instanceof MessagePayload) {
 			payload = await options.resolveBody().resolveFiles();
 		} else if (isFileBodyEncodable(options)) {

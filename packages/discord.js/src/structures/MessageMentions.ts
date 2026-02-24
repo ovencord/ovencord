@@ -244,11 +244,11 @@ export class MessageMentions {
 	get channels() {
 		if (this._channels) return this._channels;
 		this._channels = new Collection();
-		let matches: any;
-
-		while ((matches = (this.constructor as any).GlobalChannelsPattern.exec(this._content)) !== null) {
+		let matches = (this.constructor as any).GlobalChannelsPattern.exec(this._content);
+		while (matches !== null) {
 			const channel = this.client.channels.cache.get(matches.groups.id);
 			if (channel) this._channels.set(channel.id, channel);
+			matches = (this.constructor as any).GlobalChannelsPattern.exec(this._content);
 		}
 
 		return this._channels;
@@ -264,10 +264,11 @@ export class MessageMentions {
 	get parsedUsers() {
 		if (this._parsedUsers) return this._parsedUsers;
 		this._parsedUsers = new Collection();
-		let matches: any;
-		while ((matches = (this.constructor as any).GlobalUsersPattern.exec(this._content)) !== null) {
+		let matches = (this.constructor as any).GlobalUsersPattern.exec(this._content);
+		while (matches !== null) {
 			const user = this.client.users.cache.get(matches[1] as any);
 			if (user) this._parsedUsers.set(user.id, user);
+			matches = (this.constructor as any).GlobalUsersPattern.exec(this._content);
 		}
 
 		return this._parsedUsers;

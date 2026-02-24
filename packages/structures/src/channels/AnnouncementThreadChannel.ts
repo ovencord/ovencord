@@ -11,24 +11,7 @@ import { GuildChannelMixin } from './mixins/GuildChannelMixin.js';
 import { TextChannelMixin } from './mixins/TextChannelMixin.js';
 import { ThreadChannelMixin } from './mixins/ThreadChannelMixin.js';
 
-export interface AnnouncementThreadChannel<_Omitted extends keyof APIAnnouncementThreadChannel | '' = ''>
-	extends MixinTypes<
-		Channel<ChannelType.AnnouncementThread>,
-		[
-			TextChannelMixin<ChannelType.AnnouncementThread>,
-			ChannelOwnerMixin<ChannelType.AnnouncementThread>,
-			ChannelParentMixin<ChannelType.AnnouncementThread>,
-			ChannelPinMixin<ChannelType.AnnouncementThread>,
-			ChannelSlowmodeMixin<ChannelType.AnnouncementThread>,
-			GuildChannelMixin<ChannelType.AnnouncementThread>,
-			ThreadChannelMixin<ChannelType.AnnouncementThread>,
-		]
-	> {}
-
-/**
- * Sample Implementation of a structure for announcement threads, usable by direct end consumers.
- */
-export class AnnouncementThreadChannel<Omitted extends keyof APIAnnouncementThreadChannel | '' = ''> extends Channel<
+class AnnouncementThreadChannelImpl<Omitted extends keyof APIAnnouncementThreadChannel | '' = ''> extends Channel<
 	ChannelType.AnnouncementThread,
 	Omitted
 > {
@@ -38,7 +21,7 @@ export class AnnouncementThreadChannel<Omitted extends keyof APIAnnouncementThre
 	}
 }
 
-Mixin(AnnouncementThreadChannel, [
+Mixin(AnnouncementThreadChannelImpl, [
 	TextChannelMixin,
 	ChannelOwnerMixin,
 	ChannelParentMixin,
@@ -47,3 +30,24 @@ Mixin(AnnouncementThreadChannel, [
 	GuildChannelMixin,
 	ThreadChannelMixin,
 ]);
+
+export interface AnnouncementThreadChannel<Omitted extends keyof APIAnnouncementThreadChannel | '' = ''>
+	extends AnnouncementThreadChannelImpl<Omitted>,
+		MixinTypes<
+			Channel<ChannelType.AnnouncementThread>,
+			[
+				TextChannelMixin<ChannelType.AnnouncementThread>,
+				ChannelOwnerMixin<ChannelType.AnnouncementThread>,
+				ChannelParentMixin<ChannelType.AnnouncementThread>,
+				ChannelPinMixin<ChannelType.AnnouncementThread>,
+				ChannelSlowmodeMixin<ChannelType.AnnouncementThread>,
+				GuildChannelMixin<ChannelType.AnnouncementThread>,
+				ThreadChannelMixin<ChannelType.AnnouncementThread>,
+			]
+		> {}
+
+export const AnnouncementThreadChannel: {
+	new <Omitted extends keyof APIAnnouncementThreadChannel | '' = ''>(
+		data: Partialize<APIAnnouncementThreadChannel, Omitted>,
+	): AnnouncementThreadChannel<Omitted>;
+} = AnnouncementThreadChannelImpl as any;

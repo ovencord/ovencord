@@ -6,7 +6,7 @@ export interface ChannelPinMixin<
 	Type extends ChannelType.DM | ChannelType.GuildAnnouncement | ChannelType.GuildText | ThreadChannelType,
 > extends Channel<Type> {}
 
-export class ChannelPinMixin<
+export class ChannelPinMixinImpl<
 	Type extends ChannelType.DM | ChannelType.GuildAnnouncement | ChannelType.GuildText | ThreadChannelType,
 > {
 	/**
@@ -60,3 +60,5 @@ export class ChannelPinMixin<
 		data.last_pin_timestamp = this[kLastPinTimestamp] ? new Date(this[kLastPinTimestamp]).toISOString() : null;
 	}
 }
+
+export const ChannelPinMixin: typeof ChannelPinMixinImpl = ChannelPinMixinImpl as any;

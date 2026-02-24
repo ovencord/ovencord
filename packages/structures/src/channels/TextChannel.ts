@@ -10,30 +10,14 @@ import { ChannelSlowmodeMixin } from './mixins/ChannelSlowmodeMixin.js';
 import { ChannelTopicMixin } from './mixins/ChannelTopicMixin.js';
 import { TextChannelMixin } from './mixins/TextChannelMixin.js';
 
-export interface TextChannel<_Omitted extends keyof APITextChannel | '' = ''>
-	extends MixinTypes<
-		Channel<ChannelType.GuildText>,
-		[
-			TextChannelMixin<ChannelType.GuildText>,
-			ChannelParentMixin<ChannelType.GuildText>,
-			ChannelPermissionMixin<ChannelType.GuildText>,
-			ChannelPinMixin<ChannelType.GuildText>,
-			ChannelSlowmodeMixin<ChannelType.GuildText>,
-			ChannelTopicMixin<ChannelType.GuildText>,
-		]
-	> {}
-
-export class TextChannel<Omitted extends keyof APITextChannel | '' = ''> extends Channel<
-	ChannelType.GuildText,
-	Omitted
-> {
+class TextChannelImpl<Omitted extends keyof APITextChannel | '' = ''> extends Channel<ChannelType.GuildText, Omitted> {
 	public constructor(data: Partialize<APITextChannel, Omitted>) {
 		super(data);
 		this.optimizeData(data);
 	}
 }
 
-Mixin(TextChannel, [
+Mixin(TextChannelImpl, [
 	TextChannelMixin,
 	ChannelParentMixin,
 	ChannelPermissionMixin,
@@ -41,3 +25,21 @@ Mixin(TextChannel, [
 	ChannelSlowmodeMixin,
 	ChannelTopicMixin,
 ]);
+
+export interface TextChannel<Omitted extends keyof APITextChannel | '' = ''>
+	extends TextChannelImpl<Omitted>,
+		MixinTypes<
+			Channel<ChannelType.GuildText>,
+			[
+				TextChannelMixin<ChannelType.GuildText>,
+				ChannelParentMixin<ChannelType.GuildText>,
+				ChannelPermissionMixin<ChannelType.GuildText>,
+				ChannelPinMixin<ChannelType.GuildText>,
+				ChannelSlowmodeMixin<ChannelType.GuildText>,
+				ChannelTopicMixin<ChannelType.GuildText>,
+			]
+		> {}
+
+export const TextChannel: {
+	new <Omitted extends keyof APITextChannel | '' = ''>(data: Partialize<APITextChannel, Omitted>): TextChannel<Omitted>;
+} = TextChannelImpl as any;

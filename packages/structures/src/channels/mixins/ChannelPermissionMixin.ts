@@ -12,7 +12,7 @@ export interface ChannelPermissionMixin<
 /**
  * @remarks has an array of sub-structures {@link PermissionOverwrite} that extending mixins should add to their DataTemplate and _optimizeData
  */
-export class ChannelPermissionMixin<
+export class ChannelPermissionMixinImpl<
 	_Type extends Exclude<GuildChannelType, ChannelType.GuildDirectory | ThreadChannelType> = Exclude<
 		GuildChannelType,
 		ChannelType.GuildDirectory | ThreadChannelType
@@ -22,7 +22,7 @@ export class ChannelPermissionMixin<
 	 * The sorting position of the channel
 	 */
 	public get position() {
-		return this[kData].position;
+		return (this as any)[kData].position;
 	}
 
 	/**
@@ -32,3 +32,5 @@ export class ChannelPermissionMixin<
 		return true;
 	}
 }
+
+export const ChannelPermissionMixin: typeof ChannelPermissionMixinImpl = ChannelPermissionMixinImpl as any;

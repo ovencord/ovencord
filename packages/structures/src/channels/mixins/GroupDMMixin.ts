@@ -4,25 +4,27 @@ import type { Channel } from '../Channel.js';
 
 export interface GroupDMMixin extends Channel<ChannelType.GroupDM> {}
 
-export class GroupDMMixin {
+export class GroupDMMixinImpl {
 	/**
 	 * The icon hash of the group DM.
 	 */
 	public get icon() {
-		return this[kData].icon;
+		return (this as any)[kData].icon;
 	}
 
 	/**
 	 * Whether the channel is managed by an application via the `gdm.join` OAuth2 scope.
 	 */
 	public get managed() {
-		return this[kData].managed;
+		return (this as any)[kData].managed;
 	}
 
 	/**
 	 * The application id of the group DM creator if it is bot-created.
 	 */
 	public get applicationId() {
-		return this[kData].application_id;
+		return (this as any)[kData].application_id;
 	}
 }
+
+export const GroupDMMixin: typeof GroupDMMixinImpl = GroupDMMixinImpl as any;

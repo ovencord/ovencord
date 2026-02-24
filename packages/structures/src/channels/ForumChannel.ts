@@ -9,21 +9,7 @@ import { ChannelPermissionMixin } from './mixins/ChannelPermissionMixin.js';
 import { ChannelTopicMixin } from './mixins/ChannelTopicMixin.js';
 import { ThreadOnlyChannelMixin } from './mixins/ThreadOnlyChannelMixin.js';
 
-export interface ForumChannel<_Omitted extends keyof APIGuildForumChannel | '' = ''>
-	extends MixinTypes<
-		Channel<ChannelType.GuildForum>,
-		[
-			ChannelParentMixin<ChannelType.GuildForum>,
-			ChannelPermissionMixin<ChannelType.GuildForum>,
-			ChannelTopicMixin<ChannelType.GuildForum>,
-			ThreadOnlyChannelMixin<ChannelType.GuildForum>,
-		]
-	> {}
-
-/**
- * Sample Implementation of a structure for forum channels, usable by direct end consumers.
- */
-export class ForumChannel<Omitted extends keyof APIGuildForumChannel | '' = ''> extends Channel<
+class ForumChannelImpl<Omitted extends keyof APIGuildForumChannel | '' = ''> extends Channel<
 	ChannelType.GuildForum,
 	Omitted
 > {
@@ -41,4 +27,22 @@ export class ForumChannel<Omitted extends keyof APIGuildForumChannel | '' = ''> 
 	}
 }
 
-Mixin(ForumChannel, [ChannelParentMixin, ChannelPermissionMixin, ChannelTopicMixin, ThreadOnlyChannelMixin]);
+Mixin(ForumChannelImpl, [ChannelParentMixin, ChannelPermissionMixin, ChannelTopicMixin, ThreadOnlyChannelMixin]);
+
+export interface ForumChannel<Omitted extends keyof APIGuildForumChannel | '' = ''>
+	extends ForumChannelImpl<Omitted>,
+		MixinTypes<
+			Channel<ChannelType.GuildForum>,
+			[
+				ChannelParentMixin<ChannelType.GuildForum>,
+				ChannelPermissionMixin<ChannelType.GuildForum>,
+				ChannelTopicMixin<ChannelType.GuildForum>,
+				ThreadOnlyChannelMixin<ChannelType.GuildForum>,
+			]
+		> {}
+
+export const ForumChannel: {
+	new <Omitted extends keyof APIGuildForumChannel | '' = ''>(
+		data: Partialize<APIGuildForumChannel, Omitted>,
+	): ForumChannel<Omitted>;
+} = ForumChannelImpl as any;

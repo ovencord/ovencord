@@ -8,21 +8,22 @@ import { ChannelPermissionMixin } from './mixins/ChannelPermissionMixin.js';
 import { ChannelTopicMixin } from './mixins/ChannelTopicMixin.js';
 import { ThreadOnlyChannelMixin } from './mixins/ThreadOnlyChannelMixin.js';
 
-export interface MediaChannel<_Omitted extends keyof APIGuildMediaChannel | '' = ''>
-	extends MixinTypes<
-		Channel<ChannelType.GuildMedia>,
-		[
-			ChannelParentMixin<ChannelType.GuildMedia>,
-			ChannelPermissionMixin<ChannelType.GuildMedia>,
-			ChannelTopicMixin<ChannelType.GuildMedia>,
-			ThreadOnlyChannelMixin<ChannelType.GuildMedia>,
-		]
-	> {}
+export interface MediaChannel<Omitted extends keyof APIGuildMediaChannel | '' = ''>
+	extends MediaChannelImpl<Omitted>,
+		MixinTypes<
+			Channel<ChannelType.GuildMedia>,
+			[
+				ChannelParentMixin<ChannelType.GuildMedia>,
+				ChannelPermissionMixin<ChannelType.GuildMedia>,
+				ChannelTopicMixin<ChannelType.GuildMedia>,
+				ThreadOnlyChannelMixin<ChannelType.GuildMedia>,
+			]
+		> {}
 
 /**
  * Sample Implementation of a structure for media channels, usable by direct end consumers.
  */
-export class MediaChannel<Omitted extends keyof APIGuildMediaChannel | '' = ''> extends Channel<
+class MediaChannelImpl<Omitted extends keyof APIGuildMediaChannel | '' = ''> extends Channel<
 	ChannelType.GuildMedia,
 	Omitted
 > {
@@ -32,4 +33,10 @@ export class MediaChannel<Omitted extends keyof APIGuildMediaChannel | '' = ''> 
 	}
 }
 
-Mixin(MediaChannel, [ChannelParentMixin, ChannelPermissionMixin, ChannelTopicMixin, ThreadOnlyChannelMixin]);
+Mixin(MediaChannelImpl, [ChannelParentMixin, ChannelPermissionMixin, ChannelTopicMixin, ThreadOnlyChannelMixin]);
+
+export const MediaChannel: {
+	new <Omitted extends keyof APIGuildMediaChannel | '' = ''>(
+		data: Partialize<APIGuildMediaChannel, Omitted>,
+	): MediaChannel<Omitted>;
+} = MediaChannelImpl as any;

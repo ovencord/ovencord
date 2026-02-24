@@ -5,7 +5,7 @@ export class GuildRoleDeleteAction extends Action {
 	override handle(data: any) {
 		const client = this.client;
 		const guild = client.guilds.cache.get(data.guild_id);
-		let role;
+		let role: any;
 
 		if (guild) {
 			role = guild.roles.cache.get(data.role_id);

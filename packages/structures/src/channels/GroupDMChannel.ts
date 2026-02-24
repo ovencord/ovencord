@@ -8,21 +8,7 @@ import { DMChannelMixin } from './mixins/DMChannelMixin.js';
 import { GroupDMMixin } from './mixins/GroupDMMixin.js';
 import { TextChannelMixin } from './mixins/TextChannelMixin.js';
 
-export interface GroupDMChannel<_Omitted extends keyof APIGroupDMChannel | '' = ''>
-	extends MixinTypes<
-		Channel<ChannelType.GroupDM>,
-		[
-			DMChannelMixin<ChannelType.GroupDM>,
-			TextChannelMixin<ChannelType.GroupDM>,
-			ChannelOwnerMixin<ChannelType.GroupDM>,
-			GroupDMMixin,
-		]
-	> {}
-
-/**
- * Sample Implementation of a structure for group dm channels, usable by direct end consumers.
- */
-export class GroupDMChannel<Omitted extends keyof APIGroupDMChannel | '' = ''> extends Channel<
+class GroupDMChannelImpl<Omitted extends keyof APIGroupDMChannel | '' = ''> extends Channel<
 	ChannelType.GroupDM,
 	Omitted
 > {
@@ -32,4 +18,22 @@ export class GroupDMChannel<Omitted extends keyof APIGroupDMChannel | '' = ''> e
 	}
 }
 
-Mixin(GroupDMChannel, [DMChannelMixin, TextChannelMixin, ChannelOwnerMixin, GroupDMMixin]);
+Mixin(GroupDMChannelImpl, [DMChannelMixin, TextChannelMixin, ChannelOwnerMixin, GroupDMMixin]);
+
+export interface GroupDMChannel<Omitted extends keyof APIGroupDMChannel | '' = ''>
+	extends GroupDMChannelImpl<Omitted>,
+		MixinTypes<
+			Channel<ChannelType.GroupDM>,
+			[
+				DMChannelMixin<ChannelType.GroupDM>,
+				TextChannelMixin<ChannelType.GroupDM>,
+				ChannelOwnerMixin<ChannelType.GroupDM>,
+				GroupDMMixin,
+			]
+		> {}
+
+export const GroupDMChannel: {
+	new <Omitted extends keyof APIGroupDMChannel | '' = ''>(
+		data: Partialize<APIGroupDMChannel, Omitted>,
+	): GroupDMChannel<Omitted>;
+} = GroupDMChannelImpl as any;

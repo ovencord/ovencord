@@ -7,15 +7,6 @@ export type ReadonlyCollection<Key, Value> = Omit<
 > &
 	ReadonlyMap<Key, Value>;
 
-export interface Collection<Key, Value> {
-	/**
-	 * Ambient declaration to allow references to `this.constructor` in class methods.
-	 *
-	 * @internal
-	 */
-	constructor: typeof Collection;
-}
-
 /**
  * A Map with additional utility methods. This is used throughout discord.js rather than Arrays for anything that has
  * an ID, for significantly improved performance and ease-of-use.
@@ -436,7 +427,7 @@ export class Collection<Key, Value> extends Map<Key, Value> {
 	public filter(fn: (value: Value, key: Key, collection: this) => unknown, thisArg?: unknown): Collection<Key, Value> {
 		if (typeof fn !== 'function') throw new TypeError(`${fn} is not a function`);
 		if (thisArg !== undefined) fn = fn.bind(thisArg);
-		const results = new this.constructor[Symbol.species]<Key, Value>();
+		const results = new (this.constructor as typeof Collection)[Symbol.species]<Key, Value>();
 		for (const { 0: key, 1: value } of this) {
 			if (fn(value, key, this)) results.set(key, value);
 		}
@@ -483,8 +474,8 @@ export class Collection<Key, Value> extends Map<Key, Value> {
 		if (typeof fn !== 'function') throw new TypeError(`${fn} is not a function`);
 		if (thisArg !== undefined) fn = fn.bind(thisArg);
 		const results: [Collection<Key, Value>, Collection<Key, Value>] = [
-			new this.constructor[Symbol.species]<Key, Value>(),
-			new this.constructor[Symbol.species]<Key, Value>(),
+			new (this.constructor as typeof Collection)[Symbol.species]<Key, Value>(),
+			new (this.constructor as typeof Collection)[Symbol.species]<Key, Value>(),
 		];
 		for (const { 0: key, 1: value } of this) {
 			if (fn(value, key, this)) {
@@ -520,7 +511,7 @@ export class Collection<Key, Value> extends Map<Key, Value> {
 		thisArg?: unknown,
 	): Collection<Key, NewValue> {
 		const collections = this.map(fn, thisArg);
-		return new this.constructor[Symbol.species]<Key, NewValue>().concat(...collections);
+		return new (this.constructor as typeof Collection)[Symbol.species]<Key, NewValue>().concat(...collections);
 	}
 
 	/**
@@ -574,7 +565,7 @@ export class Collection<Key, Value> extends Map<Key, Value> {
 	): Collection<Key, NewValue> {
 		if (typeof fn !== 'function') throw new TypeError(`${fn} is not a function`);
 		if (thisArg !== undefined) fn = fn.bind(thisArg);
-		const coll = new this.constructor[Symbol.species]<Key, NewValue>();
+		const coll = new (this.constructor as typeof Collection)[Symbol.species]<Key, NewValue>();
 		for (const { 0: key, 1: value } of this) coll.set(key, fn(value, key, this));
 		return coll;
 	}
@@ -781,7 +772,7 @@ export class Collection<Key, Value> extends Map<Key, Value> {
 	 * ```
 	 */
 	public clone(): Collection<Key, Value> {
-		return new this.constructor[Symbol.species](this);
+		return new (this.constructor as typeof Collection)[Symbol.species](this);
 	}
 
 	/**
@@ -868,7 +859,7 @@ export class Collection<Key, Value> extends Map<Key, Value> {
 	 * ```
 	 */
 	public intersection(other: ReadonlyCollection<Key, any>): Collection<Key, Value> {
-		const coll = new this.constructor[Symbol.species]<Key, Value>();
+		const coll = new (this.constructor as typeof Collection)[Symbol.species]<Key, Value>();
 
 		for (const { 0: key, 1: value } of this) {
 			if (other.has(key)) coll.set(key, value);
@@ -894,7 +885,7 @@ export class Collection<Key, Value> extends Map<Key, Value> {
 	 * ```
 	 */
 	public union<OtherValue>(other: ReadonlyCollection<Key, OtherValue>): Collection<Key, OtherValue | Value> {
-		const coll = new this.constructor[Symbol.species]<Key, OtherValue | Value>(this);
+		const coll = new (this.constructor as typeof Collection)[Symbol.species]<Key, OtherValue | Value>(this);
 
 		for (const { 0: key, 1: value } of other) {
 			if (!coll.has(key)) coll.set(key, value);
@@ -918,7 +909,7 @@ export class Collection<Key, Value> extends Map<Key, Value> {
 	 * ```
 	 */
 	public difference(other: ReadonlyCollection<Key, any>): Collection<Key, Value> {
-		const coll = new this.constructor[Symbol.species]<Key, Value>();
+		const coll = new (this.constructor as typeof Collection)[Symbol.species]<Key, Value>();
 
 		for (const { 0: key, 1: value } of this) {
 			if (!other.has(key)) coll.set(key, value);
@@ -943,7 +934,7 @@ export class Collection<Key, Value> extends Map<Key, Value> {
 	public symmetricDifference<OtherValue>(
 		other: ReadonlyCollection<Key, OtherValue>,
 	): Collection<Key, OtherValue | Value> {
-		const coll = new this.constructor[Symbol.species]<Key, OtherValue | Value>();
+		const coll = new (this.constructor as typeof Collection)[Symbol.species]<Key, OtherValue | Value>();
 
 		for (const { 0: key, 1: value } of this) {
 			if (!other.has(key)) coll.set(key, value);
@@ -990,7 +981,7 @@ export class Collection<Key, Value> extends Map<Key, Value> {
 		whenInOther: (valueOther: OtherValue, key: Key) => Keep<ResultValue>,
 		whenInBoth: (value: Value, valueOther: OtherValue, key: Key) => Keep<ResultValue>,
 	): Collection<Key, ResultValue> {
-		const coll = new this.constructor[Symbol.species]<Key, ResultValue>();
+		const coll = new (this.constructor as typeof Collection)[Symbol.species]<Key, ResultValue>();
 		const keys = new Set([...this.keys(), ...other.keys()]);
 
 		for (const key of keys) {
@@ -1019,7 +1010,7 @@ export class Collection<Key, Value> extends Map<Key, Value> {
 	 * but returns a Collection instead of an Array.
 	 */
 	public toReversed() {
-		return new this.constructor[Symbol.species](this).reverse();
+		return new (this.constructor as typeof Collection)[Symbol.species](this).reverse();
 	}
 
 	/**
@@ -1035,7 +1026,7 @@ export class Collection<Key, Value> extends Map<Key, Value> {
 	 * ```
 	 */
 	public toSorted(compareFunction: Comparator<Key, Value> = Collection.defaultSort): Collection<Key, Value> {
-		return new this.constructor[Symbol.species](this).sort(compareFunction);
+		return new (this.constructor as typeof Collection)[Symbol.species](this).sort(compareFunction);
 	}
 
 	public toJSON() {

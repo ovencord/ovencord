@@ -9,14 +9,14 @@ export interface ThreadOnlyChannelMixin<
 /**
  * @remarks has an array of sub-structures {@link ForumTag} that extending mixins should add to their DataTemplate and _optimizeData
  */
-export class ThreadOnlyChannelMixin<
+export class ThreadOnlyChannelMixinImpl<
 	_Type extends ChannelType.GuildForum | ChannelType.GuildMedia = ChannelType.GuildForum | ChannelType.GuildMedia,
 > {
 	/**
 	 * The emoji to show in the add reaction button on a thread in this channel.
 	 */
 	public get defaultReactionEmoji() {
-		return this[kData].default_reaction_emoji;
+		return (this as any)[kData].default_reaction_emoji;
 	}
 
 	/**
@@ -25,7 +25,7 @@ export class ThreadOnlyChannelMixin<
 	 * @defaultValue `null` – indicates a preferred sort order hasn't been set.
 	 */
 	public get defaultSortOrder() {
-		return this[kData].default_sort_order!;
+		return (this as any)[kData].default_sort_order!;
 	}
 
 	/**
@@ -35,3 +35,5 @@ export class ThreadOnlyChannelMixin<
 		return true;
 	}
 }
+
+export const ThreadOnlyChannelMixin: typeof ThreadOnlyChannelMixinImpl = ThreadOnlyChannelMixinImpl as any;

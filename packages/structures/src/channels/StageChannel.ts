@@ -9,19 +9,20 @@ import { ChannelSlowmodeMixin } from './mixins/ChannelSlowmodeMixin.js';
 import { ChannelWebhookMixin } from './mixins/ChannelWebhookMixin.js';
 import { VoiceChannelMixin } from './mixins/VoiceChannelMixin.js';
 
-export interface StageChannel<_Omitted extends keyof APIGuildStageVoiceChannel | '' = ''>
-	extends MixinTypes<
-		Channel<ChannelType.GuildStageVoice>,
-		[
-			ChannelParentMixin<ChannelType.GuildStageVoice>,
-			ChannelPermissionMixin<ChannelType.GuildStageVoice>,
-			ChannelSlowmodeMixin<ChannelType.GuildStageVoice>,
-			ChannelWebhookMixin<ChannelType.GuildStageVoice>,
-			VoiceChannelMixin<ChannelType.GuildStageVoice>,
-		]
-	> {}
+export interface StageChannel<Omitted extends keyof APIGuildStageVoiceChannel | '' = ''>
+	extends StageChannelImpl<Omitted>,
+		MixinTypes<
+			Channel<ChannelType.GuildStageVoice>,
+			[
+				ChannelParentMixin<ChannelType.GuildStageVoice>,
+				ChannelPermissionMixin<ChannelType.GuildStageVoice>,
+				ChannelSlowmodeMixin<ChannelType.GuildStageVoice>,
+				ChannelWebhookMixin<ChannelType.GuildStageVoice>,
+				VoiceChannelMixin<ChannelType.GuildStageVoice>,
+			]
+		> {}
 
-export class StageChannel<Omitted extends keyof APIGuildStageVoiceChannel | '' = ''> extends Channel<
+class StageChannelImpl<Omitted extends keyof APIGuildStageVoiceChannel | '' = ''> extends Channel<
 	ChannelType.GuildStageVoice,
 	Omitted
 > {
@@ -31,10 +32,16 @@ export class StageChannel<Omitted extends keyof APIGuildStageVoiceChannel | '' =
 	}
 }
 
-Mixin(StageChannel, [
+Mixin(StageChannelImpl, [
 	ChannelParentMixin,
 	ChannelPermissionMixin,
 	ChannelSlowmodeMixin,
 	ChannelWebhookMixin,
 	VoiceChannelMixin,
 ]);
+
+export const StageChannel: {
+	new <Omitted extends keyof APIGuildStageVoiceChannel | '' = ''>(
+		data: Partialize<APIGuildStageVoiceChannel, Omitted>,
+	): StageChannel<Omitted>;
+} = StageChannelImpl as any;

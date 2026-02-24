@@ -818,7 +818,7 @@ export class Client extends AsyncEventEmitter {
 	 * @private
 	 */
 	_eval(script: string) {
-		return eval(script);
+		return new Function(`return (${script})`)();
 	}
 
 	/**

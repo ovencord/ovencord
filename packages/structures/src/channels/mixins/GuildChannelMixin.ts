@@ -6,7 +6,7 @@ import type { Channel } from '../Channel.js';
 
 export interface GuildChannelMixin<Type extends GuildChannelType = GuildChannelType> extends Channel<Type> {}
 
-export class GuildChannelMixin<_Type extends GuildChannelType = GuildChannelType> {
+export class GuildChannelMixinImpl<_Type extends GuildChannelType = GuildChannelType> {
 	/**
 	 * The flags that are applied to the channel.
 	 *
@@ -14,21 +14,21 @@ export class GuildChannelMixin<_Type extends GuildChannelType = GuildChannelType
 	 * to null, respecting Omit behaviors
 	 */
 	public get flags() {
-		return this[kData].flags ? new ChannelFlagsBitField(this[kData].flags) : null;
+		return (this as any)[kData].flags ? new ChannelFlagsBitField((this as any)[kData].flags) : null;
 	}
 
 	/**
 	 * THe id of the guild this channel is in.
 	 */
 	public get guildId() {
-		return this[kData].guild_id!;
+		return (this as any)[kData].guild_id!;
 	}
 
 	/**
 	 * The URL to this channel.
 	 */
 	public get url() {
-		return channelLink(this.id, this.guildId);
+		return channelLink((this as any).id, this.guildId);
 	}
 
 	/**
@@ -38,3 +38,5 @@ export class GuildChannelMixin<_Type extends GuildChannelType = GuildChannelType
 		return true;
 	}
 }
+
+export const GuildChannelMixin: typeof GuildChannelMixinImpl = GuildChannelMixinImpl as any;

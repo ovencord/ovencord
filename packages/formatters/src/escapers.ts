@@ -131,7 +131,7 @@ export function escapeMarkdown(text: string, options: EscapeMarkdownOptions = {}
 		spoiler = true,
 		codeBlockContent = true,
 		inlineCodeContent = true,
-		escape = true,
+		escape: shouldEscape = true,
 		heading = true,
 		bulletedList = true,
 		numberedList = true,
@@ -153,7 +153,7 @@ export function escapeMarkdown(text: string, options: EscapeMarkdownOptions = {}
 					strikethrough,
 					spoiler,
 					inlineCodeContent,
-					escape,
+					escape: shouldEscape,
 					heading,
 					bulletedList,
 					numberedList,
@@ -177,7 +177,7 @@ export function escapeMarkdown(text: string, options: EscapeMarkdownOptions = {}
 					underline,
 					strikethrough,
 					spoiler,
-					escape,
+					escape: shouldEscape,
 					heading,
 					bulletedList,
 					numberedList,
@@ -190,7 +190,7 @@ export function escapeMarkdown(text: string, options: EscapeMarkdownOptions = {}
 	}
 
 	let res = text;
-	if (escape) res = escapeEscape(res);
+	if (shouldEscape) res = escapeEscape(res);
 	if (inlineCode) res = escapeInlineCode(res);
 	if (codeBlock) res = escapeCodeBlock(res);
 	if (italic) res = escapeItalic(res);

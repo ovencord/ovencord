@@ -10,23 +10,24 @@ import { ChannelSlowmodeMixin } from './mixins/ChannelSlowmodeMixin.js';
 import { TextChannelMixin } from './mixins/TextChannelMixin.js';
 import { ThreadChannelMixin } from './mixins/ThreadChannelMixin.js';
 
-export interface PrivateThreadChannel<_Omitted extends keyof APIPrivateThreadChannel | '' = ''>
-	extends MixinTypes<
-		Channel<ChannelType.PrivateThread>,
-		[
-			TextChannelMixin<ChannelType.PrivateThread>,
-			ChannelOwnerMixin<ChannelType.PrivateThread>,
-			ChannelParentMixin<ChannelType.PrivateThread>,
-			ChannelPinMixin<ChannelType.PrivateThread>,
-			ChannelSlowmodeMixin<ChannelType.PrivateThread>,
-			ThreadChannelMixin<ChannelType.PrivateThread>,
-		]
-	> {}
+export interface PrivateThreadChannel<Omitted extends keyof APIPrivateThreadChannel | '' = ''>
+	extends PrivateThreadChannelImpl<Omitted>,
+		MixinTypes<
+			Channel<ChannelType.PrivateThread>,
+			[
+				TextChannelMixin<ChannelType.PrivateThread>,
+				ChannelOwnerMixin<ChannelType.PrivateThread>,
+				ChannelParentMixin<ChannelType.PrivateThread>,
+				ChannelPinMixin<ChannelType.PrivateThread>,
+				ChannelSlowmodeMixin<ChannelType.PrivateThread>,
+				ThreadChannelMixin<ChannelType.PrivateThread>,
+			]
+		> {}
 
 /**
  * Sample Implementation of a structure for private thread channels, usable by direct end consumers.
  */
-export class PrivateThreadChannel<Omitted extends keyof APIPrivateThreadChannel | '' = ''> extends Channel<
+class PrivateThreadChannelImpl<Omitted extends keyof APIPrivateThreadChannel | '' = ''> extends Channel<
 	ChannelType.PrivateThread,
 	Omitted
 > {
@@ -36,7 +37,7 @@ export class PrivateThreadChannel<Omitted extends keyof APIPrivateThreadChannel 
 	}
 }
 
-Mixin(PrivateThreadChannel, [
+Mixin(PrivateThreadChannelImpl, [
 	TextChannelMixin,
 	ChannelOwnerMixin,
 	ChannelParentMixin,
@@ -44,3 +45,9 @@ Mixin(PrivateThreadChannel, [
 	ChannelSlowmodeMixin,
 	ThreadChannelMixin,
 ]);
+
+export const PrivateThreadChannel: {
+	new <Omitted extends keyof APIPrivateThreadChannel | '' = ''>(
+		data: Partialize<APIPrivateThreadChannel, Omitted>,
+	): PrivateThreadChannel<Omitted>;
+} = PrivateThreadChannelImpl as any;

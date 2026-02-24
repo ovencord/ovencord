@@ -1,7 +1,7 @@
 import type { ChannelType } from 'discord-api-types/v10';
 import { kData } from '../../utils/symbols.js';
 import type { Channel } from '../Channel.js';
-import { TextChannelMixin } from './TextChannelMixin.js';
+import { TextChannelMixin, TextChannelMixinImpl } from './TextChannelMixin.js';
 
 export interface VoiceChannelMixin<
 	Type extends ChannelType.GuildStageVoice | ChannelType.GuildVoice =
@@ -9,37 +9,37 @@ export interface VoiceChannelMixin<
 		| ChannelType.GuildVoice,
 > extends Channel<Type> {}
 
-export class VoiceChannelMixin<
+export class VoiceChannelMixinImpl<
 	Type extends ChannelType.GuildStageVoice | ChannelType.GuildVoice =
 		| ChannelType.GuildStageVoice
 		| ChannelType.GuildVoice,
-> extends TextChannelMixin<Type> {
+> extends TextChannelMixinImpl<Type> {
 	/**
 	 * The bitrate (in bits) of the voice channel.
 	 */
 	public get bitrate() {
-		return this[kData].bitrate!;
+		return (this as any)[kData].bitrate!;
 	}
 
 	/**
 	 * The voice region id for this channel, automatic when set to null.
 	 */
 	public get rtcRegion() {
-		return this[kData].rtc_region!;
+		return (this as any)[kData].rtc_region!;
 	}
 
 	/**
 	 * The camera video quality mode of the voice channel, {@link discord-api-types/v10#(VideoQualityMode:enum) | Auto} when not present.
 	 */
 	public get videoQualityMode() {
-		return this[kData].video_quality_mode!;
+		return (this as any)[kData].video_quality_mode!;
 	}
 
 	/**
 	 * The user limit of the voice channel.
 	 */
 	public get userLimit() {
-		return this[kData].user_limit!;
+		return (this as any)[kData].user_limit!;
 	}
 
 	/**
@@ -49,3 +49,5 @@ export class VoiceChannelMixin<
 		return true;
 	}
 }
+
+export const VoiceChannelMixin: typeof VoiceChannelMixinImpl = VoiceChannelMixinImpl as any;

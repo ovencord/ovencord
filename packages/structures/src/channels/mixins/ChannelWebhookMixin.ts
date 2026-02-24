@@ -8,7 +8,7 @@ export interface ChannelWebhookMixin<
 		| Exclude<GuildTextChannelType, ThreadChannelType>,
 > extends Channel<Type> {}
 
-export class ChannelWebhookMixin<
+export class ChannelWebhookMixinImpl<
 	_Type extends ChannelType.GuildForum | ChannelType.GuildMedia | Exclude<GuildTextChannelType, ThreadChannelType> =
 		| ChannelType.GuildForum
 		| ChannelType.GuildMedia
@@ -21,3 +21,5 @@ export class ChannelWebhookMixin<
 		return true;
 	}
 }
+
+export const ChannelWebhookMixin: typeof ChannelWebhookMixinImpl = ChannelWebhookMixinImpl as any;

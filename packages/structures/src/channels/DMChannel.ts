@@ -7,20 +7,22 @@ import { ChannelPinMixin } from './mixins/ChannelPinMixin.js';
 import { DMChannelMixin } from './mixins/DMChannelMixin.js';
 import { TextChannelMixin } from './mixins/TextChannelMixin.js';
 
-export interface DMChannel<_Omitted extends keyof APIDMChannel | '' = ''>
-	extends MixinTypes<
-		Channel<ChannelType.DM>,
-		[DMChannelMixin<ChannelType.DM>, TextChannelMixin<ChannelType.DM>, ChannelPinMixin<ChannelType.DM>]
-	> {}
-
-/**
- * Sample Implementation of a structure for dm channels, usable by direct end consumers.
- */
-export class DMChannel<Omitted extends keyof APIDMChannel | '' = ''> extends Channel<ChannelType.DM, Omitted> {
+class DMChannelImpl<Omitted extends keyof APIDMChannel | '' = ''> extends Channel<ChannelType.DM, Omitted> {
 	public constructor(data: Partialize<APIDMChannel, Omitted>) {
 		super(data);
 		this.optimizeData(data);
 	}
 }
 
-Mixin(DMChannel, [DMChannelMixin, TextChannelMixin, ChannelPinMixin]);
+Mixin(DMChannelImpl, [DMChannelMixin, TextChannelMixin, ChannelPinMixin]);
+
+export interface DMChannel<Omitted extends keyof APIDMChannel | '' = ''>
+	extends DMChannelImpl<Omitted>,
+		MixinTypes<
+			Channel<ChannelType.DM>,
+			[DMChannelMixin<ChannelType.DM>, TextChannelMixin<ChannelType.DM>, ChannelPinMixin<ChannelType.DM>]
+		> {}
+
+export const DMChannel: {
+	new <Omitted extends keyof APIDMChannel | '' = ''>(data: Partialize<APIDMChannel, Omitted>): DMChannel<Omitted>;
+} = DMChannelImpl as any;

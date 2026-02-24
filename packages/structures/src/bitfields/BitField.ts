@@ -35,13 +35,11 @@ export abstract class BitField<Flags extends string> {
 	 */
 	public bitField: bigint;
 
-	public declare constructor: NonAbstract<typeof BitField<Flags>>;
-
 	/**
 	 * @param bits - Bit(s) to read from
 	 */
-	public constructor(bits: BitFieldResolvable<Flags> = this.constructor.DefaultBit) {
-		this.bitField = this.constructor.resolve(bits);
+	public constructor(bits: BitFieldResolvable<Flags> = (this.constructor as any).DefaultBit) {
+		this.bitField = (this.constructor as any).resolve(bits);
 	}
 
 	/**
@@ -51,7 +49,10 @@ export abstract class BitField<Flags extends string> {
 	 * @returns Whether the bit field has the bit(s)
 	 */
 	public any(bit: BitFieldResolvable<Flags>) {
-		return (this.bitField & this.constructor.resolve(bit)) !== this.constructor.DefaultBit;
+		return (
+			(this.bitField & (this.constructor as unknown as typeof BitField).resolve(bit)) !==
+			(this.constructor as unknown as typeof BitField).DefaultBit
+		);
 	}
 
 	/**
@@ -61,7 +62,7 @@ export abstract class BitField<Flags extends string> {
 	 * @returns Whether this bit field equals the other
 	 */
 	public equals(bit: BitFieldResolvable<Flags>) {
-		return this.bitField === this.constructor.resolve(bit);
+		return this.bitField === (this.constructor as unknown as typeof BitField).resolve(bit);
 	}
 
 	/**
@@ -71,7 +72,7 @@ export abstract class BitField<Flags extends string> {
 	 * @returns Whether the bit field has the bit(s)
 	 */
 	public has(bit: BitFieldResolvable<Flags>, ..._hasParams: unknown[]) {
-		const resolvedBit = this.constructor.resolve(bit);
+		const resolvedBit = (this.constructor as unknown as typeof BitField).resolve(bit);
 		return (this.bitField & resolvedBit) === resolvedBit;
 	}
 
@@ -83,7 +84,7 @@ export abstract class BitField<Flags extends string> {
 	 * @returns A bit field containing the missing bits
 	 */
 	public missing(bits: BitFieldResolvable<Flags>, ...hasParams: readonly unknown[]) {
-		return new this.constructor(bits).remove(this).toArray(...hasParams);
+		return new (this.constructor as any)(bits).remove(this).toArray(...hasParams);
 	}
 
 	/**
@@ -102,12 +103,12 @@ export abstract class BitField<Flags extends string> {
 	 * @returns These bits or new BitField if the instance is frozen.
 	 */
 	public add(...bits: BitFieldResolvable<Flags>[]) {
-		let total = this.constructor.DefaultBit;
+		let total = (this.constructor as unknown as typeof BitField).DefaultBit;
 		for (const bit of bits) {
-			total |= this.constructor.resolve(bit);
+			total |= (this.constructor as unknown as typeof BitField).resolve(bit);
 		}
 
-		if (Object.isFrozen(this)) return new this.constructor(this.bitField | total);
+		if (Object.isFrozen(this)) return new (this.constructor as any)(this.bitField | total);
 		this.bitField |= total;
 		return this;
 	}
@@ -119,12 +120,12 @@ export abstract class BitField<Flags extends string> {
 	 * @returns These bits or new BitField if the instance is frozen.
 	 */
 	public remove(...bits: BitFieldResolvable<Flags>[]) {
-		let total = this.constructor.DefaultBit;
+		let total = (this.constructor as unknown as typeof BitField).DefaultBit;
 		for (const bit of bits) {
-			total |= this.constructor.resolve(bit);
+			total |= (this.constructor as unknown as typeof BitField).resolve(bit);
 		}
 
-		if (Object.isFrozen(this)) return new this.constructor(this.bitField & ~total);
+		if (Object.isFrozen(this)) return new (this.constructor as any)(this.bitField & ~total);
 		this.bitField &= ~total;
 		return this;
 	}
@@ -137,7 +138,7 @@ export abstract class BitField<Flags extends string> {
 	 */
 	public serialize(...hasParams: readonly unknown[]) {
 		const serialized: Partial<Record<keyof Flags, boolean>> = {};
-		for (const [flag, bit] of Object.entries(this.constructor.Flags)) {
+		for (const [flag, bit] of Object.entries((this.constructor as unknown as typeof BitField).Flags)) {
 			if (Number.isNaN(Number(flag))) serialized[flag as keyof Flags] = this.has(bit as bigint | number, ...hasParams);
 		}
 
@@ -173,7 +174,7 @@ export abstract class BitField<Flags extends string> {
 	}
 
 	public *[Symbol.iterator](...hasParams: unknown[]) {
-		for (const bitName of Object.keys(this.constructor.Flags)) {
+		for (const bitName of Object.keys((this.constructor as unknown as typeof BitField).Flags)) {
 			if (Number.isNaN(Number(bitName)) && this.has(bitName as Flags, ...hasParams)) yield bitName as Flags;
 		}
 	}

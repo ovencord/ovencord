@@ -10,23 +10,7 @@ import { ChannelSlowmodeMixin } from './mixins/ChannelSlowmodeMixin.js';
 import { ChannelTopicMixin } from './mixins/ChannelTopicMixin.js';
 import { TextChannelMixin } from './mixins/TextChannelMixin.js';
 
-export interface AnnouncementChannel<_Omitted extends keyof APINewsChannel | '' = ''>
-	extends MixinTypes<
-		Channel<ChannelType.GuildAnnouncement>,
-		[
-			TextChannelMixin<ChannelType.GuildAnnouncement>,
-			ChannelParentMixin<ChannelType.GuildAnnouncement>,
-			ChannelPermissionMixin<ChannelType.GuildAnnouncement>,
-			ChannelPinMixin<ChannelType.GuildAnnouncement>,
-			ChannelSlowmodeMixin<ChannelType.GuildAnnouncement>,
-			ChannelTopicMixin<ChannelType.GuildAnnouncement>,
-		]
-	> {}
-
-/**
- * Sample Implementation of a structure for announcement channels, usable by direct end consumers.
- */
-export class AnnouncementChannel<Omitted extends keyof APINewsChannel | '' = ''> extends Channel<
+class AnnouncementChannelImpl<Omitted extends keyof APINewsChannel | '' = ''> extends Channel<
 	ChannelType.GuildAnnouncement,
 	Omitted
 > {
@@ -36,7 +20,7 @@ export class AnnouncementChannel<Omitted extends keyof APINewsChannel | '' = ''>
 	}
 }
 
-Mixin(AnnouncementChannel, [
+Mixin(AnnouncementChannelImpl, [
 	TextChannelMixin,
 	ChannelParentMixin,
 	ChannelPermissionMixin,
@@ -44,3 +28,23 @@ Mixin(AnnouncementChannel, [
 	ChannelSlowmodeMixin,
 	ChannelTopicMixin,
 ]);
+
+export interface AnnouncementChannel<Omitted extends keyof APINewsChannel | '' = ''>
+	extends AnnouncementChannelImpl<Omitted>,
+		MixinTypes<
+			Channel<ChannelType.GuildAnnouncement>,
+			[
+				TextChannelMixin<ChannelType.GuildAnnouncement>,
+				ChannelParentMixin<ChannelType.GuildAnnouncement>,
+				ChannelPermissionMixin<ChannelType.GuildAnnouncement>,
+				ChannelPinMixin<ChannelType.GuildAnnouncement>,
+				ChannelSlowmodeMixin<ChannelType.GuildAnnouncement>,
+				ChannelTopicMixin<ChannelType.GuildAnnouncement>,
+			]
+		> {}
+
+export const AnnouncementChannel: {
+	new <Omitted extends keyof APINewsChannel | '' = ''>(
+		data: Partialize<APINewsChannel, Omitted>,
+	): AnnouncementChannel<Omitted>;
+} = AnnouncementChannelImpl as any;

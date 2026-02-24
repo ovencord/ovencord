@@ -11,24 +11,25 @@ import { ChannelSlowmodeMixin } from './mixins/ChannelSlowmodeMixin.js';
 import { TextChannelMixin } from './mixins/TextChannelMixin.js';
 import { ThreadChannelMixin } from './mixins/ThreadChannelMixin.js';
 
-export interface PublicThreadChannel<_Omitted extends keyof APIPublicThreadChannel | '' = ''>
-	extends MixinTypes<
-		Channel<ChannelType.PublicThread>,
-		[
-			TextChannelMixin<ChannelType.PublicThread>,
-			ChannelOwnerMixin<ChannelType.PublicThread>,
-			ChannelParentMixin<ChannelType.PublicThread>,
-			ChannelPinMixin<ChannelType.PublicThread>,
-			ChannelSlowmodeMixin<ChannelType.PublicThread>,
-			ThreadChannelMixin<ChannelType.PublicThread>,
-			AppliedTagsMixin,
-		]
-	> {}
+export interface PublicThreadChannel<Omitted extends keyof APIPublicThreadChannel | '' = ''>
+	extends PublicThreadChannelImpl<Omitted>,
+		MixinTypes<
+			Channel<ChannelType.PublicThread>,
+			[
+				TextChannelMixin<ChannelType.PublicThread>,
+				ChannelOwnerMixin<ChannelType.PublicThread>,
+				ChannelParentMixin<ChannelType.PublicThread>,
+				ChannelPinMixin<ChannelType.PublicThread>,
+				ChannelSlowmodeMixin<ChannelType.PublicThread>,
+				ThreadChannelMixin<ChannelType.PublicThread>,
+				AppliedTagsMixin,
+			]
+		> {}
 
 /**
  * Sample Implementation of a structure for public thread channels, usable by direct end consumers.
  */
-export class PublicThreadChannel<Omitted extends keyof APIPublicThreadChannel | '' = ''> extends Channel<
+class PublicThreadChannelImpl<Omitted extends keyof APIPublicThreadChannel | '' = ''> extends Channel<
 	ChannelType.PublicThread,
 	Omitted
 > {
@@ -38,7 +39,7 @@ export class PublicThreadChannel<Omitted extends keyof APIPublicThreadChannel | 
 	}
 }
 
-Mixin(PublicThreadChannel, [
+Mixin(PublicThreadChannelImpl, [
 	TextChannelMixin,
 	ChannelOwnerMixin,
 	ChannelParentMixin,
@@ -47,3 +48,9 @@ Mixin(PublicThreadChannel, [
 	ThreadChannelMixin,
 	AppliedTagsMixin,
 ]);
+
+export const PublicThreadChannel: {
+	new <Omitted extends keyof APIPublicThreadChannel | '' = ''>(
+		data: Partialize<APIPublicThreadChannel, Omitted>,
+	): PublicThreadChannel<Omitted>;
+} = PublicThreadChannelImpl as any;

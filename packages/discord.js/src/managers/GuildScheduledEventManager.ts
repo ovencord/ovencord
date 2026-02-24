@@ -241,7 +241,7 @@ export class GuildScheduledEventManager extends CachedManager {
 			recurrenceRule,
 		} = options;
 
-		let entity_metadata;
+		let entity_metadata: any;
 		if (entityMetadata) {
 			entity_metadata = {
 				location: entityMetadata.location,

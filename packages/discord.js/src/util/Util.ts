@@ -42,7 +42,7 @@ function _flatten(obj: any, seen: WeakSet<object>, depth: number, ...props: any[
 		? Object.assign(Object.assign({}, ...objProps), ...props)
 		: Object.assign({}, ...props);
 
-	const out = {};
+	const out: any = {};
 
 	for (let [prop, newProp] of Object.entries(mergedProps)) {
 		if (!newProp) continue;
@@ -50,30 +50,23 @@ function _flatten(obj: any, seen: WeakSet<object>, depth: number, ...props: any[
 
 		const element = obj[prop];
 		const elemIsObj = isObject(element);
-		const valueOf = elemIsObj && typeof element.valueOf === 'function' ? element.valueOf() : null;
+		const elementValueOf = elemIsObj && typeof element.valueOf === 'function' ? element.valueOf() : null;
 		const hasToJSON = elemIsObj && typeof element.toJSON === 'function';
 
 		// If it's a Collection, make the array of keys
-		// @ts-expect-error
 		if (element instanceof Collection) out[newProp as string] = Array.from(element.keys());
 		// If the valueOf is a Collection, use its array of keys
-		// @ts-expect-error
-		else if (valueOf instanceof Collection) out[newProp as string] = Array.from(valueOf.keys());
+		else if (elementValueOf instanceof Collection) out[newProp as string] = Array.from(elementValueOf.keys());
 		// If it's an array, call toJSON function on each element if present, otherwise flatten each element
-		// @ts-expect-error
 		else if (Array.isArray(element))
 			out[newProp as string] = element.map((elm) => elm.toJSON?.() ?? _flatten(elm, seen, depth + 1));
 		// If it's an object with a primitive `valueOf`, use that value
-		// @ts-expect-error
-		else if (typeof valueOf !== 'object') out[newProp as string] = valueOf;
+		else if (typeof elementValueOf !== 'object') out[newProp as string] = elementValueOf;
 		// If it's an object with a toJSON function, use the return value of it
-		// @ts-expect-error
 		else if (hasToJSON) out[newProp as string] = element.toJSON();
 		// If element is an object, use the flattened version of it
-		// @ts-expect-error
 		else if (typeof element === 'object') out[newProp as string] = _flatten(element, seen, depth + 1);
 		// If it's a primitive
-		// @ts-expect-error
 		else if (!elemIsObj) out[newProp as string] = element;
 	}
 
@@ -305,7 +298,7 @@ export function verifyString(
  * @returns {number} A color
  */
 export function resolveColor(color: any): number {
-	let resolvedColor;
+	let resolvedColor: any;
 
 	if (typeof color === 'string') {
 		if (color === 'Random') return Math.floor(Math.random() * (0xffffff + 1));
