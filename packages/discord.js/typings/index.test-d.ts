@@ -2526,22 +2526,22 @@ expectType<Promise<GuildTextBasedChannel | { id: string } | undefined>>(
 	guild.fetchAuditLogs({ type: AuditLogEvent.MessageBulkDelete }).then((al) => al.entries.first()?.target),
 );
 
-declare const AuditLogChange: AuditLogChange;
-expectType<boolean | undefined>(AuditLogChange.old);
-expectType<boolean | undefined>(AuditLogChange.new);
-if (AuditLogChange.key === 'available') {
-	expectType<boolean | undefined>(AuditLogChange.old);
-	expectType<boolean | undefined>(AuditLogChange.new);
+declare const testAuditLogChange: AuditLogChange;
+expectType<boolean | undefined>(testAuditLogChange.old);
+expectType<boolean | undefined>(testAuditLogChange.new);
+if (testAuditLogChange.key === 'available') {
+	expectType<boolean | undefined>(testAuditLogChange.old);
+	expectType<boolean | undefined>(testAuditLogChange.new);
 }
 
-declare const TextBasedChannel: TextBasedChannel;
-declare const TextBasedChannelTypes: TextBasedChannelTypes;
-declare const VoiceBasedChannel: VoiceBasedChannel;
-declare const GuildBasedChannel: GuildBasedChannel;
-declare const NonThreadGuildBasedChannel: NonThreadGuildBasedChannel;
-declare const GuildTextBasedChannel: GuildTextBasedChannel;
+declare const testTextBasedChannel: TextBasedChannel;
+declare const testTextBasedChannelTypes: TextBasedChannelTypes;
+declare const testVoiceBasedChannel: VoiceBasedChannel;
+declare const testGuildBasedChannel: GuildBasedChannel;
+declare const testNonThreadGuildBasedChannel: NonThreadGuildBasedChannel;
+declare const testGuildTextBasedChannel: GuildTextBasedChannel;
 
-expectType<TextBasedChannel>(TextBasedChannel);
+expectType<TextBasedChannel>(testTextBasedChannel);
 expectType<
 	| ChannelType.DM
 	| ChannelType.GroupDM
@@ -2550,13 +2550,13 @@ expectType<
 	| ChannelType.GuildText
 	| ChannelType.GuildVoice
 	| ThreadChannelType
->(TextBasedChannelTypes);
-expectType<StageChannel | VoiceChannel>(VoiceBasedChannel);
-expectType<GuildBasedChannel>(GuildBasedChannel);
+>(testTextBasedChannelTypes);
+expectType<StageChannel | VoiceChannel>(testVoiceBasedChannel);
+expectType<GuildBasedChannel>(testGuildBasedChannel);
 expectType<
 	AnnouncementChannel | CategoryChannel | ForumChannel | MediaChannel | StageChannel | TextChannel | VoiceChannel
->(NonThreadGuildBasedChannel);
-expectType<GuildTextBasedChannel>(GuildTextBasedChannel);
+>(testNonThreadGuildBasedChannel);
+expectType<GuildTextBasedChannel>(testGuildTextBasedChannel);
 
 new EmbedBuilder().setColor(resolveColor('#ffffff'));
 

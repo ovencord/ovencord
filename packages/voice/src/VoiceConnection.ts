@@ -161,46 +161,22 @@ export type VoiceConnectionState =
 	| VoiceConnectionReadyState
 	| VoiceConnectionSignallingState;
 
-export interface VoiceConnection extends AsyncEventEmitter {
-	/**
-	 * Emitted when there is an error emitted from the voice connection
-	 *
-	 * @eventProperty
-	 */
-	on(event: 'error', listener: (error: Error) => void): this;
-	/**
-	 * Emitted debugging information about the voice connection
-	 *
-	 * @eventProperty
-	 */
-	on(event: 'debug', listener: (message: string) => void): this;
-	/**
-	 * Emitted when the state of the voice connection changes
-	 *
-	 * @eventProperty
-	 */
-	on(event: 'stateChange', listener: (oldState: VoiceConnectionState, newState: VoiceConnectionState) => void): this;
-	/**
-	 * Emitted when the end-to-end encrypted session has transitioned
-	 *
-	 * @eventProperty
-	 */
-	on(event: 'transitioned', listener: (transitionId: number) => void): this;
-	/**
-	 * Emitted when the state of the voice connection changes to a specific status
-	 *
-	 * @eventProperty
-	 */
-	on<Event extends VoiceConnectionStatus>(
-		event: Event,
-		listener: (oldState: VoiceConnectionState, newState: VoiceConnectionState & { status: Event }) => void,
-	): this;
-}
+/**
+ * The events that a VoiceConnection can emit.
+ */
+export type VoiceConnectionEvents = {
+	error: [error: Error];
+	debug: [message: string];
+	stateChange: [oldState: VoiceConnectionState, newState: VoiceConnectionState];
+	transitioned: [transitionId: number];
+} & {
+	[K in VoiceConnectionStatus]: [oldState: VoiceConnectionState, newState: VoiceConnectionState];
+};
 
 /**
  * A connection to the voice server of a Guild, can be used to play audio in voice channels.
  */
-export class VoiceConnection extends AsyncEventEmitter {
+export class VoiceConnection extends AsyncEventEmitter<VoiceConnectionEvents> {
 	/**
 	 * The number of consecutive rejoin attempts. Initially 0, and increments for each rejoin.
 	 * When a connection is successfully established, it resets to 0.

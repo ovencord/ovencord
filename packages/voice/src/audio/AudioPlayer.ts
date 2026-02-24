@@ -1,7 +1,7 @@
 import { AsyncEventEmitter } from '@ovencord/util';
 import { addAudioPlayer, deleteAudioPlayer } from '../DataStore';
 import { noop } from '../util/util';
-import { VoiceConnectionStatus, type VoiceConnection } from '../VoiceConnection';
+import { type VoiceConnection, VoiceConnectionStatus } from '../VoiceConnection';
 import { AudioPlayerError } from './AudioPlayerError';
 import type { AudioResource } from './AudioResource';
 import { PlayerSubscription } from './PlayerSubscription';
@@ -150,44 +150,21 @@ export type AudioPlayerState =
 	| AudioPlayerPausedState
 	| AudioPlayerPlayingState;
 
-export interface AudioPlayer extends AsyncEventEmitter {
-	/**
-	 * Emitted when there is an error emitted from the audio resource played by the audio player
-	 *
-	 * @eventProperty
-	 */
-	on(event: 'error', listener: (error: AudioPlayerError) => void): this;
-	/**
-	 * Emitted debugging information about the audio player
-	 *
-	 * @eventProperty
-	 */
-	on(event: 'debug', listener: (message: string) => void): this;
-	/**
-	 * Emitted when the state of the audio player changes
-	 *
-	 * @eventProperty
-	 */
-	on(event: 'stateChange', listener: (oldState: AudioPlayerState, newState: AudioPlayerState) => void): this;
-	/**
-	 * Emitted when the audio player is subscribed to a voice connection
-	 *
-	 * @eventProperty
-	 */
-	on(event: 'subscribe' | 'unsubscribe', listener: (subscription: PlayerSubscription) => void): this;
-	/**
-	 * Emitted when the status of state changes to a specific status
-	 *
-	 * @eventProperty
-	 */
-	on<Event extends AudioPlayerStatus>(
-		event: Event,
-		listener: (oldState: AudioPlayerState, newState: AudioPlayerState & { status: Event }) => void,
-	): this;
-}
+/**
+ * The events that an AudioPlayer can emit.
+ */
+export type AudioPlayerEvents = {
+	error: [error: AudioPlayerError];
+	debug: [message: string];
+	stateChange: [oldState: AudioPlayerState, newState: AudioPlayerState];
+	subscribe: [subscription: PlayerSubscription];
+	unsubscribe: [subscription: PlayerSubscription];
+} & {
+	[K in AudioPlayerStatus]: [oldState: AudioPlayerState, newState: AudioPlayerState];
+};
 
 /**
- * Stringifies an AudioPlayerState instance.
+ * Stringified representation of an AudioPlayerState instance.
  *
  * @param state - The state to stringify
  */
@@ -209,7 +186,7 @@ function stringifyState(state: AudioPlayerState) {
  * The AudioPlayer drives the timing of playback, and therefore is unaffected by voice connections
  * becoming unavailable. Its behavior in these scenarios can be configured.
  */
-export class AudioPlayer extends AsyncEventEmitter {
+export class AudioPlayer extends AsyncEventEmitter<AudioPlayerEvents> {
 	/**
 	 * The state that the AudioPlayer is in.
 	 */

@@ -1623,8 +1623,15 @@ export class GuildMemberFlagsBitField extends BitField<GuildMemberFlagsString> {
 	public static resolve(bit?: BitFieldResolvable<GuildMemberFlagsString, GuildMemberFlags>): number;
 }
 
-export interface GuildMember extends SendMethod<false> {}
 export class GuildMember extends Base {
+	public send(
+		options:
+			| FileBodyEncodable<RESTPostAPIChannelMessageJSONBody>
+			| JSONEncodable<RESTPostAPIChannelMessageJSONBody>
+			| MessageCreateOptions
+			| MessagePayload
+			| string,
+	): Promise<Message<false>>;
 	private constructor(client: Client<true>, data: unknown, guild: Guild);
 	private readonly _roles: Snowflake[];
 	public avatar: string | null;
@@ -2018,17 +2025,24 @@ export class InteractionCollector<Interaction extends CollectedInteraction> exte
 	public dispose(interaction: Interaction): Snowflake;
 }
 
-export interface InteractionWebhook extends PartialWebhookFields {}
 export class InteractionWebhook {
 	public constructor(client: Client<true>, id: Snowflake, token: string);
 	public readonly client: Client<true>;
 	public token: string;
-	public send(options: InteractionReplyOptions | MessagePayload | string): Promise<Message>;
+	public id: Snowflake;
+	public send(
+		options: InteractionReplyOptions | MessagePayload | WebhookMessageCreateOptions | string,
+	): Promise<APIMessage | Message>;
 	public editMessage(
 		message: MessageResolvable | '@original',
 		options: MessagePayload | WebhookMessageEditOptions | string,
-	): Promise<Message>;
-	public fetchMessage(message: Snowflake | '@original'): Promise<Message>;
+	): Promise<APIMessage | Message>;
+	public fetchMessage(
+		message: Snowflake | '@original',
+		options?: WebhookFetchMessageOptions,
+	): Promise<APIMessage | Message>;
+	public deleteMessage(message: APIMessage | MessageResolvable | '@original', threadId?: Snowflake): Promise<void>;
+	public get url(): string;
 }
 
 export class BaseInvite<WithCounts extends boolean = boolean> extends Base {
@@ -2737,8 +2751,19 @@ export class OAuth2Guild extends BaseGuild {
 	public permissions: Readonly<PermissionsBitField>;
 }
 
-export interface PartialGroupDMChannel extends TextBasedChannelFields<false, false>, PinnableChannelFields {}
 export class PartialGroupDMChannel extends BaseChannel {
+	public awaitMessageComponent<ComponentType extends MessageComponentType>(
+		options?: AwaitMessageCollectorOptionsParams<ComponentType, true>,
+	): Promise<MappedInteractionTypes[ComponentType]>;
+	public createMessageComponentCollector<ComponentType extends MessageComponentType>(
+		options?: MessageChannelCollectorOptionsParams<ComponentType, true>,
+	): InteractionCollector<MappedInteractionTypes[ComponentType]>;
+	public get lastMessage(): Message | null;
+	public lastMessageId: Snowflake | null;
+	public messages: PartialGroupDMMessageManager;
+	public get lastPinAt(): Date | null;
+	public lastPinTimestamp: number | null;
+
 	private constructor(client: Client<true>, data: RawPartialGroupDMChannelData);
 	public type: ChannelType.GroupDM;
 	public flags: null;
@@ -2772,8 +2797,11 @@ export interface DefaultReactionEmoji {
 	name: string | null;
 }
 
-export interface ThreadOnlyChannel extends WebhookChannelFields, SetRateLimitPerUserMethod {}
 export abstract class ThreadOnlyChannel extends GuildChannel {
+	public createWebhook(options: ChannelWebhookCreateOptions): Promise<Webhook<WebhookType.Incoming>>;
+	public fetchWebhooks(): Promise<Collection<Snowflake, Webhook<WebhookType.ChannelFollower | WebhookType.Incoming>>>;
+	public setNSFW(nsfw?: boolean, reason?: string): Promise<this>;
+	public setRateLimitPerUser(rateLimitPerUser: number, reason?: string): Promise<this>;
 	public type: ChannelType.GuildForum | ChannelType.GuildMedia;
 	public threads: GuildForumThreadManager;
 	public availableTags: GuildForumTag[];
@@ -3510,14 +3538,27 @@ export interface PrivateThreadChannel extends ThreadChannel<false> {
 	type: ChannelType.PrivateThread;
 }
 
-export interface ThreadChannel<_ThreadOnly extends boolean = boolean>
-	extends TextBasedChannelFields<true>,
-		PinnableChannelFields,
-		BulkDeleteMethod,
-		SetRateLimitPerUserMethod,
-		MessageChannelFields,
-		SendMethod<true> {}
 export class ThreadChannel<ThreadOnly extends boolean = boolean> extends BaseChannel {
+	public awaitMessageComponent<ComponentType extends MessageComponentType>(
+		options?: AwaitMessageCollectorOptionsParams<ComponentType, true>,
+	): Promise<MappedInteractionTypes[ComponentType]>;
+	public createMessageComponentCollector<ComponentType extends MessageComponentType>(
+		options?: MessageChannelCollectorOptionsParams<ComponentType, true>,
+	): InteractionCollector<MappedInteractionTypes[ComponentType]>;
+	public get lastMessage(): Message | null;
+	public lastMessageId: Snowflake | null;
+	public messages: GuildMessageManager;
+	public get lastPinAt(): Date | null;
+	public lastPinTimestamp: number | null;
+	public bulkDelete(
+		messages: Collection<Snowflake, Message> | number | readonly MessageResolvable[],
+		filterOld?: boolean,
+	): Promise<Collection<Snowflake, Message>>;
+	public setRateLimitPerUser(rateLimitPerUser: number, reason?: string): Promise<this>;
+	public awaitMessages(options?: AwaitMessagesOptions): Promise<Collection<Snowflake, Message>>;
+	public createMessageCollector(options?: MessageCollectorOptions): MessageCollector;
+	public sendTyping(): Promise<void>;
+	public send(options: string | MessagePayload | MessageCreateOptions): Promise<Message<true>>;
 	private constructor(guild: Guild, data: RawThreadChannelData, client?: Client<true>);
 	public archived: boolean | null;
 	public get archivedAt(): Date | null;
@@ -3655,8 +3696,15 @@ export class UnfurledMediaItem {
 	public get url(): string;
 }
 
-export interface User extends SendMethod<false> {}
 export class User extends Base {
+	public send(
+		options:
+			| FileBodyEncodable<RESTPostAPIChannelMessageJSONBody>
+			| JSONEncodable<RESTPostAPIChannelMessageJSONBody>
+			| MessageCreateOptions
+			| MessagePayload
+			| string,
+	): Promise<Message<false>>;
 	protected constructor(client: Client<true>, data: unknown);
 	private _equals(user: APIUser): boolean;
 
@@ -3812,8 +3860,8 @@ export class VoiceState extends Base {
 	public fetch(force?: boolean): Promise<VoiceState>;
 }
 
-export interface Webhook<_Type extends WebhookType = WebhookType> extends WebhookFields {}
 export class Webhook<Type extends WebhookType = WebhookType> {
+	public sendSlackMessage(body: unknown): Promise<boolean>;
 	private constructor(client: Client<true>, data: unknown);
 	public avatar: string | null;
 	public avatarURL(options?: ImageURLOptions): string | null;

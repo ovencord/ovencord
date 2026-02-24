@@ -109,7 +109,8 @@ let NODES: Map<StreamType, Node> | null = null;
  * @param type - The stream type of the target node
  */
 export function getNode(type: StreamType) {
-	const node = (NODES ??= initializeNodes()).get(type);
+	if (!NODES) NODES = initializeNodes();
+	const node = NODES.get(type);
 	if (!node) throw new Error(`Node type '${type}' does not exist!`);
 	return node;
 }
