@@ -159,11 +159,15 @@ export class BitField {
 	 */
 	static resolve(bit: any): number | bigint {
 		const { DefaultBit } = this as any;
-		if (typeof DefaultBit === typeof bit && bit >= DefaultBit) return bit;
+		if (typeof bit === 'number' || typeof bit === 'bigint') {
+			if (bit >= (typeof bit === 'bigint' ? 0n : 0)) {
+				return typeof DefaultBit === 'bigint' ? BigInt(bit) : Number(bit);
+			}
+		}
 		if (bit instanceof BitField) return bit.bitfield;
 		if (Array.isArray(bit)) {
 			return bit
-				.map((bit_) => BitField.resolve(bit_))
+				.map((bit_) => (this as any).resolve(bit_))
 				.reduce((prev, bit_) => (prev as any) | (bit_ as any), DefaultBit);
 		}
 

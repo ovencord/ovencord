@@ -186,12 +186,13 @@ export abstract class BitField<Flags extends string> {
 	 * @returns the numeric value of the bit fields
 	 */
 	public static resolve<Flags extends string = string>(bit: BitFieldResolvable<Flags>): bigint {
-		const DefaultBit = BitField.DefaultBit;
-		if (typeof bit === 'bigint' && bit >= DefaultBit) return bit;
-		if (typeof bit === 'number' && BigInt(bit) >= DefaultBit) return BigInt(bit);
+		const DefaultBit = (this as any).DefaultBit;
+		if (typeof bit === 'number' || typeof bit === 'bigint') {
+			if (bit >= (typeof bit === 'bigint' ? 0n : 0)) return BigInt(bit);
+		}
 		if (bit instanceof BitField) return bit.bitField;
 		if (Array.isArray(bit)) {
-			return bit.map((bit_) => BitField.resolve(bit_)).reduce((prev, bit_) => prev | bit_, DefaultBit);
+			return bit.map((bit_) => (this as any).resolve(bit_)).reduce((prev: bigint, bit_: bigint) => prev | bit_, DefaultBit);
 		}
 
 		if (typeof bit === 'string') {
