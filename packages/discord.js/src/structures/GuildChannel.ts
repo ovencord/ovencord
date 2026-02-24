@@ -200,8 +200,7 @@ export class GuildChannel extends BaseChannel {
 		return role && this.rolePermissions(role, checkAdmin);
 	}
 
-	// @ts-expect-error
-	overwritesFor(member: any, verified = false, roles = null) {
+	overwritesFor(member: any, verified: any = false, roles: any = null): any {
 		const resolvedMember = verified ? member : this.guild.members.resolve(member);
 		if (!resolvedMember) return [];
 

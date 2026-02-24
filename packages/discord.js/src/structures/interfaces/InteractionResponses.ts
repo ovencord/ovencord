@@ -40,13 +40,13 @@ export class InteractionResponses {
 				},
 			},
 			auth: false,
-			query: makeURLSearchParams({ with_response: options.withResponse ?? false }),
+			query: makeURLSearchParams({ with_response: options.withResponse ?? true }),
 		});
 
 		this.deferred = true;
 		this.ephemeral = resolvedFlags.has(MessageFlags.Ephemeral);
 
-		return options.withResponse ? new InteractionCallbackResponse(this.client, response) : undefined;
+		return new InteractionCallbackResponse(this.client, response);
 	}
 
 	/**
@@ -71,14 +71,14 @@ export class InteractionResponses {
 			},
 			files,
 			auth: false,
-			query: makeURLSearchParams({ with_response: options.withResponse ?? options.fetchReply ?? false }),
+			query: makeURLSearchParams({ with_response: options.withResponse ?? options.fetchReply ?? true }),
 		});
 
 		this.ephemeral = Boolean(data.flags & MessageFlags.Ephemeral);
 		this.replied = true;
 
 		if (options.fetchReply) return this.fetchReply();
-		return options.withResponse ? new InteractionCallbackResponse(this.client, response) : undefined;
+		return new InteractionCallbackResponse(this.client, response);
 	}
 
 	/**
@@ -144,11 +144,11 @@ export class InteractionResponses {
 				type: InteractionResponseType.DeferredMessageUpdate,
 			},
 			auth: false,
-			query: makeURLSearchParams({ with_response: options.withResponse ?? false }),
+			query: makeURLSearchParams({ with_response: options.withResponse ?? true }),
 		});
 		this.deferred = true;
 
-		return options.withResponse ? new InteractionCallbackResponse(this.client, response) : undefined;
+		return new InteractionCallbackResponse(this.client, response);
 	}
 
 	/**
@@ -171,12 +171,12 @@ export class InteractionResponses {
 			},
 			files,
 			auth: false,
-			query: makeURLSearchParams({ with_response: options.withResponse ?? options.fetchReply ?? false }),
+			query: makeURLSearchParams({ with_response: options.withResponse ?? options.fetchReply ?? true }),
 		});
 		this.replied = true;
 
 		if (options.fetchReply) return this.fetchReply();
-		return options.withResponse ? new InteractionCallbackResponse(this.client, response) : undefined;
+		return new InteractionCallbackResponse(this.client, response);
 	}
 
 	/**

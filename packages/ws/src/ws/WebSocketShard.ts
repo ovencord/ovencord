@@ -288,7 +288,7 @@ export class WebSocketShard extends AsyncEventEmitter<WebSocketShardEventsMap> {
 			]);
 
 			if (shouldClose) {
-				let outerResolve: () => void;
+				let outerResolve!: () => void;
 				const promise = new Promise<void>((resolve) => {
 					outerResolve = resolve;
 				});

@@ -1446,8 +1446,7 @@ export class Guild extends AnonymousGuild {
 	 * @param {string} [reason] Reason for changing the state of the guild's premium progress bar
 	 * @returns {Promise<Guild>}
 	 */
-	// @ts-expect-error
-	async setPremiumProgressBarEnabled(enabled = true, reason = undefined) {
+	async setPremiumProgressBarEnabled(enabled: any = true, reason: any = undefined) {
 		return this.edit({ premiumProgressBarEnabled: enabled, reason });
 	}
 

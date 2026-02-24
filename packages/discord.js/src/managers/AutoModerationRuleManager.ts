@@ -294,9 +294,8 @@ export class AutoModerationRuleManager extends CachedManager {
 		const data = await this.client.rest.get(Routes.guildAutoModerationRules(this.guild.id));
 
 		return data.reduce(
-			// @ts-expect-error
 			(col: any, autoModerationRule: any) =>
-				col.set(autoModerationRule.id, this._add(autoModerationRule, options.cache)),
+				col.set(autoModerationRule.id, this._add(autoModerationRule, (options as any).cache)),
 			new Collection(),
 		);
 	}

@@ -37,8 +37,8 @@ export class Sweepers {
 		 *
 		 * @type {Object<SweeperKey, ?Timeout>}
 		 */
-		// @ts-expect-error
-		this.intervals = Object.fromEntries(SweeperKeys.map((key) => [key, null]));
+		this.intervals = Object.fromEntries(SweeperKeys.map((key): [string, any] => [key, null]));
+		(this as any).intervals = this.intervals; // cast to satisfy TS if needed, but the directive was said to be unused
 
 		for (const key of SweeperKeys) {
 			if (!(key in options)) continue;
@@ -526,8 +526,7 @@ export class Sweepers {
 			const sweepFn = opts.filter();
 			if (sweepFn === null) return;
 			if (typeof sweepFn !== 'function') throw new DiscordjsTypeError(ErrorCodes.SweepFilterReturn);
-			// @ts-expect-error
-			this[sweepKey](sweepFn);
+			(this as any)[sweepKey](sweepFn);
 		}, opts.interval * 1_000).unref();
 	}
 }

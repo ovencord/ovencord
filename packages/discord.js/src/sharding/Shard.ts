@@ -454,7 +454,6 @@ export class Shard extends AsyncEventEmitter {
 	 * has become ready (`-1` or `Infinity` for no wait)
 	 * @private
 	 */
-	// @ts-expect-error
 	_handleExit(respawn: boolean = this.manager.respawn, timeout?: number) {
 		/**
 		 * Emitted upon the shard's child process/worker exiting.

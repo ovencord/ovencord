@@ -25,9 +25,9 @@
     },
     "packages/builders": {
       "name": "@ovencord/builders",
-      "version": "1.13.0",
+      "version": "1.13.1",
       "dependencies": {
-        "@ovencord/util": "^1.1.9",
+        "@ovencord/util": "^1.10.0",
         "discord-api-types": "^0.38.40",
         "ts-mixer": "^6.0.4",
         "zod": "^4.3.6",
@@ -49,14 +49,14 @@
     },
     "packages/discord.js": {
       "name": "@ovencord/discord.js",
-      "version": "14.16.51",
+      "version": "14.16.52",
       "dependencies": {
-        "@ovencord/builders": "^1.13.0",
+        "@ovencord/builders": "^1.13.1",
         "@ovencord/collection": "^2.1.4",
         "@ovencord/formatters": "^0.6.4",
-        "@ovencord/rest": "^2.6.0",
-        "@ovencord/util": "^1.1.9",
-        "@ovencord/ws": "^2.0.7",
+        "@ovencord/rest": "^2.6.1",
+        "@ovencord/util": "^1.10.0",
+        "@ovencord/ws": "^2.0.8",
         "discord-api-types": "^0.38.40",
       },
     },
@@ -69,24 +69,24 @@
     },
     "packages/next": {
       "name": "@ovencord/next",
-      "version": "0.1.3",
+      "version": "0.1.4",
       "dependencies": {
-        "@ovencord/builders": "^1.12.9",
+        "@ovencord/builders": "^1.13.0",
         "@ovencord/collection": "^2.1.4",
         "@ovencord/core": "^2.1.5",
         "@ovencord/formatters": "^0.6.4",
-        "@ovencord/rest": "^2.6.0",
-        "@ovencord/util": "^1.1.8",
-        "@ovencord/ws": "^2.0.7",
+        "@ovencord/rest": "^2.6.1",
+        "@ovencord/util": "^1.10.0",
+        "@ovencord/ws": "^2.0.8",
         "discord-api-types": "^0.38.40",
       },
     },
     "packages/rest": {
       "name": "@ovencord/rest",
-      "version": "2.6.0",
+      "version": "2.6.1",
       "dependencies": {
         "@ovencord/collection": "^2.1.4",
-        "@ovencord/util": "^1.1.8",
+        "@ovencord/util": "^1.10.0",
         "discord-api-types": "^0.38.40",
       },
     },
@@ -111,7 +111,7 @@
     },
     "packages/util": {
       "name": "@ovencord/util",
-      "version": "1.1.9",
+      "version": "1.10.0",
       "dependencies": {
         "discord-api-types": "^0.38.40",
       },
@@ -128,10 +128,10 @@
     },
     "packages/ws": {
       "name": "@ovencord/ws",
-      "version": "2.0.7",
+      "version": "2.0.8",
       "dependencies": {
         "@ovencord/collection": "^2.1.4",
-        "@ovencord/util": "^1.1.8",
+        "@ovencord/util": "^1.10.0",
         "discord-api-types": "^0.38.40",
       },
     },

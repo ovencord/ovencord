@@ -27,17 +27,14 @@ export class Emoji extends Base {
 	imageURL(options = {}): string | null {
 		if (!this.id) return null;
 
-		// @ts-expect-error
 		const resolvedOptions = {
-			extension: options.extension,
-			size: options.size,
+			extension: (options as any).extension,
+			size: (options as any).size,
 			animated: undefined as boolean | undefined,
 		};
 
-		// @ts-expect-error
-		if (!options.extension || options.extension === 'webp') {
-			// @ts-expect-error
-			resolvedOptions.animated = options.animated ?? (this.animated || undefined);
+		if (!(options as any).extension || (options as any).extension === 'webp') {
+			resolvedOptions.animated = (options as any).animated ?? (this.animated || undefined);
 		}
 
 		return (this.client as any).rest.cdn.emoji(this.id, resolvedOptions);

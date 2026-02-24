@@ -110,8 +110,7 @@ export class CommandInteractionOptionResolver {
 			return null;
 		} else if (!allowedTypes.includes(option.type)) {
 			throw new DiscordjsTypeError(ErrorCodes.CommandInteractionOptionType, name, option.type, allowedTypes.join(', '));
-			// @ts-expect-error
-		} else if (required && properties.every((prop) => option[prop] === null || option[prop] === undefined)) {
+		} else if (required && properties.every((prop: any) => (option as any)[prop] === null || (option as any)[prop] === undefined)) {
 			throw new DiscordjsTypeError(ErrorCodes.CommandInteractionOptionEmpty, name, option.type);
 		}
 
@@ -167,9 +166,8 @@ export class CommandInteractionOptionResolver {
 	 * @returns {?(GuildChannel|ThreadChannel|APIChannel)}
 	 * The value of the option, or null if not set and not required.
 	 */
-	// @ts-expect-error
-	getChannel(name: any, required = false, channelTypes: any[] = []) {
-		const option = this._getTypedOption(name, [ApplicationCommandOptionType.Channel], ['channel'], required);
+	getChannel(name: any, required: any = false, channelTypes: any[] = []) {
+		const option = (this as any)._getTypedOption(name, [ApplicationCommandOptionType.Channel], ['channel'], required);
 		const channel = option?.channel ?? null;
 
 		if (channel && channelTypes.length > 0 && !channelTypes.includes(channel.type)) {

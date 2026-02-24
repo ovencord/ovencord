@@ -297,8 +297,7 @@ export class AutoModerationRule extends Base {
 	 * @param {string} [reason] The reason for enabling or disabling this auto moderation rule
 	 * @returns {Promise<AutoModerationRule>}
 	 */
-	// @ts-expect-error
-	async setEnabled(enabled = true, reason = undefined) {
+	async setEnabled(enabled: any = true, reason: any = undefined) {
 		return this.edit({ enabled, reason });
 	}
 

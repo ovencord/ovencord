@@ -87,8 +87,7 @@ export class Options extends null {
 			waitGuildTimeout: 15_000,
 			presence: {},
 			makeCache: Options.cacheWithLimits(Options.DefaultMakeCacheSettings),
-			// @ts-expect-error
-			partials: [],
+			partials: [] as any[],
 			failIfNotExists: true,
 			enforceNonce: false,
 			sweepers: Options.DefaultSweeperSettings,
@@ -125,8 +124,7 @@ export class Options extends null {
 	 */
 	static cacheWithLimits(settings = {}) {
 		return ({ managerType, manager }: any) => {
-			// @ts-expect-error
-			const setting = settings[manager.name] ?? settings[managerType.name];
+			const setting = (settings as any)[manager.name] ?? (settings as any)[managerType.name];
 			if (setting == null) {
 				return new Collection();
 			}

@@ -99,7 +99,7 @@ export class ThumbnailBuilder extends ComponentBuilder<APIThumbnailComponent> {
 		const data: APIThumbnailComponent = {
 			type: ComponentType.Thumbnail,
 			media: {
-				url: clone.media?.url,
+				url: clone.media?.url!,
 			},
 		};
 

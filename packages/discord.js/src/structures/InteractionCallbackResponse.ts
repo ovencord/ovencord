@@ -31,4 +31,25 @@ export class InteractionCallbackResponse {
 		 */
 		this.resource = data.resource ? new InteractionCallbackResource(client, data.resource) : null;
 	}
+
+	/**
+	 * Creates a message component collector for the message created by this interaction response.
+	 *
+	 * @param {MessageComponentCollectorOptions} [options] Options to send to the collector
+	 * @returns {InteractionCollector}
+	 */
+	createMessageComponentCollector(options: any = {}) {
+		return this.resource?.message?.createMessageComponentCollector(options);
+	}
+
+	/**
+	 * Collects a single component interaction that passes the filter.
+	 * The Promise will reject if the time expires.
+	 *
+	 * @param {AwaitMessageComponentOptions} [options] Options to pass to the internal collector
+	 * @returns {Promise<MessageComponentInteraction>}
+	 */
+	awaitMessageComponent(options: any = {}) {
+		return this.resource?.message?.awaitMessageComponent(options);
+	}
 }

@@ -378,8 +378,7 @@ export class Role extends Base {
 	 *   .then(updated => console.log(`Role hoisted: ${updated.hoist}`))
 	 *   .catch(console.error);
 	 */
-	// @ts-expect-error
-	async setHoist(hoist = true, reason = undefined) {
+	async setHoist(hoist: any = true, reason: any = undefined) {
 		return this.edit({ hoist, reason });
 	}
 
@@ -416,8 +415,7 @@ export class Role extends Base {
 	 *   .then(updated => console.log(`Role updated ${updated.name}`))
 	 *   .catch(console.error);
 	 */
-	// @ts-expect-error
-	async setMentionable(mentionable = true, reason = undefined) {
+	async setMentionable(mentionable: any = true, reason: any = undefined) {
 		return this.edit({ mentionable, reason });
 	}
 

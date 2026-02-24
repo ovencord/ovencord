@@ -226,23 +226,23 @@ export function createComponentBuilder(
 		case ComponentType.ChannelSelect:
 			return new ChannelSelectMenuBuilder(rawData as APIChannelSelectComponent);
 		case ComponentType.Thumbnail:
-			return new ThumbnailBuilder(rawData as unknown);
+			return new ThumbnailBuilder(rawData as any);
 		case ComponentType.File:
-			return new FileBuilder(rawData as unknown);
+			return new FileBuilder(rawData as any);
 		case ComponentType.Separator:
-			return new SeparatorBuilder(rawData as unknown);
+			return new SeparatorBuilder(rawData as any);
 		case ComponentType.TextDisplay:
-			return new TextDisplayBuilder(rawData as unknown);
+			return new TextDisplayBuilder(rawData as any);
 		case ComponentType.MediaGallery:
-			return new MediaGalleryBuilder(rawData as unknown);
+			return new MediaGalleryBuilder(rawData as any);
 		case ComponentType.Section:
-			return new SectionBuilder(rawData as unknown);
+			return new SectionBuilder(rawData as any);
 		case ComponentType.Container:
-			return new ContainerBuilder(rawData as unknown);
+			return new ContainerBuilder(rawData as any);
 		case ComponentType.Label:
-			return new LabelBuilder(rawData as unknown);
+			return new LabelBuilder(rawData as any);
 		case ComponentType.FileUpload:
-			return new FileUploadBuilder(rawData as unknown);
+			return new FileUploadBuilder(rawData as any);
 		default:
 			// This case can still occur if we get a newer unsupported component type
 			throw new Error(`Cannot properly serialize component type: ${rawData.type}`);

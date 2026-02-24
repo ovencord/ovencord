@@ -214,8 +214,7 @@ export class ClientUser extends User {
 	 * @param {number|number[]} [shardId] Shard Id(s) to have the AFK flag set on
 	 * @returns {Promise<ClientPresence>}
 	 */
-	// @ts-expect-error
-	async setAFK(afk = true, shardId = undefined) {
+	async setAFK(afk: any = true, shardId: any = undefined) {
 		return this.setPresence({ afk, shardId });
 	}
 }

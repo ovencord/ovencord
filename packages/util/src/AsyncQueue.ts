@@ -17,7 +17,7 @@ export class AsyncQueue {
 	 * @param options.signal - An optional abort signal
 	 */
 	public wait(options?: { signal?: AbortSignal }): Promise<void> {
-		const next = this.#promises.length ? this.#promises.at(-1)?.promise : Promise.resolve();
+		const next = this.#promises.length ? this.#promises[this.#promises.length - 1].promise : Promise.resolve();
 
 		let resolve!: () => void;
 		const promise = new Promise<void>((res) => {

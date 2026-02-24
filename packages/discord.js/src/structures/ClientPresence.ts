@@ -9,8 +9,7 @@ import { Presence } from './Presence.js';
  */
 export class ClientPresence extends Presence {
 	constructor(client: any, data = {}) {
-		// @ts-expect-error
-		super(client, Object.assign(data, { status: data.status ?? 'online', user: { id: null } }));
+		super(client, Object.assign(data, { status: (data as any).status ?? 'online', user: { id: null } }));
 	}
 
 	/**
@@ -47,7 +46,6 @@ export class ClientPresence extends Presence {
 	 */
 	_parse({ status, since, afk, activities }: any) {
 		const data = {
-			// @ts-expect-error
 			activities: [] as any[],
 			afk: typeof afk === 'boolean' ? afk : false,
 			since: typeof since === 'number' && !Number.isNaN(since) ? since : null,

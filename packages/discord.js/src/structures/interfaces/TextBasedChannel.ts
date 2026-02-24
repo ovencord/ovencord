@@ -402,12 +402,10 @@ export class TextBasedChannel {
 	 * @param {string} [reason] Reason for changing the channel's NSFW flag
 	 * @returns {Promise<this>}
 	 */
-	// @ts-expect-error
-	async setNSFW(nsfw = true, reason = undefined) {
+	async setNSFW(nsfw: any = true, reason: any = undefined) {
 		return this.edit({ nsfw, reason });
 	}
 
-	// @ts-expect-error
 	static applyToClass(structure: any, ignore: any[] = []) {
 		const props = [
 			'lastMessage',
