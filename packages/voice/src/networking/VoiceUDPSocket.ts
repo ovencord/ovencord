@@ -1,6 +1,6 @@
 import { AsyncEventEmitter } from '@ovencord/util';
 
-type UDPSocket = Awaited<ReturnType<typeof Bun.udpSocket>>;
+
 
 /**
  * Stores an IP address and port. Used to store socket details for the local client as well as

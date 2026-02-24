@@ -16,10 +16,25 @@ export function DiscordMessageAuthorReply({ avatar, bot, verified, color, userna
 					id="bot"
 				>
 					{verified ? (
-						<svg class="mr-0.5 inline-block" stroke="currentColor" fill="none" stroke-width="3" viewBox="0 0 24 24" stroke-linecap="round" stroke-linejoin="round" height="1em" width="1em" xmlns="http://www.w3.org/2000/svg">
+						<svg
+							class="mr-0.5 inline-block"
+							stroke="currentColor"
+							fill="none"
+							stroke-width="3"
+							viewBox="0 0 24 24"
+							stroke-linecap="round"
+							stroke-linejoin="round"
+							height="1em"
+							width="1em"
+							xmlns="http://www.w3.org/2000/svg"
+							role="img"
+							aria-label="Verified icon"
+						>
+							<title>Verified icon</title>
 							<polyline points="20 6 9 17 4 12"></polyline>
 						</svg>
-					) : null} BOT
+					) : null}{' '}
+					BOT
 				</div>
 			) : null}
 			<span class={`mr-1 cursor-pointer select-none text-sm font-medium leading-snug ${color ?? 'text-white'}`}>
