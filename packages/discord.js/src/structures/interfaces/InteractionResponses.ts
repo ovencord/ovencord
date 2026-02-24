@@ -71,12 +71,13 @@ export class InteractionResponses {
 			},
 			files,
 			auth: false,
-			query: makeURLSearchParams({ with_response: options.withResponse ?? false }),
+			query: makeURLSearchParams({ with_response: options.withResponse ?? options.fetchReply ?? false }),
 		});
 
 		this.ephemeral = Boolean(data.flags & MessageFlags.Ephemeral);
 		this.replied = true;
 
+		if (options.fetchReply) return this.fetchReply();
 		return options.withResponse ? new InteractionCallbackResponse(this.client, response) : undefined;
 	}
 
@@ -170,10 +171,11 @@ export class InteractionResponses {
 			},
 			files,
 			auth: false,
-			query: makeURLSearchParams({ with_response: options.withResponse ?? false }),
+			query: makeURLSearchParams({ with_response: options.withResponse ?? options.fetchReply ?? false }),
 		});
 		this.replied = true;
 
+		if (options.fetchReply) return this.fetchReply();
 		return options.withResponse ? new InteractionCallbackResponse(this.client, response) : undefined;
 	}
 
