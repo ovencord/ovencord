@@ -192,7 +192,9 @@ export abstract class BitField<Flags extends string> {
 		}
 		if (bit instanceof BitField) return bit.bitField;
 		if (Array.isArray(bit)) {
-			return bit.map((bit_) => (this as any).resolve(bit_)).reduce((prev: bigint, bit_: bigint) => prev | bit_, DefaultBit);
+			return bit
+				.map((bit_) => (this as any).resolve(bit_))
+				.reduce((prev: bigint, bit_: bigint) => prev | bit_, DefaultBit);
 		}
 
 		if (typeof bit === 'string') {
