@@ -1,7 +1,7 @@
 {
 	"$schema": "https://json.schemastore.org/package.json",
 	"name": "@ovencord/builders",
-	"version": "1.12.8",
+	"version": "1.12.9",
 	"description": "A set of builders that you can use when creating your bot",
 	"scripts": {
 		"test": "bun test",
@@ -45,7 +45,7 @@
 		"ts-mixer": "^6.0.4",
 
 		"zod": "^4.3.6",
-		"@ovencord/util": "^1.1.5"
+		"@ovencord/util": "^1.1.8"
 	},
 	"devDependencies": {},
 	"engines": {
