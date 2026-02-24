@@ -6,11 +6,11 @@ export interface IDiscordMessageEmbedFooter {
 
 export function DiscordMessageEmbedFooter({ content, icon, timestamp }: IDiscordMessageEmbedFooter) {
 	return (
-		<div className="mt-2 flex items-center text-xs">
-			{icon ? <img alt="Icon" className="mr-2 rounded-full" height="20" src={icon} width="20" /> : null}
+		<div class="mt-2 flex items-center text-xs">
+			{icon ? <img alt="Icon" class="mr-2 rounded-full" height="20" src={icon} width="20" /> : null}
 
 			{content}
-			{content && timestamp ? <span className="mx-1 font-medium">•</span> : null}
+			{content && timestamp ? <span class="mx-1 font-medium">•</span> : null}
 			{timestamp}
 		</div>
 	);

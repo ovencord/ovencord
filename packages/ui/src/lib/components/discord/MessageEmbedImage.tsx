@@ -6,5 +6,5 @@ export interface IDiscordMessageEmbedImage {
 }
 
 export function DiscordMessageEmbedImage({ alt, height, url, width }: IDiscordMessageEmbedImage) {
-	return <img alt={alt} className="mt-4" height={height} src={url} width={width} />;
+	return <img alt={alt} class="mt-4" height={height} src={url} width={width} />;
 }

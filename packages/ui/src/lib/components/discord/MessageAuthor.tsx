@@ -1,5 +1,3 @@
-import { FiCheck } from '@react-icons/all-files/fi/FiCheck';
-
 export interface IDiscordMessageAuthor {
 	readonly avatar: string;
 	readonly bot?: boolean;
@@ -14,24 +12,28 @@ export function DiscordMessageAuthor({ avatar, bot, verified, color, time, usern
 		<>
 			<img
 				alt={`${username}'s avatar`}
-				className="absolute left-[16px] mt-0.5 h-10 w-10 cursor-pointer select-none rounded-full"
+				class="absolute left-[16px] mt-0.5 h-10 w-10 cursor-pointer select-none rounded-full"
 				src={avatar}
 			/>
-			<h2 className="m-0 flex place-items-center text-size-inherit font-medium leading-snug" id="user-info">
-				<span className="inline-flex place-items-center" id="username">
-					<span className={`mr-1.5 cursor-pointer text-base font-medium hover:underline ${color ?? 'text-white'}`}>
+			<h2 class="m-0 flex place-items-center text-size-inherit font-medium leading-snug" id="user-info">
+				<span class="inline-flex place-items-center" id="username">
+					<span class={`mr-1.5 cursor-pointer text-base font-medium hover:underline ${color ?? 'text-white'}`}>
 						{username}
 					</span>
 					{bot ? (
 						<span
-							className="mr-1 inline-flex place-items-center rounded bg-blurple px-1 vertical-top text-[0.7rem]/4 text-white font-normal"
+							class="mr-1 inline-flex place-items-center rounded bg-blurple px-1 vertical-top text-[0.7rem]/4 text-white font-normal"
 							id="bot"
 						>
-							{verified ? <FiCheck className="mr-0.5 inline-block stroke-3" /> : null} BOT
+							{verified ? (
+								<svg class="mr-0.5 inline-block" stroke="currentColor" fill="none" stroke-width="3" viewBox="0 0 24 24" stroke-linecap="round" stroke-linejoin="round" height="1em" width="1em" xmlns="http://www.w3.org/2000/svg">
+									<polyline points="20 6 9 17 4 12"></polyline>
+								</svg>
+							) : null} BOT
 						</span>
 					) : null}
 				</span>
-				<span className="ml-1 cursor-default text-xs text-[rgb(163_166_170)] leading-snug" id="time">
+				<span class="ml-1 cursor-default text-xs text-[rgb(163_166_170)] leading-snug" id="time">
 					{time}
 				</span>
 			</h2>

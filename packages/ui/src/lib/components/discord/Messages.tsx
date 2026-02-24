@@ -1,13 +1,14 @@
-import type { PropsWithChildren } from 'react';
+import type { Child } from 'hono/jsx';
 
 export interface IDiscordMessages {
 	readonly rounded?: boolean;
+	readonly children?: Child;
 }
 
-export function DiscordMessages({ rounded, children }: PropsWithChildren<IDiscordMessages>) {
+export function DiscordMessages({ rounded, children }: IDiscordMessages) {
 	return (
 		<div
-			className={`font-source-sans-pro bg-[rgb(54_57_63)] pb-4 pt-0.1 ${rounded ? 'rounded' : ''}`}
+			class={`font-source-sans-pro bg-[rgb(54_57_63)] pb-4 pt-0.1 ${rounded ? 'rounded' : ''}`}
 			id="messages-wrapper"
 		>
 			{children}

@@ -6,11 +6,11 @@ export interface IDiscordMessageEmbedAuthor {
 
 export function DiscordMessageEmbedAuthor({ avatar, url, username }: IDiscordMessageEmbedAuthor) {
 	return (
-		<div className="mt-2 flex place-items-center">
-			<img alt={`${username}'s avatar`} className="mr-2 h-6 w-6 select-none rounded-full" src={avatar} />
+		<div class="mt-2 flex place-items-center">
+			<img alt={`${username}'s avatar`} class="mr-2 h-6 w-6 select-none rounded-full" src={avatar} />
 			{url ? (
 				<a
-					className="text-sm font-medium hover:underline"
+					class="text-sm font-medium hover:underline"
 					href={url}
 					rel="noreferrer noopener external"
 					target="_blank"
@@ -18,7 +18,7 @@ export function DiscordMessageEmbedAuthor({ avatar, url, username }: IDiscordMes
 					{username}
 				</a>
 			) : (
-				<span className="text-sm font-medium">{username}</span>
+				<span class="text-sm font-medium">{username}</span>
 			)}
 		</div>
 	);
