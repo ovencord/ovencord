@@ -1,7 +1,5 @@
 import { AsyncEventEmitter } from '@ovencord/util';
 
-
-
 /**
  * Stores an IP address and port. Used to store socket details for the local client as well as
  * for Discord.
