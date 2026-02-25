@@ -1,14 +1,17 @@
 # @𝗼𝘃𝗲𝗻𝗰𝗼𝗿𝗱/𝗯𝗿𝗼𝗸𝗲𝗿𝘀
 
-[![Bun](https://img.shields.io/badge/Bun-1.0%2B-black?logo=bun)](https://bun.sh)
-[![CI](https://github.com/ovencord/ovencord/actions/workflows/ci.yml/badge.svg)](https://github.com/ovencord/ovencord/actions/workflows/ci.yml)
-[![License](https://img.shields.io/badge/license-Apache--2.0-blue)](https://github.com/ovencord/ovencord/blob/main/LICENSE)
-<img src="https://img.shields.io/github/repo-size/ovencord/ovencord"> 
-[![GitHub Stars](https://img.shields.io/github/stars/ovencord/ovencord?style=social)](https://github.com/ovencord/ovencord)
-
-
+<div align="left">
+	<p>
+		<a href="https://discord.gg/ovencord"><img src="https://img.shields.io/badge/join_us-on_discord-5865F2?logo=discord&logoColor=white" alt="Discord server" /></a>
+		<a href="https://www.npmjs.com/package/@ovencord/builders"><img src="https://img.shields.io/npm/v/@ovencord/brokers.svg?maxAge=3600" alt="npm version" /></a>
+		<a href="https://github.com/ovencord/builders"><img src="https://img.shields.io/github/repo-size/ovencord/brokers" alt="repo size" /></a>
+		<a href="https://github.com/ovencord/ovencord/actions"><img src="https://github.com/ovencord/ovencord/actions/workflows/ci.yml/badge.svg" alt="CI status" /></a>
+	</p>
+</div>
 <div align="center">
-<img width="250" alt="Ovencord Logo" src="https://github.com/ovencord.png" />
+	<p>
+		<a href="https://ovencord.dev"><img src="https://github.com/ovencord.png" width="250" alt="ovencord" /></a>
+	</p>
 </div>
 
 ## **About**
