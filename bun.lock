@@ -25,7 +25,7 @@
     },
     "packages/builders": {
       "name": "@ovencord/builders",
-      "version": "1.13.1",
+      "version": "1.13.2",
       "dependencies": {
         "@ovencord/util": "^1.10.0",
         "discord-api-types": "^0.38.40",
@@ -49,9 +49,9 @@
     },
     "packages/discord.js": {
       "name": "@ovencord/discord.js",
-      "version": "14.16.52",
+      "version": "14.16.53",
       "dependencies": {
-        "@ovencord/builders": "^1.13.1",
+        "@ovencord/builders": "^1.13.2",
         "@ovencord/collection": "^2.1.4",
         "@ovencord/formatters": "^0.6.4",
         "@ovencord/rest": "^2.6.1",
@@ -118,7 +118,7 @@
     },
     "packages/voice": {
       "name": "@ovencord/voice",
-      "version": "0.19.7",
+      "version": "0.19.8",
       "dependencies": {
         "@noble/ciphers": "^2.1.1",
         "@snazzah/davey": "^0.1.9",
