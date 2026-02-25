@@ -110,7 +110,10 @@ export class CommandInteractionOptionResolver {
 			return null;
 		} else if (!allowedTypes.includes(option.type)) {
 			throw new DiscordjsTypeError(ErrorCodes.CommandInteractionOptionType, name, option.type, allowedTypes.join(', '));
-		} else if (required && properties.every((prop: any) => (option as any)[prop] === null || (option as any)[prop] === undefined)) {
+		} else if (
+			required &&
+			properties.every((prop: any) => (option as any)[prop] === null || (option as any)[prop] === undefined)
+		) {
 			throw new DiscordjsTypeError(ErrorCodes.CommandInteractionOptionEmpty, name, option.type);
 		}
 
