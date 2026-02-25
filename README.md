@@ -19,7 +19,8 @@ Ovencord is a **technical collective** dedicated to building high-performance, B
 
 ## What is Ovencord?
 
-**Ovencord is not a simple refactor, it is an Engine Re-engineering.** We believe that **emulation is the enemy of performance**. Our mission is to eliminate the legacy Node.js overhead from Discord tools, replacing it with pure, Zig-powered Bun native implementations.
+**Ovencord is not a simple refactor, it is an Engine Re-engineering.**                                                                                  
+We believe that **emulation is the enemy of performance**. Our mission is to eliminate the legacy Node.js overhead from Discord tools, replacing it with pure, Zig-powered Bun native implementations.
 
 > **Ovencord = Oven + Discord**  
 > We're cooking something special. 🔥
@@ -240,14 +241,14 @@ Ovencord stands on the shoulders of giants:
 - [x] Stabilize `@ovencord/discord.js` heavy fork and resolve all typings conflicts
 - [x] Port `@ovencord/voice` and `@ovencord/util` internal pipelines to Native zeroing `node:events` and external emitters
 - [x] Comprehensive performance benchmarks vs original discord.js - check `@ovencord/benchmark`
-- [ ] Achieve 100% monorepo functional test coverage
+- [x] Achieve 100% monorepo functional test coverage
 - [ ] Launch official documentation site (ovencord.dev)
 - [ ] Release discord.js -> Ovencord migration guide
 
 
 <div align="center">
 
-**Join the evolution. Stop emulating, start running.** 🥟
+**Join the evolution. Stop emulating, start running.** 
 
 [Discord](https://discord.gg/ovencord) · [Documentation](https://ovencord.dev) · [Twitter](https://twitter.com/ovencord)
 
