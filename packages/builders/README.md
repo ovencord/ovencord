@@ -1,23 +1,23 @@
-<div align="center">
-	<br />
-	<p>
-		<a href="https://ovencord.dev"><img src="https://github.com/ovencord.png" width="150" alt="ovencord" /></a>
-	</p>
-	<br />
+# @𝗼𝘃𝗲𝗻𝗰𝗼𝗿𝗱/𝗯𝘂𝗶𝗹𝗱𝗲𝗿𝘀
+<div align="left">
 	<p>
 		<a href="https://discord.gg/ovencord"><img src="https://img.shields.io/badge/join_us-on_discord-5865F2?logo=discord&logoColor=white" alt="Discord server" /></a>
 		<a href="https://www.npmjs.com/package/@ovencord/builders"><img src="https://img.shields.io/npm/v/@ovencord/builders.svg?maxAge=3600" alt="npm version" /></a>
+		<a href="https://github.com/ovencord/builders"><img src="https://img.shields.io/github/repo-size/ovencord/builders" alt="repo size" /></a>
 		<a href="https://github.com/ovencord/ovencord/actions"><img src="https://github.com/ovencord/ovencord/actions/workflows/ci.yml/badge.svg" alt="CI status" /></a>
 	</p>
 </div>
-
-# @ovencord/builders
+<div align="center">
+	<p>
+		<a href="https://ovencord.dev"><img src="https://github.com/ovencord.png" width="250" alt="ovencord" /></a>
+	</p>
+</div>
 
 **High-performance payload builders, standardized for Zod 3 and Bun.**
 
 `@ovencord/builders` is a modernized utility package for building Discord API payloads. Rebuilt for Bun, it eliminates legacy Zod v2 constraints and fixes long-standing multi-inheritance issues in TypeScript.
 
-## 🥟 Why Ovencord-Builders?
+## Why Ovencord-Builders?
 
 | Feature | @ovencord/builders | @ovencord/builders |
 |---------|---------------------|--------------------|
@@ -27,7 +27,7 @@
 | **TypeScript** | Basic | **Strict & Highly Inferential** |
 | **Build Step** | Required | **Zero** (Source-only) |
 
-### ✨ Technical Optimizations
+### Technical Optimizations
 - **Zod 3 Native**: All schemas have been refactored to use native Zod 3 features like `z.nativeEnum()`, `z.string().url()`, and `superRefine`, resulting in faster validation cycles and better error messages.
 - **Mixin Clarity**: Resolved `ts-mixer` visibility issues. Methods like `.toJSON()` are now properly exposed through interface merging, ensuring a seamless developer experience.
 - **Uint8Array Support**: Native support for Web Standard `Uint8Array` in attachments, reducing `Buffer` overhead.
@@ -40,7 +40,7 @@
 bun add @ovencord/builders
 ```
 
-## 🚀 Examples
+## Examples
 
 ### Build a Chat Input Command
 
@@ -77,16 +77,16 @@ const row = new ActionRowBuilder()
 	);
 ```
 
-## 🛠️ Performance Features
+## Performance Features
 
 - **Standardized Assertions**: Refactored assertions for maximum performance during serialization.
 - **Source-Only Distribution**: No more `dist` folders. Bun loads the TypeScript source directly, making the package extremely lightweight (~1.5MB total vs ~15MB for discord.js).
 
-## 🤝 Contributing
+## Contributing
 
 See [the contribution guide](https://github.com/ovencord/ovencord/blob/main/.github/CONTRIBUTING.md) if you'd like to submit a PR.
 
-## 📜 License
+## License
 
 Apache-2.0 © Ovencord Contributors  
 Original discord.js code © Discord.js Contributors
