@@ -3894,6 +3894,10 @@ export class Webhook<Type extends WebhookType = WebhookType> {
 	public isIncoming(): this is Webhook<WebhookType.Incoming>;
 	public isChannelFollower(): this is Webhook<WebhookType.ChannelFollower>;
 
+	public get createdAt(): Date;
+	public get createdTimestamp(): number;
+	public delete(reason?: string): Promise<void>;
+	public edit(options: WebhookEditOptions): Promise<this>;
 	public editMessage(
 		message: MessageResolvable,
 		options: MessagePayload | WebhookMessageEditOptions | string,

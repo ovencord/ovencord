@@ -118,10 +118,6 @@ function audioCycleStep() {
 	nextTime += FRAME_LENGTH;
 	const available = audioPlayers.filter((player) => player.checkPlayable());
 
-	for (const player of available) {
-		player._stepDispatch();
-	}
-
 	prepareNextAudioFrame(available);
 }
 
