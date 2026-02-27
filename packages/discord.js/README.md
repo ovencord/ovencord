@@ -7,6 +7,7 @@
 		<a href="https://www.npmjs.com/package/@ovencord/discord.js"><img src="https://img.shields.io/npm/v/@ovencord/discord.js.svg?maxAge=3600&label=version&color=f97316" alt="npm version" /></a>
 		<a href="https://www.npmjs.com/package/@ovencord/discord.js"><img src="https://img.shields.io/npm/dt/@ovencord/discord.js.svg?maxAge=3600&color=22c55e" alt="npm downloads" /></a>
 		<a href="https://github.com/ovencord/ovencord/commits/main/packages/discord.js"><img alt="Last commit" src="https://img.shields.io/github/last-commit/ovencord/ovencord?logo=github&logoColor=ffffff&path=packages%2Fdiscord.js" /></a>
+		<img src="https://saizu.dev/badge/@ovencord/discord.js?type=install" alt="install size">
 		<a href="https://github.com/ovencord/ovencord/blob/main/LICENSE"><img src="https://img.shields.io/github/license/ovencord/ovencord?color=6366f1" alt="License" /></a>
 	</p>
 		<p>
