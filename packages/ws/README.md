@@ -1,12 +1,18 @@
-# @ovencord/ws
+# @𝗼𝘃𝗲𝗻𝗰𝗼𝗿𝗱/𝘄𝘀
 
+<div align="left">
+	<p>
+		<a href="https://discord.gg/ovencord"><img src="https://img.shields.io/badge/join_us-on_discord-5865F2?logo=discord&logoColor=white" alt="Discord server" /></a>
+		<a href="https://www.npmjs.com/package/@ovencord/ws"><img src="https://img.shields.io/npm/v/@ovencord/ws.svg?maxAge=3600" alt="npm version" /></a>
+		<img src="https://saizu.dev/badge/@ovencord/ws?type=install" alt="install size">
+		<a href="https://github.com/ovencord/ovencord/actions"><img src="https://github.com/ovencord/ovencord/actions/workflows/ci.yml/badge.svg" alt="CI status" /></a>
+	</p>
+</div>
 <div align="center">
-
-**Discord WebSocket Client — Bun Native Edition**
-
-[![npm version](https://img.shields.io/npm/v/@ovencord/ws?color=crimson&logo=npm)](https://www.npmjs.com/package/@ovencord/ws)
-[![Bun](https://img.shields.io/badge/Bun-1.0%2B-black?logo=bun)](https://bun.sh)
-[![License](https://img.shields.io/npm/l/@ovencord/ws?color=blue)](https://github.com/Bru/ovencord/blob/main/LICENSE)
+	<p>
+		<a href="https://ovencord.dev"><img src="https://github.com/ovencord.png" width="250" alt="ovencord" /></a>
+	</p>
+</div>
 
 **The ONLY Discord Gateway client built exclusively for Bun.**
 
@@ -14,14 +20,14 @@
 
 ---
 
-## 🚀 What is @ovencord/ws?
+## **About**
 
 `@ovencord/ws` is a **radical reimagining** of Discord's WebSocket client, stripped of all Node.js legacy and rebuilt from the ground up to leverage **Bun's native runtime APIs**.
 
 This is NOT a simple port. Every line of code has been scrutinized and rewritten to be:
-- ⚡ **Faster** (30-50% performance gains)
-- 🪶 **Lighter** (~56MB smaller than discord.js ecosystem)
-- 🔥 **Simpler** (132 fewer lines of complexity)
+- **Faster** (30-50% performance gains)
+- **Lighter** (~56MB smaller than discord.js ecosystem)
+- **Simpler** (132 fewer lines of complexity)
 
 ---
 
@@ -88,13 +94,13 @@ What was added:
 
 ---
 
-## Installation
+## 📦 Installation
+
+**Bun 1.0.+ is required, but we recommend always using the most up-to-date version**
 
 ```bash
 bun add @ovencord/ws
 ```
-
-**Requirements**: Bun >= 1.0.0
 
 ---
 
@@ -178,12 +184,6 @@ Bun loads TypeScript directly. **No `dist/` folder. No build time. Instant updat
 - All event types
 - All configuration options
 
-**Migration**:
-```diff
-- import { WebSocketManager } from '@ovencord/ws';
-+ import { WebSocketManager } from '@ovencord/ws';
-```
-
 That's the ONLY change needed.
 
 ---
@@ -222,41 +222,3 @@ That's the ONLY change needed.
 
 ---
 
-## Contributing
-
-We accept PRs that:
-- Remove more legacy code
-- Improve performance
-- Add Bun-native features
-- Fix bugs
-
-We reject PRs that:
-- Add Node.js dependencies
-- Add build tools
-- Break API compatibility
-- Reduce performance
-
----
-
-## License
-
-Apache-2.0
-
----
-
-## Credits
-
-Original `@ovencord/ws` by the Discord.js team.  
-Bun-native refactor by the ovencord team.
-
-**This is NOT an official Discord library.**
-
----
-
-<div align="center">
-
-**Built with ❤️ and ⚡ by developers who refuse to compromise on performance.**
-
-[Report Bug](https://github.com/Bru/ovencord/issues) · [Request Feature](https://github.com/Bru/ovencord/issues)
-
-</div>
