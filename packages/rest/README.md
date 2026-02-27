@@ -1,45 +1,49 @@
-<div align="center">
-	<br />
-	<p>
-		<a href="https://ovencord.dev"><img src="https://github.com/ovencord.png" width="150" alt="ovencord" /></a>
-	</p>
-	<br />
+# @𝗼𝘃𝗲𝗻𝗰𝗼𝗿𝗱/𝗿𝗲𝘀𝘁
+
+<div align="left">
 	<p>
 		<a href="https://discord.gg/ovencord"><img src="https://img.shields.io/badge/join_us-on_discord-5865F2?logo=discord&logoColor=white" alt="Discord server" /></a>
-		<a href="https://www.npmjs.com/package/@ovencord/rest"><img src="https://img.shields.io/npm/v/@ovencord/rest.svg?maxAge=3600" alt="npm version" /></a>
+		<a href="https://www.npmjs.com/package/@ovencord/rest"><img src="https://img.shields.io/npm/v/@ovencord/brokers.svg?maxAge=3600" alt="npm version" /></a>
+		<img src="https://saizu.dev/badge/@ovencord/rest?type=install" alt="install size">
 		<a href="https://github.com/ovencord/ovencord/actions"><img src="https://github.com/ovencord/ovencord/actions/workflows/ci.yml/badge.svg" alt="CI status" /></a>
 	</p>
 </div>
+<div align="center">
+	<p>
+		<a href="https://ovencord.dev"><img src="https://github.com/ovencord.png" width="250" alt="ovencord" /></a>
+	</p>
+</div>
 
-# @ovencord/rest
+## **About**
 
 **High-performance, Bun-native Discord REST client.**
 
 `@ovencord/rest` is a modernized fork of `@ovencord/rest`, rebuilt from the ground up to leverage the full power of the Bun runtime. It maintains 100% API compatibility with the original package while offering superior performance and zero legacy bloat.
 
-## 🥟 Why Ovencord-REST?
+## **Why Ovencord Rest?**
 
 | Feature | @ovencord/rest | @ovencord/rest |
 |---------|-----------------|----------------|
-| **Runtime** | Node.js | **Bun Native** |
-| **HTTP Client** | undici (Legacy) | **Bun.fetch** (Native Zig) |
-| **File Handling** | node:fs / Buffer | **Bun.file** / Uint8Array |
+| **Runtime** | Node.js | **`Bun Native`** |
+| **HTTP Client** | undici (Legacy) | **`Bun.fetch`** (Native Zig) |
+| **File Handling** | node:fs / Buffer | **`Bun.file`** / `Uint8Array` |
 | **Dependencies** | ~10+ | **Minimal** |
 | **Build Step** | Required (CJS/ESM) | **None** (Source-only) |
 | **Speed** | Standard | **Up to 2x faster request cycle** |
 
-### ✨ Architectural Shift
-We replaced the complex `undici` dispatcher and Node.js-specific stream handling with a clean, Web-Standard implementation powered by Bun's native Zig-accelerated `fetch`.
-
 ## 📦 Installation
 
-**Bun 1.0.0 or newer is required.**
+**Bun 1.0.+ is required, but we recommend always using the most up-to-date version**
 
 ```sh
-bun add @ovencord/rest
+bun add @ovencord/brokers
 ```
 
-## 🚀 Examples
+## **Architectural Shift**
+We replaced the complex `undici` dispatcher and Node.js-specific stream handling with a clean, Web-Standard implementation powered by Bun's native Zig-accelerated `fetch`.
+
+
+## Examples
 
 ### Send a basic message
 
@@ -78,17 +82,17 @@ await rest.post(Routes.channelMessages(CHANNEL_ID), {
 });
 ```
 
-## 🛠️ Performance Features
+## **Performance Features**
 
 - **Zero-Copy**: Optimized binary handling using `Uint8Array` instead of `Buffer` where possible.
 - **Native Fetch**: Uses Bun's specialized `fetch` implementation for lower overhead.
 - **Source-Only**: No more `dist` folders. Bun loads the TypeScript source directly, leading to faster startup times and better stack traces.
 
-## 🤝 Contributing
+## **Contributing**
 
 See [the contribution guide](https://github.com/ovencord/ovencord/blob/main/.github/CONTRIBUTING.md) if you'd like to submit a PR.
 
-## 📜 License
+## **License**
 
 Apache-2.0 © Ovencord Contributors  
 Original discord.js code © Discord.js Contributors
