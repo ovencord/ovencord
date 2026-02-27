@@ -42,8 +42,8 @@ We believe that **emulation is the enemy of performance**. Our mission is to eli
 | [@ovencord/formatters](./packages/formatters) | Message formatting utilities | ✅ **Stable** |
 | [@ovencord/structures](./packages/structures) | Discord data structures | ✅ **Stable** |
 | [@ovencord/voice](./packages/voice) | Implementation of the Discord Voice API | ✅ **Stable** |
-| [@ovencord/next](./packages/next) | Next-generation components | 🚧 **WIP** |
-| [@ovencord/ui](./packages/ui) | JSX-based UI framework for Discord | 🚧 **WIP** |
+| [@ovencord/next](./packages/next) | Next-generation components | ✅ **Stable** |
+| [@ovencord/ui](./packages/ui) | JSX-based UI framework for Discord | ✅ **Stable** |
 
 
 ## Our Philosophy
