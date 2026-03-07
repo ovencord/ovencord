@@ -1,8 +1,9 @@
+import type { Sticker } from '../../structures/Sticker.js';
 import { Events } from '../../util/Events.js';
 import { Action } from './Action.js';
 
 export class GuildStickerDeleteAction extends Action {
-	override handle(sticker: any) {
+	override handle(sticker: Sticker) {
 		sticker.guild.stickers.cache.delete(sticker.id);
 		/**
 		 * Emitted whenever a custom sticker is deleted in a guild.

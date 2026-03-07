@@ -1,3 +1,4 @@
+import type { Client } from '../Client.js';
 import { ChannelCreateAction } from './ChannelCreate.js';
 import { ChannelDeleteAction } from './ChannelDelete.js';
 import { ChannelUpdateAction } from './ChannelUpdate.js';
@@ -40,7 +41,7 @@ import { TypingStartAction } from './TypingStart.js';
 import { UserUpdateAction } from './UserUpdate.js';
 
 export class ActionsManager {
-	public client: any;
+	public client: Client;
 	public ChannelCreate: ChannelCreateAction;
 
 	public ChannelDelete: ChannelDeleteAction;
@@ -91,7 +92,7 @@ export class ActionsManager {
 
 	injectedMessage = Symbol('djs.actions.injectedMessage');
 
-	constructor(client: any) {
+	constructor(client: Client) {
 		this.client = client;
 
 		this.ChannelCreate = new ChannelCreateAction(this.client);

@@ -1,8 +1,9 @@
+import type { GatewayThreadCreateDispatchData } from 'discord-api-types/v10';
 import { Events } from '../../util/Events.js';
 import { Action } from './Action.js';
 
 export class ThreadCreateAction extends Action {
-	override handle(data: any) {
+	override handle(data: GatewayThreadCreateDispatchData) {
 		const client = this.client;
 		const existing = client.channels.cache.has(data.id);
 		const thread = client.channels._add(data);

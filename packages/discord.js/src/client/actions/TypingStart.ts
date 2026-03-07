@@ -1,9 +1,10 @@
+import type { GatewayTypingStartDispatchData } from 'discord-api-types/v10';
 import { Typing } from '../../structures/Typing.js';
 import { Events } from '../../util/Events.js';
 import { Action } from './Action.js';
 
 export class TypingStartAction extends Action {
-	override handle(data: any) {
+	override handle(data: GatewayTypingStartDispatchData) {
 		const channel = this.getChannel({ id: data.channel_id, ...('guild_id' in data && { guild_id: data.guild_id }) });
 		if (!channel) return;
 

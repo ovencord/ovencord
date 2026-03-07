@@ -1,9 +1,11 @@
 import { Collection } from '@ovencord/collection';
+import type { GatewayThreadMembersUpdateDispatchData } from 'discord-api-types/v10';
+import type { ThreadMember } from '../../structures/ThreadMember.js';
 import { Events } from '../../util/Events.js';
 import { Action } from './Action.js';
 
 export class ThreadMembersUpdateAction extends Action {
-	override handle(data: any) {
+	override handle(data: GatewayThreadMembersUpdateDispatchData) {
 		const client = this.client;
 		const thread = client.channels.cache.get(data.id);
 		if (thread) {
@@ -12,17 +14,22 @@ export class ThreadMembersUpdateAction extends Action {
 			const removedMembers = new Collection();
 
 			data.added_members?.reduce(
-				(_addedMembers: any, addedMember: any) =>
-					_addedMembers.set(addedMember.user_id, thread.members._add(addedMember)),
+				(
+					_addedMembers: Collection<string, ThreadMember>,
+					addedMember: GatewayThreadMembersUpdateDispatchData['added_members'][number],
+				) => _addedMembers.set(addedMember.user_id, thread.members._add(addedMember)),
 				addedMembers,
 			);
 
-			data.removed_member_ids?.reduce((removedMembersIds: any, removedMembersId: any) => {
-				const threadMember = this.getThreadMember(removedMembersId, thread.members);
-				if (threadMember) removedMembersIds.set(threadMember.id, threadMember);
-				thread.members.cache.delete(removedMembersId);
-				return removedMembersIds;
-			}, removedMembers);
+			data.removed_member_ids?.reduce(
+				(removedMembersIds: Collection<string, ThreadMember>, removedMembersId: string) => {
+					const threadMember = this.getThreadMember(removedMembersId, thread.members);
+					if (threadMember) removedMembersIds.set(threadMember.id, threadMember);
+					thread.members.cache.delete(removedMembersId);
+					return removedMembersIds;
+				},
+				removedMembers,
+			);
 
 			if (addedMembers.size === 0 && removedMembers.size === 0) {
 				// Uncached thread member(s) left.

@@ -1,11 +1,13 @@
+import type { GatewayMessageDeleteDispatchData } from 'discord-api-types/v10';
+import type { Message } from '../../structures/Message.js';
 import { Events } from '../../util/Events.js';
 import { Action } from './Action.js';
 
 export class MessageDeleteAction extends Action {
-	override handle(data: any) {
+	override handle(data: GatewayMessageDeleteDispatchData) {
 		const client = this.client;
 		const channel = this.getChannel({ id: data.channel_id, ...('guild_id' in data && { guild_id: data.guild_id }) });
-		let message: any;
+		let message: Message | undefined;
 		if (channel) {
 			if (!channel.isTextBased()) return {};
 

@@ -1,3 +1,4 @@
+import type { GatewayMessageReactionAddDispatchData } from 'discord-api-types/v10';
 import { Events } from '../../util/Events.js';
 import { Partials } from '../../util/Partials.js';
 import { Action } from './Action.js';
@@ -5,7 +6,7 @@ import { Action } from './Action.js';
 /*
 { user_id: 'id',
      message_id: 'id',
-     emoji: { name: '�', id: null },
+     emoji: { name: '', id: null },
      channel_id: 'id',
      burst: boolean
      // If originating from a guild
@@ -14,7 +15,7 @@ import { Action } from './Action.js';
 */
 
 export class MessageReactionAddAction extends Action {
-	override handle(data: any, fromStructure = false) {
+	override handle(data: GatewayMessageReactionAddDispatchData, fromStructure = false) {
 		if (!data.emoji) return false;
 
 		const user = this.getUserFromMember(data);

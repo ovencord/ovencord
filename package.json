@@ -13,8 +13,18 @@
 		"build": "bun run --recursive build",
 		"test": "bun run --recursive test",
 		"lint": "biome check .",
+		"lint:discord.js": "biome check ./packages/discord.js",
+		"lint:rest": "biome check ./packages/rest",
+		"lint:structures": "biome check ./packages/structures",
+		"lint:util": "biome check ./packages/util",
+		"lint:ws": "biome check ./packages/ws",
 		"format": "biome format --write .",
 		"check": "biome check --write .",
+		"check:discord.js": "biome check ./packages/discord.js",
+		"check:rest": "biome check ./packages/rest",
+		"check:structures": "biome check ./packages/structures",
+		"check:util": "biome check ./packages/util",
+		"check:ws": "biome check ./packages/ws",
 		"update": "bun --recursive update --interactive",
 		"update:latest": "bun --recursive update --interactive --latest",
 		"typecheck": "bun run --recursive typecheck"
@@ -52,7 +62,7 @@
 	"engines": {
 		"bun": ">=1.3.0"
 	},
-	"packageManager": "bun@1.3.9",
+	"packageManager": "bun@1.3.10",
 	"dependencies": {
 		"ts-mixer": "^6.0.4"
 	}

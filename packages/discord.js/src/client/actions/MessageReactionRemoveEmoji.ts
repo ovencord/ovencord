@@ -1,8 +1,9 @@
+import type { GatewayMessageReactionRemoveEmojiDispatchData } from 'discord-api-types/v10';
 import { Events } from '../../util/Events.js';
 import { Action } from './Action.js';
 
 export class MessageReactionRemoveEmojiAction extends Action {
-	override handle(data: any) {
+	override handle(data: GatewayMessageReactionRemoveEmojiDispatchData) {
 		const channel = this.getChannel({ id: data.channel_id, ...('guild_id' in data && { guild_id: data.guild_id }) });
 		if (!channel?.isTextBased()) return false;
 

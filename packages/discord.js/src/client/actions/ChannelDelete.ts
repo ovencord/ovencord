@@ -1,8 +1,9 @@
+import type { GatewayChannelDeleteDispatchData } from 'discord-api-types/v10';
 import { Events } from '../../util/Events.js';
 import { Action } from './Action.js';
 
 export class ChannelDeleteAction extends Action {
-	override handle(data: any) {
+	override handle(data: GatewayChannelDeleteDispatchData) {
 		const client = this.client;
 		const channel = client.channels.cache.get(data.id);
 

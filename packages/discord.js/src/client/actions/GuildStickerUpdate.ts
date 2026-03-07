@@ -1,8 +1,9 @@
+import type { Sticker } from '../../structures/Sticker.js';
 import { Events } from '../../util/Events.js';
 import { Action } from './Action.js';
 
 export class GuildStickerUpdateAction extends Action {
-	override handle(current: any, data: any) {
+	override handle(current: Sticker, data: Sticker) {
 		const old = current._update(data);
 		/**
 		 * Emitted whenever a custom sticker is updated in a guild.

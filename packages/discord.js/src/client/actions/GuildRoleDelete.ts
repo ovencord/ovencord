@@ -1,11 +1,13 @@
+import type { GatewayGuildRoleDeleteDispatchData } from 'discord-api-types/v10';
+import type { Role } from '../../structures/Role.js';
 import { Events } from '../../util/Events.js';
 import { Action } from './Action.js';
 
 export class GuildRoleDeleteAction extends Action {
-	override handle(data: any) {
+	override handle(data: GatewayGuildRoleDeleteDispatchData) {
 		const client = this.client;
 		const guild = client.guilds.cache.get(data.guild_id);
-		let role: any;
+		let role: Role | undefined;
 
 		if (guild) {
 			role = guild.roles.cache.get(data.role_id);

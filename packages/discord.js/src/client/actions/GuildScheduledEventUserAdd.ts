@@ -1,8 +1,9 @@
+import type { GatewayGuildScheduledEventUserAddDispatchData } from 'discord-api-types/v10';
 import { Events } from '../../util/Events.js';
 import { Action } from './Action.js';
 
 export class GuildScheduledEventUserAddAction extends Action {
-	override handle(data: any) {
+	override handle(data: GatewayGuildScheduledEventUserAddDispatchData) {
 		const client = this.client;
 		const guild = client.guilds.cache.get(data.guild_id);
 

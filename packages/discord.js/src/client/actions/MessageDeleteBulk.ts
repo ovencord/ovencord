@@ -1,9 +1,10 @@
 import { Collection } from '@ovencord/collection';
+import type { GatewayMessageDeleteBulkDispatchData } from 'discord-api-types/v10';
 import { Events } from '../../util/Events.js';
 import { Action } from './Action.js';
 
 export class MessageDeleteBulkAction extends Action {
-	override handle(data: any) {
+	override handle(data: GatewayMessageDeleteBulkDispatchData) {
 		const client = this.client;
 		const channel = client.channels.cache.get(data.channel_id);
 

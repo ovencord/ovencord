@@ -1,8 +1,9 @@
+import type { GatewayChannelModifyDispatchData } from 'discord-api-types/v10';
 import { createChannel } from '../../util/Channels.js';
 import { Action } from './Action.js';
 
 export class ChannelUpdateAction extends Action {
-	override handle(data: any) {
+	override handle(data: GatewayChannelModifyDispatchData) {
 		const client = this.client;
 		let channel = client.channels.cache.get(data.id);
 

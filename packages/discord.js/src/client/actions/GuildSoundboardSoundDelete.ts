@@ -1,8 +1,9 @@
+import type { GatewayGuildSoundboardSoundDeleteDispatchData } from 'discord-api-types/v10';
 import { Events } from '../../util/Events.js';
 import { Action } from './Action.js';
 
 export class GuildSoundboardSoundDeleteAction extends Action {
-	override handle(data: any) {
+	override handle(data: GatewayGuildSoundboardSoundDeleteDispatchData) {
 		const guild = this.client.guilds.cache.get(data.guild_id);
 
 		if (!guild) return {};

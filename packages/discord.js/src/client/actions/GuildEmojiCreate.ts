@@ -1,8 +1,10 @@
+import type { APIEmoji } from 'discord-api-types/v10';
+import type { Guild } from '../../structures/Guild.js';
 import { Events } from '../../util/Events.js';
 import { Action } from './Action.js';
 
 export class GuildEmojiCreateAction extends Action {
-	override handle(guild: any, createdEmoji: any) {
+	override handle(guild: Guild, createdEmoji: APIEmoji) {
 		const already = guild.emojis.cache.has(createdEmoji.id);
 		const emoji = guild.emojis._add(createdEmoji);
 		/**

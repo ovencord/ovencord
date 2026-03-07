@@ -1,8 +1,9 @@
+import type { GuildEmoji } from '../../structures/GuildEmoji.js';
 import { Events } from '../../util/Events.js';
 import { Action } from './Action.js';
 
 export class GuildEmojiUpdateAction extends Action {
-	override handle(current: any, data: any) {
+	override handle(current: GuildEmoji, data: GuildEmoji) {
 		const old = current._update(data);
 		/**
 		 * Emitted whenever a custom emoji is updated in a guild.

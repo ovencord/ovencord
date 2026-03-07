@@ -1,16 +1,17 @@
+import type { GatewayMessageReactionRemoveDispatchData } from 'discord-api-types/v10';
 import { Events } from '../../util/Events.js';
 import { Action } from './Action.js';
 
 /*
 { user_id: 'id',
      message_id: 'id',
-     emoji: { name: '�', id: null },
+     emoji: { name: '', id: null },
      channel_id: 'id',
      guild_id: 'id' }
 */
 
 export class MessageReactionRemoveAction extends Action {
-	override handle(data: any) {
+	override handle(data: GatewayMessageReactionRemoveDispatchData) {
 		if (!data.emoji) return false;
 
 		const user = this.getUser(data);

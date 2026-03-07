@@ -1,8 +1,10 @@
+import type { APISticker } from 'discord-api-types/v10';
+import type { Guild } from '../../structures/Guild.js';
 import { Events } from '../../util/Events.js';
 import { Action } from './Action.js';
 
 export class GuildStickerCreateAction extends Action {
-	override handle(guild: any, createdSticker: any) {
+	override handle(guild: Guild, createdSticker: APISticker) {
 		const already = guild.stickers.cache.has(createdSticker.id);
 		const sticker = guild.stickers._add(createdSticker);
 		/**

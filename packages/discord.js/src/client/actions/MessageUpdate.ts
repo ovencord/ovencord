@@ -1,7 +1,8 @@
+import type { GatewayMessageUpdateDispatchData } from 'discord-api-types/v10';
 import { Action } from './Action.js';
 
 export class MessageUpdateAction extends Action {
-	override handle(data: any) {
+	override handle(data: GatewayMessageUpdateDispatchData) {
 		const channel = this.getChannel({ id: data.channel_id, ...('guild_id' in data && { guild_id: data.guild_id }) });
 		if (channel) {
 			if (!channel.isTextBased()) return {};

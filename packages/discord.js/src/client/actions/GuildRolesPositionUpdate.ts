@@ -1,7 +1,12 @@
 import { Action } from './Action.js';
 
+interface GuildRolesPositionUpdateData {
+	guild_id: string;
+	roles: { id: string; position: number | null }[];
+}
+
 export class GuildRolesPositionUpdateAction extends Action {
-	override handle(data: any) {
+	override handle(data: GuildRolesPositionUpdateData) {
 		const client = this.client;
 
 		const guild = client.guilds.cache.get(data.guild_id);

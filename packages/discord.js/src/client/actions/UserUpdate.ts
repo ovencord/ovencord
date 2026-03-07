@@ -1,8 +1,9 @@
+import type { GatewayUserUpdateDispatchData } from 'discord-api-types/v10';
 import { Events } from '../../util/Events.js';
 import { Action } from './Action.js';
 
 export class UserUpdateAction extends Action {
-	override handle(data: any) {
+	override handle(data: GatewayUserUpdateDispatchData) {
 		const client = this.client;
 
 		const newUser = data.id === client.user?.id ? client.user : client.users.cache.get(data.id);

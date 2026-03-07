@@ -1,5 +1,11 @@
+import type {
+	APIApplicationCommandInteraction,
+	APIMessageComponentInteraction,
+	GatewayInteractionCreateDispatchData,
+} from 'discord-api-types/v10';
 import { ApplicationCommandType, ComponentType, InteractionType } from 'discord-api-types/v10';
 import { AutocompleteInteraction } from '../../structures/AutocompleteInteraction.js';
+import type { BaseInteraction } from '../../structures/BaseInteraction.js';
 import { ButtonInteraction } from '../../structures/ButtonInteraction.js';
 import { ChannelSelectMenuInteraction } from '../../structures/ChannelSelectMenuInteraction.js';
 import { ChatInputCommandInteraction } from '../../structures/ChatInputCommandInteraction.js';
@@ -12,21 +18,24 @@ import { StringSelectMenuInteraction } from '../../structures/StringSelectMenuIn
 import { UserContextMenuCommandInteraction } from '../../structures/UserContextMenuCommandInteraction.js';
 import { UserSelectMenuInteraction } from '../../structures/UserSelectMenuInteraction.js';
 import { Events } from '../../util/Events.js';
+import type { Client } from '../Client.js';
 import { Action } from './Action.js';
 
+type InteractionConstructor = new (client: Client, data: GatewayInteractionCreateDispatchData) => BaseInteraction;
+
 export class InteractionCreateAction extends Action {
-	override handle(data: any) {
+	override handle(data: GatewayInteractionCreateDispatchData) {
 		const client = this.client;
 
 		// Resolve and cache partial channels for Interaction#channel getter
 		const channel = data.channel && this.getChannel(data.channel);
 
 		// Do not emit this for interactions that cache messages that are non-text-based.
-		let InteractionClass: any;
+		let InteractionClass: InteractionConstructor | undefined;
 
 		switch (data.type) {
 			case InteractionType.ApplicationCommand:
-				switch (data.data.type) {
+				switch ((data as APIApplicationCommandInteraction).data.type) {
 					case ApplicationCommandType.ChatInput:
 						InteractionClass = ChatInputCommandInteraction;
 						break;
@@ -52,7 +61,7 @@ export class InteractionCreateAction extends Action {
 			case InteractionType.MessageComponent:
 				if (channel && !channel.isTextBased()) return;
 
-				switch (data.data.component_type) {
+				switch ((data as APIMessageComponentInteraction).data.component_type) {
 					case ComponentType.Button:
 						InteractionClass = ButtonInteraction;
 						break;
@@ -91,6 +100,7 @@ export class InteractionCreateAction extends Action {
 				return;
 		}
 
+		if (!InteractionClass) return;
 		const interaction = new InteractionClass(client, data);
 
 		/**

@@ -1,8 +1,9 @@
+import type { GatewayStageInstanceDeleteDispatchData } from 'discord-api-types/v10';
 import { Events } from '../../util/Events.js';
 import { Action } from './Action.js';
 
 export class StageInstanceDeleteAction extends Action {
-	override handle(data: any) {
+	override handle(data: GatewayStageInstanceDeleteDispatchData) {
 		const client = this.client;
 		const channel = this.getChannel({ id: data.channel_id, guild_id: data.guild_id });
 
