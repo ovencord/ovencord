@@ -43,7 +43,6 @@ We believe that **emulation is the enemy of performance**. Our mission is to eli
 | [@ovencord/structures](./packages/structures) | Discord data structures | ✅ **Stable** |
 | [@ovencord/voice](./packages/voice) | Implementation of the Discord Voice API | ✅ **Stable** |
 | [@ovencord/next](./packages/next) | Next-generation components | ✅ **Stable** |
-| [@ovencord/ui](./packages/ui) | JSX-based UI framework for Discord | ✅ **Stable** |
 
 
 ## Our Philosophy
@@ -188,7 +187,6 @@ ovencord/
 │   ├── next/        # Next-generation library paradigms
 │   ├── rest/        # Discord REST API client
 │   ├── structures/  # Discord data structures
-│   ├── ui/          # JSX-based Discord UI framework
 │   ├── util/        # Shared utilities
 │   ├── voice/       # Voice connection support
 │   └── ws/          # WebSocket gateway client
