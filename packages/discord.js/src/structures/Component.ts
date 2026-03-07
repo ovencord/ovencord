@@ -1,9 +1,11 @@
+import type { APIMessageComponent } from 'discord-api-types/v10';
+
 /**
  * Represents a component
  */
 export class Component {
-	public data: any;
-	constructor(data: any) {
+	public data: APIMessageComponent;
+	constructor(data: APIMessageComponent) {
 		/**
 		 * The API data associated with this component
 		 *
@@ -38,7 +40,7 @@ export class Component {
 	 * @param {Component|APIMessageComponent} other The component to compare against
 	 * @returns {boolean}
 	 */
-	equals(other: any) {
+	equals(other: Component | APIMessageComponent) {
 		if (other instanceof Component) {
 			return Bun.deepEquals(other.data, this.data);
 		}

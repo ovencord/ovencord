@@ -1,5 +1,11 @@
 import { lazy } from '@ovencord/util';
+import type {
+	APIApplicationCommandInteraction,
+	APIApplicationCommandInteractionData,
+	Snowflake,
+} from 'discord-api-types/v10';
 import { ApplicationCommandOptionType } from 'discord-api-types/v10';
+import type { Client } from '../client/Client.js';
 import { transformResolved } from '../util/Util.js';
 import { CommandInteraction } from './CommandInteraction.js';
 import { CommandInteractionOptionResolver } from './CommandInteractionOptionResolver.js';
@@ -12,9 +18,9 @@ const getMessage = lazy(() => require('./Message.js').Message);
  * @extends {CommandInteraction}
  */
 export class ContextMenuCommandInteraction extends CommandInteraction {
-	public options: any;
-	public targetId: any;
-	constructor(client: any, data: any) {
+	public options: CommandInteractionOptionResolver;
+	public targetId: Snowflake;
+	constructor(client: Client, data: APIApplicationCommandInteraction) {
 		super(client, data);
 		/**
 		 * The target of the interaction, parsed into options
@@ -23,8 +29,8 @@ export class ContextMenuCommandInteraction extends CommandInteraction {
 		 */
 		this.options = new CommandInteractionOptionResolver(
 			this.client,
-			this.resolveContextMenuOptions(data.data),
-			transformResolved({ client: this.client, guild: this.guild, channel: this.channel }, data.data.resolved),
+			this.resolveContextMenuOptions(data.data as any),
+			transformResolved({ client: this.client, guild: this.guild, channel: this.channel }, (data.data as any).resolved),
 		);
 
 		/**
@@ -32,7 +38,7 @@ export class ContextMenuCommandInteraction extends CommandInteraction {
 		 *
 		 * @type {Snowflake}
 		 */
-		this.targetId = data.data.target_id;
+		this.targetId = (data.data as any).target_id;
 	}
 
 	/**
@@ -42,7 +48,7 @@ export class ContextMenuCommandInteraction extends CommandInteraction {
 	 * @returns {CommandInteractionOption[]}
 	 * @private
 	 */
-	resolveContextMenuOptions({ target_id, resolved }: any) {
+	resolveContextMenuOptions({ target_id, resolved }: Record<string, any>) {
 		const result = [];
 
 		if (resolved.users?.[target_id]) {

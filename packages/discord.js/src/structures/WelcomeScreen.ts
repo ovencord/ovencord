@@ -1,6 +1,8 @@
 import { Collection } from '@ovencord/collection';
+import type { APIGuildWelcomeScreen, Snowflake } from 'discord-api-types/v10';
 import { GuildFeature } from 'discord-api-types/v10';
 import { Base } from './Base.js';
+import type { Guild } from './Guild.js';
 import { WelcomeChannel } from './WelcomeChannel.js';
 
 /**
@@ -9,10 +11,10 @@ import { WelcomeChannel } from './WelcomeChannel.js';
  * @extends {Base}
  */
 export class WelcomeScreen extends Base {
-	public guild: any;
-	public description: any;
-	public welcomeChannels: any;
-	constructor(guild: any, data: any) {
+	public guild: Guild;
+	public description: string | null;
+	public welcomeChannels: Collection<Snowflake, WelcomeChannel>;
+	constructor(guild: Guild, data: APIGuildWelcomeScreen | Record<string, unknown>) {
 		super(guild.client);
 
 		/**
@@ -27,7 +29,7 @@ export class WelcomeScreen extends Base {
 		 *
 		 * @type {?string}
 		 */
-		this.description = data.description ?? null;
+		this.description = (data as APIGuildWelcomeScreen).description ?? null;
 
 		/**
 		 * Collection of welcome channels belonging to this welcome screen
@@ -36,7 +38,7 @@ export class WelcomeScreen extends Base {
 		 */
 		this.welcomeChannels = new Collection();
 
-		for (const channel of data.welcome_channels) {
+		for (const channel of (data as APIGuildWelcomeScreen).welcome_channels ?? []) {
 			const welcomeChannel = new WelcomeChannel(this.guild, channel);
 			this.welcomeChannels.set(welcomeChannel.channelId, welcomeChannel);
 		}

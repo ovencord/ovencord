@@ -1,4 +1,6 @@
+import type { Snowflake } from 'discord-api-types/v10';
 import { ApplicationIntegrationType } from 'discord-api-types/v10';
+import type { Client } from '../client/Client.js';
 import { Base } from './Base.js';
 
 /**
@@ -7,10 +9,10 @@ import { Base } from './Base.js';
  * @extends {Base}
  */
 export class AuthorizingIntegrationOwners extends Base {
-	public guildId: any;
-	public userId: any;
-	public data: any;
-	constructor(client: any, data: any) {
+	public guildId: Snowflake | null;
+	public userId: Snowflake | null;
+	public data: Record<string, Snowflake>;
+	constructor(client: Client, data: Record<string, Snowflake>) {
 		super(client);
 
 		Object.defineProperty(this, 'data', { value: data });

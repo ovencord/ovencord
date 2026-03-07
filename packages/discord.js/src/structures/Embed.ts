@@ -1,11 +1,12 @@
 import { embedLength } from '@ovencord/util';
+import type { APIEmbed } from 'discord-api-types/v10';
 
 /**
  * Represents an embed.
  */
 export class Embed {
-	public data: any;
-	constructor(data: any) {
+	public data: APIEmbed;
+	constructor(data: APIEmbed) {
 		/**
 		 * The API embed data.
 		 *
@@ -224,7 +225,7 @@ export class Embed {
 	 * @param {Embed|APIEmbed} other The embed to compare against
 	 * @returns {boolean}
 	 */
-	equals(other: any) {
+	equals(other: Embed | APIEmbed) {
 		if (other instanceof Embed) {
 			return Bun.deepEquals(this.data, other.data);
 		}
@@ -243,7 +244,6 @@ export class Embed {
 			this.title === (other.title ?? null) &&
 			this.url === (other.url ?? null) &&
 			this.video?.url === other.video?.url &&
-			// @ts-expect-error
 			Bun.deepEquals(this.fields, other.fields?.map((field) => ({ ...field, inline: field.inline ?? false })) ?? []) &&
 			Bun.deepEquals(this.provider, other.provider ?? null)
 		);

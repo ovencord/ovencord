@@ -1,3 +1,4 @@
+import type { APIActionRowComponent, APIComponentInMessageActionRow, APIMessageComponent } from 'discord-api-types/v10';
 import { createComponent } from '../util/Components.js';
 import { Component } from './Component.js';
 
@@ -7,9 +8,14 @@ import { Component } from './Component.js';
  * @extends {Component}
  */
 export class ActionRow extends Component {
-	public components: any;
-	constructor({ components, ...data }: any) {
-		super(data);
+	public components: Component[];
+	constructor({
+		components,
+		...data
+	}: Partial<APIActionRowComponent<APIComponentInMessageActionRow>> & {
+		components?: (APIComponentInMessageActionRow | Component)[];
+	}) {
+		super(data as unknown as APIMessageComponent);
 
 		/**
 		 * The components in this action row
@@ -17,8 +23,7 @@ export class ActionRow extends Component {
 		 * @type {Component[]}
 		 * @readonly
 		 */
-		// @ts-expect-error
-		this.components = components.map((component) => createComponent(component));
+		this.components = components?.map((component) => createComponent(component)) ?? [];
 	}
 
 	/**
@@ -27,7 +32,9 @@ export class ActionRow extends Component {
 	 * @returns {APIActionRowComponent}
 	 */
 	toJSON() {
-		// @ts-expect-error
-		return { ...this.data, components: this.components.map((component) => component.toJSON()) };
+		return {
+			...this.data,
+			components: this.components.map((component) => component.toJSON()),
+		} as unknown as APIActionRowComponent<APIComponentInMessageActionRow>;
 	}
 }

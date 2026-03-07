@@ -1,6 +1,8 @@
 import { makeURLSearchParams } from '@ovencord/rest';
 import { DiscordSnowflake } from '@ovencord/util';
+import type { APIPartialGuild, Snowflake } from 'discord-api-types/v10';
 import { GuildFeature, Routes } from 'discord-api-types/v10';
+import type { Client } from '../client/Client.js';
 import { Base } from './Base.js';
 
 /**
@@ -10,11 +12,11 @@ import { Base } from './Base.js';
  * @abstract
  */
 export class BaseGuild extends Base {
-	public id: any;
-	public name: any;
-	public features: any;
-	public icon: any;
-	constructor(client: any, data: any) {
+	public id: Snowflake;
+	public name: string;
+	public features: GuildFeature[];
+	public icon: string | null;
+	constructor(client: Client, data: APIPartialGuild) {
 		super(client);
 
 		/**
@@ -73,13 +75,10 @@ export class BaseGuild extends Base {
 	 * @readonly
 	 */
 	get nameAcronym() {
-		return (
-			this.name
-				.replace(/'s /g, ' ')
-				// @ts-expect-error
-				.replace(/\w+/g, (word) => word[0])
-				.replace(/\s/g, '')
-		);
+		return this.name
+			.replace(/'s /g, ' ')
+			.replace(/\w+/g, (word: string) => word[0] as string)
+			.replace(/\s/g, '');
 	}
 
 	/**

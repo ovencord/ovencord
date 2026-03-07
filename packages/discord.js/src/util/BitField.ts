@@ -158,7 +158,7 @@ export class BitField {
 	 * @returns {number|bigint}
 	 */
 	static resolve(bit: any): number | bigint {
-		const { DefaultBit } = this as any;
+		const { DefaultBit } = BitField as any;
 		if (typeof bit === 'number' || typeof bit === 'bigint') {
 			if (bit >= (typeof bit === 'bigint' ? 0n : 0)) {
 				return typeof DefaultBit === 'bigint' ? BigInt(bit) : Number(bit);
@@ -167,7 +167,7 @@ export class BitField {
 		if (bit instanceof BitField) return bit.bitfield;
 		if (Array.isArray(bit)) {
 			return bit
-				.map((bit_) => (this as any).resolve(bit_))
+				.map((bit_) => (BitField as any).resolve(bit_))
 				.reduce((prev, bit_) => (prev as any) | (bit_ as any), DefaultBit);
 		}
 

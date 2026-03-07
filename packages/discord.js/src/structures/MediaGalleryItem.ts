@@ -1,18 +1,19 @@
+import type { APIMediaGalleryItem, APIUnfurledMediaItem } from 'discord-api-types/v10';
 import { UnfurledMediaItem } from './UnfurledMediaItem.js';
 
 /**
  * Represents an item in a media gallery
  */
 export class MediaGalleryItem {
-	public data: any;
-	public media: any;
-	constructor({ media, ...data }: any) {
+	public data: APIMediaGalleryItem;
+	public media: UnfurledMediaItem;
+	constructor({ media, ...data }: APIMediaGalleryItem & { media?: APIUnfurledMediaItem | UnfurledMediaItem }) {
 		/**
 		 * The API data associated with this component
 		 *
 		 * @type {APIMediaGalleryItem}
 		 */
-		this.data = data;
+		this.data = data as unknown as APIMediaGalleryItem;
 
 		/**
 		 * The media associated with this media gallery item
@@ -20,7 +21,7 @@ export class MediaGalleryItem {
 		 * @type {UnfurledMediaItem}
 		 * @readonly
 		 */
-		this.media = new UnfurledMediaItem(media);
+		this.media = media instanceof UnfurledMediaItem ? media : new UnfurledMediaItem(media!);
 	}
 
 	/**

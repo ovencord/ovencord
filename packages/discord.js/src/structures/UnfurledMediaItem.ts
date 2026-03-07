@@ -1,9 +1,11 @@
+import type { APIUnfurledMediaItem } from 'discord-api-types/v10';
+
 /**
  * Represents a media item in a component
  */
 export class UnfurledMediaItem {
-	public data: any;
-	constructor(data: any) {
+	public data: APIUnfurledMediaItem;
+	constructor(data: APIUnfurledMediaItem) {
 		/**
 		 * The API data associated with this media item
 		 *

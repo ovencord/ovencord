@@ -1,3 +1,5 @@
+import type { APIInviteGuild } from 'discord-api-types/v10';
+import type { Client } from '../client/Client.js';
 import { AnonymousGuild } from './AnonymousGuild.js';
 import { WelcomeScreen } from './WelcomeScreen.js';
 
@@ -7,8 +9,8 @@ import { WelcomeScreen } from './WelcomeScreen.js';
  * @extends {AnonymousGuild}
  */
 export class InviteGuild extends AnonymousGuild {
-	public welcomeScreen: any;
-	constructor(client: any, data: any) {
+	public welcomeScreen: WelcomeScreen | null;
+	constructor(client: Client, data: APIInviteGuild) {
 		super(client, data);
 
 		/**
@@ -16,6 +18,8 @@ export class InviteGuild extends AnonymousGuild {
 		 *
 		 * @type {?WelcomeScreen}
 		 */
-		this.welcomeScreen = data.welcome_screen === undefined ? null : new WelcomeScreen(this, data.welcome_screen);
+		this.welcomeScreen = (data as unknown as { welcome_screen?: Record<string, unknown> }).welcome_screen
+			? new WelcomeScreen(this as any, (data as unknown as { welcome_screen: Record<string, unknown> }).welcome_screen)
+			: null;
 	}
 }

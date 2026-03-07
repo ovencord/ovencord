@@ -1,3 +1,4 @@
+import type { APIComponentInLabel, APILabelComponent, APIMessageComponent } from 'discord-api-types/v10';
 import { createComponent } from '../util/Components.js';
 import { Component } from './Component.js';
 
@@ -7,9 +8,9 @@ import { Component } from './Component.js';
  * @extends {Component}
  */
 export class LabelComponent extends Component {
-	public component: any;
-	constructor({ component, ...data }: any) {
-		super(data);
+	public component: Component;
+	constructor({ component, ...data }: Partial<APILabelComponent> & { component?: APIComponentInLabel | Component }) {
+		super(data as unknown as APIMessageComponent);
 
 		/**
 		 * The component in this label
@@ -27,7 +28,7 @@ export class LabelComponent extends Component {
 	 * @readonly
 	 */
 	get label() {
-		return this.data.label;
+		return (this.data as unknown as APILabelComponent).label;
 	}
 
 	/**
@@ -37,7 +38,7 @@ export class LabelComponent extends Component {
 	 * @readonly
 	 */
 	get description() {
-		return this.data.description ?? null;
+		return (this.data as unknown as APILabelComponent).description ?? null;
 	}
 
 	/**

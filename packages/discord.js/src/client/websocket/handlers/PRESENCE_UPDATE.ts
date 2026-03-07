@@ -1,4 +1,4 @@
-import type { GatewayPresenceUpdateDispatch } from 'discord-api-types/v10';
+import type { APIUser, GatewayPresenceUpdateDispatch } from 'discord-api-types/v10';
 import { Events } from '../../../util/Events.js';
 import { Partials } from '../../../util/Partials.js';
 import type { Client } from '../../Client.js';
@@ -6,12 +6,12 @@ import type { Client } from '../../Client.js';
 export default (client: Client, { d: data }: GatewayPresenceUpdateDispatch) => {
 	let user = client.users.cache.get(data.user.id);
 	if (!user && ('username' in data.user || client.options.partials.includes(Partials.User))) {
-		user = client.users._add(data.user);
+		user = client.users._add(data.user as unknown as APIUser);
 	}
 
 	if (!user) return;
 
-	if (data.user.username && !user._equals(data.user)) client.actions.UserUpdate.handle(data.user);
+	if (data.user.username && !user._equals(data.user)) client.actions.UserUpdate.handle(data.user as unknown as APIUser);
 
 	const guild = client.guilds.cache.get(data.guild_id);
 	if (!guild) return;

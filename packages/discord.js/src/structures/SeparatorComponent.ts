@@ -14,7 +14,7 @@ export class SeparatorComponent extends Component {
 	 * @readonly
 	 */
 	get spacing() {
-		return this.data.spacing ?? SeparatorSpacingSize.Small;
+		return (this.data as unknown as { spacing?: SeparatorSpacingSize }).spacing ?? SeparatorSpacingSize.Small;
 	}
 
 	/**
@@ -24,6 +24,6 @@ export class SeparatorComponent extends Component {
 	 * @readonly
 	 */
 	get divider() {
-		return this.data.divider ?? true;
+		return (this.data as unknown as { divider?: boolean }).divider ?? true;
 	}
 }

@@ -16,49 +16,64 @@ that WebSocket events don't clash with REST methods.
 
 import type { Client } from '../Client.js';
 
+type AnyType = ReturnType<typeof JSON.parse>;
+
+export interface ManagerLike {
+	_add: (data: AnyType, cache?: boolean) => AnyType;
+	cache: { get: (id: string) => AnyType };
+}
+
 export class Action {
 	public client: Client;
 	constructor(client: Client) {
 		this.client = client;
 	}
 
-	handle(...data: any[]) {
+	handle(...data: AnyType[]) {
 		return data[0];
 	}
 
-	getPayload(data: any, manager: any, id: any, partialType: any, cache?: any) {
-		return this.client.options.partials.includes(partialType) ? manager._add(data, cache) : manager.cache.get(id);
+	getPayload(data: AnyType, manager: ManagerLike, id: string | undefined, partialType: unknown, cache?: boolean) {
+		return this.client.options.partials.includes(partialType as AnyType)
+			? manager._add(data, cache)
+			: manager.cache.get(id as string);
 	}
 
-	getChannel(data: any) {
-		const payloadData: Record<string, any> = {};
-		const id = data.channel_id ?? data.id;
+	getChannel(data: AnyType) {
+		const payloadData: Record<string, AnyType> = {};
+		const id = (data.channel_id ?? data.id) as string | undefined;
 
 		if (!('recipients' in data)) {
 			// Try to resolve the recipient, but do not add the client user.
-			const recipient = data.author ?? data.user ?? { id: data.user_id };
+			const recipient = (data.author ?? data.user ?? { id: data.user_id }) as { id?: string };
 			if (recipient.id !== this.client.user?.id) payloadData.recipients = [recipient];
 		}
 
 		if (id !== undefined) payloadData.id = id;
 
 		return (
-			data[this.client.actions.injectedChannel] ??
-			this.getPayload({ ...data, ...payloadData }, this.client.channels, id, Partials.Channel, undefined)
+			data[this.client.actions.injectedChannel as AnyType] ??
+			this.getPayload(
+				{ ...data, ...payloadData },
+				this.client.channels as unknown as ManagerLike,
+				id,
+				Partials.Channel,
+				undefined,
+			)
 		);
 	}
 
-	getMessage(data: any, channel: any, cache?: any) {
-		const id = data.message_id ?? data.id;
+	getMessage(data: AnyType, channel: AnyType, cache?: boolean) {
+		const id = (data.message_id ?? data.id) as string | undefined;
 		return (
-			data[this.client.actions.injectedMessage] ??
+			data[this.client.actions.injectedMessage as AnyType] ??
 			this.getPayload(
 				{
 					id,
 					channel_id: channel.id,
 					guild_id: data.guild_id ?? channel.guild?.id,
 				},
-				channel.messages,
+				channel.messages as unknown as ManagerLike,
 				id,
 				Partials.Message,
 				cache,
@@ -66,7 +81,7 @@ export class Action {
 		);
 	}
 
-	getPoll(data: any, message: any, channel: any) {
+	getPoll(data: AnyType, message: AnyType, channel: AnyType) {
 		const includePollPartial = this.client.options.partials.includes(Partials.Poll);
 		const includePollAnswerPartial = this.client.options.partials.includes(Partials.PollAnswer);
 		if (message.partial && (!includePollPartial || !includePollAnswerPartial)) return null;
@@ -83,35 +98,42 @@ export class Action {
 		return message.poll;
 	}
 
-	getReaction(data: any, message: any, user?: any) {
-		const id = data.emoji.id ?? decodeURIComponent(data.emoji.name);
+	getReaction(data: AnyType, message: AnyType, user?: AnyType) {
+		const id = (data.emoji.id ?? decodeURIComponent(data.emoji.name as string)) as string;
 		return this.getPayload(
 			{
 				emoji: data.emoji,
 				count: message.partial ? null : 0,
 				me: user?.id === this.client.user?.id,
 			},
-			message.reactions,
+			message.reactions as unknown as ManagerLike,
 			id,
 			Partials.Reaction,
 			undefined,
 		);
 	}
 
-	getMember(data: any, guild: any) {
-		return this.getPayload(data, guild.members, data.user.id, Partials.GuildMember, undefined);
-	}
-
-	getUser(data: any) {
-		const id = data.user_id;
-		return (
-			data[this.client.actions.injectedUser] ?? this.getPayload({ id }, this.client.users, id, Partials.User, undefined)
+	getMember(data: AnyType, guild: AnyType) {
+		return this.getPayload(
+			data,
+			guild.members as unknown as ManagerLike,
+			data.user.id as string,
+			Partials.GuildMember,
+			undefined,
 		);
 	}
 
-	getUserFromMember(data: any) {
+	getUser(data: AnyType) {
+		const id = data.user_id as string;
+		return (
+			data[this.client.actions.injectedUser as AnyType] ??
+			this.getPayload({ id }, this.client.users as unknown as ManagerLike, id, Partials.User, undefined)
+		);
+	}
+
+	getUserFromMember(data: AnyType) {
 		if (data.guild_id && data.member?.user) {
-			const guild = this.client.guilds.cache.get(data.guild_id);
+			const guild = this.client.guilds.cache.get(data.guild_id as string);
 			if (guild) {
 				return guild.members._add(data.member).user;
 			} else {
@@ -122,26 +144,34 @@ export class Action {
 		return this.getUser(data);
 	}
 
-	getScheduledEvent(data: any, guild: any) {
-		const id = data.guild_scheduled_event_id ?? data.id;
+	getScheduledEvent(data: AnyType, guild: AnyType) {
+		const id = (data.guild_scheduled_event_id ?? data.id) as string;
 		return this.getPayload(
 			{ id, guild_id: data.guild_id ?? guild.id },
-			guild.scheduledEvents,
+			guild.scheduledEvents as unknown as ManagerLike,
 			id,
 			Partials.GuildScheduledEvent,
 			undefined,
 		);
 	}
 
-	getThreadMember(id: any, manager: any) {
-		return this.getPayload({ user_id: id }, manager, id, Partials.ThreadMember, false);
+	getThreadMember(id: string, manager: AnyType) {
+		return this.getPayload({ user_id: id }, manager as unknown as ManagerLike, id, Partials.ThreadMember, false);
 	}
 
-	getSoundboardSound(data: any, guild: any) {
-		return this.getPayload(data, guild.soundboardSounds, data.sound_id, Partials.SoundboardSound, undefined);
+	getSoundboardSound(data: AnyType, guild: AnyType) {
+		return this.getPayload(
+			data,
+			guild.soundboardSounds as unknown as ManagerLike,
+			data.sound_id as string,
+			Partials.SoundboardSound,
+			undefined,
+		);
 	}
 
-	spreadInjectedData(data: any) {
-		return Object.fromEntries(Object.getOwnPropertySymbols(data).map((symbol) => [symbol, data[symbol]]));
+	spreadInjectedData(data: AnyType) {
+		return Object.fromEntries(
+			Object.getOwnPropertySymbols(data).map((symbol) => [symbol, data[symbol as unknown as string]]),
+		);
 	}
 }

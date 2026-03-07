@@ -1,3 +1,4 @@
+import type { APIButtonComponent, APIMessageComponentEmoji } from 'discord-api-types/v10';
 import { Component } from './Component.js';
 
 /**
@@ -13,7 +14,7 @@ export class ButtonComponent extends Component {
 	 * @readonly
 	 */
 	get style() {
-		return this.data.style;
+		return (this.data as APIButtonComponent).style;
 	}
 
 	/**
@@ -23,7 +24,7 @@ export class ButtonComponent extends Component {
 	 * @readonly
 	 */
 	get label() {
-		return this.data.label ?? null;
+		return (this.data as unknown as { label?: string }).label ?? null;
 	}
 
 	/**
@@ -33,7 +34,7 @@ export class ButtonComponent extends Component {
 	 * @readonly
 	 */
 	get emoji() {
-		return this.data.emoji ?? null;
+		return (this.data as unknown as { emoji?: APIMessageComponentEmoji }).emoji ?? null;
 	}
 
 	/**
@@ -43,7 +44,7 @@ export class ButtonComponent extends Component {
 	 * @readonly
 	 */
 	get disabled() {
-		return this.data.disabled ?? false;
+		return (this.data as unknown as { disabled?: boolean }).disabled ?? false;
 	}
 
 	/**
@@ -53,7 +54,7 @@ export class ButtonComponent extends Component {
 	 * @readonly
 	 */
 	get customId() {
-		return this.data.custom_id ?? null;
+		return (this.data as unknown as { custom_id?: string }).custom_id ?? null;
 	}
 
 	/**
@@ -63,6 +64,6 @@ export class ButtonComponent extends Component {
 	 * @readonly
 	 */
 	get url() {
-		return this.data.url ?? null;
+		return (this.data as unknown as { url?: string }).url ?? null;
 	}
 }

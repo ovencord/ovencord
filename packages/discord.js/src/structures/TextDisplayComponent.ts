@@ -1,3 +1,4 @@
+import type { APITextDisplayComponent } from 'discord-api-types/v10';
 import { Component } from './Component.js';
 
 /**
@@ -13,6 +14,6 @@ export class TextDisplayComponent extends Component {
 	 * @readonly
 	 */
 	get content() {
-		return this.data.content;
+		return (this.data as unknown as APITextDisplayComponent).content;
 	}
 }

@@ -1,3 +1,4 @@
+import type { APITextInputComponent } from 'discord-api-types/v10';
 import { Component } from './Component.js';
 
 /**
@@ -13,7 +14,7 @@ export class TextInputComponent extends Component {
 	 * @readonly
 	 */
 	get customId() {
-		return this.data.custom_id;
+		return (this.data as unknown as APITextInputComponent).custom_id;
 	}
 
 	/**
@@ -23,6 +24,6 @@ export class TextInputComponent extends Component {
 	 * @readonly
 	 */
 	get value() {
-		return this.data.value;
+		return (this.data as unknown as APITextInputComponent).value ?? null;
 	}
 }

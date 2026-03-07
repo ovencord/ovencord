@@ -1,3 +1,4 @@
+import type { APIChannel } from 'discord-api-types/v10';
 import { BaseGuildVoiceChannel } from './BaseGuildVoiceChannel.js';
 
 /**
@@ -6,8 +7,8 @@ import { BaseGuildVoiceChannel } from './BaseGuildVoiceChannel.js';
  * @extends {BaseGuildVoiceChannel}
  */
 export class StageChannel extends BaseGuildVoiceChannel {
-	public declare topic: any;
-	_patch(data: any) {
+	public declare topic: string | null;
+	_patch(data: Partial<APIChannel>) {
 		super._patch(data);
 
 		if ('topic' in data) {
@@ -37,7 +38,7 @@ export class StageChannel extends BaseGuildVoiceChannel {
 	 * @param {StageInstanceCreateOptions} options The options to create the stage instance
 	 * @returns {Promise<StageInstance>}
 	 */
-	async createStageInstance(options: any) {
+	async createStageInstance(options: Record<string, unknown>) {
 		return this.guild.stageInstances.create(this.id, options);
 	}
 
@@ -53,7 +54,7 @@ export class StageChannel extends BaseGuildVoiceChannel {
 	 *   .then(channel => console.log(`Channel's new topic is ${channel.topic}`))
 	 *   .catch(console.error);
 	 */
-	async setTopic(topic: any, reason: any) {
+	async setTopic(topic: string | null, reason?: string) {
 		return this.edit({ topic, reason });
 	}
 }

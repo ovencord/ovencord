@@ -1,3 +1,4 @@
+import type { APITextChannel } from 'discord-api-types/v10';
 import { BaseGuildTextChannel } from './BaseGuildTextChannel.js';
 
 /**
@@ -6,8 +7,8 @@ import { BaseGuildTextChannel } from './BaseGuildTextChannel.js';
  * @extends {BaseGuildTextChannel}
  */
 export class TextChannel extends BaseGuildTextChannel {
-	public rateLimitPerUser: any;
-	_patch(data: any) {
+	public rateLimitPerUser: number | null | undefined;
+	_patch(data: Partial<APITextChannel>) {
 		super._patch(data);
 
 		if ('rate_limit_per_user' in data) {
@@ -27,7 +28,8 @@ export class TextChannel extends BaseGuildTextChannel {
 	 * @param {string} [reason] Reason for changing the channel's rate limit
 	 * @returns {Promise<TextChannel>}
 	 */
-	async setRateLimitPerUser(...args: any[]): Promise<any> {
-		return this.edit({ rateLimitPerUser: args[0], reason: args[1] });
+	// @ts-expect-error
+	async setRateLimitPerUser(rateLimitPerUser: number | null, reason?: string): Promise<TextChannel> {
+		return this.edit({ rateLimitPerUser, reason }) as unknown as Promise<TextChannel>;
 	}
 }

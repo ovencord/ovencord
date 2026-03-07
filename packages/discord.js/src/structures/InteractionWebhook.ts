@@ -1,3 +1,5 @@
+import type { Snowflake } from 'discord-api-types/v10';
+import type { Client } from '../client/Client.js';
 import { Webhook } from './Webhook.js';
 
 /**
@@ -6,13 +8,13 @@ import { Webhook } from './Webhook.js';
  * @implements {Webhook}
  */
 export class InteractionWebhook {
-	public id: any;
+	public id: Snowflake;
 	/**
 	 * @param {Client} client The instantiating client
 	 * @param {Snowflake} id The application's id
 	 * @param {string} token The interaction's token
 	 */
-	constructor(client: any, id: any, token: any) {
+	constructor(client: Client, id: Snowflake, token: string) {
 		/**
 		 * The client that instantiated the interaction webhook
 		 *
@@ -57,7 +59,7 @@ export class InteractionWebhook {
 
 	deleteMessage() {}
 
-	get url(): any {
+	get url(): string | undefined {
 		return undefined;
 	}
 }

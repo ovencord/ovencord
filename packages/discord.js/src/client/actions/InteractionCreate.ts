@@ -66,7 +66,7 @@ export class InteractionCreateAction extends Action {
 						InteractionClass = ButtonInteraction;
 						break;
 					case ComponentType.StringSelect:
-						InteractionClass = StringSelectMenuInteraction;
+						InteractionClass = StringSelectMenuInteraction as any;
 						break;
 					case ComponentType.UserSelect:
 						InteractionClass = UserSelectMenuInteraction;
@@ -78,7 +78,7 @@ export class InteractionCreateAction extends Action {
 						InteractionClass = MentionableSelectMenuInteraction;
 						break;
 					case ComponentType.ChannelSelect:
-						InteractionClass = ChannelSelectMenuInteraction;
+						InteractionClass = ChannelSelectMenuInteraction as any;
 						break;
 					default:
 						client.emit(

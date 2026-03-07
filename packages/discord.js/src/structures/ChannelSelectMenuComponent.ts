@@ -1,3 +1,4 @@
+import type { APIChannelSelectComponent } from 'discord-api-types/v10';
 import { BaseSelectMenuComponent } from './BaseSelectMenuComponent.js';
 
 /**
@@ -13,6 +14,6 @@ export class ChannelSelectMenuComponent extends BaseSelectMenuComponent {
 	 * @readonly
 	 */
 	get channelTypes() {
-		return this.data.channel_types ?? null;
+		return (this.data as APIChannelSelectComponent).channel_types ?? null;
 	}
 }

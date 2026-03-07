@@ -1,3 +1,4 @@
+import type { APIChannel, ForumLayoutType } from 'discord-api-types/v10';
 import { ThreadOnlyChannel } from './ThreadOnlyChannel.js';
 
 /**
@@ -6,8 +7,8 @@ import { ThreadOnlyChannel } from './ThreadOnlyChannel.js';
  * @extends {ThreadOnlyChannel}
  */
 export class ForumChannel extends ThreadOnlyChannel {
-	public defaultForumLayout: any;
-	_patch(data: any) {
+	public defaultForumLayout: ForumLayoutType | null | undefined;
+	_patch(data: Partial<APIChannel>) {
 		super._patch(data);
 
 		/**
@@ -15,7 +16,9 @@ export class ForumChannel extends ThreadOnlyChannel {
 		 *
 		 * @type {ForumLayoutType}
 		 */
-		this.defaultForumLayout = data.default_forum_layout;
+		this.defaultForumLayout = (
+			data as unknown as { default_forum_layout?: ForumLayoutType | null }
+		).default_forum_layout;
 	}
 
 	/**
@@ -25,7 +28,7 @@ export class ForumChannel extends ThreadOnlyChannel {
 	 * @param {string} [reason] Reason for changing the default forum layout
 	 * @returns {Promise<ForumChannel>}
 	 */
-	async setDefaultForumLayout(defaultForumLayout: any, reason: any) {
+	async setDefaultForumLayout(defaultForumLayout: ForumLayoutType, reason?: string) {
 		return this.edit({ defaultForumLayout, reason });
 	}
 }

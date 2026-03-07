@@ -1,4 +1,6 @@
+import type { APIInvite } from 'discord-api-types/v10';
 import { BaseInvite } from './BaseInvite.js';
+import type { PartialGroupDMChannel } from './PartialGroupDMChannel.js';
 
 /**
  * A channel invite leading to a group direct message channel.
@@ -6,7 +8,7 @@ import { BaseInvite } from './BaseInvite.js';
  * @extends {BaseInvite}
  */
 export class GroupDMInvite extends BaseInvite {
-	public channel: any;
+	public channel: PartialGroupDMChannel | undefined;
 	/**
 	 * The approximate total number of members of in the group direct message channel.
 	 * <info>This is only available when the invite was fetched through {@link Client#fetchInvite}.</info>
@@ -15,7 +17,7 @@ export class GroupDMInvite extends BaseInvite {
 	 * @type {?number}
 	 */
 
-	_patch(data: any) {
+	_patch(data: Partial<APIInvite> & Record<string, unknown>) {
 		super._patch(data);
 
 		if ('channel' in data) {

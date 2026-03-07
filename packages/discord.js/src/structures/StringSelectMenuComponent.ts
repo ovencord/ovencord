@@ -1,3 +1,4 @@
+import type { APIStringSelectComponent } from 'discord-api-types/v10';
 import { BaseSelectMenuComponent } from './BaseSelectMenuComponent.js';
 
 /**
@@ -13,6 +14,6 @@ export class StringSelectMenuComponent extends BaseSelectMenuComponent {
 	 * @readonly
 	 */
 	get options() {
-		return this.data.options;
+		return (this.data as APIStringSelectComponent).options;
 	}
 }

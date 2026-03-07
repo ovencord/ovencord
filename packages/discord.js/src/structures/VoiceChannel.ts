@@ -1,5 +1,11 @@
 import { PermissionFlagsBits, Routes } from 'discord-api-types/v10';
 import { BaseGuildVoiceChannel } from './BaseGuildVoiceChannel.js';
+import type { SoundboardSound } from './SoundboardSound.js';
+
+export interface SendSoundboardSoundOptions {
+	soundId: string;
+	guildId?: string;
+}
 
 /**
  * Represents a guild voice channel on Discord.
@@ -48,7 +54,7 @@ export class VoiceChannel extends BaseGuildVoiceChannel {
 	 * @param {SoundboardSound|SendSoundboardSoundOptions} sound The sound to send
 	 * @returns {Promise<void>}
 	 */
-	async sendSoundboardSound(sound: any) {
+	async sendSoundboardSound(sound: SoundboardSound | SendSoundboardSoundOptions) {
 		await this.client.rest.post(Routes.sendSoundboardSound(this.id), {
 			body: {
 				sound_id: sound.soundId,

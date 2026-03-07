@@ -1,3 +1,4 @@
+import type { APIMessageComponent, APIThumbnailComponent, APIUnfurledMediaItem } from 'discord-api-types/v10';
 import { Component } from './Component.js';
 import { UnfurledMediaItem } from './UnfurledMediaItem.js';
 
@@ -7,9 +8,12 @@ import { UnfurledMediaItem } from './UnfurledMediaItem.js';
  * @extends {Component}
  */
 export class ThumbnailComponent extends Component {
-	public media: any;
-	constructor({ media, ...data }: any) {
-		super(data);
+	public media: UnfurledMediaItem;
+	constructor({
+		media,
+		...data
+	}: Partial<APIThumbnailComponent> & { media?: APIUnfurledMediaItem | UnfurledMediaItem }) {
+		super(data as unknown as APIMessageComponent);
 
 		/**
 		 * The media associated with this thumbnail
@@ -27,7 +31,7 @@ export class ThumbnailComponent extends Component {
 	 * @readonly
 	 */
 	get description() {
-		return this.data.description ?? null;
+		return (this.data as unknown as APIThumbnailComponent).description ?? null;
 	}
 
 	/**
@@ -37,7 +41,7 @@ export class ThumbnailComponent extends Component {
 	 * @readonly
 	 */
 	get spoiler() {
-		return this.data.spoiler ?? false;
+		return (this.data as unknown as APIThumbnailComponent).spoiler ?? false;
 	}
 
 	/**

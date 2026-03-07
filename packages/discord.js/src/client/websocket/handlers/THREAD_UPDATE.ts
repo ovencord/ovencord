@@ -3,7 +3,8 @@ import { Events } from '../../../util/Events.js';
 import type { Client } from '../../Client.js';
 
 export default (client: Client, packet: GatewayThreadUpdateDispatch) => {
-	const { old, updated } = client.actions.ChannelUpdate.handle(packet.d);
+	const { old, updated } = client.actions.ChannelUpdate.handle(packet.d as any);
+	const channel = client.channels._add(packet.d as any);
 	if (old && updated) {
 		/**
 		 * Emitted whenever a thread is updated - e.g. name change, archive state change, locked state change.

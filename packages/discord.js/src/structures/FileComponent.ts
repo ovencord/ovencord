@@ -1,3 +1,4 @@
+import type { APIFileComponent, APIMessageComponent, APIUnfurledMediaItem } from 'discord-api-types/v10';
 import { Component } from './Component.js';
 import { UnfurledMediaItem } from './UnfurledMediaItem.js';
 
@@ -7,9 +8,9 @@ import { UnfurledMediaItem } from './UnfurledMediaItem.js';
  * @extends {Component}
  */
 export class FileComponent extends Component {
-	public file: any;
-	constructor({ file, ...data }: any) {
-		super(data);
+	public file: UnfurledMediaItem;
+	constructor({ file, ...data }: Partial<APIFileComponent> & { file?: APIUnfurledMediaItem | UnfurledMediaItem }) {
+		super(data as unknown as APIMessageComponent);
 
 		/**
 		 * The media associated with this file
@@ -27,7 +28,7 @@ export class FileComponent extends Component {
 	 * @readonly
 	 */
 	get spoiler() {
-		return this.data.spoiler ?? false;
+		return (this.data as unknown as APIFileComponent).spoiler ?? false;
 	}
 
 	/**

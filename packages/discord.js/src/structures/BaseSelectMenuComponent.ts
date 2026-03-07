@@ -1,3 +1,4 @@
+import type { APISelectMenuComponent, APISelectMenuOption } from 'discord-api-types/v10';
 import { Component } from './Component.js';
 
 /**
@@ -13,7 +14,7 @@ export class BaseSelectMenuComponent extends Component {
 	 * @readonly
 	 */
 	get placeholder() {
-		return this.data.placeholder ?? null;
+		return (this.data as unknown as APISelectMenuComponent).placeholder ?? null;
 	}
 
 	/**
@@ -23,7 +24,7 @@ export class BaseSelectMenuComponent extends Component {
 	 * @readonly
 	 */
 	get maxValues() {
-		return this.data.max_values ?? null;
+		return (this.data as unknown as APISelectMenuComponent).max_values ?? null;
 	}
 
 	/**
@@ -33,7 +34,7 @@ export class BaseSelectMenuComponent extends Component {
 	 * @readonly
 	 */
 	get minValues() {
-		return this.data.min_values ?? null;
+		return (this.data as unknown as APISelectMenuComponent).min_values ?? null;
 	}
 
 	/**
@@ -43,7 +44,7 @@ export class BaseSelectMenuComponent extends Component {
 	 * @readonly
 	 */
 	get customId() {
-		return this.data.custom_id;
+		return (this.data as unknown as APISelectMenuComponent).custom_id;
 	}
 
 	/**
@@ -53,6 +54,6 @@ export class BaseSelectMenuComponent extends Component {
 	 * @readonly
 	 */
 	get disabled() {
-		return this.data.disabled ?? false;
+		return (this.data as unknown as APISelectMenuComponent).disabled ?? false;
 	}
 }

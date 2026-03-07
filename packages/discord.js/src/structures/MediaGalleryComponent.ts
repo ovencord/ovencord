@@ -1,3 +1,4 @@
+import type { APIMediaGalleryComponent, APIMediaGalleryItem, APIMessageComponent } from 'discord-api-types/v10';
 import { Component } from './Component.js';
 import { MediaGalleryItem } from './MediaGalleryItem.js';
 
@@ -7,9 +8,12 @@ import { MediaGalleryItem } from './MediaGalleryItem.js';
  * @extends {Component}
  */
 export class MediaGalleryComponent extends Component {
-	public items: any;
-	constructor({ items, ...data }: any) {
-		super(data);
+	public items: MediaGalleryItem[];
+	constructor({
+		items,
+		...data
+	}: Partial<APIMediaGalleryComponent> & { items?: (APIMediaGalleryItem | MediaGalleryItem)[] }) {
+		super(data as unknown as APIMessageComponent);
 
 		/**
 		 * The items in this media gallery
@@ -17,8 +21,7 @@ export class MediaGalleryComponent extends Component {
 		 * @type {MediaGalleryItem[]}
 		 * @readonly
 		 */
-		// @ts-expect-error
-		this.items = items.map((item) => new MediaGalleryItem(item));
+		this.items = items?.map((item) => new MediaGalleryItem(item)) ?? [];
 	}
 
 	/**
@@ -27,7 +30,6 @@ export class MediaGalleryComponent extends Component {
 	 * @returns {APIMediaGalleryComponent}
 	 */
 	toJSON() {
-		// @ts-expect-error
-		return { ...this.data, items: this.items.map((item) => item.toJSON()) };
+		return { ...this.data, items: this.items.map((item) => item.toJSON()) } as unknown as APIMediaGalleryComponent;
 	}
 }

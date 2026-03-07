@@ -1,3 +1,5 @@
+import type { APIMessageStringSelectInteractionData } from 'discord-api-types/v10';
+import type { Client } from '../client/Client.js';
 import { MessageComponentInteraction } from './MessageComponentInteraction.js';
 
 /**
@@ -6,8 +8,8 @@ import { MessageComponentInteraction } from './MessageComponentInteraction.js';
  * @extends {MessageComponentInteraction}
  */
 export class StringSelectMenuInteraction extends MessageComponentInteraction {
-	public values: any;
-	constructor(client: any, data: any) {
+	public values: string[];
+	constructor(client: Client, data: { data: APIMessageStringSelectInteractionData } & Record<string, unknown>) {
 		super(client, data);
 
 		/**

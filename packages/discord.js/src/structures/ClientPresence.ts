@@ -1,4 +1,6 @@
+import type { GatewayActivityUpdateData, GatewayPresenceUpdateData } from 'discord-api-types/v10';
 import { ActivityType, GatewayOpcodes } from 'discord-api-types/v10';
+import type { Client } from '../client/Client.js';
 import { DiscordjsTypeError, ErrorCodes } from '../errors/index.js';
 import { Presence } from './Presence.js';
 
@@ -8,8 +10,11 @@ import { Presence } from './Presence.js';
  * @extends {Presence}
  */
 export class ClientPresence extends Presence {
-	constructor(client: any, data = {}) {
-		super(client, Object.assign(data, { status: (data as any).status ?? 'online', user: { id: null } }));
+	constructor(client: Client, data: Record<string, unknown> = {}) {
+		super(
+			client,
+			Object.assign(data, { status: (data as unknown as { status?: string }).status ?? 'online', user: { id: null } }),
+		);
 	}
 
 	/**
@@ -18,15 +23,14 @@ export class ClientPresence extends Presence {
 	 * @param {PresenceData} presence The data to set the presence to
 	 * @returns {Promise<ClientPresence>}
 	 */
-	async set(presence: any) {
-		const packet = this._parse(presence);
+	async set(presence: Record<string, unknown>) {
+		const packet = this._parse(presence) as unknown as GatewayPresenceUpdateData;
 		this._patch(packet);
 		if (presence.shardId === undefined) {
 			await this.client._broadcast({ op: GatewayOpcodes.PresenceUpdate, d: packet });
 		} else if (Array.isArray(presence.shardId)) {
 			await Promise.all(
-				// @ts-expect-error
-				presence.shardId.map((shardId) =>
+				presence.shardId.map((shardId: number) =>
 					this.client.ws.send(shardId, { op: GatewayOpcodes.PresenceUpdate, d: packet }),
 				),
 			);
@@ -44,14 +48,14 @@ export class ClientPresence extends Presence {
 	 * @returns {GatewayPresenceUpdateData}
 	 * @private
 	 */
-	_parse({ status, since, afk, activities }: any) {
+	_parse({ status, since, afk, activities }: Record<string, unknown>): Record<string, unknown> {
 		const data = {
-			activities: [] as any[],
+			activities: [] as GatewayActivityUpdateData[],
 			afk: typeof afk === 'boolean' ? afk : false,
 			since: typeof since === 'number' && !Number.isNaN(since) ? since : null,
 			status: status ?? this.status,
 		};
-		if (activities?.length) {
+		if (Array.isArray(activities) && activities.length) {
 			for (const [i, activity] of activities.entries()) {
 				if (typeof activity.name !== 'string') {
 					throw new DiscordjsTypeError(ErrorCodes.InvalidType, `activities[${i}].name`, 'string');

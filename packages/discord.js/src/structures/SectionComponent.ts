@@ -1,5 +1,8 @@
+import type { APIMessageComponent, APISectionComponent } from 'discord-api-types/v10';
 import { createComponent } from '../util/Components.js';
+import type { ButtonComponent } from './ButtonComponent.js';
 import { Component } from './Component.js';
+import type { ThumbnailComponent } from './ThumbnailComponent.js';
 
 /**
  * Represents a section component
@@ -7,10 +10,14 @@ import { Component } from './Component.js';
  * @extends {Component}
  */
 export class SectionComponent extends Component {
-	public components: any;
-	public accessory: any;
-	constructor({ accessory, components, ...data }: any) {
-		super(data);
+	public components: Component[];
+	public accessory: ButtonComponent | ThumbnailComponent | Component;
+	constructor({
+		accessory,
+		components,
+		...data
+	}: Partial<APISectionComponent> & { accessory?: unknown; components?: unknown[] }) {
+		super(data as unknown as APIMessageComponent);
 
 		/**
 		 * The components in this section
@@ -18,8 +25,7 @@ export class SectionComponent extends Component {
 		 * @type {Component[]}
 		 * @readonly
 		 */
-		// @ts-expect-error
-		this.components = components.map((component) => createComponent(component));
+		this.components = components?.map((component) => createComponent(component)) ?? [];
 
 		/**
 		 * The accessory component of this section
@@ -27,7 +33,7 @@ export class SectionComponent extends Component {
 		 * @type {Component}
 		 * @readonly
 		 */
-		this.accessory = createComponent(accessory);
+		this.accessory = createComponent(accessory) as ButtonComponent | ThumbnailComponent | Component;
 	}
 
 	/**
@@ -38,9 +44,10 @@ export class SectionComponent extends Component {
 	toJSON() {
 		return {
 			...this.data,
-			accessory: this.accessory.toJSON(),
-			// @ts-expect-error
-			components: this.components.map((component) => component.toJSON()),
-		};
+			accessory: (this.accessory as unknown as { toJSON(): unknown }).toJSON(),
+			components: this.components.map((component: Component | unknown) =>
+				(component as { toJSON(): unknown }).toJSON(),
+			),
+		} as unknown as APISectionComponent;
 	}
 }

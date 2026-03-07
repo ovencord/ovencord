@@ -1,5 +1,7 @@
+import type { APIMessageComponentEmoji, APIReaction } from 'discord-api-types/v10';
 import { flatten } from '../util/Util.js';
 import { Emoji } from './Emoji.js';
+import type { MessageReaction } from './MessageReaction.js';
 
 /**
  * Represents a limited emoji set used for both custom and unicode emojis. Custom emojis
@@ -9,8 +11,8 @@ import { Emoji } from './Emoji.js';
  * @extends {Emoji}
  */
 export class ReactionEmoji extends Emoji {
-	public reaction: any;
-	constructor(reaction: any, emoji: any) {
+	public reaction: MessageReaction;
+	constructor(reaction: MessageReaction, emoji: APIMessageComponentEmoji | APIReaction) {
 		super(reaction.message.client, emoji);
 		/**
 		 * The message reaction this emoji refers to
