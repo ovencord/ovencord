@@ -1,7 +1,29 @@
 import { Collection } from '@ovencord/collection';
 import { makeURLSearchParams } from '@ovencord/rest';
 import { DiscordSnowflake } from '@ovencord/util';
-import { ChannelType, GuildFeature, GuildPremiumTier, Routes } from 'discord-api-types/v10';
+import {
+	ChannelType,
+	GuildFeature,
+	GuildPremiumTier,
+	Routes,
+	type APIGuild,
+	type APIGuildIntegration,
+	type APIGuildWidgetSettings,
+	type APITemplate,
+	type APIGuildWelcomeScreen,
+	type APIInvite,
+	type APIWebhook,
+	type APIAuditLog,
+	type GatewayGuildCreateDispatchData,
+	type GuildDefaultMessageNotifications,
+	type GuildExplicitContentFilter,
+	type GuildMFALevel,
+	type GuildVerificationLevel,
+	type GuildWidgetStyle,
+	type Locale,
+	type Snowflake,
+} from 'discord-api-types/v10';
+import type { Client } from '../client/Client.js';
 import { DiscordjsError, DiscordjsTypeError, ErrorCodes } from '../errors/index.js';
 import { AutoModerationRuleManager } from '../managers/AutoModerationRuleManager.js';
 import { GuildApplicationCommandManager } from '../managers/GuildApplicationCommandManager.js';
@@ -37,60 +59,71 @@ import { WelcomeScreen } from './WelcomeScreen.js';
  *
  * @extends {AnonymousGuild}
  */
+/** Guild data received from the gateway, augmented with the shard id. */
+interface GuildPatchData extends Partial<GatewayGuildCreateDispatchData> {
+	id: Snowflake;
+	name: string;
+	icon: string | null;
+	splash: string | null;
+	features: GuildFeature[];
+	shardId?: number;
+	unavailable?: boolean;
+}
+
 export class Guild extends AnonymousGuild {
-	public commands: any;
-	public members: any;
-	public channels: any;
-	public bans: any;
-	public roles: any;
-	public presences: any;
-	public voiceStates: any;
-	public stageInstances: any;
-	public invites: any;
-	public scheduledEvents: any;
-	public autoModerationRules: any;
-	public soundboardSounds: any;
-	public available: any;
-	public shardId: any;
-	public declare id: any;
-	public declare name: any;
-	public declare icon: any;
-	public memberCount: any;
-	public large: any;
-	public premiumProgressBarEnabled: any;
-	public applicationId: any;
-	public afkTimeout: any;
-	public afkChannelId: any;
-	public systemChannelId: any;
-	public premiumTier: any;
-	public widgetEnabled: any;
-	public widgetChannelId: any;
-	public explicitContentFilter: any;
-	public mfaLevel: any;
-	public joinedTimestamp: any;
-	public defaultMessageNotifications: any;
-	public systemChannelFlags: any;
-	public maximumMembers: any;
-	public maximumPresences: any;
-	public maxVideoChannelUsers: any;
-	public maxStageVideoChannelUsers: any;
-	public approximateMemberCount: any;
-	public approximatePresenceCount: any;
-	public rulesChannelId: any;
-	public publicUpdatesChannelId: any;
-	public preferredLocale: any;
-	public safetyAlertsChannelId: any;
-	public ownerId: any;
-	public emojis: any;
-	public stickers: any;
-	public incidentsData: any;
-	public declare vanityURLCode: any;
-	public vanityURLUses: any;
-	public declare splash: any;
-	public discoverySplash: any;
-	public declare verificationLevel: any;
-	public declare features: any;
-	constructor(client: any, data: any) {
+	public commands: GuildApplicationCommandManager;
+	public members: GuildMemberManager;
+	public channels: GuildChannelManager;
+	public bans: GuildBanManager;
+	public roles: RoleManager;
+	public presences: PresenceManager;
+	public voiceStates: VoiceStateManager;
+	public stageInstances: StageInstanceManager;
+	public invites: GuildInviteManager;
+	public scheduledEvents: GuildScheduledEventManager;
+	public autoModerationRules: AutoModerationRuleManager;
+	public soundboardSounds: GuildSoundboardSoundManager;
+	public available: boolean;
+	public shardId: number;
+	public declare id: Snowflake;
+	public declare name: string;
+	public declare icon: string | null;
+	public memberCount: number;
+	public large: boolean;
+	public premiumProgressBarEnabled: boolean;
+	public applicationId: Snowflake | null;
+	public afkTimeout: APIGuild['afk_timeout'] | null;
+	public afkChannelId: Snowflake | null;
+	public systemChannelId: Snowflake | null;
+	public premiumTier: GuildPremiumTier;
+	public widgetEnabled: boolean | null;
+	public widgetChannelId: Snowflake | null;
+	public explicitContentFilter: GuildExplicitContentFilter;
+	public mfaLevel: GuildMFALevel;
+	public joinedTimestamp: number;
+	public defaultMessageNotifications: GuildDefaultMessageNotifications;
+	public systemChannelFlags: Readonly<SystemChannelFlagsBitField>;
+	public maximumMembers: number | null;
+	public maximumPresences: number | null;
+	public maxVideoChannelUsers: number | null;
+	public maxStageVideoChannelUsers: number | null;
+	public approximateMemberCount: number | null;
+	public approximatePresenceCount: number | null;
+	public rulesChannelId: Snowflake | null;
+	public publicUpdatesChannelId: Snowflake | null;
+	public preferredLocale: Locale;
+	public safetyAlertsChannelId: Snowflake | null;
+	public ownerId: Snowflake;
+	public emojis: GuildEmojiManager;
+	public stickers: GuildStickerManager;
+	public incidentsData: ReturnType<typeof _transformAPIIncidentsData> | null;
+	public declare vanityURLCode: string | null;
+	public vanityURLUses: number | null;
+	public declare splash: string | null;
+	public discoverySplash: string | null;
+	public declare verificationLevel: GuildVerificationLevel;
+	public declare features: GuildFeature[];
+	constructor(client: Client, data: GuildPatchData) {
 		super(client, data, false);
 
 		/**
@@ -198,7 +231,7 @@ export class Guild extends AnonymousGuild {
 		this.shardId = data.shardId;
 	}
 
-	_patch(data: any) {
+	_patch(data: GuildPatchData) {
 		super._patch(data);
 		this.id = data.id;
 		if ('name' in data) this.name = data.name;
@@ -622,7 +655,7 @@ export class Guild extends AnonymousGuild {
 	 * @param {BaseFetchOptions} [options] The options for fetching the member
 	 * @returns {Promise<GuildMember>}
 	 */
-	async fetchOwner(options: any) {
+	async fetchOwner(options?: { cache?: boolean; force?: boolean }) {
 		if (!this.ownerId) {
 			throw new DiscordjsError(ErrorCodes.FetchOwnerId, 'guild');
 		}
@@ -735,9 +768,9 @@ export class Guild extends AnonymousGuild {
 	 *   .catch(console.error);
 	 */
 	async fetchIntegrations() {
-		const data = await this.client.rest.get(Routes.guildIntegrations(this.id));
+		const data = (await this.client.rest.get(Routes.guildIntegrations(this.id))) as APIGuildIntegration[];
 		return data.reduce(
-			(collection: any, integration: any) =>
+			(collection: Collection<string, Integration>, integration: APIGuildIntegration) =>
 				collection.set(integration.id, new Integration(this.client, integration, this)),
 			new Collection(),
 		);
@@ -750,9 +783,9 @@ export class Guild extends AnonymousGuild {
 	 * @returns {Promise<Collection<string, GuildTemplate>>}
 	 */
 	async fetchTemplates() {
-		const templates = await this.client.rest.get(Routes.guildTemplates(this.id));
+		const templates = (await this.client.rest.get(Routes.guildTemplates(this.id))) as APITemplate[];
 		return templates.reduce(
-			(col: any, data: any) => col.set(data.code, new GuildTemplate(this.client, data)),
+			(col: Collection<string, GuildTemplate>, data: APITemplate) => col.set(data.code, new GuildTemplate(this.client, data)),
 			new Collection(),
 		);
 	}
@@ -763,7 +796,7 @@ export class Guild extends AnonymousGuild {
 	 * @returns {Promise<WelcomeScreen>}
 	 */
 	async fetchWelcomeScreen() {
-		const data = await this.client.rest.get(Routes.guildWelcomeScreen(this.id));
+		const data = (await this.client.rest.get(Routes.guildWelcomeScreen(this.id))) as APIGuildWelcomeScreen;
 		return new WelcomeScreen(this, data);
 	}
 
@@ -774,8 +807,8 @@ export class Guild extends AnonymousGuild {
 	 * @param {string} [description] The description for the template
 	 * @returns {Promise<GuildTemplate>}
 	 */
-	async createTemplate(name: any, description: any) {
-		const data = await this.client.rest.post(Routes.guildTemplates(this.id), { body: { name, description } });
+	async createTemplate(name: string, description?: string) {
+		const data = (await this.client.rest.post(Routes.guildTemplates(this.id), { body: { name, description } })) as APITemplate;
 		return new GuildTemplate(this.client, data);
 	}
 
@@ -785,7 +818,7 @@ export class Guild extends AnonymousGuild {
 	 * @returns {Promise<GuildPreview>}
 	 */
 	async fetchPreview() {
-		const data = await this.client.rest.get(Routes.guildPreview(this.id));
+		const data = (await this.client.rest.get(Routes.guildPreview(this.id))) as Record<string, unknown>;
 		return new GuildPreview(this.client, data);
 	}
 
@@ -811,7 +844,7 @@ export class Guild extends AnonymousGuild {
 	 *   .catch(console.error);
 	 */
 	async fetchVanityData() {
-		const data = await this.client.rest.get(Routes.guildVanityUrl(this.id));
+		const data = (await this.client.rest.get(Routes.guildVanityUrl(this.id))) as { code: string | null; uses: number };
 		this.vanityURLCode = data.code;
 		this.vanityURLUses = data.uses;
 
@@ -829,8 +862,8 @@ export class Guild extends AnonymousGuild {
 	 *   .catch(console.error);
 	 */
 	async fetchWebhooks() {
-		const apiHooks = await this.client.rest.get(Routes.guildWebhooks(this.id));
-		const hooks = new Collection();
+		const apiHooks = (await this.client.rest.get(Routes.guildWebhooks(this.id))) as APIWebhook[];
+		const hooks = new Collection<Snowflake, Webhook>();
 		for (const hook of apiHooks) hooks.set(hook.id, new Webhook(this.client, hook));
 		return hooks;
 	}
@@ -878,7 +911,7 @@ export class Guild extends AnonymousGuild {
 	 *   .catch(console.error);
 	 */
 	async fetchWidgetSettings() {
-		const data = await this.client.rest.get(Routes.guildWidgetSettings(this.id));
+		const data = (await this.client.rest.get(Routes.guildWidgetSettings(this.id))) as APIGuildWidgetSettings;
 		this.widgetEnabled = data.enabled;
 		this.widgetChannelId = data.channel_id;
 		return {
@@ -893,7 +926,7 @@ export class Guild extends AnonymousGuild {
 	 * @param {GuildWidgetStyle} [style] The style for the widget image
 	 * @returns {string}
 	 */
-	widgetImageURL(style: any) {
+	widgetImageURL(style?: GuildWidgetStyle) {
 		return this.client.guilds.widgetImageURL(this.id, style);
 	}
 
