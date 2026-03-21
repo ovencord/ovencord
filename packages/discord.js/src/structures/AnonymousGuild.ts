@@ -1,3 +1,11 @@
+import type {
+	APIGuild,
+	APIPartialGuild,
+	GuildFeature,
+	GuildNSFWLevel,
+	GuildVerificationLevel,
+} from 'discord-api-types/v10';
+import type { Client } from '../client/Client.js';
 import { BaseGuild } from './BaseGuild.js';
 
 /**
@@ -7,21 +15,28 @@ import { BaseGuild } from './BaseGuild.js';
  * @abstract
  */
 export class AnonymousGuild extends BaseGuild {
-	public declare features: any;
-	public description: any;
-	public verificationLevel: any;
-	public vanityURLCode: any;
-	public nsfwLevel: any;
-	public splash: any;
-	public banner: any;
-	public premiumSubscriptionCount: any;
-	constructor(client: any, data: any, immediatePatch = true) {
+	public declare features: GuildFeature[];
+	public description: string | null;
+	public verificationLevel: GuildVerificationLevel;
+	public vanityURLCode: string | null;
+	public nsfwLevel: GuildNSFWLevel;
+	public splash: string | null;
+	public banner: string | null;
+	public premiumSubscriptionCount: number | null;
+	constructor(client: Client, data: APIPartialGuild, immediatePatch = true) {
 		super(client, data);
+		this.description = null;
+		this.verificationLevel = 0 as GuildVerificationLevel;
+		this.vanityURLCode = null;
+		this.nsfwLevel = 0 as GuildNSFWLevel;
+		this.splash = data.splash;
+		this.banner = null;
+		this.premiumSubscriptionCount = null;
 		if (immediatePatch) this._patch(data);
 	}
 
-	_patch(data: any) {
-		if ('features' in data) this.features = data.features;
+	_patch(data: Partial<APIGuild>) {
+		if ('features' in data && data.features) this.features = data.features;
 
 		if ('splash' in data) {
 			/**
@@ -29,7 +44,7 @@ export class AnonymousGuild extends BaseGuild {
 			 *
 			 * @type {?string}
 			 */
-			this.splash = data.splash;
+			this.splash = data.splash ?? null;
 		}
 
 		if ('banner' in data) {
@@ -38,7 +53,7 @@ export class AnonymousGuild extends BaseGuild {
 			 *
 			 * @type {?string}
 			 */
-			this.banner = data.banner;
+			this.banner = data.banner ?? null;
 		}
 
 		if ('description' in data) {
@@ -47,10 +62,10 @@ export class AnonymousGuild extends BaseGuild {
 			 *
 			 * @type {?string}
 			 */
-			this.description = data.description;
+			this.description = data.description ?? null;
 		}
 
-		if ('verification_level' in data) {
+		if ('verification_level' in data && data.verification_level !== undefined) {
 			/**
 			 * The verification level of the guild
 			 *
@@ -65,10 +80,10 @@ export class AnonymousGuild extends BaseGuild {
 			 *
 			 * @type {?string}
 			 */
-			this.vanityURLCode = data.vanity_url_code;
+			this.vanityURLCode = data.vanity_url_code ?? null;
 		}
 
-		if ('nsfw_level' in data) {
+		if ('nsfw_level' in data && data.nsfw_level !== undefined) {
 			/**
 			 * The NSFW level of this guild
 			 *
@@ -83,7 +98,7 @@ export class AnonymousGuild extends BaseGuild {
 			 *
 			 * @type {?number}
 			 */
-			this.premiumSubscriptionCount = data.premium_subscription_count;
+			this.premiumSubscriptionCount = data.premium_subscription_count ?? null;
 		} else {
 			this.premiumSubscriptionCount ??= null;
 		}

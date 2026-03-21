@@ -1,3 +1,4 @@
+import type { Client } from '../client/Client.js';
 import { flatten } from '../util/Util.js';
 
 /**
@@ -6,32 +7,32 @@ import { flatten } from '../util/Util.js';
  * @abstract
  */
 export abstract class Base {
-	public client: any;
+	public client: Client;
 
-	constructor(client: any) {
+	constructor(client: Client) {
 		// Non-enumerable so flatten()/Object.keys() won't recurse into the massive Client object
 		Object.defineProperty(this, 'client', { value: client, writable: true, enumerable: false });
 	}
 
-	_clone(): any {
+	_clone(): this {
 		return Object.assign(Object.create(this), this);
 	}
 
-	_patch(data: any): any {
-		return data;
+	_patch(_data: unknown): unknown {
+		return _data;
 	}
 
-	_update(data: any): any {
+	_update(data: unknown): this {
 		const clone = this._clone();
 		this._patch(data);
 		return clone;
 	}
 
-	toJSON(...props: any[]): any {
+	toJSON(...props: Record<string, boolean>[]): Record<string, unknown> {
 		return flatten(this, ...props);
 	}
 
-	valueOf(): any {
-		return (this as any).id;
+	valueOf(): string {
+		return (this as unknown as { id: string }).id;
 	}
 }
