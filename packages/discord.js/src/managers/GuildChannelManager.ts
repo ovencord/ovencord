@@ -16,6 +16,14 @@ import { GuildTextThreadManager } from './GuildTextThreadManager.js';
 let cacheWarningEmitted = false;
 
 /**
+ * Data that can be resolved to give a Guild Channel object. This can be:
+ * - A GuildChannel object
+ * - A ThreadChannel object
+ * - A Snowflake
+ */
+export type GuildChannelResolvable = GuildChannel | ThreadChannel | string;
+
+/**
  * Manages API methods for GuildChannels and stores their cache.
  *
  * @extends {CachedManager}

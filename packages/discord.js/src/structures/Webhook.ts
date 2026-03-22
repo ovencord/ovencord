@@ -1,9 +1,16 @@
 import { makeURLSearchParams } from '@ovencord/rest';
 import { DiscordSnowflake, lazy } from '@ovencord/util';
-import { Routes, WebhookType } from 'discord-api-types/v10';
+import { type APIWebhook, Routes, type Snowflake, WebhookType } from 'discord-api-types/v10';
+import type { Client } from '../client/Client.js';
 import { DiscordjsError, ErrorCodes } from '../errors/index.js';
 import { resolveImage } from '../util/DataResolver.js';
+import type { AnnouncementChannel } from './AnnouncementChannel.js';
+import type { Guild } from './Guild.js';
+import type { Message } from './Message.js';
 import { MessagePayload } from './MessagePayload.js';
+import type { User } from './User.js';
+
+export type MessageResolvable = Message | Snowflake;
 
 const getMessage = lazy(() => require('./Message.js').Message);
 
@@ -11,19 +18,19 @@ const getMessage = lazy(() => require('./Message.js').Message);
  * Represents a webhook.
  */
 export class Webhook {
-	public name: any;
-	public id: any;
-	public type: any;
-	public guildId: any;
-	public channelId: any;
-	public owner: any;
-	public applicationId: any;
-	public sourceGuild: any;
-	public sourceChannel: any;
-	public avatar: any;
-	public client: any;
-	public token: any;
-	constructor(client: any, data: any) {
+	public name: string;
+	public id: Snowflake;
+	public type: WebhookType;
+	public guildId: Snowflake | null;
+	public channelId: Snowflake;
+	public owner: User | null;
+	public applicationId: Snowflake | null;
+	public sourceGuild: Guild | Record<string, unknown> | null;
+	public sourceChannel: AnnouncementChannel | Record<string, unknown> | null;
+	public avatar: string | null;
+	public readonly client!: Client;
+	public token: string | null;
+	constructor(client: Client, data: Record<string, unknown>) {
 		/**
 		 * The client that instantiated the webhook
 		 *
@@ -35,111 +42,60 @@ export class Webhook {
 		this._patch(data);
 	}
 
-	_patch(data: any) {
+	_patch(data: Record<string, unknown>) {
 		if ('name' in data) {
-			/**
-			 * The name of the webhook
-			 *
-			 * @type {string}
-			 */
-			this.name = data.name;
+			this.name = data.name as string;
 		}
 
-		/**
-		 * The token for the webhook, unavailable for follower webhooks and webhooks owned by another application.
-		 *
-		 * @name Webhook#token
-		 * @type {?string}
-		 */
 		Object.defineProperty(this, 'token', {
-			value: data.token ?? null,
+			value: (data.token as string) ?? null,
 			writable: true,
 			configurable: true,
 		});
 
 		if ('avatar' in data) {
-			/**
-			 * The avatar for the webhook
-			 *
-			 * @type {?string}
-			 */
-			this.avatar = data.avatar;
+			this.avatar = data.avatar as string;
 		}
 
-		/**
-		 * The webhook's id
-		 *
-		 * @type {Snowflake}
-		 */
-		this.id = data.id;
+		this.id = data.id as Snowflake;
 
 		if ('type' in data) {
-			/**
-			 * The type of the webhook
-			 *
-			 * @type {WebhookType}
-			 */
-			this.type = data.type;
+			this.type = data.type as WebhookType;
 		}
 
 		if ('guild_id' in data) {
-			/**
-			 * The guild the webhook belongs to
-			 *
-			 * @type {Snowflake}
-			 */
-			this.guildId = data.guild_id;
+			this.guildId = data.guild_id as Snowflake;
+		} else {
+			this.guildId ??= null;
 		}
 
 		if ('channel_id' in data) {
-			/**
-			 * The id of the channel the webhook belongs to
-			 *
-			 * @type {Snowflake}
-			 */
-			this.channelId = data.channel_id;
+			this.channelId = data.channel_id as Snowflake;
 		}
 
 		if ('user' in data) {
-			/**
-			 * The owner of the webhook
-			 *
-			 * @type {?User}
-			 */
-			this.owner = this.client.users._add(data.user);
+			this.owner = this.client.users._add(data.user as Record<string, unknown>);
 		} else {
 			this.owner ??= null;
 		}
 
 		if ('application_id' in data) {
-			/**
-			 * The application that created this webhook
-			 *
-			 * @type {?Snowflake}
-			 */
-			this.applicationId = data.application_id;
+			this.applicationId = data.application_id as Snowflake;
 		} else {
 			this.applicationId ??= null;
 		}
 
-		if ('source_guild' in data) {
-			/**
-			 * The source guild of the webhook
-			 *
-			 * @type {?(Guild|APIGuild)}
-			 */
-			this.sourceGuild = this.client.guilds.cache.get(data.source_guild.id) ?? data.source_guild;
+		if ('source_guild' in data && data.source_guild) {
+			const sourceGuild = data.source_guild as Record<string, unknown>;
+			this.sourceGuild = this.client.guilds.cache.get(sourceGuild.id as Snowflake) ?? sourceGuild;
 		} else {
 			this.sourceGuild ??= null;
 		}
 
-		if ('source_channel' in data) {
-			/**
-			 * The source channel of the webhook
-			 *
-			 * @type {?(AnnouncementChannel|APIChannel)}
-			 */
-			this.sourceChannel = this.client.channels.cache.get(data.source_channel?.id) ?? data.source_channel;
+		if ('source_channel' in data && data.source_channel) {
+			const sourceChannel = data.source_channel as Record<string, unknown>;
+			this.sourceChannel =
+				(this.client.channels.cache.get(sourceChannel.id as Snowflake) as AnnouncementChannel) ?? sourceChannel;
 		} else {
 			this.sourceChannel ??= null;
 		}
@@ -232,10 +188,10 @@ export class Webhook {
 	 *   .then(console.log)
 	 *   .catch(console.error);
 	 */
-	async send(options: any) {
+	async send(options: string | MessagePayload | Record<string, unknown>) {
 		if (!this.token) throw new DiscordjsError(ErrorCodes.WebhookTokenUnavailable);
 
-		let messagePayload: any;
+		let messagePayload: MessagePayload;
 
 		if (options instanceof MessagePayload) {
 			messagePayload = options.resolveBody();
@@ -245,20 +201,20 @@ export class Webhook {
 
 		const query = makeURLSearchParams({
 			wait: true,
-			thread_id: messagePayload.options.threadId,
-			with_components: messagePayload.options.withComponents,
+			thread_id: messagePayload.options.threadId as Snowflake | undefined,
+			with_components: messagePayload.options.withComponents as boolean | undefined,
 		});
 
 		const { body, files } = await messagePayload.resolveFiles();
-		const data = await this.client.rest.post(Routes.webhook(this.id, this.token), {
+		const data = (await this.client.rest.post(Routes.webhook(this.id, this.token), {
 			body,
 			files,
 			query,
 			auth: false,
-		});
+		})) as Record<string, unknown>;
 
 		return (
-			this.client.channels.cache.get(data.channel_id)?.messages._add(data, false) ??
+			this.client.channels.cache.get(data.channel_id as Snowflake)?.messages._add(data, false) ??
 			new (getMessage())(this.client, data)
 		);
 	}
@@ -282,14 +238,14 @@ export class Webhook {
 	 * }).catch(console.error);
 	 * @see {@link https://api.slack.com/messaging/webhooks}
 	 */
-	async sendSlackMessage(body: any) {
+	async sendSlackMessage(body: Record<string, unknown>) {
 		if (!this.token) throw new DiscordjsError(ErrorCodes.WebhookTokenUnavailable);
 
-		const data = await this.client.rest.post(Routes.webhookPlatform(this.id, this.token, 'slack'), {
+		const data = (await this.client.rest.post(Routes.webhookPlatform(this.id, this.token, 'slack'), {
 			query: makeURLSearchParams({ wait: true }),
 			auth: false,
 			body,
-		});
+		})) as Record<string, unknown> | string;
 		return data.toString() === 'ok';
 	}
 
@@ -310,22 +266,22 @@ export class Webhook {
 	 * @param {WebhookEditOptions} options Options for editing the webhook
 	 * @returns {Promise<Webhook>}
 	 */
-	async edit({ name = this.name, avatar: newAvatar, channel: newChannel, reason }: any) {
-		let avatar = newAvatar;
+	async edit({ name = this.name, avatar: newAvatar, channel: newChannel, reason }: Record<string, unknown>) {
+		let avatar = newAvatar as string | Buffer | null;
 		if (avatar && !(typeof avatar === 'string' && avatar.startsWith('data:'))) {
-			avatar = await resolveImage(avatar);
+			avatar = (await resolveImage(avatar)) as string | null;
 		}
 
-		const channel = newChannel?.id ?? newChannel;
-		const data = await this.client.rest.patch(Routes.webhook(this.id, channel ? undefined : this.token), {
-			body: { name, avatar, channel_id: channel },
-			reason,
+		const channel = (newChannel as Record<string, unknown>)?.id ?? newChannel;
+		const data = (await this.client.rest.patch(Routes.webhook(this.id, channel ? undefined : this.token), {
+			body: { name, avatar, channel_id: channel as Snowflake },
+			reason: reason as string | undefined,
 			auth: !this.token || Boolean(channel),
-		});
+		})) as Record<string, unknown>;
 
-		this.name = data.name;
-		this.avatar = data.avatar;
-		this.channelId = data.channel_id;
+		this.name = data.name as string;
+		this.avatar = data.avatar as string;
+		this.channelId = data.channel_id as Snowflake;
 		return this;
 	}
 
@@ -345,16 +301,16 @@ export class Webhook {
 	 * @param {WebhookFetchMessageOptions} [options={}] The options to provide to fetch the message.
 	 * @returns {Promise<Message>} Returns the message sent by this webhook
 	 */
-	async fetchMessage(message: any, { threadId }: any = {}) {
+	async fetchMessage(message: string | MessageResolvable, { threadId }: Record<string, unknown> = {}) {
 		if (!this.token) throw new DiscordjsError(ErrorCodes.WebhookTokenUnavailable);
 
-		const data = await this.client.rest.get(Routes.webhookMessage(this.id, this.token, message), {
-			query: threadId ? makeURLSearchParams({ thread_id: threadId }) : undefined,
+		const data = (await this.client.rest.get(Routes.webhookMessage(this.id, this.token, message as string), {
+			query: threadId ? makeURLSearchParams({ thread_id: threadId as Snowflake }) : undefined,
 			auth: false,
-		});
+		})) as Record<string, unknown>;
 
 		return (
-			this.client.channels.cache.get(data.channel_id)?.messages._add(data, false) ??
+			this.client.channels.cache.get(data.channel_id as Snowflake)?.messages._add(data, false) ??
 			new (getMessage())(this.client, data)
 		);
 	}
@@ -366,10 +322,10 @@ export class Webhook {
 	 * @param {string|MessagePayload|WebhookMessageEditOptions} options The options to provide
 	 * @returns {Promise<Message>} Returns the message edited by this webhook
 	 */
-	async editMessage(message: any, options: any) {
+	async editMessage(message: string | MessageResolvable, options: string | MessagePayload | Record<string, unknown>) {
 		if (!this.token) throw new DiscordjsError(ErrorCodes.WebhookTokenUnavailable);
 
-		let messagePayload: any;
+		let messagePayload: MessagePayload;
 
 		if (options instanceof MessagePayload) messagePayload = options;
 		else messagePayload = MessagePayload.create(this, options);
@@ -377,24 +333,23 @@ export class Webhook {
 		const { body, files } = await messagePayload.resolveBody().resolveFiles();
 
 		const query = makeURLSearchParams({
-			thread_id: messagePayload.options.threadId,
-			with_components: messagePayload.options.withComponents,
+			thread_id: messagePayload.options.threadId as Snowflake | undefined,
+			with_components: messagePayload.options.withComponents as boolean | undefined,
 		});
 
-		const data = await this.client.rest.patch(
-			Routes.webhookMessage(this.id, this.token, typeof message === 'string' ? message : message.id),
-			{
-				body,
-				files,
-				query,
-				auth: false,
-			},
-		);
+		const messageId = typeof message === 'string' ? message : message.id;
 
-		const messageManager = this.client.channels.cache.get(data.channel_id)?.messages;
+		const data = (await this.client.rest.patch(Routes.webhookMessage(this.id, this.token, messageId), {
+			body,
+			files,
+			query,
+			auth: false,
+		})) as Record<string, unknown>;
+
+		const messageManager = this.client.channels.cache.get(data.channel_id as Snowflake)?.messages;
 		if (!messageManager) return new (getMessage())(this.client, data);
 
-		const existing = messageManager.cache.get(data.id);
+		const existing = messageManager.cache.get(data.id as Snowflake);
 		if (!existing) return messageManager._add(data);
 
 		const clone = existing._clone();
@@ -408,8 +363,8 @@ export class Webhook {
 	 * @param {string} [reason] Reason for deleting this webhook
 	 * @returns {Promise<void>}
 	 */
-	async delete(reason: any) {
-		return this.client.deleteWebhook(this.id, { token: this.token, reason });
+	async delete(reason?: string) {
+		return this.client.deleteWebhook(this.id, { token: this.token as string, reason });
 	}
 
 	/**
@@ -419,16 +374,15 @@ export class Webhook {
 	 * @param {Snowflake} [threadId] The id of the thread this message belongs to
 	 * @returns {Promise<void>}
 	 */
-	async deleteMessage(message: any, threadId: any) {
+	async deleteMessage(message: string | MessageResolvable, threadId?: Snowflake) {
 		if (!this.token) throw new DiscordjsError(ErrorCodes.WebhookTokenUnavailable);
 
-		await this.client.rest.delete(
-			Routes.webhookMessage(this.id, this.token, typeof message === 'string' ? message : message.id),
-			{
-				query: threadId ? makeURLSearchParams({ thread_id: threadId }) : undefined,
-				auth: false,
-			},
-		);
+		const messageId = typeof message === 'string' ? message : message.id;
+
+		await this.client.rest.delete(Routes.webhookMessage(this.id, this.token, messageId), {
+			query: threadId ? makeURLSearchParams({ thread_id: threadId }) : undefined,
+			auth: false,
+		});
 	}
 
 	/**
@@ -507,7 +461,7 @@ export class Webhook {
 		return this.type === WebhookType.Incoming;
 	}
 
-	static applyToClass(structure: any, ignore: any[] = []) {
+	static applyToClass(structure: Record<string, unknown>, ignore: string[] = []) {
 		for (const prop of [
 			'send',
 			'sendSlackMessage',
@@ -522,7 +476,7 @@ export class Webhook {
 		]) {
 			if (ignore.includes(prop)) continue;
 			Object.defineProperty(
-				structure.prototype,
+				structure.prototype as object,
 				prop,
 				Object.getOwnPropertyDescriptor(Webhook.prototype, prop) as PropertyDescriptor,
 			);

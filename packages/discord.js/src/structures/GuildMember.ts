@@ -1,10 +1,44 @@
-import { PermissionFlagsBits } from 'discord-api-types/v10';
+import {
+	type APIGuildMember,
+	type APIInteractionDataResolvedGuildMember,
+	type APIUser,
+	PermissionFlagsBits,
+	type Snowflake,
+} from 'discord-api-types/v10';
+import type { Client } from '../client/Client.js';
 import { DiscordjsError, ErrorCodes } from '../errors/index.js';
+import type { GuildChannelResolvable } from '../managers/GuildChannelManager.js';
 import { GuildMemberRoleManager } from '../managers/GuildMemberRoleManager.js';
 import { GuildMemberFlagsBitField } from '../util/GuildMemberFlagsBitField.js';
 import { PermissionsBitField } from '../util/PermissionsBitField.js';
 import { Base } from './Base.js';
+import type { DMChannel } from './DMChannel.js';
+import type { Guild } from './Guild.js';
+import type { Message } from './Message.js';
+import type { MessagePayload } from './MessagePayload.js';
+import type { User } from './User.js';
 import { VoiceState } from './VoiceState.js';
+
+export interface AvatarDecorationData {
+	asset: string;
+	skuId?: string;
+}
+
+export interface GuildMemberEditOptions {
+	nick?: string | null;
+	roles?: Snowflake[];
+	mute?: boolean;
+	deaf?: boolean;
+	channel?: Snowflake | null;
+	communicationDisabledUntil?: Date | number | null;
+	flags?: number;
+	reason?: string;
+}
+
+export interface BanOptions {
+	deleteMessageSeconds?: number;
+	reason?: string;
+}
 
 /**
  * Represents a member of a guild on Discord.
@@ -12,19 +46,23 @@ import { VoiceState } from './VoiceState.js';
  * @extends {Base}
  */
 export class GuildMember extends Base {
-	public guild: any;
-	public premiumSinceTimestamp: any;
-	public nickname: any;
-	public pending: any;
-	public communicationDisabledUntilTimestamp: any;
-	public user: any;
-	public avatar: any;
-	public banner: any;
-	public joinedTimestamp: any;
-	public _roles: any;
-	public flags: any;
-	public avatarDecorationData: any;
-	constructor(client: any, data: any, guild: any) {
+	public guild: Guild;
+	public premiumSinceTimestamp: number | null;
+	public nickname: string | null;
+	public pending: boolean;
+	public communicationDisabledUntilTimestamp: number | null;
+	public user: User;
+	public avatar: string | null;
+	public banner: string | null;
+	public joinedTimestamp: number | null;
+	public _roles: Snowflake[];
+	public flags: Readonly<GuildMemberFlagsBitField>;
+	public avatarDecorationData: AvatarDecorationData | null;
+	constructor(
+		client: Client,
+		data: APIGuildMember | (APIInteractionDataResolvedGuildMember & { user?: APIUser }) | any,
+		guild: Guild,
+	) {
 		super(client);
 
 		/**
@@ -74,7 +112,13 @@ export class GuildMember extends Base {
 		this._patch(data);
 	}
 
-	_patch(data: any) {
+	_patch(
+		data: Partial<APIGuildMember & APIInteractionDataResolvedGuildMember> & {
+			user?: APIUser;
+			avatar_decoration_data?: { asset: string; sku_id?: string };
+			banner?: string;
+		},
+	) {
 		if ('user' in data) {
 			/**
 			 * The user that this guild member instance represents
@@ -234,7 +278,7 @@ export class GuildMember extends Base {
 	 * @param {ImageURLOptions} [options={}] Options for the image URL
 	 * @returns {string}
 	 */
-	displayAvatarURL(options: any) {
+	displayAvatarURL(options?: any) {
 		return this.avatarURL(options) ?? this.user.displayAvatarURL(options);
 	}
 
@@ -245,7 +289,7 @@ export class GuildMember extends Base {
 	 * @param {ImageURLOptions} [options={}] Options for the image URL
 	 * @returns {?string}
 	 */
-	displayBannerURL(options: any) {
+	displayBannerURL(options?: any) {
 		return this.bannerURL(options) ?? this.user.bannerURL(options);
 	}
 
@@ -426,7 +470,7 @@ export class GuildMember extends Base {
 	 * @param {GuildChannelResolvable} channel The guild channel to use as context
 	 * @returns {Readonly<PermissionsBitField>}
 	 */
-	permissionsIn(channel: any) {
+	permissionsIn(channel: GuildChannelResolvable) {
 		const resolvedChannel = this.guild.channels.resolve(channel);
 		if (!resolvedChannel) throw new DiscordjsError(ErrorCodes.GuildChannelResolve);
 		return resolvedChannel.permissionsFor(this);
@@ -438,7 +482,7 @@ export class GuildMember extends Base {
 	 * @param {GuildMemberEditOptions} options The options to provide
 	 * @returns {Promise<GuildMember>}
 	 */
-	async edit(options: any) {
+	async edit(options: GuildMemberEditOptions) {
 		return this.guild.members.edit(this, options);
 	}
 
@@ -449,7 +493,7 @@ export class GuildMember extends Base {
 	 * @param {string} [reason] Reason for setting the flags
 	 * @returns {Promise<GuildMember>}
 	 */
-	async setFlags(flags: any, reason: any) {
+	async setFlags(flags: number, reason?: string) {
 		return this.edit({ flags, reason });
 	}
 
@@ -470,7 +514,7 @@ export class GuildMember extends Base {
 	 *   .then(member => console.log(`Removed nickname for ${member.user.username}`))
 	 *   .catch(console.error);
 	 */
-	async setNickname(nick: any, reason: any) {
+	async setNickname(nick: string | null, reason?: string) {
 		return this.user.id === this.client.user.id
 			? this.guild.members.editMe({ nick, reason })
 			: this.edit({ nick, reason });
@@ -501,7 +545,7 @@ export class GuildMember extends Base {
 	 * @param {string} [reason] Reason for kicking user
 	 * @returns {Promise<void>}
 	 */
-	async kick(reason: any) {
+	async kick(reason?: string) {
 		await this.guild.members.kick(this, reason);
 	}
 
@@ -514,7 +558,7 @@ export class GuildMember extends Base {
 	 * // Ban a guild member, deleting a week's worth of messages
 	 * await guildMember.ban({ deleteMessageSeconds: 60 * 60 * 24 * 7, reason: 'They deserved it' });
 	 */
-	async ban(options: any) {
+	async ban(options?: BanOptions) {
 		await this.guild.bans.create(this, options);
 	}
 
@@ -536,7 +580,7 @@ export class GuildMember extends Base {
 	 *   .then(member => console.log(`Removed timeout for ${member.displayName}`))
 	 *   .catch(console.error);
 	 */
-	async disableCommunicationUntil(communicationDisabledUntil: any, reason: any) {
+	async disableCommunicationUntil(communicationDisabledUntil: Date | number | null, reason?: string) {
 		return this.edit({ communicationDisabledUntil, reason });
 	}
 
@@ -553,7 +597,7 @@ export class GuildMember extends Base {
 	 *   .then(console.log)
 	 *   .catch(console.error);
 	 */
-	async timeout(timeout: any, reason: any) {
+	async timeout(timeout: number | null, reason?: string) {
 		return this.disableCommunicationUntil(timeout && Date.now() + timeout, reason);
 	}
 
@@ -578,7 +622,7 @@ export class GuildMember extends Base {
 	 *   .then(message => console.log(`Sent message: ${message.content} to ${guildMember.displayName}`))
 	 *   .catch(console.error);
 	 */
-	async send(options: any) {
+	async send(options: string | MessagePayload | Record<string, any>) {
 		const dmChannel = await this.createDM();
 
 		return this.client.channels.createMessage(dmChannel, options);
@@ -592,7 +636,7 @@ export class GuildMember extends Base {
 	 * @param {GuildMember} member The member to compare with
 	 * @returns {boolean}
 	 */
-	equals(member: any) {
+	equals(member: GuildMember) {
 		const isMember = member && member instanceof this.constructor;
 		const m = member;
 		return (
@@ -628,7 +672,7 @@ export class GuildMember extends Base {
 	}
 
 	toJSON() {
-		const json = super.toJSON({
+		const json: any = super.toJSON({
 			guild: 'guildId',
 			user: 'userId',
 			displayName: true,

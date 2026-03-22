@@ -1,9 +1,34 @@
 import { userMention } from '@ovencord/formatters';
 import { calculateUserDefaultAvatarIndex } from '@ovencord/rest';
 import { DiscordSnowflake } from '@ovencord/util';
+import type { APIUser, Snowflake } from 'discord-api-types/v10';
+import type { Client } from '../client/Client.js';
 import { _transformCollectibles } from '../util/Transformers.js';
 import { UserFlagsBitField } from '../util/UserFlagsBitField.js';
 import { Base } from './Base.js';
+
+export interface AvatarDecorationData {
+	asset: string;
+	skuId: Snowflake;
+}
+
+export interface NameplateData {
+	skuId: Snowflake;
+	asset: string;
+	label: string;
+	palette: Record<string, unknown>;
+}
+
+export interface Collectibles {
+	nameplate: NameplateData | null;
+}
+
+export interface UserPrimaryGuild {
+	identityGuildId: Snowflake | null;
+	identityEnabled: boolean | null;
+	tag: string | null;
+	badge: string | null;
+}
 
 /**
  * Represents a user on Discord.
@@ -11,20 +36,20 @@ import { Base } from './Base.js';
  * @extends {Base}
  */
 export class User extends Base {
-	public id: any;
-	public bot: any;
-	public system: any;
-	public flags: any;
-	public username: any;
-	public globalName: any;
-	public discriminator: any;
-	public accentColor: any;
-	public avatarDecorationData: any;
-	public collectibles: any;
-	public primaryGuild: any;
-	public avatar: any;
-	public banner: any;
-	constructor(client: any, data: any) {
+	public id: Snowflake;
+	public bot: boolean;
+	public system: boolean;
+	public flags: UserFlagsBitField | null;
+	public username: string;
+	public globalName: string | null;
+	public discriminator: string;
+	public accentColor: number | null;
+	public avatarDecorationData: AvatarDecorationData | null;
+	public collectibles: Collectibles | null;
+	public primaryGuild: UserPrimaryGuild | null;
+	public avatar: string | null;
+	public banner: string | null;
+	constructor(client: Client, data: Record<string, unknown>) {
 		super(client);
 
 		/**
@@ -32,7 +57,7 @@ export class User extends Base {
 		 *
 		 * @type {Snowflake}
 		 */
-		this.id = data.id;
+		this.id = data.id as Snowflake;
 
 		this.bot = null;
 
@@ -43,16 +68,16 @@ export class User extends Base {
 		this._patch(data);
 	}
 
-	_patch(data: any) {
+	_patch(data: Record<string, unknown>) {
 		if ('username' in data) {
 			/**
 			 * The username of the user
 			 *
 			 * @type {?string}
 			 */
-			this.username = data.username;
+			this.username = data.username as string;
 		} else {
-			this.username ??= null;
+			this.username ??= null as unknown as string;
 		}
 
 		if ('global_name' in data) {
@@ -61,7 +86,7 @@ export class User extends Base {
 			 *
 			 * @type {?string}
 			 */
-			this.globalName = data.global_name;
+			this.globalName = data.global_name as string;
 		} else {
 			this.globalName ??= null;
 		}
@@ -84,9 +109,9 @@ export class User extends Base {
 			 *
 			 * @type {?string}
 			 */
-			this.discriminator = data.discriminator;
+			this.discriminator = data.discriminator as string;
 		} else {
-			this.discriminator ??= null;
+			this.discriminator ??= null as unknown as string;
 		}
 
 		if ('avatar' in data) {
@@ -95,7 +120,7 @@ export class User extends Base {
 			 *
 			 * @type {?string}
 			 */
-			this.avatar = data.avatar;
+			this.avatar = data.avatar as string;
 		} else {
 			this.avatar ??= null;
 		}
@@ -107,7 +132,7 @@ export class User extends Base {
 			 *
 			 * @type {?string}
 			 */
-			this.banner = data.banner;
+			this.banner = data.banner as string;
 		} else if (this.banner !== null) {
 			this.banner ??= undefined;
 		}
@@ -119,7 +144,7 @@ export class User extends Base {
 			 *
 			 * @type {?number}
 			 */
-			this.accentColor = data.accent_color;
+			this.accentColor = data.accent_color as number;
 		} else if (this.accentColor !== null) {
 			this.accentColor ??= undefined;
 		}
@@ -141,7 +166,7 @@ export class User extends Base {
 			 *
 			 * @type {?UserFlagsBitField}
 			 */
-			this.flags = new UserFlagsBitField(data.public_flags);
+			this.flags = new UserFlagsBitField(data.public_flags as number);
 		}
 
 		/**
@@ -151,15 +176,16 @@ export class User extends Base {
 		 */
 
 		if ('avatar_decoration_data' in data) {
-			if (data.avatar_decoration_data) {
+			const decoration = data.avatar_decoration_data as Record<string, unknown> | null;
+			if (decoration) {
 				/**
 				 * The user avatar decoration's data
 				 *
 				 * @type {?AvatarDecorationData}
 				 */
 				this.avatarDecorationData = {
-					asset: data.avatar_decoration_data.asset,
-					skuId: data.avatar_decoration_data.sku_id,
+					asset: decoration.asset as string,
+					skuId: decoration.sku_id as Snowflake,
 				};
 			} else {
 				this.avatarDecorationData = null;
@@ -187,7 +213,7 @@ export class User extends Base {
 			 *
 			 * @type {?Collectibles}
 			 */
-			this.collectibles = _transformCollectibles(data.collectibles);
+			this.collectibles = _transformCollectibles(data.collectibles as Record<string, unknown>) as Collectibles;
 		} else {
 			this.collectibles = null;
 		}
@@ -201,17 +227,18 @@ export class User extends Base {
 		 */
 
 		if ('primary_guild' in data) {
-			if (data.primary_guild) {
+			const primary = data.primary_guild as Record<string, unknown> | null;
+			if (primary) {
 				/**
 				 * The primary guild of the user
 				 *
 				 * @type {?UserPrimaryGuild}
 				 */
 				this.primaryGuild = {
-					identityGuildId: data.primary_guild.identity_guild_id,
-					identityEnabled: data.primary_guild.identity_enabled,
-					tag: data.primary_guild.tag,
-					badge: data.primary_guild.badge,
+					identityGuildId: primary.identity_guild_id as Snowflake,
+					identityEnabled: primary.identity_enabled as boolean,
+					tag: primary.tag as string,
+					badge: primary.badge as string,
 				};
 			} else {
 				this.primaryGuild = null;
@@ -280,7 +307,7 @@ export class User extends Base {
 		const index =
 			this.discriminator === '0' || this.discriminator === '0000'
 				? calculateUserDefaultAvatarIndex(this.id)
-				: this.discriminator % 5;
+				: Number(this.discriminator) % 5;
 
 		return this.client.rest.cdn.defaultAvatar(index);
 	}
@@ -292,7 +319,7 @@ export class User extends Base {
 	 * @param {ImageURLOptions} [options={}] Options for the image URL
 	 * @returns {string}
 	 */
-	displayAvatarURL(options: any) {
+	displayAvatarURL(options: Record<string, unknown>) {
 		return this.avatarURL(options) ?? this.defaultAvatarURL;
 	}
 
@@ -396,7 +423,7 @@ export class User extends Base {
 	 *   .then(message => console.log(`Sent message: ${message.content} to ${user.tag}`))
 	 *   .catch(console.error);
 	 */
-	async send(options: any) {
+	async send(options: Record<string, unknown> | string) {
 		const dmChannel = await this.createDM();
 
 		return this.client.channels.createMessage(dmChannel, options);
@@ -410,7 +437,7 @@ export class User extends Base {
 	 * @param {User} user User to compare with
 	 * @returns {boolean}
 	 */
-	equals(user: any) {
+	equals(user: User) {
 		return (
 			user &&
 			this.id === user.id &&
@@ -441,32 +468,33 @@ export class User extends Base {
 	 * @returns {boolean}
 	 * @private
 	 */
-	_equals(user: any) {
+	_equals(user: APIUser | Record<string, unknown>) {
+		const u = user as any;
 		return (
-			user &&
-			this.id === user.id &&
-			this.username === user.username &&
-			this.discriminator === user.discriminator &&
-			this.globalName === user.global_name &&
-			this.avatar === user.avatar &&
-			this.flags?.bitfield === user.public_flags &&
-			('banner' in user ? this.banner === user.banner : true) &&
-			('accent_color' in user ? this.accentColor === user.accent_color : true) &&
-			('avatar_decoration_data' in user
-				? this.avatarDecorationData?.asset === user.avatar_decoration_data?.asset &&
-					this.avatarDecorationData?.skuId === user.avatar_decoration_data?.sku_id
+			u &&
+			this.id === u.id &&
+			this.username === u.username &&
+			this.discriminator === u.discriminator &&
+			this.globalName === u.global_name &&
+			this.avatar === u.avatar &&
+			this.flags?.bitfield === u.public_flags &&
+			('banner' in u ? this.banner === u.banner : true) &&
+			('accent_color' in u ? this.accentColor === u.accent_color : true) &&
+			('avatar_decoration_data' in u
+				? this.avatarDecorationData?.asset === u.avatar_decoration_data?.asset &&
+					this.avatarDecorationData?.skuId === u.avatar_decoration_data?.sku_id
 				: true) &&
-			('collectibles' in user
-				? this.collectibles?.nameplate?.skuId === user.collectibles?.nameplate?.sku_id &&
-					this.collectibles?.nameplate?.asset === user.collectibles?.nameplate?.asset &&
-					this.collectibles?.nameplate?.label === user.collectibles?.nameplate?.label &&
-					this.collectibles?.nameplate?.palette === user.collectibles?.nameplate?.palette
+			('collectibles' in u
+				? this.collectibles?.nameplate?.skuId === u.collectibles?.nameplate?.sku_id &&
+					this.collectibles?.nameplate?.asset === u.collectibles?.nameplate?.asset &&
+					this.collectibles?.nameplate?.label === u.collectibles?.nameplate?.label &&
+					this.collectibles?.nameplate?.palette === u.collectibles?.nameplate?.palette
 				: true) &&
-			('primary_guild' in user
-				? this.primaryGuild?.identityGuildId === user.primary_guild?.identity_guild_id &&
-					this.primaryGuild?.identityEnabled === user.primary_guild?.identity_enabled &&
-					this.primaryGuild?.tag === user.primary_guild?.tag &&
-					this.primaryGuild?.badge === user.primary_guild?.badge
+			('primary_guild' in u
+				? this.primaryGuild?.identityGuildId === u.primary_guild?.identity_guild_id &&
+					this.primaryGuild?.identityEnabled === u.primary_guild?.identity_enabled &&
+					this.primaryGuild?.tag === u.primary_guild?.tag &&
+					this.primaryGuild?.badge === u.primary_guild?.badge
 				: true)
 		);
 	}

@@ -21,7 +21,9 @@ export class VoiceChannel extends BaseGuildVoiceChannel {
 	 */
 	get joinable() {
 		if (!super.joinable) return false;
-		return !this.full || this.permissionsFor(this.client.user?.id as string)?.has(PermissionFlagsBits.MoveMembers, false);
+		return (
+			!this.full || this.permissionsFor(this.client.user?.id as string)?.has(PermissionFlagsBits.MoveMembers, false)
+		);
 	}
 
 	/**

@@ -1,7 +1,71 @@
 import { DiscordSnowflake } from '@ovencord/util';
-import { GuildScheduledEventEntityType, GuildScheduledEventStatus, RouteBases } from 'discord-api-types/v10';
+import {
+	type APIGuildScheduledEvent,
+	type APIGuildScheduledEventEntityMetadata,
+	type APIGuildScheduledEventRecurrenceRule,
+	GuildScheduledEventEntityType,
+	type GuildScheduledEventPrivacyLevel,
+	GuildScheduledEventStatus,
+	RouteBases,
+	type Snowflake,
+} from 'discord-api-types/v10';
+import type { Client } from '../client/Client.js';
 import { DiscordjsError, ErrorCodes } from '../errors/index.js';
+import type { GuildChannelResolvable } from '../managers/GuildChannelManager.js';
 import { Base } from './Base.js';
+import type { Guild } from './Guild.js';
+import type { StageChannel } from './StageChannel.js';
+import type { User } from './User.js';
+import type { VoiceChannel } from './VoiceChannel.js';
+export interface GuildScheduledEventInviteURLCreateOptions {
+	channel?: GuildChannelResolvable;
+	temporary?: boolean;
+	maxAge?: number;
+	maxUses?: number;
+	unique?: boolean;
+	targetUser?: string;
+	targetApplication?: string;
+	targetType?: number;
+	reason?: string;
+}
+
+export interface GuildScheduledEventEntityMetadata {
+	location: string | null;
+}
+
+export interface GuildScheduledEventRecurrenceRuleNWeekday {
+	n: number;
+	day: number;
+}
+
+export interface GuildScheduledEventRecurrenceRule {
+	startTimestamp: number;
+	get startAt(): Date;
+	endTimestamp: number | null;
+	get endAt(): Date | null;
+	frequency: number;
+	interval: number;
+	byWeekday: number[] | null;
+	byNWeekday: GuildScheduledEventRecurrenceRuleNWeekday[] | null;
+	byMonth: number[] | null;
+	byMonthDay: number[] | null;
+	byYearDay: number[] | null;
+	count: number | null;
+}
+
+export interface GuildScheduledEventEditOptions {
+	name?: string;
+	description?: string | null;
+	channel?: GuildChannelResolvable | null;
+	privacyLevel?: GuildScheduledEventPrivacyLevel;
+	entityType?: GuildScheduledEventEntityType;
+	scheduledStartTime?: Date | number;
+	scheduledEndTime?: Date | number | null;
+	entityMetadata?: GuildScheduledEventEntityMetadata | null;
+	image?: string | null;
+	status?: GuildScheduledEventStatus;
+	reason?: string;
+}
 
 /**
  * Represents a scheduled event in a {@link Guild}.
@@ -9,24 +73,24 @@ import { Base } from './Base.js';
  * @extends {Base}
  */
 export class GuildScheduledEvent extends Base {
-	public id: any;
-	public guildId: any;
-	public channelId: any;
-	public creatorId: any;
-	public name: any;
-	public description: any;
-	public scheduledStartTimestamp: any;
-	public scheduledEndTimestamp: any;
-	public privacyLevel: any;
-	public status: any;
-	public entityType: any;
-	public entityId: any;
-	public userCount: any;
-	public creator: any;
-	public entityMetadata: any;
-	public image: any;
-	public recurrenceRule: any;
-	constructor(client: any, data: any) {
+	public id: Snowflake;
+	public guildId: Snowflake;
+	public channelId: Snowflake | null;
+	public creatorId: Snowflake | null;
+	public name: string | null;
+	public description: string | null;
+	public scheduledStartTimestamp: number | null;
+	public scheduledEndTimestamp: number | null;
+	public privacyLevel: GuildScheduledEventPrivacyLevel | null;
+	public status: GuildScheduledEventStatus | null;
+	public entityType: GuildScheduledEventEntityType | null;
+	public entityId: Snowflake | null;
+	public userCount: number | null;
+	public creator: User | null;
+	public entityMetadata: GuildScheduledEventEntityMetadata | null;
+	public image: string | null;
+	public recurrenceRule: GuildScheduledEventRecurrenceRule | null;
+	constructor(client: Client, data: APIGuildScheduledEvent | Partial<APIGuildScheduledEvent>) {
 		super(client);
 
 		/**
@@ -46,7 +110,7 @@ export class GuildScheduledEvent extends Base {
 		this._patch(data);
 	}
 
-	_patch(data: any) {
+	_patch(data: Partial<APIGuildScheduledEvent>) {
 		if ('channel_id' in data) {
 			/**
 			 * The channel id in which the scheduled event will be hosted,
@@ -381,7 +445,7 @@ export class GuildScheduledEvent extends Base {
 	 * @param {GuildScheduledEventInviteURLCreateOptions} [options] The options to create the invite
 	 * @returns {Promise<string>}
 	 */
-	async createInviteURL(options: any) {
+	async createInviteURL(options?: GuildScheduledEventInviteURLCreateOptions) {
 		let channelId = this.channelId;
 		if (this.entityType === GuildScheduledEventEntityType.External) {
 			if (!options?.channel) throw new DiscordjsError(ErrorCodes.InviteOptionsMissingChannel);
@@ -404,7 +468,7 @@ export class GuildScheduledEvent extends Base {
 	 *  .then(guildScheduledEvent => console.log(guildScheduledEvent))
 	 *  .catch(console.error);
 	 */
-	async edit(options: any) {
+	async edit(options: GuildScheduledEventEditOptions) {
 		return this.guild.scheduledEvents.edit(this.id, options);
 	}
 
@@ -445,7 +509,7 @@ export class GuildScheduledEvent extends Base {
 	 *  .then(guildScheduledEvent => console.log(`Set the name to: ${guildScheduledEvent.name}`))
 	 *  .catch(console.error);
 	 */
-	async setName(name: any, reason: any) {
+	async setName(name: string, reason?: string) {
 		return this.edit({ name, reason });
 	}
 
@@ -461,7 +525,7 @@ export class GuildScheduledEvent extends Base {
 	 *  .then(guildScheduledEvent => console.log(`Set the start time to: ${guildScheduledEvent.scheduledStartTime}`))
 	 *  .catch(console.error);
 	 */
-	async setScheduledStartTime(scheduledStartTime: any, reason: any) {
+	async setScheduledStartTime(scheduledStartTime: Date | number, reason?: string) {
 		return this.edit({ scheduledStartTime, reason });
 	}
 
@@ -478,7 +542,7 @@ export class GuildScheduledEvent extends Base {
 	 *  .then(guildScheduledEvent => console.log(`Set the end time to: ${guildScheduledEvent.scheduledEndTime}`))
 	 *  .catch(console.error);
 	 */
-	async setScheduledEndTime(scheduledEndTime: any, reason: any) {
+	async setScheduledEndTime(scheduledEndTime: Date | number | null, reason?: string) {
 		return this.edit({ scheduledEndTime, reason });
 	}
 
@@ -494,7 +558,7 @@ export class GuildScheduledEvent extends Base {
 	 *  .then(guildScheduledEvent => console.log(`Set the description to: ${guildScheduledEvent.description}`))
 	 *  .catch(console.error);
 	 */
-	async setDescription(description: any, reason: any) {
+	async setDescription(description: string, reason?: string) {
 		return this.edit({ description, reason });
 	}
 
@@ -512,7 +576,7 @@ export class GuildScheduledEvent extends Base {
 	 *  .then(guildScheduledEvent => console.log(`Set the status to: ${guildScheduledEvent.status}`))
 	 *  .catch(console.error);
 	 */
-	async setStatus(status: any, reason: any) {
+	async setStatus(status: GuildScheduledEventStatus, reason?: string) {
 		return this.edit({ status, reason });
 	}
 
@@ -528,7 +592,7 @@ export class GuildScheduledEvent extends Base {
 	 *  .then(guildScheduledEvent => console.log(`Set the location to: ${guildScheduledEvent.entityMetadata.location}`))
 	 *  .catch(console.error);
 	 */
-	async setLocation(location: any, reason: any) {
+	async setLocation(location: string, reason?: string) {
 		return this.edit({ entityMetadata: { location }, reason });
 	}
 
@@ -538,7 +602,7 @@ export class GuildScheduledEvent extends Base {
 	 * @param {FetchGuildScheduledEventSubscribersOptions} [options] Options for fetching the subscribers
 	 * @returns {Promise<Collection<Snowflake, GuildScheduledEventUser>>}
 	 */
-	async fetchSubscribers(options: any) {
+	async fetchSubscribers(options?: { limit?: number; withMember?: boolean; before?: string; after?: string }) {
 		return this.guild.scheduledEvents.fetchSubscribers(this.id, options);
 	}
 

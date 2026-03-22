@@ -1,3 +1,5 @@
+import type { Snowflake, SubscriptionStatus } from 'discord-api-types/v10';
+import type { Client } from '../client/Client.js';
 import { Base } from './Base.js';
 
 /**
@@ -6,17 +8,17 @@ import { Base } from './Base.js';
  * @extends {Base}
  */
 export class Subscription extends Base {
-	public id: any;
-	public userId: any;
-	public skuIds: any;
-	public entitlementIds: any;
-	public currentPeriodStartTimestamp: any;
-	public currentPeriodEndTimestamp: any;
-	public status: any;
-	public renewalSkuIds: any;
-	public canceledTimestamp: any;
-	public country: any;
-	constructor(client: any, data: any) {
+	public id: Snowflake;
+	public userId: Snowflake;
+	public skuIds: Snowflake[];
+	public entitlementIds: Snowflake[];
+	public currentPeriodStartTimestamp: number;
+	public currentPeriodEndTimestamp: number;
+	public status: SubscriptionStatus;
+	public renewalSkuIds: Snowflake[] | null;
+	public canceledTimestamp: number | null;
+	public country: string | null;
+	constructor(client: Client, data: Record<string, unknown>) {
 		super(client);
 
 		/**
@@ -24,53 +26,53 @@ export class Subscription extends Base {
 		 *
 		 * @type {Snowflake}
 		 */
-		this.id = data.id;
+		this.id = data.id as Snowflake;
 
 		/**
 		 * The id of the user who subscribed
 		 *
 		 * @type {Snowflake}
 		 */
-		this.userId = data.user_id;
+		this.userId = data.user_id as Snowflake;
 
 		this._patch(data);
 	}
 
-	_patch(data: any) {
+	_patch(data: Record<string, unknown>) {
 		/**
 		 * The SKU ids subscribed to
 		 *
 		 * @type {Snowflake[]}
 		 */
-		this.skuIds = data.sku_ids;
+		this.skuIds = data.sku_ids as Snowflake[];
 
 		/**
 		 * The entitlement ids granted for this subscription
 		 *
 		 * @type {Snowflake[]}
 		 */
-		this.entitlementIds = data.entitlement_ids;
+		this.entitlementIds = data.entitlement_ids as Snowflake[];
 
 		/**
 		 * The timestamp the current subscription period will start at
 		 *
 		 * @type {number}
 		 */
-		this.currentPeriodStartTimestamp = Date.parse(data.current_period_start);
+		this.currentPeriodStartTimestamp = Date.parse(data.current_period_start as string);
 
 		/**
 		 * The timestamp the current subscription period will end at
 		 *
 		 * @type {number}
 		 */
-		this.currentPeriodEndTimestamp = Date.parse(data.current_period_end);
+		this.currentPeriodEndTimestamp = Date.parse(data.current_period_end as string);
 
 		/**
 		 * The current status of the subscription
 		 *
 		 * @type {SubscriptionStatus}
 		 */
-		this.status = data.status;
+		this.status = data.status as SubscriptionStatus;
 
 		if ('renewal_sku_ids' in data) {
 			/**
@@ -78,7 +80,7 @@ export class Subscription extends Base {
 			 *
 			 * @type {?Snowflake[]}
 			 */
-			this.renewalSkuIds = data.renewal_sku_ids;
+			this.renewalSkuIds = data.renewal_sku_ids as Snowflake[];
 		}
 
 		if ('canceled_at' in data) {
@@ -87,7 +89,7 @@ export class Subscription extends Base {
 			 *
 			 * @type {?number}
 			 */
-			this.canceledTimestamp = data.canceled_at ? Date.parse(data.canceled_at) : null;
+			this.canceledTimestamp = data.canceled_at ? Date.parse(data.canceled_at as string) : null;
 		} else {
 			this.canceledTimestamp ??= null;
 		}
@@ -99,7 +101,7 @@ export class Subscription extends Base {
 			 *
 			 * @type {?string}
 			 */
-			this.country = data.country;
+			this.country = data.country as string;
 		} else {
 			this.country ??= null;
 		}

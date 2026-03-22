@@ -1,4 +1,4 @@
-import type { GatewayActivityUpdateData, GatewayPresenceUpdateData } from 'discord-api-types/v10';
+import type { GatewayActivityUpdateData, GatewayPresenceUpdateData, GatewayPresenceUpdate } from 'discord-api-types/v10';
 import { ActivityType, GatewayOpcodes } from 'discord-api-types/v10';
 import type { Client } from '../client/Client.js';
 import { DiscordjsTypeError, ErrorCodes } from '../errors/index.js';
@@ -13,7 +13,7 @@ export class ClientPresence extends Presence {
 	constructor(client: Client, data: Record<string, unknown> = {}) {
 		super(
 			client,
-			Object.assign(data, { status: (data as unknown as { status?: string }).status ?? 'online', user: { id: null } }),
+			Object.assign(data, { status: (data as unknown as { status?: string }).status ?? 'online', user: { id: null } }) as unknown as Partial<GatewayPresenceUpdate>,
 		);
 	}
 
@@ -25,7 +25,7 @@ export class ClientPresence extends Presence {
 	 */
 	async set(presence: Record<string, unknown>) {
 		const packet = this._parse(presence) as unknown as GatewayPresenceUpdateData;
-		this._patch(packet);
+		this._patch(packet as unknown as Partial<GatewayPresenceUpdate>);
 		if (presence.shardId === undefined) {
 			await this.client._broadcast({ op: GatewayOpcodes.PresenceUpdate, d: packet });
 		} else if (Array.isArray(presence.shardId)) {
@@ -77,7 +77,6 @@ export class ClientPresence extends Presence {
 			}
 		} else if (!activities && (status || afk || since) && this.activities.length) {
 			data.activities.push(
-				// @ts-expect-error
 				...this.activities.map((activity) => ({
 					name: activity.name,
 					state: activity.state ?? undefined,

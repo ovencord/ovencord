@@ -1,6 +1,8 @@
+import type { Snowflake } from 'discord-api-types/v10';
 import { ChannelType, Routes } from 'discord-api-types/v10';
 import { DiscordjsError, DiscordjsTypeError, ErrorCodes } from '../errors/index.js';
 import { Base } from './Base.js';
+import type { Guild } from './Guild.js';
 
 /**
  * Represents the voice state for a Guild Member.
@@ -8,19 +10,19 @@ import { Base } from './Base.js';
  * @extends {Base}
  */
 export class VoiceState extends Base {
-	public guild: any;
-	public id: any;
-	public serverDeaf: any;
-	public serverMute: any;
-	public selfDeaf: any;
-	public selfMute: any;
-	public selfVideo: any;
-	public sessionId: any;
-	public streaming: any;
-	public channelId: any;
-	public suppress: any;
-	public requestToSpeakTimestamp: any;
-	constructor(guild: any, data: any) {
+	public guild: Guild;
+	public id: Snowflake;
+	public serverDeaf: boolean | null;
+	public serverMute: boolean | null;
+	public selfDeaf: boolean | null;
+	public selfMute: boolean | null;
+	public selfVideo: boolean | null;
+	public sessionId: string | null;
+	public streaming: boolean | null;
+	public channelId: Snowflake | null;
+	public suppress: boolean | null;
+	public requestToSpeakTimestamp: number | null;
+	constructor(guild: Guild, data: Record<string, unknown>) {
 		super(guild.client);
 		/**
 		 * The guild of this voice state
@@ -33,18 +35,18 @@ export class VoiceState extends Base {
 		 *
 		 * @type {Snowflake}
 		 */
-		this.id = data.user_id;
+		this.id = data.user_id as Snowflake;
 		this._patch(data);
 	}
 
-	_patch(data: any) {
+	_patch(data: Record<string, unknown>) {
 		if ('deaf' in data) {
 			/**
 			 * Whether this member is deafened server-wide
 			 *
 			 * @type {?boolean}
 			 */
-			this.serverDeaf = data.deaf;
+			this.serverDeaf = data.deaf as boolean;
 		} else {
 			this.serverDeaf ??= null;
 		}
@@ -55,7 +57,7 @@ export class VoiceState extends Base {
 			 *
 			 * @type {?boolean}
 			 */
-			this.serverMute = data.mute;
+			this.serverMute = data.mute as boolean;
 		} else {
 			this.serverMute ??= null;
 		}
@@ -66,7 +68,7 @@ export class VoiceState extends Base {
 			 *
 			 * @type {?boolean}
 			 */
-			this.selfDeaf = data.self_deaf;
+			this.selfDeaf = data.self_deaf as boolean;
 		} else {
 			this.selfDeaf ??= null;
 		}
@@ -77,7 +79,7 @@ export class VoiceState extends Base {
 			 *
 			 * @type {?boolean}
 			 */
-			this.selfMute = data.self_mute;
+			this.selfMute = data.self_mute as boolean;
 		} else {
 			this.selfMute ??= null;
 		}
@@ -88,7 +90,7 @@ export class VoiceState extends Base {
 			 *
 			 * @type {?boolean}
 			 */
-			this.selfVideo = data.self_video;
+			this.selfVideo = data.self_video as boolean;
 		} else {
 			this.selfVideo ??= null;
 		}
@@ -99,7 +101,7 @@ export class VoiceState extends Base {
 			 *
 			 * @type {?string}
 			 */
-			this.sessionId = data.session_id;
+			this.sessionId = data.session_id as string;
 		} else {
 			this.sessionId ??= null;
 		}
@@ -112,7 +114,7 @@ export class VoiceState extends Base {
 			 *
 			 * @type {?boolean}
 			 */
-			this.streaming = data.self_stream ?? false;
+			this.streaming = (data.self_stream as boolean) ?? false;
 		} else {
 			this.streaming ??= null;
 		}
@@ -123,7 +125,7 @@ export class VoiceState extends Base {
 			 *
 			 * @type {?Snowflake}
 			 */
-			this.channelId = data.channel_id;
+			this.channelId = data.channel_id as Snowflake;
 		} else {
 			this.channelId ??= null;
 		}
@@ -134,7 +136,7 @@ export class VoiceState extends Base {
 			 *
 			 * @type {?boolean}
 			 */
-			this.suppress = data.suppress;
+			this.suppress = data.suppress as boolean;
 		} else {
 			this.suppress ??= null;
 		}
@@ -145,7 +147,8 @@ export class VoiceState extends Base {
 			 *
 			 * @type {?number}
 			 */
-			this.requestToSpeakTimestamp = data.request_to_speak_timestamp && Date.parse(data.request_to_speak_timestamp);
+			this.requestToSpeakTimestamp =
+				data.request_to_speak_timestamp && Date.parse(data.request_to_speak_timestamp as string);
 		} else {
 			this.requestToSpeakTimestamp ??= null;
 		}
@@ -200,7 +203,7 @@ export class VoiceState extends Base {
 	 * @param {string} [reason] Reason for muting or unmuting
 	 * @returns {Promise<GuildMember>}
 	 */
-	async setMute(mute: any = true, reason: any = undefined) {
+	async setMute(mute = true, reason: string | undefined = undefined) {
 		return this.guild.members.edit(this.id, { mute, reason });
 	}
 
@@ -211,7 +214,7 @@ export class VoiceState extends Base {
 	 * @param {string} [reason] Reason for deafening or undeafening
 	 * @returns {Promise<GuildMember>}
 	 */
-	async setDeaf(deaf: any = true, reason: any = undefined) {
+	async setDeaf(deaf = true, reason: string | undefined = undefined) {
 		return this.guild.members.edit(this.id, { deaf, reason });
 	}
 
@@ -221,7 +224,7 @@ export class VoiceState extends Base {
 	 * @param {string} [reason] Reason for disconnecting the member from the channel
 	 * @returns {Promise<GuildMember>}
 	 */
-	async disconnect(reason: any) {
+	async disconnect(reason?: string) {
 		return this.setChannel(null, reason);
 	}
 
@@ -233,7 +236,7 @@ export class VoiceState extends Base {
 	 * @param {string} [reason] Reason for moving member to another channel or disconnecting
 	 * @returns {Promise<GuildMember>}
 	 */
-	async setChannel(channel: any, reason: any) {
+	async setChannel(channel: Snowflake | Record<string, unknown> | null, reason?: string) {
 		return this.guild.members.edit(this.id, { channel, reason });
 	}
 
@@ -252,7 +255,7 @@ export class VoiceState extends Base {
 	 * @param {VoiceStateEditOptions} options The options to provide
 	 * @returns {Promise<VoiceState>}
 	 */
-	async edit(options: any) {
+	async edit(options: Record<string, unknown>) {
 		if (this.channel?.type !== ChannelType.GuildStageVoice) throw new DiscordjsError(ErrorCodes.VoiceNotStageChannel);
 
 		const target = this.client.user.id === this.id ? '@me' : this.id;
