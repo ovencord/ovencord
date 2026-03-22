@@ -28,7 +28,7 @@ export abstract class Base {
 		return clone;
 	}
 
-	toJSON(...props: Record<string, boolean>[]): Record<string, unknown> {
+	toJSON(...props: Record<string, boolean | string>[]): Record<string, unknown> {
 		return flatten(this, ...props);
 	}
 
