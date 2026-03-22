@@ -35,7 +35,7 @@ export class ClientPresence extends Presence {
 				),
 			);
 		} else {
-			await this.client.ws.send(presence.shardId, { op: GatewayOpcodes.PresenceUpdate, d: packet });
+			await this.client.ws.send(presence.shardId as number, { op: GatewayOpcodes.PresenceUpdate, d: packet });
 		}
 
 		return this;

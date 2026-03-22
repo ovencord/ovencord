@@ -41,6 +41,7 @@ export * from '@ovencord/util';
 export * from '@ovencord/ws';
 // External
 export * from 'discord-api-types/v10';
+export type { ApplicationCommandOptionAllowedChannelType } from 'discord-api-types/v10';
 export { version } from '../package.json' with { type: 'json' };
 export { ClientVoiceManager } from './client/voice/ClientVoiceManager.js';
 // Managers

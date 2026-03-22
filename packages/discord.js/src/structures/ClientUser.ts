@@ -70,7 +70,7 @@ export class ClientUser extends User {
 			},
 		});
 
-		const { updated } = this.client.actions.UserUpdate.handle(data);
+		const { updated } = this.client.actions.UserUpdate.handle(data as any);
 		return updated ?? this;
 	}
 
