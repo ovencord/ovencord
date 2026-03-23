@@ -8,13 +8,13 @@ export default (client: Client, { d: data }: GatewayReadyDispatch, shardId: numb
 	if (client.user) {
 		client.user._patch(data.user);
 	} else {
-		client.user = new ClientUser(client, data.user as any);
+		client.user = new ClientUser(client, data.user);
 		client.users.cache.set(client.user.id, client.user);
 	}
 
 	for (const guild of data.guilds) {
 		client.expectedGuilds.add(guild.id);
-		(guild as any).shardId = shardId;
+		(guild as (typeof data.guilds)[number] & { shardId: number }).shardId = shardId;
 		client.guilds._add(guild);
 	}
 

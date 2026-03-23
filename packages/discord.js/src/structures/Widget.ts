@@ -1,5 +1,5 @@
 import { Collection } from '@ovencord/collection';
-import type { APIGuildWidget, APIWidgetChannel, Snowflake } from 'discord-api-types/v10';
+import type { APIGuildWidget, APIGuildWidgetChannel as APIWidgetChannel, Snowflake } from 'discord-api-types/v10';
 import { Routes } from 'discord-api-types/v10';
 import type { Client } from '../client/Client.js';
 import { Base } from './Base.js';

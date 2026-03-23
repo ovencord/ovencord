@@ -3,6 +3,7 @@ import { DiscordjsError, ErrorCodes } from '../errors/index.js';
 import { AsyncEventEmitter } from '../util/AsyncEventEmitter.js';
 import { ShardEvents } from '../util/ShardEvents.js';
 import { makeError, makePlainError } from '../util/Util.js';
+import type { ShardingManager } from './ShardingManager.js';
 
 /**
  * A self-contained shard created by the {@link ShardingManager}. Each one has a {@link Subprocess} or {@link Worker}
@@ -12,19 +13,19 @@ import { makeError, makePlainError } from '../util/Util.js';
  * @extends {AsyncEventEmitter}
  */
 export class Shard extends AsyncEventEmitter {
-	public manager: any;
-	public id: any;
-	public silent: any;
-	public args: any;
-	public execArgv: any;
-	public env: any;
+	public manager: ShardingManager;
+	public id: number;
+	public silent: boolean;
+	public args: string[];
+	public execArgv: string[];
+	public env: Record<string, string | undefined>;
 	public worker: Worker | null = null;
 	public process: Subprocess | null = null;
 	public ready: boolean = false;
-	public _evals: any;
-	public _fetches: any;
+	public _evals: Map<string, any>;
+	public _fetches: Map<string, any>;
 
-	constructor(manager: any, id: any) {
+	constructor(manager: ShardingManager, id: number) {
 		super();
 
 		if (manager.mode !== 'process' && manager.mode !== 'worker') {
@@ -138,10 +139,10 @@ export class Shard extends AsyncEventEmitter {
 					env: this.env,
 					stdout: this.silent ? 'ignore' : 'inherit',
 					stderr: this.silent ? 'ignore' : 'inherit',
-					ipc: (message: any) => {
+					ipc: (message: unknown) => {
 						this._handleMessage(message);
 					},
-					onExit: (_proc: any, _exitCode: number | null, _signalCode: number | null) => {
+					onExit: (_proc: unknown, _exitCode: number | null, _signalCode: number | null) => {
 						this._handleExit(undefined, timeout);
 					},
 				});
@@ -257,7 +258,7 @@ export class Shard extends AsyncEventEmitter {
 	 * @param {*} message Message to send to the shard
 	 * @returns {Promise<Shard>}
 	 */
-	async send(message: any): Promise<Shard> {
+	async send(message: unknown): Promise<Shard> {
 		if (this.process) {
 			this.process.send(message);
 		} else if (this.worker) {
@@ -276,7 +277,7 @@ export class Shard extends AsyncEventEmitter {
 	 *   .then(count => console.log(`${count} guilds in shard ${shard.id}`))
 	 *   .catch(console.error);
 	 */
-	async fetchClientValue(prop: any): Promise<any> {
+	async fetchClientValue(prop: string): Promise<any> {
 		// Shard is dead (maybe respawning), don't cache anything and error immediately
 		if (!this.process && !this.worker) {
 			throw new DiscordjsError(ErrorCodes.ShardingNoChildExists, this.id);
@@ -318,7 +319,7 @@ export class Shard extends AsyncEventEmitter {
 	 * @param {*} [context] The context for the eval
 	 * @returns {Promise<*>} Result of the script execution
 	 */
-	async eval(script: any, context?: any): Promise<any> {
+	async eval<T>(script: string | ((client: unknown, context: unknown) => T), context?: unknown): Promise<T> {
 		// Stringify the script if it's a Function
 		const _eval = typeof script === 'function' ? `(${script})(this, ${JSON.stringify(context)})` : script;
 
@@ -338,7 +339,7 @@ export class Shard extends AsyncEventEmitter {
 		});
 
 		this._evals.set(_eval, promise);
-		return promise;
+		return promise as Promise<T>;
 	}
 
 	/**
@@ -389,9 +390,7 @@ export class Shard extends AsyncEventEmitter {
 			if (message._sFetchProp) {
 				const resp = { _sFetchProp: message._sFetchProp, _sFetchPropShard: message._sFetchPropShard };
 				this.manager.fetchClientValues(message._sFetchProp, message._sFetchPropShard).then(
-					// @ts-expect-error
 					async (results) => this.send({ ...resp, _result: results }),
-					// @ts-expect-error
 					async (error) => this.send({ ...resp, _error: makePlainError(error) }),
 				);
 				return;
@@ -400,10 +399,8 @@ export class Shard extends AsyncEventEmitter {
 			// Shard is requesting an eval broadcast
 			if (message._sEval) {
 				const resp = { _sEval: message._sEval, _sEvalShard: message._sEvalShard };
-				this.manager._performOnShards('eval', [message._sEval], message._sEvalShard).then(
-					// @ts-expect-error
+				this.manager._performOnShards('eval' as never, [message._sEval], message._sEvalShard).then(
 					async (results) => this.send({ ...resp, _result: results }),
-					// @ts-expect-error
 					async (error) => this.send({ ...resp, _error: makePlainError(error) }),
 				);
 				return;

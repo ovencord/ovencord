@@ -287,7 +287,10 @@ export class Message extends Base {
 			 * @type {Collection<Snowflake, Sticker>}
 			 */
 			this.stickers = new Collection(
-				(data.sticker_items ?? data.stickers)?.map((sticker) => [sticker.id, new Sticker(this.client, sticker)]),
+				(data.sticker_items ?? data.stickers)?.map((sticker) => [
+					sticker.id,
+					new Sticker(this.client, sticker as import('discord-api-types/v10').APISticker),
+				]),
 			);
 		} else {
 			this.stickers = new Collection(this.stickers);

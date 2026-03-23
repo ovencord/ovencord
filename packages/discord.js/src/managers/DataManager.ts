@@ -1,3 +1,4 @@
+import type { Client } from '../client/Client.js';
 import { DiscordjsError, ErrorCodes } from '../errors/index.js';
 import { BaseManager } from './BaseManager.js';
 
@@ -8,30 +9,30 @@ import { BaseManager } from './BaseManager.js';
  * @abstract
  */
 export abstract class DataManager extends BaseManager {
-	public holds: any;
+	public holds: { new (...args: any[]): any };
 
-	constructor(client: any, holds: any) {
+	constructor(client: Client, holds: { new (...args: any[]): any }) {
 		super(client);
 		this.holds = holds;
 	}
 
-	get cache(): any {
+	get cache(): unknown {
 		throw new DiscordjsError(ErrorCodes.NotImplemented, 'get cache', this.constructor.name);
 	}
 
-	resolve(idOrInstance: any): any {
+	resolve(idOrInstance: unknown): any {
 		if (idOrInstance instanceof this.holds) return idOrInstance;
-		if (typeof idOrInstance === 'string') return this.cache.get(idOrInstance) ?? null;
+		if (typeof idOrInstance === 'string') return (this.cache as any).get(idOrInstance) ?? null;
 		return null;
 	}
 
-	resolveId(idOrInstance: any): any {
+	resolveId(idOrInstance: unknown): string | null {
 		if (idOrInstance instanceof this.holds) return (idOrInstance as any).id;
 		if (typeof idOrInstance === 'string') return idOrInstance;
 		return null;
 	}
 
-	override valueOf(): any {
+	override valueOf(): unknown {
 		return this.cache;
 	}
 }

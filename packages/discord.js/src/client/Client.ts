@@ -212,11 +212,12 @@ export class Client extends AsyncEventEmitter {
 				? null
 				: (ShardClientUtil.singleton(
 						this as unknown as Client,
-						process.env.SHARDING_MANAGER_MODE as unknown as string,
+						process.env.SHARDING_MANAGER_MODE as import('../sharding/ShardingManager.js').ShardingManagerMode,
 					) as unknown as ShardClientUtil);
-		this.users = new UserManager(this as unknown as Client, undefined as unknown as ShardClientUtil);
-		this.guilds = new GuildManager(this as unknown as Client, undefined as unknown as ShardClientUtil);
-		this.channels = new ChannelManager(this as unknown as Client, undefined as unknown as ShardClientUtil);
+		this.users = new UserManager(this);
+		this.guilds = new GuildManager(this);
+		this.channels = new ChannelManager(this);
+
 		this.sweepers = new Sweepers(this, this.options.sweepers);
 
 		this._validateOptions();
@@ -280,7 +281,10 @@ export class Client extends AsyncEventEmitter {
 		 * @type {?ShardClientUtil}
 		 */
 		this.shard = process.env.SHARDING_MANAGER
-			? ShardClientUtil.singleton(this, process.env.SHARDING_MANAGER_MODE)
+			? ShardClientUtil.singleton(
+					this,
+					process.env.SHARDING_MANAGER_MODE as import('../sharding/ShardingManager.js').ShardingManagerMode,
+				)
 			: null;
 
 		/**

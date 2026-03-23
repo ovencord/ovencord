@@ -365,7 +365,7 @@ export class ClientApplication extends Application {
 		 * @type {?(User|Team)}
 		 */
 		this.owner = data.team
-			? new Team(this.client, data.team as Record<string, unknown>)
+			? new Team(this.client, data.team as import('discord-api-types/v10').APITeam)
 			: data.owner
 				? this.client.users._add(data.owner as Record<string, unknown>)
 				: (this.owner ?? null);
@@ -517,7 +517,8 @@ export class ClientApplication extends Application {
 		const skus = (await this.client.rest.get(Routes.skus(this.id))) as Record<string, unknown>[];
 		return skus.reduce(
 			(coll: Collection<Snowflake, SKU>, sku: Record<string, unknown>) =>
-				coll.set(sku.id as Snowflake, new SKU(this.client, sku)),
+				coll.set(sku.id as Snowflake, new SKU(this.client, sku as unknown as import('discord-api-types/v10').APISKU)),
+
 			new Collection<Snowflake, SKU>(),
 		);
 	}

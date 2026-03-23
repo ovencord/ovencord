@@ -37,7 +37,7 @@ export class MessageManager extends CachedManager {
 	 * @name MessageManager#cache
 	 */
 
-	_add(data: any, cache: any) {
+	_add(data: any, cache = true) {
 		return super._add(data, cache);
 	}
 

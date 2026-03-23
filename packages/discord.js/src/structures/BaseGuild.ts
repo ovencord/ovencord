@@ -128,13 +128,16 @@ export class BaseGuild extends Base {
 	 *
 	 * @returns {string}
 	 */
-	toJSON(): Record<string, unknown> {
-		return super.toJSON({
-			name: true,
-			icon: true,
-			features: true,
-			createdTimestamp: true,
-		});
+	toJSON(...props: Record<string, boolean | string>[]): Record<string, unknown> {
+		return super.toJSON(
+			{
+				name: true,
+				icon: true,
+				features: true,
+				createdTimestamp: true,
+			},
+			...props,
+		);
 	}
 
 	toString(): string {

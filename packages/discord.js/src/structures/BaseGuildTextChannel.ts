@@ -30,7 +30,12 @@ export class BaseGuildTextChannel extends GuildChannel {
 	public defaultThreadRateLimitPerUser: number | null;
 
 	constructor(guild: Guild, data: APIGuildChannel<GuildChannelType>, client: Client) {
-		super(guild, data, client, false);
+		super(
+			guild,
+			data as unknown as Partial<APIGuildChannel<GuildChannelType>> & Record<string, unknown>,
+			client,
+			false,
+		);
 
 		/**
 		 * A manager of the messages sent to this channel
@@ -51,12 +56,12 @@ export class BaseGuildTextChannel extends GuildChannel {
 		 *
 		 * @type {boolean}
 		 */
-		this.nsfw = Boolean((data as any).nsfw);
+		this.nsfw = Boolean((data as { nsfw?: boolean }).nsfw);
 
-		this._patch(data);
+		this._patch(data as unknown as APIChannel);
 	}
 
-	_patch(data: Partial<APIGuildChannel<GuildChannelType>>) {
+	_patch(data: APIChannel | Partial<APIChannel>) {
 		super._patch(data as APIChannel);
 
 		if ('topic' in data) {

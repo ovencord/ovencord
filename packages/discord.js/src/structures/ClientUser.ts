@@ -207,7 +207,6 @@ export class ClientUser extends User {
 	 * client.user.setActivity('discord.js', { type: ActivityType.Watching });
 	 */
 	async setActivity(name: string | any, options: any = {}) {
-		// @ts-expect-error
 		if (!name) return this.setPresence({ activities: [], shardId: options.shardId });
 
 		const activity = { ...options, ...(typeof name === 'object' ? name : { name }) };

@@ -14,7 +14,6 @@ export class Component {
 		this.data = data;
 	}
 
-
 	/**
 	 * The type of the component
 	 *

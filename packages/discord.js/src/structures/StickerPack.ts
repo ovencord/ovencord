@@ -35,7 +35,7 @@ export class StickerPack extends Base {
 		this.stickers = new Collection(
 			(pack.stickers as Record<string, unknown>[]).map((sticker) => [
 				sticker.id as Snowflake,
-				new Sticker(client, sticker),
+				new Sticker(client, sticker as unknown as import('discord-api-types/v10').APISticker),
 			]),
 		);
 

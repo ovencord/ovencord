@@ -7,6 +7,24 @@ import { AsyncEventEmitter } from '../util/AsyncEventEmitter.js';
 import { fetchRecommendedShardCount } from '../util/Util.js';
 import { Shard } from './Shard.js';
 
+export type ShardingManagerMode = 'process' | 'worker';
+
+export interface ShardingManagerOptions {
+	totalShards?: number | 'auto';
+	shardList?: number[] | 'auto';
+	mode?: ShardingManagerMode;
+	respawn?: boolean;
+	silent?: boolean;
+	shardArgs?: string[];
+	execArgv?: string[];
+	token?: string;
+}
+
+export interface BroadcastEvalOptions {
+	shard?: number;
+	context?: unknown;
+}
+
 /**
  * This is a utility class that makes multi-process sharding of a bot an easy and painless experience.
  * It works by spawning a self-contained {@link ChildProcess} or {@link Worker} for each individual shard, each
@@ -18,16 +36,16 @@ import { Shard } from './Shard.js';
  * @extends {AsyncEventEmitter}
  */
 export class ShardingManager extends AsyncEventEmitter {
-	public file: any;
-	public shardList: any;
-	public totalShards: any;
-	public mode: any;
+	public file: string;
+	public shardList: number[] | 'auto';
+	public totalShards: number | 'auto';
+	public mode: ShardingManagerMode;
 	public respawn: boolean;
-	public silent: any;
-	public shardArgs: any;
-	public execArgv: any;
-	public token: any;
-	public shards: any;
+	public silent: boolean;
+	public shardArgs: string[];
+	public execArgv: string[];
+	public token: string | null;
+	public shards: Collection<number, Shard>;
 	/**
 	 * The mode to spawn shards with for a {@link ShardingManager}. Can be either one of:
 	 * - 'process' to use child processes
@@ -55,16 +73,17 @@ export class ShardingManager extends AsyncEventEmitter {
 	 * @param {string} file Path to your shard script file
 	 * @param {ShardingManagerOptions} [options] Options for the sharding manager
 	 */
-	constructor(file: any, options?: any) {
+	constructor(file: string, options: ShardingManagerOptions = {}) {
 		super();
-		const _options = {
+		const _options: Required<ShardingManagerOptions> = {
 			totalShards: 'auto',
 			mode: 'process',
 			respawn: true,
 			silent: false,
 			shardArgs: [],
 			execArgv: [],
-			token: process.env.DISCORD_TOKEN,
+			shardList: 'auto',
+			token: process.env.DISCORD_TOKEN ?? '',
 			...options,
 		};
 
@@ -97,7 +116,6 @@ export class ShardingManager extends AsyncEventEmitter {
 
 			if (
 				this.shardList.some(
-					// @ts-expect-error
 					(shardId) =>
 						typeof shardId !== 'number' || Number.isNaN(shardId) || !Number.isInteger(shardId) || shardId < 0,
 				)
@@ -111,7 +129,7 @@ export class ShardingManager extends AsyncEventEmitter {
 		 *
 		 * @type {number}
 		 */
-		this.totalShards = _options.totalShards || 'auto';
+		this.totalShards = _options.totalShards;
 		if (this.totalShards !== 'auto') {
 			if (typeof this.totalShards !== 'number' || Number.isNaN(this.totalShards)) {
 				throw new DiscordjsTypeError(ErrorCodes.ClientInvalidOption, 'Amount of shards', 'a number.');
@@ -131,7 +149,7 @@ export class ShardingManager extends AsyncEventEmitter {
 		 *
 		 * @type {ShardingManagerMode}
 		 */
-		this.mode = _options.mode;
+		this.mode = _options.mode as ShardingManagerMode;
 		if (this.mode !== 'process' && this.mode !== 'worker') {
 			throw new DiscordjsRangeError(ErrorCodes.ClientInvalidOption, 'Sharding mode', '"process" or "worker"');
 		}
@@ -248,8 +266,10 @@ export class ShardingManager extends AsyncEventEmitter {
 			this.totalShards = shardAmount;
 		}
 
-		// @ts-expect-error
-		if (this.shardList.some((shardId) => shardId >= shardAmount)) {
+		if (
+			this.shardList !== ('auto' as never) &&
+			(this.shardList as number[]).some((shardId) => shardId >= shardAmount)
+		) {
 			throw new DiscordjsRangeError(
 				ErrorCodes.ClientInvalidOption,
 				'Amount of shards',
@@ -275,7 +295,7 @@ export class ShardingManager extends AsyncEventEmitter {
 	 * @param {*} message Message to be sent to the shards
 	 * @returns {Promise<Shard[]>}
 	 */
-	async broadcast(message: any) {
+	async broadcast(message: unknown) {
 		const promises = [];
 		for (const shard of this.shards.values()) promises.push(shard.send(message));
 		return Promise.all(promises);
@@ -296,13 +316,19 @@ export class ShardingManager extends AsyncEventEmitter {
 	 * @param {BroadcastEvalOptions} [options={}] The options for the broadcast
 	 * @returns {Promise<*|Array<*>>} Results of the script execution
 	 */
-	async broadcastEval(script: any, options = {}): Promise<any> {
+	async broadcastEval<T>(
+		script: (client: unknown, context: unknown) => T,
+		options: BroadcastEvalOptions = {},
+	): Promise<T | T[]> {
 		if (typeof script !== 'function') {
 			throw new DiscordjsTypeError(ErrorCodes.ShardingInvalidEvalBroadcast);
 		}
 
-		// @ts-expect-error
-		return this._performOnShards('eval', [`(${script})(this, ${JSON.stringify(options.context)})`], options.shard);
+		return this._performOnShards(
+			'eval' as never,
+			[`(${script})(this, ${JSON.stringify(options.context)})`],
+			options.shard,
+		);
 	}
 
 	/**
@@ -316,7 +342,7 @@ export class ShardingManager extends AsyncEventEmitter {
 	 *   .then(results => console.log(`${results.reduce((prev, val) => prev + val, 0)} total guilds`))
 	 *   .catch(console.error);
 	 */
-	async fetchClientValues(prop: any, shard: any) {
+	async fetchClientValues(prop: string, shard?: number) {
 		return this._performOnShards('fetchClientValue', [prop], shard);
 	}
 
@@ -329,11 +355,11 @@ export class ShardingManager extends AsyncEventEmitter {
 	 * @returns {Promise<*|Array<*>>} Results of the method execution
 	 * @private
 	 */
-	async _performOnShards(method: any, args: any, shard: any) {
+	async _performOnShards(method: string, args: unknown[], shard?: number) {
 		if (this.shards.size === 0) throw new DiscordjsError(ErrorCodes.ShardingNoShards);
 
 		if (typeof shard === 'number') {
-			if (this.shards.has(shard)) return this.shards.get(shard)[method](...args);
+			if (this.shards.has(shard)) return (this.shards.get(shard) as any)[method](...args);
 			throw new DiscordjsError(ErrorCodes.ShardingShardNotFound, shard);
 		}
 
@@ -342,7 +368,7 @@ export class ShardingManager extends AsyncEventEmitter {
 		}
 
 		const promises = [];
-		for (const sh of this.shards.values()) promises.push(sh[method](...args));
+		for (const sh of this.shards.values()) promises.push((sh as any)[method](...args));
 		return Promise.all(promises);
 	}
 

@@ -20,7 +20,7 @@ export default (client: Client, { d: data }: GatewayGuildCreateDispatch, shardId
 		}
 	} else {
 		// A new guild
-		(data as any).shardId = shardId;
+		(data as GatewayGuildCreateDispatch['d'] & { shardId: number }).shardId = shardId;
 		guild = client.guilds._add(data);
 		if (client.status === Status.Ready) {
 			/**

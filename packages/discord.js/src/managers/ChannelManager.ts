@@ -1,6 +1,8 @@
 import { isFileBodyEncodable, isJSONEncodable, lazy } from '@ovencord/util';
-import { Routes } from 'discord-api-types/v10';
+import { type APIChannel, Routes, type Snowflake } from 'discord-api-types/v10';
+import type { Client } from '../client/Client.js';
 import { BaseChannel } from '../structures/BaseChannel.js';
+import type { Guild } from '../structures/Guild.js';
 import { MessagePayload } from '../structures/MessagePayload.js';
 import { createChannel } from '../util/Channels.js';
 import { ThreadChannelTypes } from '../util/Constants.js';
@@ -12,17 +14,36 @@ const getMessage = lazy(() => require('../structures/Message.js').Message);
 let cacheWarningEmitted = false;
 
 /**
+ * Data that can be resolved to give a Channel object. This can be:
+ * - A Channel object
+ * - A Snowflake
+ */
+export type ChannelResolvable = BaseChannel | Snowflake;
+
+/**
+ * Options for fetching a channel from Discord
+ */
+export interface FetchChannelOptions {
+	/** Whether to include approximate member counts */
+	allowUnknownGuild?: boolean;
+	/** Whether to cache the fetched channel */
+	cache?: boolean;
+	/** Whether to skip the cache and fetch from the API */
+	force?: boolean;
+}
+
+/**
  * A manager of channels belonging to a client
  *
  * @extends {CachedManager}
  */
 export class ChannelManager extends CachedManager {
-	constructor(client: any, iterable?: any) {
+	constructor(client: Client, iterable?: Iterable<APIChannel>) {
 		super(client, BaseChannel, iterable);
 		const defaultCaching =
-			this._cache.constructor.name === 'Collection' ||
-			this._cache.maxSize === undefined ||
-			this._cache.maxSize === Infinity;
+			(this._cache as any).constructor.name === 'Collection' ||
+			(this._cache as any).maxSize === undefined ||
+			(this._cache as any).maxSize === Infinity;
 		if (!cacheWarningEmitted && !defaultCaching) {
 			cacheWarningEmitted = true;
 			process.emitWarning(
@@ -39,16 +60,20 @@ export class ChannelManager extends CachedManager {
 	 * @name ChannelManager#cache
 	 */
 
-	_add(data: any, guild?: any, { cache = true, allowUnknownGuild = false }: any = {}) {
+	_add(
+		data: APIChannel & { id: Snowflake },
+		guild?: Guild,
+		{ cache = true, allowUnknownGuild = false }: { cache?: boolean; allowUnknownGuild?: boolean } = {},
+	) {
 		const existing = this.cache.get(data.id);
 		if (existing) {
-			if (cache) existing._patch(data);
-			guild?.channels?._add(existing);
-			if (ThreadChannelTypes.includes(existing.type)) {
-				existing.parent?.threads?._add(existing);
+			if (cache) (existing as any)._patch(data);
+			if (guild) (guild as any).channels?._add(existing);
+			if (ThreadChannelTypes.includes((existing as any).type)) {
+				(existing as any).parent?.threads?._add(existing);
 			}
 
-			return existing;
+			return existing as BaseChannel;
 		}
 
 		const channel = createChannel(this.client, data, guild, { allowUnknownGuild });
@@ -63,11 +88,11 @@ export class ChannelManager extends CachedManager {
 		return channel;
 	}
 
-	_remove(id: any) {
-		const channel = this.cache.get(id);
+	_remove(id: Snowflake) {
+		const channel = this.cache.get(id) as any;
 		channel?.guild?.channels.cache.delete(id);
 
-		for (const [code, invite] of channel?.guild?.invites.cache ?? []) {
+		for (const [code, invite] of (channel?.guild?.invites.cache as any) ?? []) {
 			if (invite.channelId === id) channel.guild.invites.cache.delete(code);
 		}
 
@@ -83,40 +108,24 @@ export class ChannelManager extends CachedManager {
 	}
 
 	/**
-	 * Data that can be resolved to give a Channel object. This can be:
-	 * - A Channel object
-	 * - A Snowflake
-	 *
-	 * @typedef {BaseChannel|Snowflake} ChannelResolvable
-	 */
-
-	/**
 	 * Resolves a ChannelResolvable to a Channel object.
 	 *
-	 * @method resolve
-	 * @memberof ChannelManager
-	 * @instance
 	 * @param {ChannelResolvable} channel The channel resolvable to resolve
 	 * @returns {?BaseChannel}
 	 */
+	override resolve(channel: ChannelResolvable): BaseChannel | null {
+		return super.resolve(channel);
+	}
 
 	/**
 	 * Resolves a ChannelResolvable to a channel id string.
 	 *
-	 * @method resolveId
-	 * @memberof ChannelManager
-	 * @instance
 	 * @param {ChannelResolvable} channel The channel resolvable to resolve
 	 * @returns {?Snowflake}
 	 */
-
-	/**
-	 * Options for fetching a channel from Discord
-	 *
-	 * @typedef {BaseFetchOptions} FetchChannelOptions
-	 * @property {boolean} [allowUnknownGuild=false] Allows the channel to be returned even if the guild is not in cache,
-	 * it will not be cached. <warn>Many of the properties and methods on the returned channel will throw errors</warn>
-	 */
+	override resolveId(channel: ChannelResolvable): Snowflake | null {
+		return super.resolveId(channel);
+	}
 
 	/**
 	 * Obtains a channel from Discord, or the channel cache if it's already available.
@@ -130,47 +139,24 @@ export class ChannelManager extends CachedManager {
 	 *   .then(channel => console.log(channel.name))
 	 *   .catch(console.error);
 	 */
-	async fetch(id: any, { allowUnknownGuild = false, cache = true, force = false } = {}) {
+	async fetch(id: Snowflake, { allowUnknownGuild = false, cache = true, force = false }: FetchChannelOptions = {}) {
 		if (!force) {
 			const existing = this.cache.get(id);
-			if (existing && !existing.partial) return existing;
+			if (existing && !(existing as any).partial) return existing as BaseChannel;
 		}
 
-		const data = await this.client.rest.get(Routes.channel(id));
-		return this._add(data, null, { cache, allowUnknownGuild });
+		const data = (await this.client.rest.get(Routes.channel(id))) as APIChannel & { id: Snowflake };
+		return this._add(data, undefined, { cache, allowUnknownGuild });
 	}
 
 	/**
 	 * Creates a message in a channel.
 	 *
-	 * @param {TextChannelResolvable} channel The channel to send the message to
-	 * @param {string|MessagePayload|MessageCreateOptions|JSONEncodable<RESTPostAPIChannelMessageJSONBody>|FileBodyEncodable<RESTPostAPIChannelMessageJSONBody>} options The options to provide
+	 * @param {ChannelResolvable} channel The channel to send the message to
+	 * @param {string|MessagePayload|Record<string, unknown>} options The options to provide
 	 * @returns {Promise<Message>}
-	 * @example
-	 * // Send a basic message
-	 * client.channels.createMessage(channel, 'hello!')
-	 *   .then(message => console.log(`Sent message: ${message.content}`))
-	 *   .catch(console.error);
-	 * @example
-	 * // Send a remote file
-	 * client.channels.createMessage(channel, {
-	 *   files: ['https://github.com/discordjs.png']
-	 * })
-	 *   .then(console.log)
-	 *   .catch(console.error);
-	 * @example
-	 * // Send a local file
-	 * client.channels.createMessage(channel, {
-	 *   files: [{
-	 *     attachment: 'entire/path/to/file.jpg',
-	 *     name: 'file.jpg',
-	 *     description: 'A description of the file'
-	 *   }]
-	 * })
-	 *   .then(console.log)
-	 *   .catch(console.error);
 	 */
-	async createMessage(channel: any, options: any) {
+	async createMessage(channel: ChannelResolvable, options: string | MessagePayload | Record<string, unknown>) {
 		let payload: any;
 
 		if (options instanceof MessagePayload) {
@@ -184,9 +170,11 @@ export class ChannelManager extends CachedManager {
 		}
 
 		const resolvedChannelId = this.resolveId(channel);
-		const resolvedChannel = this.resolve(channel);
+		const resolvedChannel = this.resolve(channel) as any;
+		if (!resolvedChannelId) throw new Error('Invalid channel');
+
 		const data = await this.client.rest.post(Routes.channelMessages(resolvedChannelId), payload);
 
-		return resolvedChannel?.messages._add(data) ?? new (getMessage())(this.client, data);
+		return resolvedChannel?.messages?._add(data) ?? new (getMessage())(this.client, data);
 	}
 }

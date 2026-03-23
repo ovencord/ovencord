@@ -9,7 +9,7 @@ export default (client: Client, { d: data }: GatewayInviteDeleteDispatch) => {
 	if (!channel) return;
 
 	const inviteData = Object.assign(data, { channel, guild });
-	const invite = new GuildInvite(client, inviteData);
+	const invite = new GuildInvite(client, inviteData as unknown as import('discord-api-types/v10').APIInvite);
 
 	guild.invites.cache.delete(invite.code);
 
