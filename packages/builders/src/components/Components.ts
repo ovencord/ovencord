@@ -4,13 +4,22 @@ import type {
 	APIButtonComponent,
 	APIChannelSelectComponent,
 	APIComponentInActionRow,
+	APIContainerComponent,
+	APIFileComponent,
+	APIFileUploadComponent,
+	APILabelComponent,
+	APIMediaGalleryComponent,
 	APIMentionableSelectComponent,
 	APIMessageComponent,
 	APIModalComponent,
 	APIRoleSelectComponent,
 	APISectionAccessoryComponent,
+	APISectionComponent,
+	APISeparatorComponent,
 	APIStringSelectComponent,
+	APITextDisplayComponent,
 	APITextInputComponent,
+	APIThumbnailComponent,
 	APIUserSelectComponent,
 } from 'discord-api-types/v10';
 import { ButtonStyle, ComponentType } from 'discord-api-types/v10';
@@ -226,23 +235,23 @@ export function createComponentBuilder(
 		case ComponentType.ChannelSelect:
 			return new ChannelSelectMenuBuilder(rawData as APIChannelSelectComponent);
 		case ComponentType.Thumbnail:
-			return new ThumbnailBuilder(rawData as any);
+			return new ThumbnailBuilder(rawData as APIThumbnailComponent);
 		case ComponentType.File:
-			return new FileBuilder(rawData as any);
+			return new FileBuilder(rawData as APIFileComponent);
 		case ComponentType.Separator:
-			return new SeparatorBuilder(rawData as any);
+			return new SeparatorBuilder(rawData as APISeparatorComponent);
 		case ComponentType.TextDisplay:
-			return new TextDisplayBuilder(rawData as any);
+			return new TextDisplayBuilder(rawData as APITextDisplayComponent);
 		case ComponentType.MediaGallery:
-			return new MediaGalleryBuilder(rawData as any);
+			return new MediaGalleryBuilder(rawData as APIMediaGalleryComponent);
 		case ComponentType.Section:
-			return new SectionBuilder(rawData as any);
+			return new SectionBuilder(rawData as APISectionComponent);
 		case ComponentType.Container:
-			return new ContainerBuilder(rawData as any);
+			return new ContainerBuilder(rawData as APIContainerComponent);
 		case ComponentType.Label:
-			return new LabelBuilder(rawData as any);
+			return new LabelBuilder(rawData as APILabelComponent);
 		case ComponentType.FileUpload:
-			return new FileUploadBuilder(rawData as any);
+			return new FileUploadBuilder(rawData as APIFileUploadComponent);
 		default:
 			// This case can still occur if we get a newer unsupported component type
 			throw new Error(`Cannot properly serialize component type: ${rawData.type}`);
@@ -275,8 +284,9 @@ export function resolveAccessoryComponent(component: APISectionAccessoryComponen
 			return createButtonBuilder(component);
 		case ComponentType.Thumbnail:
 			return new ThumbnailBuilder(component);
-		default:
-			// @ts-expect-error This case can still occur if we get a newer unsupported component type
-			throw new Error(`Cannot properly serialize section accessory component: ${component.type}`);
+		default: {
+			const unknownComponent = component as { type: number };
+			throw new Error(`Cannot properly serialize section accessory component: ${unknownComponent.type}`);
+		}
 	}
 }

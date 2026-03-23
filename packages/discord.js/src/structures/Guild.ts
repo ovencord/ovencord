@@ -1100,11 +1100,17 @@ export class Guild extends AnonymousGuild {
 				afk_timeout: afkTimeout,
 				icon: icon && (await resolveImage(icon as import('../util/DataResolver.js').BufferResolvable)),
 				splash: splash && (await resolveImage(splash as import('../util/DataResolver.js').BufferResolvable)),
-				discovery_splash: discoverySplash && (await resolveImage(discoverySplash as import('../util/DataResolver.js').BufferResolvable)),
+				discovery_splash:
+					discoverySplash &&
+					(await resolveImage(discoverySplash as import('../util/DataResolver.js').BufferResolvable)),
 				banner: banner && (await resolveImage(banner as import('../util/DataResolver.js').BufferResolvable)),
 				system_channel_id: systemChannel && this.client.channels.resolveId(systemChannel),
 				system_channel_flags:
-					systemChannelFlags === undefined ? undefined : SystemChannelFlagsBitField.resolve(systemChannelFlags as import('../util/BitField.js').BitFieldResolvable),
+					systemChannelFlags === undefined
+						? undefined
+						: SystemChannelFlagsBitField.resolve(
+								systemChannelFlags as import('../util/BitField.js').BitFieldResolvable,
+							),
 				rules_channel_id: rulesChannel && this.client.channels.resolveId(rulesChannel),
 				public_updates_channel_id: publicUpdatesChannel && this.client.channels.resolveId(publicUpdatesChannel),
 				preferred_locale: preferredLocale,

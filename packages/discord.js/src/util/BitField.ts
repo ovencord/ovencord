@@ -40,7 +40,8 @@ export class BitField {
 	any(bit: BitFieldResolvable): boolean {
 		return (
 			// LAST RESORT: bitwise operators do not support union of number | bigint directly
-			((this.bitfield as unknown as number) & ((this.constructor as typeof BitField).resolve(bit) as unknown as number)) !==
+			((this.bitfield as unknown as number) &
+				((this.constructor as typeof BitField).resolve(bit) as unknown as number)) !==
 			((this.constructor as typeof BitField).DefaultBit as unknown as number)
 		);
 	}
@@ -64,7 +65,9 @@ export class BitField {
 	has(bit: BitFieldResolvable): boolean {
 		const resolvedBit = (this.constructor as typeof BitField).resolve(bit);
 		// LAST RESORT: bitwise operators do not support union of number | bigint directly
-		return ((this.bitfield as unknown as number) & (resolvedBit as unknown as number)) === (resolvedBit as unknown as number);
+		return (
+			((this.bitfield as unknown as number) & (resolvedBit as unknown as number)) === (resolvedBit as unknown as number)
+		);
 	}
 
 	/**
@@ -100,7 +103,10 @@ export class BitField {
 			(total as unknown as number) |= (this.constructor as typeof BitField).resolve(bit) as unknown as number;
 		}
 
-		if (Object.isFrozen(this)) return new (this.constructor as typeof BitField)((this.bitfield as unknown as number) | (total as unknown as number)) as this;
+		if (Object.isFrozen(this))
+			return new (this.constructor as typeof BitField)(
+				(this.bitfield as unknown as number) | (total as unknown as number),
+			) as this;
 		(this.bitfield as unknown as number) |= total as unknown as number;
 		return this;
 	}
@@ -118,7 +124,10 @@ export class BitField {
 			(total as unknown as number) |= (this.constructor as typeof BitField).resolve(bit) as unknown as number;
 		}
 
-		if (Object.isFrozen(this)) return new (this.constructor as typeof BitField)((this.bitfield as unknown as number) & ~(total as unknown as number)) as this;
+		if (Object.isFrozen(this))
+			return new (this.constructor as typeof BitField)(
+				(this.bitfield as unknown as number) & ~(total as unknown as number),
+			) as this;
 		(this.bitfield as unknown as number) &= ~(total as unknown as number);
 		return this;
 	}
@@ -178,10 +187,15 @@ export class BitField {
 		}
 		if (bit instanceof BitField) return bit.bitfield;
 		if (Array.isArray(bit)) {
-			return bit
-				.map((bit_) => (BitField as typeof BitField).resolve(bit_))
-				// LAST RESORT: bitwise operators do not support union of number | bigint directly
-				.reduce((prev, bit_) => (prev as unknown as number) | (bit_ as unknown as number), DefaultBit as unknown as number) as number | bigint;
+			return (
+				bit
+					.map((bit_) => (BitField as typeof BitField).resolve(bit_))
+					// LAST RESORT: bitwise operators do not support union of number | bigint directly
+					.reduce(
+						(prev, bit_) => (prev as unknown as number) | (bit_ as unknown as number),
+						DefaultBit as unknown as number,
+					) as number | bigint
+			);
 		}
 
 		if (typeof bit === 'string') {

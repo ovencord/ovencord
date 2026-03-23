@@ -37,7 +37,8 @@ export class Emoji extends Base {
 		};
 
 		if (!options.extension || options.extension === 'webp') {
-			resolvedOptions.animated = (options as unknown as { animated?: boolean }).animated ?? (this.animated || undefined);
+			resolvedOptions.animated =
+				(options as unknown as { animated?: boolean }).animated ?? (this.animated || undefined);
 		}
 
 		return (this.client as unknown as { rest: { cdn: { emoji: Function } } }).rest.cdn.emoji(this.id, resolvedOptions);

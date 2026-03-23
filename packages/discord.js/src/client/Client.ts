@@ -1,15 +1,31 @@
 import { Collection } from '@ovencord/collection';
 import { makeURLSearchParams, REST, RESTEvents } from '@ovencord/rest';
 import { WebSocketManager, WebSocketShardEvents, WebSocketShardStatus } from '@ovencord/ws';
-import { GatewayDispatchEvents, GatewayIntentBits, OAuth2Scopes, Routes, type Snowflake } from 'discord-api-types/v10';
+import {
+	type APIGuildPreview,
+	type APIGuildWidget,
+	type APISoundboardSound,
+	type APISticker,
+	type APIStickerPack,
+	type APIVoiceRegion,
+	type APIWebhook,
+	GatewayDispatchEvents,
+	GatewayIntentBits,
+	OAuth2Scopes,
+	type PermissionFlagsBits,
+	Routes,
+	type Snowflake,
+} from 'discord-api-types/v10';
 import { DiscordjsError, DiscordjsTypeError, ErrorCodes } from '../errors/index.js';
 import { ChannelManager } from '../managers/ChannelManager.js';
 import { GuildManager } from '../managers/GuildManager.js';
 import { UserManager } from '../managers/UserManager.js';
 import { ShardClientUtil } from '../sharding/ShardClientUtil.js';
+import type { BaseGuild } from '../structures/BaseGuild.js';
 import type { ClientApplication } from '../structures/ClientApplication.js';
 import { ClientPresence } from '../structures/ClientPresence.js';
 import type { ClientUser } from '../structures/ClientUser.js';
+import type { Guild } from '../structures/Guild.js';
 import { GuildPreview } from '../structures/GuildPreview.js';
 import { GuildTemplate } from '../structures/GuildTemplate.js';
 import { SoundboardSound } from '../structures/SoundboardSound.js';
@@ -43,8 +59,13 @@ const BeforeReadyWhitelist = [
 	GatewayDispatchEvents.GuildMemberRemove,
 ];
 
-export type GuildResolvable = any;
-export type PermissionResolvable = any;
+export type GuildResolvable = Guild | BaseGuild | Snowflake;
+export type PermissionResolvable =
+	| PermissionsBitField
+	| bigint
+	| number
+	| string
+	| (keyof typeof PermissionFlagsBits)[];
 
 /**
  * The main hub for interacting with the Discord API, and the starting point for any bot.
@@ -619,8 +640,8 @@ export class Client extends AsyncEventEmitter {
 	 *   .catch(console.error);
 	 */
 	async fetchWebhook(id: string, token?: string) {
-		const data = (await this.rest.get(Routes.webhook(id, token), { auth: token === undefined })) as any;
-		return new Webhook(this, { token, ...data });
+		const data = (await this.rest.get(Routes.webhook(id, token), { auth: token === undefined })) as APIWebhook;
+		return new Webhook(this, data);
 	}
 
 	/**
@@ -633,9 +654,11 @@ export class Client extends AsyncEventEmitter {
 	 *   .catch(console.error);
 	 */
 	async fetchVoiceRegions() {
-		const apiRegions = (await this.rest.get(Routes.voiceRegions())) as any[];
-		const regions = new Collection();
-		for (const region of apiRegions) regions.set(region.id, new VoiceRegion(region));
+		const apiRegions = (await this.rest.get(Routes.voiceRegions())) as APIVoiceRegion[];
+		const regions = new Collection<string, VoiceRegion>();
+		for (const region of apiRegions) {
+			regions.set(region.id, new VoiceRegion(region as unknown as Record<string, unknown>));
+		}
 		return regions;
 	}
 
@@ -650,8 +673,8 @@ export class Client extends AsyncEventEmitter {
 	 *   .catch(console.error);
 	 */
 	async fetchSticker(id: string) {
-		const data = await this.rest.get(Routes.sticker(id));
-		return new Sticker(this, data as any);
+		const data = (await this.rest.get(Routes.sticker(id))) as APISticker;
+		return new Sticker(this, data);
 	}
 
 	/**
@@ -671,13 +694,16 @@ export class Client extends AsyncEventEmitter {
 	 */
 	async fetchStickerPacks({ packId }: StickerPackFetchOptions = {}) {
 		if (packId) {
-			const innerData = (await this.rest.get(Routes.stickerPack(packId))) as any;
-			return new StickerPack(this, innerData);
+			const innerData = (await this.rest.get(Routes.stickerPack(packId))) as APIStickerPack;
+			return new StickerPack(this, innerData as unknown as Record<string, unknown>);
 		}
 
-		const data = (await this.rest.get(Routes.stickerPacks())) as any;
-		return new Collection(
-			data.sticker_packs.map((stickerPack: any) => [stickerPack.id, new StickerPack(this, stickerPack)]),
+		const data = (await this.rest.get(Routes.stickerPacks())) as { sticker_packs: APIStickerPack[] };
+		return new Collection<Snowflake, StickerPack>(
+			data.sticker_packs.map((stickerPack) => [
+				stickerPack.id,
+				new StickerPack(this, stickerPack as unknown as Record<string, unknown>),
+			]),
 		);
 	}
 
@@ -691,8 +717,8 @@ export class Client extends AsyncEventEmitter {
 	 *  .catch(console.error);
 	 */
 	async fetchDefaultSoundboardSounds() {
-		const data = (await this.rest.get(Routes.soundboardDefaultSounds())) as any;
-		return new Collection(data.map((sound: any) => [sound.sound_id, new SoundboardSound(this, sound)]));
+		const data = (await this.rest.get(Routes.soundboardDefaultSounds())) as APISoundboardSound[];
+		return new Collection<string, SoundboardSound>(data.map((sound) => [sound.sound_id, new SoundboardSound(this, sound)]));
 	}
 
 	/**
@@ -701,11 +727,11 @@ export class Client extends AsyncEventEmitter {
 	 * @param {GuildResolvable} guild The guild to fetch the preview for
 	 * @returns {Promise<GuildPreview>}
 	 */
-	async fetchGuildPreview(guild: any) {
+	async fetchGuildPreview(guild: GuildResolvable) {
 		const id = this.guilds.resolveId(guild);
 		if (!id) throw new DiscordjsTypeError(ErrorCodes.InvalidType, 'guild', 'GuildResolvable');
-		const data = (await this.rest.get(Routes.guildPreview(id))) as any;
-		return new GuildPreview(this, data);
+		const data = (await this.rest.get(Routes.guildPreview(id))) as APIGuildPreview;
+		return new GuildPreview(this, data as unknown as Record<string, unknown>);
 	}
 
 	/**
@@ -714,11 +740,11 @@ export class Client extends AsyncEventEmitter {
 	 * @param {GuildResolvable} guild The guild to fetch the widget data for
 	 * @returns {Promise<Widget>}
 	 */
-	async fetchGuildWidget(guild: any) {
+	async fetchGuildWidget(guild: GuildResolvable) {
 		const id = this.guilds.resolveId(guild);
 		if (!id) throw new DiscordjsTypeError(ErrorCodes.InvalidType, 'guild', 'GuildResolvable');
-		const data = (await this.rest.get(Routes.guildWidgetJSON(id))) as any;
-		return new Widget(this, data);
+		const data = (await this.rest.get(Routes.guildWidgetJSON(id))) as APIGuildWidget;
+		return new Widget(this, data as any); // Widget.ts expects APIWidget, but has some issues with Record
 	}
 
 	/**
@@ -742,7 +768,7 @@ export class Client extends AsyncEventEmitter {
 	 * });
 	 * console.log(`Generated bot invite link: ${link}`);
 	 */
-	generateInvite(options: InviteGenerationOptions | any = {}) {
+	generateInvite(options: InviteGenerationOptions) {
 		if (typeof options !== 'object') throw new DiscordjsTypeError(ErrorCodes.InvalidType, 'options', 'object', true);
 		if (!this.application) throw new DiscordjsError(ErrorCodes.ClientNotReady, 'generate an invite link');
 

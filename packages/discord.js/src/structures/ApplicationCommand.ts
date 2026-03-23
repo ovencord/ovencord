@@ -107,12 +107,7 @@ export class ApplicationCommand extends Base {
 	public contexts: InteractionContextType[] | null;
 	public handler: EntryPointCommandHandlerType | null;
 	public version: Snowflake;
-	constructor(
-		client: Client,
-		data: APIApplicationCommand,
-		guild: Guild | null,
-		guildId: Snowflake | null,
-	) {
+	constructor(client: Client, data: APIApplicationCommand, guild: Guild | null, guildId: Snowflake | null) {
 		super(client);
 
 		/**
@@ -512,10 +507,7 @@ export class ApplicationCommand extends Base {
 	 * order in the array <info>The client may not always respect this ordering!</info>
 	 * @returns {boolean}
 	 */
-	equals(
-		command: ApplicationCommand | ApplicationCommandData | APIApplicationCommand,
-		enforceOptionOrder = false,
-	) {
+	equals(command: ApplicationCommand | ApplicationCommandData | APIApplicationCommand, enforceOptionOrder = false) {
 		// If given an id, check if the id matches
 		if ('id' in command && command.id && this.id !== command.id) return false;
 

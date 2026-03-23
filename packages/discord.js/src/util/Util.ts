@@ -76,7 +76,12 @@ export function flatten(obj: unknown, ...props: Record<string, boolean | string>
 
 const MAX_FLATTEN_DEPTH = 10;
 
-function _flatten(obj: unknown, seen: WeakSet<object>, depth: number, ...props: Record<string, boolean | string>[]): any {
+function _flatten(
+	obj: unknown,
+	seen: WeakSet<object>,
+	depth: number,
+	...props: Record<string, boolean | string>[]
+): any {
 	if (!isObject(obj)) return obj;
 
 	// Depth guard — prevents stack overflow from deeply nested object trees
@@ -430,7 +435,10 @@ export function transformResolved(
 	if (roles) {
 		result.roles = new Collection<Snowflake, any>();
 		for (const role of Object.values(roles)) {
-			result.roles.set((role as { id: string }).id as Snowflake, (guild?.roles as { _add: Function })?._add(role) ?? role);
+			result.roles.set(
+				(role as { id: string }).id as Snowflake,
+				(guild?.roles as { _add: Function })?._add(role) ?? role,
+			);
 		}
 	}
 
@@ -447,7 +455,10 @@ export function transformResolved(
 	if (messages) {
 		result.messages = new Collection<Snowflake, any>();
 		for (const message of Object.values(messages)) {
-			result.messages.set((message as { id: string }).id as Snowflake, (channel?.messages as { _add: Function })?._add(message) ?? message);
+			result.messages.set(
+				(message as { id: string }).id as Snowflake,
+				(channel?.messages as { _add: Function })?._add(message) ?? message,
+			);
 		}
 	}
 
