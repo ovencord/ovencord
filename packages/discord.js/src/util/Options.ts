@@ -20,30 +20,23 @@ import { toSnakeCase } from './Transformers.js';
 
 /**
  * Options for a client.
- *
- * @typedef {Object} ClientOptions
- * @property {number} [closeTimeout=5_000] The amount of time in milliseconds to wait for the close frame to be received
- * from the WebSocket. Don't have this too high/low. It's best to have it between 2_000-6_000 ms.
- * @property {CacheFactory} [makeCache] Function to create a cache.
- * You can use your own function, or the {@link Options} class to customize the Collection used for the cache.
- * <warn>Overriding the cache used in `GuildManager`, `ChannelManager`, `GuildChannelManager`, `RoleManager`,
- * and `PermissionOverwriteManager` is unsupported and **will** break functionality</warn>
- * @property {MessageMentionOptions} [allowedMentions] The default value for {@link BaseMessageOptions#allowedMentions}
- * @property {Partials[]} [partials] Structures allowed to be partial. This means events can be emitted even when
- * they're missing all the data for a particular structure. See the "Partial Structures" topic on the
- * {@link https://discordjs.guide/popular-topics/partials.html guide} for some
- * important usage information, as partials require you to put checks in place when handling data.
- * @property {boolean} [failIfNotExists=true] The default value for {@link MessageReplyOptions#failIfNotExists}
- * @property {PresenceData} [presence] Presence data to use upon login
- * @property {IntentsResolvable} intents Intents to enable for this connection
- * @property {number} [waitGuildTimeout=15_000] Time in milliseconds that clients with the
- * {@link GatewayIntentBits.Guilds} gateway intent should wait for missing guilds to be received before being ready.
- * @property {SweeperOptions} [sweepers=this.DefaultSweeperSettings] Options for cache sweeping
- * @property {WebSocketManagerOptions} [ws] Options for the WebSocketManager
- * @property {RESTOptions} [rest] Options for the REST manager
- * @property {Function} [jsonTransformer] A function used to transform outgoing json data
- * @property {boolean} [enforceNonce=false] The default value for {@link MessageCreateOptions#enforceNonce}
  */
+export interface ClientOptions {
+	closeTimeout?: number;
+	makeCache?: (params: any) => Collection<any, any>;
+	allowedMentions?: any;
+	partials?: any[];
+	failIfNotExists?: boolean;
+	presence?: any;
+	intents?: any;
+	waitGuildTimeout?: number;
+	sweepers?: any;
+	ws?: any;
+	rest?: any;
+	jsonTransformer?: (data: any) => any;
+	enforceNonce?: boolean;
+	token?: string;
+}
 
 /**
  * Options for {@link Sweepers} defining the behavior of cache sweeping

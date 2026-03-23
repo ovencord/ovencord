@@ -10,6 +10,7 @@ import {
 	type APIVoiceRegion,
 	type APIWebhook,
 	GatewayDispatchEvents,
+	type GatewayDispatchPayload,
 	GatewayIntentBits,
 	OAuth2Scopes,
 	type PermissionFlagsBits,
@@ -39,7 +40,7 @@ import { resolveGuildTemplateCode, resolveInviteCode } from '../util/DataResolve
 import { Events } from '../util/Events.js';
 import { IntentsBitField } from '../util/IntentsBitField.js';
 import { createInvite } from '../util/Invites.js';
-import { Options } from '../util/Options.js';
+import { type ClientOptions, Options } from '../util/Options.js';
 import { PermissionsBitField } from '../util/PermissionsBitField.js';
 import { Status } from '../util/Status.js';
 import { Sweepers } from '../util/Sweepers.js';
@@ -102,10 +103,15 @@ export interface InviteGenerationOptions {
 	disableGuildSelect?: boolean;
 }
 
+interface QueuedPacket {
+	packet: GatewayDispatchPayload;
+	shardId: number;
+}
+
 export class Client extends AsyncEventEmitter {
-	public status: any;
-	public readyTimeout: any;
-	public options: any;
+	public status: Status;
+	public readyTimeout: Timer | null;
+	public options: ClientOptions;
 	public rest: REST;
 	public presence: ClientPresence;
 	public actions: ActionsManager;
@@ -123,12 +129,12 @@ export class Client extends AsyncEventEmitter {
 	public readyTimestamp: number | null;
 	public token: string | null;
 	public expectedGuilds: Set<string>;
-	public incomingPacketQueue: any[];
+	public incomingPacketQueue: QueuedPacket[];
 
 	/**
-	 * @param {any} options Options for the client
+	 * @param {ClientOptions} options Options for the client
 	 */
-	constructor(options: any) {
+	constructor(options: unknown) {
 		super();
 		this.token = null;
 
@@ -453,7 +459,7 @@ export class Client extends AsyncEventEmitter {
 	 * @param {number} shardId The shardId that received this packet
 	 * @private
 	 */
-	async _handlePacket(packet: any, shardId: number) {
+	async _handlePacket(packet: GatewayDispatchPayload, shardId: number) {
 		// Emit raw packet for connectors (Bunraku/Shoukaku) that need VOICE_SERVER_UPDATE / VOICE_STATE_UPDATE
 		this.emit('raw', packet);
 
@@ -475,7 +481,7 @@ export class Client extends AsyncEventEmitter {
 			if (packet.t === GatewayDispatchEvents.Ready) {
 				await this._checkReady();
 			} else if (this.status === Status.WaitingForGuilds && WaitingForGuildEvents.includes(packet.t)) {
-				this.expectedGuilds.delete(packet.d.id);
+				this.expectedGuilds.delete((packet.d as any).id);
 				await this._checkReady();
 			}
 		}
@@ -718,7 +724,9 @@ export class Client extends AsyncEventEmitter {
 	 */
 	async fetchDefaultSoundboardSounds() {
 		const data = (await this.rest.get(Routes.soundboardDefaultSounds())) as APISoundboardSound[];
-		return new Collection<string, SoundboardSound>(data.map((sound) => [sound.sound_id, new SoundboardSound(this, sound)]));
+		return new Collection<string, SoundboardSound>(
+			data.map((sound) => [sound.sound_id, new SoundboardSound(this, sound)]),
+		);
 	}
 
 	/**

@@ -578,15 +578,12 @@ export class Networking extends AsyncEventEmitter {
 	private onWsBinary(message: BinaryWebSocketMessage) {
 		if (this.state.code === NetworkingStatusCode.Ready && this.state.dave) {
 			if (message.op === VoiceOpcodes.DaveMlsExternalSender) {
-				this.state.dave.setExternalSender(message.payload as any);
+				this.state.dave.setExternalSender(message.payload);
 			} else if (message.op === VoiceOpcodes.DaveMlsProposals) {
-				const payload = this.state.dave.processProposals(
-					message.payload as any,
-					this.state.connectionData.connectedClients,
-				);
-				if (payload) this.state.ws.sendBinaryMessage(VoiceOpcodes.DaveMlsCommitWelcome, payload as any);
+				const payload = this.state.dave.processProposals(message.payload, this.state.connectionData.connectedClients);
+				if (payload) this.state.ws.sendBinaryMessage(VoiceOpcodes.DaveMlsCommitWelcome, payload);
 			} else if (message.op === VoiceOpcodes.DaveMlsAnnounceCommitTransition) {
-				const { transitionId, success } = this.state.dave.processCommit(message.payload as any);
+				const { transitionId, success } = this.state.dave.processCommit(message.payload);
 				if (success) {
 					if (transitionId === 0) this.emit('transitioned', transitionId);
 					else
@@ -596,7 +593,7 @@ export class Networking extends AsyncEventEmitter {
 						});
 				}
 			} else if (message.op === VoiceOpcodes.DaveMlsWelcome) {
-				const { transitionId, success } = this.state.dave.processWelcome(message.payload as any);
+				const { transitionId, success } = this.state.dave.processWelcome(message.payload);
 				if (success) {
 					if (transitionId === 0) this.emit('transitioned', transitionId);
 					else

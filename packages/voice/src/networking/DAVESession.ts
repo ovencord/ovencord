@@ -223,7 +223,10 @@ export class DAVESession extends AsyncEventEmitter {
 		}
 
 		const oldVersion = this.protocolVersion;
-		this.protocolVersion = this.pendingTransitions.get(transitionId)!;
+		const version = this.pendingTransitions.get(transitionId);
+		if (version !== undefined) {
+			this.protocolVersion = version;
+		}
 
 		// Handle upgrades & defer downgrades
 		if (oldVersion !== this.protocolVersion && this.protocolVersion === 0) {

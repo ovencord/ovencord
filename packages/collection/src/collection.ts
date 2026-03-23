@@ -887,7 +887,7 @@ export class Collection<Key, Value> extends Map<Key, Value> {
 	 * // => Collection { 'a' => 1 }
 	 * ```
 	 */
-	public intersection(other: ReadonlyCollection<Key, any>): Collection<Key, Value> {
+	public intersection<OtherValue>(other: ReadonlyCollection<Key, OtherValue>): Collection<Key, Value> {
 		const coll = new (this.constructor as typeof Collection)[Symbol.species]<Key, Value>();
 
 		for (const { 0: key, 1: value } of this) {
@@ -937,7 +937,7 @@ export class Collection<Key, Value> extends Map<Key, Value> {
 	 * // => Collection { 'c' => 3 }
 	 * ```
 	 */
-	public difference(other: ReadonlyCollection<Key, any>): Collection<Key, Value> {
+	public difference<OtherValue>(other: ReadonlyCollection<Key, OtherValue>): Collection<Key, Value> {
 		const coll = new (this.constructor as typeof Collection)[Symbol.species]<Key, Value>();
 
 		for (const { 0: key, 1: value } of this) {
