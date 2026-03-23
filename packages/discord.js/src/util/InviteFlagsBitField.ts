@@ -13,7 +13,7 @@ export class InviteFlagsBitField extends BitField {
 	 * @type {InviteFlags}
 	 * @memberof InviteFlagsBitField
 	 */
-	static Flags = InviteFlags;
+	static override Flags: Record<string, number | bigint> = InviteFlags as unknown as Record<string, number | bigint>;
 }
 
 /**

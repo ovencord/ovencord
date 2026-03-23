@@ -15,7 +15,10 @@ export class SystemChannelFlagsBitField extends BitField {
 	 * @type {GuildSystemChannelFlags}
 	 * @memberof SystemChannelFlagsBitField
 	 */
-	static Flags = GuildSystemChannelFlags;
+	static override Flags: Record<string, number | bigint> = GuildSystemChannelFlags as unknown as Record<
+		string,
+		number | bigint
+	>;
 }
 
 /**

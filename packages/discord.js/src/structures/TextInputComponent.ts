@@ -14,7 +14,7 @@ export class TextInputComponent extends Component {
 	 * @readonly
 	 */
 	get customId() {
-		return (this.data as APITextInputComponent).custom_id;
+		return (this.data as unknown as APITextInputComponent).custom_id;
 	}
 
 	/**
@@ -24,6 +24,6 @@ export class TextInputComponent extends Component {
 	 * @readonly
 	 */
 	get value() {
-		return (this.data as APITextInputComponent).value ?? null;
+		return (this.data as unknown as APITextInputComponent).value ?? null;
 	}
 }

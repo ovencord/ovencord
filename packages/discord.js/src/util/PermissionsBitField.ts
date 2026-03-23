@@ -16,7 +16,10 @@ export class PermissionsBitField extends BitField {
 	 * @memberof PermissionsBitField
 	 * @see {@link https://discord.com/developers/docs/topics/permissions#permissions-bitwise-permission-flags}
 	 */
-	static Flags = PermissionFlagsBits;
+	static override Flags: Record<string, number | bigint> = PermissionFlagsBits as unknown as Record<
+		string,
+		number | bigint
+	>;
 
 	/**
 	 * Bitfield representing every permission combined

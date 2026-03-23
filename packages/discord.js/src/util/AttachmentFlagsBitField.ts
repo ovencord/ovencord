@@ -13,7 +13,10 @@ export class AttachmentFlagsBitField extends BitField {
 	 * @type {AttachmentFlags}
 	 * @memberof AttachmentFlagsBitField
 	 */
-	static Flags = AttachmentFlags;
+	static override Flags: Record<string, number | bigint> = AttachmentFlags as unknown as Record<
+		string,
+		number | bigint
+	>;
 }
 
 /**

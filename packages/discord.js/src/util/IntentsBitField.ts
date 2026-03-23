@@ -13,7 +13,10 @@ export class IntentsBitField extends BitField {
 	 * @type {GatewayIntentBits}
 	 * @memberof IntentsBitField
 	 */
-	static Flags = GatewayIntentBits;
+	static override Flags: Record<string, number | bigint> = GatewayIntentBits as unknown as Record<
+		string,
+		number | bigint
+	>;
 }
 
 /**

@@ -13,7 +13,10 @@ export class ThreadMemberFlagsBitField extends BitField {
 	 * @type {ThreadMemberFlags}
 	 * @memberof ThreadMemberFlagsBitField
 	 */
-	static Flags = ThreadMemberFlags;
+	static override Flags: Record<string, number | bigint> = ThreadMemberFlags as unknown as Record<
+		string,
+		number | bigint
+	>;
 }
 
 /**

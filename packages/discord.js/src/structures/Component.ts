@@ -14,15 +14,6 @@ export class Component {
 		this.data = data;
 	}
 
-	/**
-	 * The id of this component
-	 *
-	 * @type {number}
-	 * @readonly
-	 */
-	get id() {
-		return this.data.id;
-	}
 
 	/**
 	 * The type of the component

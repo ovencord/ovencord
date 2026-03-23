@@ -12,6 +12,7 @@ import {
 	GatewayDispatchEvents,
 	type GatewayDispatchPayload,
 	GatewayIntentBits,
+	type GatewaySendPayload,
 	OAuth2Scopes,
 	type PermissionFlagsBits,
 	Routes,
@@ -134,7 +135,7 @@ export class Client extends AsyncEventEmitter {
 	/**
 	 * @param {ClientOptions} options Options for the client
 	 */
-	constructor(options: unknown) {
+	constructor(options: ClientOptions) {
 		super();
 		this.token = null;
 
@@ -203,16 +204,19 @@ export class Client extends AsyncEventEmitter {
 		 */
 		this.presence = new ClientPresence(this, this.options.ws.initialPresence ?? this.options.presence);
 
-		this.ws = new WebSocketManager(this as any);
+		this.ws = new WebSocketManager(this as unknown as import('@ovencord/ws').CreateWebSocketManagerOptions);
 		this.actions = new ActionsManager(this);
 		this.voice = new ClientVoiceManager(this);
 		this.shard =
 			!process.env.SHARDING_MANAGER && !process.env.DISCORD_HYBRID_SHARDING
 				? null
-				: ShardClientUtil.singleton(this, process.env.SHARDING_MANAGER_MODE as any);
-		this.users = new UserManager(this, undefined as any);
-		this.guilds = new GuildManager(this, undefined as any);
-		this.channels = new ChannelManager(this, undefined as any);
+				: (ShardClientUtil.singleton(
+						this as unknown as Client,
+						process.env.SHARDING_MANAGER_MODE as unknown as string,
+					) as unknown as ShardClientUtil);
+		this.users = new UserManager(this as unknown as Client, undefined as unknown as ShardClientUtil);
+		this.guilds = new GuildManager(this as unknown as Client, undefined as unknown as ShardClientUtil);
+		this.channels = new ChannelManager(this as unknown as Client, undefined as unknown as ShardClientUtil);
 		this.sweepers = new Sweepers(this, this.options.sweepers);
 
 		this._validateOptions();
@@ -481,7 +485,9 @@ export class Client extends AsyncEventEmitter {
 			if (packet.t === GatewayDispatchEvents.Ready) {
 				await this._checkReady();
 			} else if (this.status === Status.WaitingForGuilds && WaitingForGuildEvents.includes(packet.t)) {
-				this.expectedGuilds.delete((packet.d as any).id);
+				if ('id' in packet.d) {
+					this.expectedGuilds.delete((packet.d as { id: string }).id);
+				}
 				await this._checkReady();
 			}
 		}
@@ -501,7 +507,7 @@ export class Client extends AsyncEventEmitter {
 	 * @param {Object} packet The packet to send
 	 * @private
 	 */
-	async _broadcast(packet: any) {
+	async _broadcast(packet: GatewaySendPayload) {
 		const shardIds = await this.ws.getShardIds();
 		return Promise.all(shardIds.map((shardId) => this.ws.send(shardId, packet)));
 	}
@@ -592,7 +598,7 @@ export class Client extends AsyncEventEmitter {
 		this.sweepers.destroy();
 		await this.ws.destroy();
 		this.token = null;
-		this.rest.setToken(null as any);
+		this.rest.setToken(null as unknown as string);
 	}
 
 	/**
@@ -606,7 +612,7 @@ export class Client extends AsyncEventEmitter {
 	 *   .then(invite => console.log(`Obtained invite with code: ${invite.code}`))
 	 *   .catch(console.error);
 	 */
-	async fetchInvite(invite: any, { withCounts, guildScheduledEventId }: ClientFetchInviteOptions = {}) {
+	async fetchInvite(invite: string, { withCounts, guildScheduledEventId }: ClientFetchInviteOptions = {}) {
 		const code = resolveInviteCode(invite);
 
 		const query = makeURLSearchParams({
@@ -752,7 +758,7 @@ export class Client extends AsyncEventEmitter {
 		const id = this.guilds.resolveId(guild);
 		if (!id) throw new DiscordjsTypeError(ErrorCodes.InvalidType, 'guild', 'GuildResolvable');
 		const data = (await this.rest.get(Routes.guildWidgetJSON(id))) as APIGuildWidget;
-		return new Widget(this, data as any); // Widget.ts expects APIWidget, but has some issues with Record
+		return new Widget(this, data as unknown as APIGuildWidget); // Widget.ts expects APIWidget, but has some issues with Record
 	}
 
 	/**

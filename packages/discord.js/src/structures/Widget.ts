@@ -1,5 +1,5 @@
 import { Collection } from '@ovencord/collection';
-import type { APIWidget, APIWidgetChannel, Snowflake } from 'discord-api-types/v10';
+import type { APIGuildWidget, APIWidgetChannel, Snowflake } from 'discord-api-types/v10';
 import { Routes } from 'discord-api-types/v10';
 import type { Client } from '../client/Client.js';
 import { Base } from './Base.js';
@@ -17,7 +17,7 @@ export class Widget extends Base {
 	public channels: Collection<Snowflake, APIWidgetChannel>;
 	public members: Collection<string, WidgetMember>;
 	public presenceCount: number;
-	constructor(client: Client, data: APIWidget) {
+	constructor(client: Client, data: APIGuildWidget) {
 		super(client);
 		this._patch(data);
 	}
@@ -31,7 +31,7 @@ export class Widget extends Base {
 	 * @property {number} position Position of the channel
 	 */
 
-	_patch(data: APIWidget) {
+	_patch(data: APIGuildWidget) {
 		/**
 		 * The id of the guild.
 		 *
@@ -100,7 +100,7 @@ export class Widget extends Base {
 	 * @returns {Promise<Widget>}
 	 */
 	async fetch() {
-		const data = (await this.client.rest.get(Routes.guildWidgetJSON(this.id))) as APIWidget;
+		const data = (await this.client.rest.get(Routes.guildWidgetJSON(this.id))) as APIGuildWidget;
 		this._patch(data);
 		return this;
 	}

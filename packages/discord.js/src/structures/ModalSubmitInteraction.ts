@@ -1,16 +1,13 @@
 import { Collection } from '@ovencord/collection';
 import { lazy } from '@ovencord/util';
 
-type APIInteractionDataResolved
-,
-type APIModalSubmitInteraction
-,
-type APIModalSubmitInteractionData
-,
+import {
+	type APIInteractionDataResolved,
+	type APIModalSubmission,
+	type APIModalSubmitInteraction,
 	ComponentType,
-type Snowflake
-,
-} from 'discord-api-types/v10'
+	type Snowflake,
+} from 'discord-api-types/v10';
 
 import type { Client } from '../client/Client.js';
 import { transformResolved } from '../util/Util.js';
@@ -117,12 +114,12 @@ export class ModalSubmitInteraction extends BaseInteraction {
 		 */
 		this.components = new ModalComponentResolver(
 			this.client,
-			(data.data as APIModalSubmitInteractionData).components?.map((component: any) =>
-				this.transformComponent(component, (data.data as APIModalSubmitInteractionData).resolved),
+			(data.data as APIModalSubmission).components?.map((component: any) =>
+				this.transformComponent(component, (data.data as APIModalSubmission).resolved),
 			),
 			transformResolved(
 				{ client: this.client, guild: this.guild, channel: this.channel },
-				(data.data as APIModalSubmitInteractionData).resolved as APIInteractionDataResolved,
+				(data.data as APIModalSubmission).resolved as APIInteractionDataResolved,
 			),
 		);
 

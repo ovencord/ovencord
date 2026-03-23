@@ -2,6 +2,15 @@ import type { APIGuildWidgetMember, Snowflake } from 'discord-api-types/v10';
 import type { Client } from '../client/Client.js';
 import { Base } from './Base.js';
 
+interface WidgetVoiceState {
+	deaf?: boolean;
+	mute?: boolean;
+	self_deaf?: boolean;
+	self_mute?: boolean;
+	suppress?: boolean;
+	channel_id?: Snowflake | null;
+}
+
 /**
  * Represents a WidgetMember.
  *
@@ -66,47 +75,48 @@ export class WidgetMember extends Base {
 		 */
 		this.status = data.status;
 
+		const widgetData = data as unknown as WidgetVoiceState;
 		/**
 		 * If the member is server deafened
 		 *
 		 * @type {?boolean}
 		 */
-		this.deaf = data.deaf ?? null;
+		this.deaf = widgetData.deaf ?? null;
 
 		/**
 		 * If the member is server muted
 		 *
 		 * @type {?boolean}
 		 */
-		this.mute = data.mute ?? null;
+		this.mute = widgetData.mute ?? null;
 
 		/**
 		 * If the member is self deafened
 		 *
 		 * @type {?boolean}
 		 */
-		this.selfDeaf = data.self_deaf ?? null;
+		this.selfDeaf = widgetData.self_deaf ?? null;
 
 		/**
 		 * If the member is self muted
 		 *
 		 * @type {?boolean}
 		 */
-		this.selfMute = data.self_mute ?? null;
+		this.selfMute = widgetData.self_mute ?? null;
 
 		/**
 		 * If the member is suppressed
 		 *
 		 * @type {?boolean}
 		 */
-		this.suppress = data.suppress ?? null;
+		this.suppress = widgetData.suppress ?? null;
 
 		/**
 		 * The id of the voice channel the member is in, if any
 		 *
 		 * @type {?Snowflake}
 		 */
-		this.channelId = data.channel_id ?? null;
+		this.channelId = widgetData.channel_id ?? null;
 
 		/**
 		 * The avatar URL of the member.
