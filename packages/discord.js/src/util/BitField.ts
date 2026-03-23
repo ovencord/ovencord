@@ -1,13 +1,18 @@
 import { DiscordjsRangeError, ErrorCodes } from '../errors/index.js';
 
 /**
+ * Data that can be resolved into a bitfield.
+ */
+export type BitFieldResolvable = number | bigint | string | BitField | BitFieldResolvable[];
+
+/**
  * Data structure that makes it easy to interact with a bitfield.
  */
 export class BitField {
 	/**
 	 * Numeric bitfield flags.
 	 */
-	static Flags: Record<string, any> = {};
+	static Flags: Record<string, number | bigint> = {};
 
 	/**
 	 * Default bit value.
@@ -20,10 +25,10 @@ export class BitField {
 	public bitfield: number | bigint;
 
 	/**
-	 * @param {any} [bits] Bit(s) to read from
+	 * @param {BitFieldResolvable} [bits] Bit(s) to read from
 	 */
-	constructor(bits: any = (BitField as any).DefaultBit) {
-		this.bitfield = (this.constructor as any).resolve(bits);
+	constructor(bits: BitFieldResolvable = (BitField as typeof BitField).DefaultBit as BitFieldResolvable) {
+		this.bitfield = (this.constructor as typeof BitField).resolve(bits);
 	}
 
 	/**
@@ -32,8 +37,12 @@ export class BitField {
 	 * @param {any} bit Bit(s) to check for
 	 * @returns {boolean}
 	 */
-	any(bit: any): boolean {
-		return ((this.bitfield as any) & (this.constructor as any).resolve(bit)) !== (this.constructor as any).DefaultBit;
+	any(bit: BitFieldResolvable): boolean {
+		return (
+			// LAST RESORT: bitwise operators do not support union of number | bigint directly
+			((this.bitfield as unknown as number) & ((this.constructor as typeof BitField).resolve(bit) as unknown as number)) !==
+			((this.constructor as typeof BitField).DefaultBit as unknown as number)
+		);
 	}
 
 	/**
@@ -42,8 +51,8 @@ export class BitField {
 	 * @param {any} bit Bit(s) to check for
 	 * @returns {boolean}
 	 */
-	equals(bit: any): boolean {
-		return this.bitfield === (this.constructor as any).resolve(bit);
+	equals(bit: BitFieldResolvable): boolean {
+		return this.bitfield === (this.constructor as typeof BitField).resolve(bit);
 	}
 
 	/**
@@ -52,9 +61,10 @@ export class BitField {
 	 * @param {any} bit Bit(s) to check for
 	 * @returns {boolean}
 	 */
-	has(bit: any): boolean {
-		const resolvedBit = (this.constructor as any).resolve(bit);
-		return ((this.bitfield as any) & resolvedBit) === resolvedBit;
+	has(bit: BitFieldResolvable): boolean {
+		const resolvedBit = (this.constructor as typeof BitField).resolve(bit);
+		// LAST RESORT: bitwise operators do not support union of number | bigint directly
+		return ((this.bitfield as unknown as number) & (resolvedBit as unknown as number)) === (resolvedBit as unknown as number);
 	}
 
 	/**
@@ -64,8 +74,8 @@ export class BitField {
 	 * @param {...any} hasParams Additional parameters for the has method, if any
 	 * @returns {string[]}
 	 */
-	missing(bits: any, ...hasParams: any[]): string[] {
-		return new (this.constructor as any)(bits).remove(this).toArray(...hasParams);
+	missing(bits: BitFieldResolvable, ...hasParams: readonly any[]): string[] {
+		return new (this.constructor as typeof BitField)(bits).remove(this).toArray(...hasParams);
 	}
 
 	/**
@@ -83,14 +93,15 @@ export class BitField {
 	 * @param {...any} bits Bits to add
 	 * @returns {BitField} These bits or new BitField if the instance is frozen.
 	 */
-	add(...bits: any[]): this {
-		let total: any = (this.constructor as any).DefaultBit;
+	add(...bits: BitFieldResolvable[]): this {
+		let total = (this.constructor as typeof BitField).DefaultBit;
 		for (const bit of bits) {
-			total |= (this.constructor as any).resolve(bit);
+			// LAST RESORT: bitwise operators do not support union of number | bigint directly
+			(total as unknown as number) |= (this.constructor as typeof BitField).resolve(bit) as unknown as number;
 		}
 
-		if (Object.isFrozen(this)) return new (this.constructor as any)((this.bitfield as any) | total);
-		(this.bitfield as any) |= total;
+		if (Object.isFrozen(this)) return new (this.constructor as typeof BitField)((this.bitfield as unknown as number) | (total as unknown as number)) as this;
+		(this.bitfield as unknown as number) |= total as unknown as number;
 		return this;
 	}
 
@@ -100,14 +111,15 @@ export class BitField {
 	 * @param {...any} bits Bits to remove
 	 * @returns {BitField} These bits or new BitField if the instance is frozen.
 	 */
-	remove(...bits: any[]): this {
-		let total: any = (this.constructor as any).DefaultBit;
+	remove(...bits: BitFieldResolvable[]): this {
+		let total = (this.constructor as typeof BitField).DefaultBit;
 		for (const bit of bits) {
-			total |= (this.constructor as any).resolve(bit);
+			// LAST RESORT: bitwise operators do not support union of number | bigint directly
+			(total as unknown as number) |= (this.constructor as typeof BitField).resolve(bit) as unknown as number;
 		}
 
-		if (Object.isFrozen(this)) return new (this.constructor as any)((this.bitfield as any) & ~total);
-		(this.bitfield as any) &= ~total;
+		if (Object.isFrozen(this)) return new (this.constructor as typeof BitField)((this.bitfield as unknown as number) & ~(total as unknown as number)) as this;
+		(this.bitfield as unknown as number) &= ~(total as unknown as number);
 		return this;
 	}
 
@@ -118,10 +130,10 @@ export class BitField {
 	 * @param {...any} hasParams Additional parameters for the has method, if any
 	 * @returns {Object}
 	 */
-	serialize(..._hasParams: any[]): Record<string, boolean> {
+	serialize(..._hasParams: readonly any[]): Record<string, boolean> {
 		const serialized: Record<string, boolean> = {};
-		for (const [flag, bit] of Object.entries((this.constructor as any).Flags)) {
-			if (Number.isNaN(Number(flag))) serialized[flag] = this.has(bit);
+		for (const [flag, bit] of Object.entries((this.constructor as typeof BitField).Flags)) {
+			if (Number.isNaN(Number(flag))) serialized[flag] = this.has(bit as BitFieldResolvable);
 		}
 
 		return serialized;
@@ -133,7 +145,7 @@ export class BitField {
 	 * @param {...any} hasParams Additional parameters for the has method, if any
 	 * @returns {string[]}
 	 */
-	toArray(...hasParams: any[]): string[] {
+	toArray(...hasParams: readonly any[]): string[] {
 		return [...this[Symbol.iterator](...hasParams)];
 	}
 
@@ -145,9 +157,9 @@ export class BitField {
 		return this.bitfield;
 	}
 
-	*[Symbol.iterator](..._hasParams: any[]): Generator<string> {
-		for (const bitName of Object.keys((this.constructor as any).Flags)) {
-			if (Number.isNaN(Number(bitName)) && this.has(bitName)) yield bitName;
+	*[Symbol.iterator](..._hasParams: readonly any[]): Generator<string> {
+		for (const bitName of Object.keys((this.constructor as typeof BitField).Flags)) {
+			if (Number.isNaN(Number(bitName)) && this.has(bitName as BitFieldResolvable)) yield bitName;
 		}
 	}
 
@@ -157,8 +169,8 @@ export class BitField {
 	 * @param {any} [bit] bit(s) to resolve
 	 * @returns {number|bigint}
 	 */
-	static resolve(bit: any): number | bigint {
-		const { DefaultBit } = BitField as any;
+	static resolve(bit: BitFieldResolvable): number | bigint {
+		const { DefaultBit } = BitField as typeof BitField;
 		if (typeof bit === 'number' || typeof bit === 'bigint') {
 			if (bit >= (typeof bit === 'bigint' ? 0n : 0)) {
 				return typeof DefaultBit === 'bigint' ? BigInt(bit) : Number(bit);
@@ -167,13 +179,14 @@ export class BitField {
 		if (bit instanceof BitField) return bit.bitfield;
 		if (Array.isArray(bit)) {
 			return bit
-				.map((bit_) => (BitField as any).resolve(bit_))
-				.reduce((prev, bit_) => (prev as any) | (bit_ as any), DefaultBit);
+				.map((bit_) => (BitField as typeof BitField).resolve(bit_))
+				// LAST RESORT: bitwise operators do not support union of number | bigint directly
+				.reduce((prev, bit_) => (prev as unknown as number) | (bit_ as unknown as number), DefaultBit as unknown as number) as number | bigint;
 		}
 
 		if (typeof bit === 'string') {
 			if (!Number.isNaN(Number(bit))) return typeof DefaultBit === 'bigint' ? BigInt(bit) : Number(bit);
-			if (BitField.Flags[bit] !== undefined) return BitField.Flags[bit];
+			if ((BitField as typeof BitField).Flags[bit] !== undefined) return (BitField as typeof BitField).Flags[bit];
 		}
 
 		throw new DiscordjsRangeError(ErrorCodes.BitFieldInvalid, bit);

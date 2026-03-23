@@ -24,19 +24,19 @@ export class Sticker extends Base {
 	public guildId: Snowflake | null;
 	public user: User | null;
 	public sortValue: number | null;
-	constructor(client: Client, sticker: Record<string, unknown>) {
+	constructor(client: Client, sticker: APISticker) {
 		super(client);
 
 		this._patch(sticker);
 	}
 
-	_patch(sticker: Record<string, unknown>) {
+	_patch(sticker: Partial<APISticker>) {
 		/**
 		 * The sticker's id
 		 *
 		 * @type {Snowflake}
 		 */
-		this.id = sticker.id as Snowflake;
+		this.id = sticker.id!;
 
 		if ('description' in sticker) {
 			/**
@@ -44,7 +44,7 @@ export class Sticker extends Base {
 			 *
 			 * @type {?string}
 			 */
-			this.description = sticker.description as string;
+			this.description = sticker.description ?? null;
 		} else {
 			this.description ??= null;
 		}
@@ -55,7 +55,7 @@ export class Sticker extends Base {
 			 *
 			 * @type {?StickerType}
 			 */
-			this.type = sticker.type as StickerType;
+			this.type = sticker.type ?? null;
 		} else {
 			this.type ??= null;
 		}
@@ -66,7 +66,7 @@ export class Sticker extends Base {
 			 *
 			 * @type {StickerFormatType}
 			 */
-			this.format = sticker.format_type as StickerFormatType;
+			this.format = sticker.format_type!;
 		}
 
 		if ('name' in sticker) {
@@ -75,7 +75,7 @@ export class Sticker extends Base {
 			 *
 			 * @type {string}
 			 */
-			this.name = sticker.name as string;
+			this.name = sticker.name!;
 		}
 
 		if ('pack_id' in sticker) {
@@ -84,7 +84,7 @@ export class Sticker extends Base {
 			 *
 			 * @type {?Snowflake}
 			 */
-			this.packId = sticker.pack_id as Snowflake;
+			this.packId = sticker.pack_id ?? null;
 		} else {
 			this.packId ??= null;
 		}
@@ -95,7 +95,7 @@ export class Sticker extends Base {
 			 *
 			 * @type {?string}
 			 */
-			this.tags = sticker.tags as string;
+			this.tags = sticker.tags ?? null;
 		} else {
 			this.tags ??= null;
 		}
@@ -106,7 +106,7 @@ export class Sticker extends Base {
 			 *
 			 * @type {?boolean}
 			 */
-			this.available = sticker.available as boolean;
+			this.available = sticker.available ?? null;
 		} else {
 			this.available ??= null;
 		}
@@ -117,12 +117,12 @@ export class Sticker extends Base {
 			 *
 			 * @type {?Snowflake}
 			 */
-			this.guildId = sticker.guild_id as Snowflake;
+			this.guildId = sticker.guild_id ?? null;
 		} else {
 			this.guildId ??= null;
 		}
 
-		if ('user' in sticker) {
+		if (sticker.user) {
 			/**
 			 * The user that uploaded the guild sticker
 			 *
@@ -139,7 +139,7 @@ export class Sticker extends Base {
 			 *
 			 * @type {?number}
 			 */
-			this.sortValue = sticker.sort_value as number;
+			this.sortValue = sticker.sort_value ?? null;
 		} else {
 			this.sortValue ??= null;
 		}

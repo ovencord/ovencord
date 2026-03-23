@@ -651,7 +651,7 @@ export class Client extends AsyncEventEmitter {
 	 */
 	async fetchSticker(id: string) {
 		const data = await this.rest.get(Routes.sticker(id));
-		return new Sticker(this, data);
+		return new Sticker(this, data as any);
 	}
 
 	/**

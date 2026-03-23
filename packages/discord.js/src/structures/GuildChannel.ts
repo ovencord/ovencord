@@ -1,5 +1,11 @@
 import { SnowflakeClass as Snowflake } from '@ovencord/util';
-import { type APIGuildChannel, ChannelType, type GuildChannelType, PermissionFlagsBits } from 'discord-api-types/v10';
+import {
+	type APIChannel,
+	type APIGuildChannel,
+	ChannelType,
+	type GuildChannelType,
+	PermissionFlagsBits,
+} from 'discord-api-types/v10';
 import type { Client } from '../client/Client.js';
 import { DiscordjsError, ErrorCodes } from '../errors/index.js';
 import { PermissionOverwriteManager } from '../managers/PermissionOverwriteManager.js';
@@ -42,7 +48,7 @@ export class GuildChannel extends BaseChannel {
 		client: Client | null,
 		immediatePatch = true,
 	) {
-		super(client, data, false);
+		super(client, data as unknown as APIChannel, false);
 
 		/**
 		 * The guild the channel is in
@@ -66,11 +72,11 @@ export class GuildChannel extends BaseChannel {
 		 */
 		this.permissionOverwrites = new PermissionOverwriteManager(this);
 
-		if (data && immediatePatch) this._patch(data);
+		if (data && immediatePatch) this._patch(data as unknown as APIChannel);
 	}
 
-	_patch(data: Partial<APIGuildChannel<GuildChannelType>> & Record<string, unknown>) {
-		super._patch(data);
+	_patch(data: APIChannel) {
+		super._patch(data as unknown as APIChannel);
 
 		if ('name' in data) {
 			/**

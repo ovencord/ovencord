@@ -41,7 +41,7 @@ export class VoiceChannelEffect {
 		 *
 		 * @type {?Emoji}
 		 */
-		this.emoji = data.emoji ? new Emoji(guild.client, data.emoji as Record<string, unknown>) : null;
+		this.emoji = data.emoji ? new Emoji(guild.client, data.emoji as any) : null;
 
 		/**
 		 * The animation type of the effect.

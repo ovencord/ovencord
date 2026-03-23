@@ -52,7 +52,7 @@ export class ThreadChannel extends BaseChannel {
 		return this.guild?.channels.resolve(this.parentId as Snowflake);
 	}
 	constructor(guild: Guild, data: Partial<APIThreadChannel> | Record<string, unknown>, client?: Client) {
-		super(guild?.client ?? client, data, false);
+		super(guild?.client ?? client, data as any, false);
 
 		/**
 		 * The guild the thread is in
@@ -88,7 +88,7 @@ export class ThreadChannel extends BaseChannel {
 		 * @type {ThreadMemberManager}
 		 */
 		this.members = new ThreadMemberManager(this, []);
-		this._patch(data);
+		this._patch(data as any);
 	}
 
 	// ... (skipping unchanged parts)

@@ -1,9 +1,12 @@
 import { userMention } from '@ovencord/formatters';
-import { ChannelType } from 'discord-api-types/v10';
+import { type APIChannel, ChannelType, type Snowflake } from 'discord-api-types/v10';
+import type { Client } from '../client/Client.js';
 import { DMMessageManager } from '../managers/DMMessageManager.js';
 import { Partials } from '../util/Partials.js';
 import { BaseChannel } from './BaseChannel.js';
 import { TextBasedChannel } from './interfaces/TextBasedChannel.js';
+import type { Message } from './Message.js';
+import type { User } from './User.js';
 
 /**
  * Represents a direct message channel between two users.
@@ -12,12 +15,12 @@ import { TextBasedChannel } from './interfaces/TextBasedChannel.js';
  * @implements {TextBasedChannel}
  */
 export class DMChannel extends BaseChannel {
-	public type: any;
-	public messages: any;
-	public recipientId: any;
-	public lastMessageId: any;
-	public lastPinTimestamp: any;
-	constructor(client: any, data: any) {
+	public type: ChannelType.DM;
+	public messages: DMMessageManager;
+	public recipientId: Snowflake | null;
+	public lastMessageId: Snowflake | null;
+	public lastPinTimestamp: number | null;
+	constructor(client: Client, data: APIChannel) {
 		super(client, data);
 
 		// Override the channel type so partials have a known type
@@ -31,10 +34,10 @@ export class DMChannel extends BaseChannel {
 		this.messages = new DMMessageManager(this);
 	}
 
-	_patch(data: any) {
+	_patch(data: APIChannel) {
 		super._patch(data);
 
-		if (data.recipients) {
+		if ('recipients' in data && data.recipients) {
 			const recipient = data.recipients[0];
 
 			/**
@@ -116,12 +119,12 @@ export class DMChannel extends BaseChannel {
 
 	// These are here only for documentation purposes - they are implemented by TextBasedChannel
 
-	get lastMessage() {
-		return undefined as any;
+	get lastMessage(): Message | null {
+		return (this.lastMessageId && this.messages.cache.get(this.lastMessageId)) ?? null;
 	}
 
-	get lastPinAt() {
-		return undefined as any;
+	get lastPinAt(): Date | null {
+		return this.lastPinTimestamp ? new Date(this.lastPinTimestamp) : null;
 	}
 
 	send() {}

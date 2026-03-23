@@ -1,4 +1,8 @@
-import type { GatewayActivityUpdateData, GatewayPresenceUpdateData, GatewayPresenceUpdate } from 'discord-api-types/v10';
+import type {
+	GatewayActivityUpdateData,
+	GatewayPresenceUpdate,
+	GatewayPresenceUpdateData,
+} from 'discord-api-types/v10';
 import { ActivityType, GatewayOpcodes } from 'discord-api-types/v10';
 import type { Client } from '../client/Client.js';
 import { DiscordjsTypeError, ErrorCodes } from '../errors/index.js';
@@ -13,7 +17,10 @@ export class ClientPresence extends Presence {
 	constructor(client: Client, data: Record<string, unknown> = {}) {
 		super(
 			client,
-			Object.assign(data, { status: (data as unknown as { status?: string }).status ?? 'online', user: { id: null } }) as unknown as Partial<GatewayPresenceUpdate>,
+			Object.assign(data, {
+				status: (data as unknown as { status?: string }).status ?? 'online',
+				user: { id: null },
+			}) as unknown as Partial<GatewayPresenceUpdate>,
 		);
 	}
 

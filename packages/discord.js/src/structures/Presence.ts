@@ -316,7 +316,7 @@ export class Activity {
 		 *
 		 * @type {?Emoji}
 		 */
-		this.emoji = data.emoji ? new Emoji(presence.client, data.emoji) : null;
+		this.emoji = data.emoji ? new Emoji(presence.client, data.emoji as any) : null;
 
 		this.buttons = data.buttons?.map((b: { label: string } | string) => (typeof b === 'string' ? b : b.label)) ?? [];
 

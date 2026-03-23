@@ -1,5 +1,8 @@
 import { formatEmoji } from '@ovencord/formatters';
+import type { EmojiURLOptions } from '@ovencord/rest';
 import { DiscordSnowflake } from '@ovencord/util';
+import type { APIEmoji, Snowflake } from 'discord-api-types/v10';
+import type { Client } from '../client/Client.js';
 import { Base } from './Base.js';
 
 /**
@@ -10,9 +13,9 @@ import { Base } from './Base.js';
 export class Emoji extends Base {
 	public animated: boolean | null;
 	public name: string | null;
-	public id: string | null;
+	public id: Snowflake | null;
 
-	constructor(client: any, emoji: any) {
+	constructor(client: Client, emoji: APIEmoji) {
 		super(client);
 		this.animated = emoji.animated ?? null;
 		this.name = emoji.name ?? null;
@@ -24,20 +27,20 @@ export class Emoji extends Base {
 		return encodeURIComponent(this.name!);
 	}
 
-	imageURL(options = {}): string | null {
+	imageURL(options: EmojiURLOptions = {}): string | null {
 		if (!this.id) return null;
 
-		const resolvedOptions = {
-			extension: (options as any).extension,
-			size: (options as any).size,
-			animated: undefined as boolean | undefined,
+		const resolvedOptions: { extension?: string; size?: number; animated?: boolean } = {
+			extension: options.extension,
+			size: options.size,
+			animated: undefined,
 		};
 
-		if (!(options as any).extension || (options as any).extension === 'webp') {
-			resolvedOptions.animated = (options as any).animated ?? (this.animated || undefined);
+		if (!options.extension || options.extension === 'webp') {
+			resolvedOptions.animated = (options as unknown as { animated?: boolean }).animated ?? (this.animated || undefined);
 		}
 
-		return (this.client as any).rest.cdn.emoji(this.id, resolvedOptions);
+		return (this.client as unknown as { rest: { cdn: { emoji: Function } } }).rest.cdn.emoji(this.id, resolvedOptions);
 	}
 
 	get createdTimestamp(): number | null {
@@ -54,7 +57,7 @@ export class Emoji extends Base {
 			: this.name!;
 	}
 
-	override toJSON(): any {
+	override toJSON(): Record<string, unknown> {
 		const json = super.toJSON({
 			guild: 'guildId',
 			createdTimestamp: true,

@@ -1,5 +1,15 @@
+import type {
+	APIChannel,
+	APIGuildChannel,
+	ChannelType,
+	GuildChannelType,
+	Snowflake,
+	ThreadAutoArchiveDuration,
+} from 'discord-api-types/v10';
+import type { Client } from '../client/Client.js';
 import { GuildMessageManager } from '../managers/GuildMessageManager.js';
 import { GuildTextThreadManager } from '../managers/GuildTextThreadManager.js';
+import type { Guild } from './Guild.js';
 import { GuildChannel } from './GuildChannel.js';
 import { TextBasedChannel } from './interfaces/TextBasedChannel.js';
 
@@ -10,15 +20,16 @@ import { TextBasedChannel } from './interfaces/TextBasedChannel.js';
  * @implements {TextBasedChannel}
  */
 export class BaseGuildTextChannel extends GuildChannel {
-	public messages: any;
-	public threads: any;
-	public nsfw: any;
-	public declare topic: any;
-	public lastMessageId: any;
-	public lastPinTimestamp: any;
-	public defaultAutoArchiveDuration: any;
-	public defaultThreadRateLimitPerUser: any;
-	constructor(guild: any, data: any, client: any) {
+	public messages: GuildMessageManager;
+	public threads: GuildTextThreadManager;
+	public nsfw: boolean;
+	public declare topic: string | null;
+	public lastMessageId: Snowflake | null;
+	public lastPinTimestamp: number | null;
+	public defaultAutoArchiveDuration: ThreadAutoArchiveDuration | null;
+	public defaultThreadRateLimitPerUser: number | null;
+
+	constructor(guild: Guild, data: APIGuildChannel<GuildChannelType>, client: Client) {
 		super(guild, data, client, false);
 
 		/**
@@ -40,13 +51,13 @@ export class BaseGuildTextChannel extends GuildChannel {
 		 *
 		 * @type {boolean}
 		 */
-		this.nsfw = Boolean(data.nsfw);
+		this.nsfw = Boolean((data as any).nsfw);
 
 		this._patch(data);
 	}
 
-	_patch(data: any) {
-		super._patch(data);
+	_patch(data: Partial<APIGuildChannel<GuildChannelType>>) {
+		super._patch(data as APIChannel);
 
 		if ('topic' in data) {
 			/**
@@ -54,11 +65,11 @@ export class BaseGuildTextChannel extends GuildChannel {
 			 *
 			 * @type {?string}
 			 */
-			this.topic = data.topic;
+			this.topic = (data as any).topic;
 		}
 
 		if ('nsfw' in data) {
-			this.nsfw = Boolean(data.nsfw);
+			this.nsfw = Boolean((data as any).nsfw);
 		}
 
 		if ('last_message_id' in data) {
@@ -67,7 +78,7 @@ export class BaseGuildTextChannel extends GuildChannel {
 			 *
 			 * @type {?Snowflake}
 			 */
-			this.lastMessageId = data.last_message_id;
+			this.lastMessageId = (data as any).last_message_id;
 		}
 
 		if ('last_pin_timestamp' in data) {
@@ -76,7 +87,7 @@ export class BaseGuildTextChannel extends GuildChannel {
 			 *
 			 * @type {?number}
 			 */
-			this.lastPinTimestamp = data.last_pin_timestamp ? Date.parse(data.last_pin_timestamp) : null;
+			this.lastPinTimestamp = (data as any).last_pin_timestamp ? Date.parse((data as any).last_pin_timestamp) : null;
 		}
 
 		if ('default_auto_archive_duration' in data) {
@@ -85,7 +96,7 @@ export class BaseGuildTextChannel extends GuildChannel {
 			 *
 			 * @type {?ThreadAutoArchiveDuration}
 			 */
-			this.defaultAutoArchiveDuration = data.default_auto_archive_duration;
+			this.defaultAutoArchiveDuration = (data as any).default_auto_archive_duration;
 		}
 
 		if ('default_thread_rate_limit_per_user' in data) {
@@ -94,13 +105,13 @@ export class BaseGuildTextChannel extends GuildChannel {
 			 *
 			 * @type {?number}
 			 */
-			this.defaultThreadRateLimitPerUser = data.default_thread_rate_limit_per_user;
+			this.defaultThreadRateLimitPerUser = (data as any).default_thread_rate_limit_per_user;
 		} else {
 			this.defaultThreadRateLimitPerUser ??= null;
 		}
 
-		if ('messages' in data) {
-			for (const message of data.messages) this.messages._add(message);
+		if ('messages' in data && Array.isArray(data.messages)) {
+			for (const message of data.messages) this.messages._add(message as any);
 		}
 	}
 
@@ -111,8 +122,8 @@ export class BaseGuildTextChannel extends GuildChannel {
 	 * @param {string} [reason] Reason for changing the channel's default auto archive duration
 	 * @returns {Promise<TextChannel>}
 	 */
-	async setDefaultAutoArchiveDuration(defaultAutoArchiveDuration: any, reason: any) {
-		return this.edit({ defaultAutoArchiveDuration, reason });
+	async setDefaultAutoArchiveDuration(defaultAutoArchiveDuration: ThreadAutoArchiveDuration | null, reason?: string) {
+		return (this as any).edit({ defaultAutoArchiveDuration }, reason);
 	}
 
 	/**
@@ -123,8 +134,8 @@ export class BaseGuildTextChannel extends GuildChannel {
 	 * @param {string} [reason] Reason for changing the channel's type
 	 * @returns {Promise<GuildChannel>}
 	 */
-	async setType(type: any, reason: any) {
-		return this.edit({ type, reason });
+	async setType(type: ChannelType.GuildText | ChannelType.GuildAnnouncement, reason?: string) {
+		return (this as any).edit({ type }, reason);
 	}
 
 	/**
@@ -139,36 +150,9 @@ export class BaseGuildTextChannel extends GuildChannel {
 	 *   .then(newChannel => console.log(`Channel's new topic is ${newChannel.topic}`))
 	 *   .catch(console.error);
 	 */
-	async setTopic(topic: any, reason: any) {
-		return this.edit({ topic, reason });
+	async setTopic(topic: string | null, reason?: string) {
+		return (this as any).edit({ topic }, reason);
 	}
-
-	/**
-	 * Data that can be resolved to an Application. This can be:
-	 * - An Application
-	 * - An Activity with associated Application
-	 * - A Snowflake
-	 *
-	 * @typedef {Application|Snowflake} ApplicationResolvable
-	 */
-
-	/**
-	 * Options used to create an invite to a guild channel.
-	 *
-	 * @typedef {Object} InviteCreateOptions
-	 * @property {boolean} [temporary] Whether members that joined via the invite should be automatically
-	 * kicked after 24 hours if they have not yet received a role
-	 * @property {number} [maxAge] How long the invite should last (in seconds, 0 for forever)
-	 * @property {number} [maxUses] Maximum number of uses
-	 * @property {boolean} [unique] Create a unique invite, or use an existing one with similar settings
-	 * @property {UserResolvable} [targetUser] The user whose stream to display for this invite,
-	 * required if `targetType` is {@link InviteTargetType.Stream}, the user must be streaming in the channel
-	 * @property {ApplicationResolvable} [targetApplication] The embedded application to open for this invite,
-	 * required if `targetType` is {@link InviteTargetType.Stream}, the application must have the
-	 * {@link InviteTargetType.EmbeddedApplication} flag
-	 * @property {InviteTargetType} [targetType] The type of the target for this voice channel invite
-	 * @property {string} [reason] The reason for creating the invite
-	 */
 
 	/**
 	 * Creates an invite to this guild channel.
@@ -199,11 +183,11 @@ export class BaseGuildTextChannel extends GuildChannel {
 	// These are here only for documentation purposes - they are implemented by TextBasedChannel
 
 	get lastMessage() {
-		return undefined as any;
+		return this.lastMessageId ? this.messages.cache.get(this.lastMessageId) : null;
 	}
 
 	get lastPinAt() {
-		return undefined as any;
+		return this.lastPinTimestamp ? new Date(this.lastPinTimestamp) : null;
 	}
 
 	send() {}

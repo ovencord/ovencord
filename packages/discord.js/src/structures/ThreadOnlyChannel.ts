@@ -2,7 +2,7 @@ import type { APIGuildForumTag, SortOrderType, ThreadAutoArchiveDuration } from 
 import type { Client } from '../client/Client.js';
 import { GuildForumThreadManager } from '../managers/GuildForumThreadManager.js';
 import { transformAPIGuildDefaultReaction, transformAPIGuildForumTag } from '../util/Channels.js';
-import { Guild } from './Guild.js';
+import type { Guild } from './Guild.js';
 import { GuildChannel } from './GuildChannel.js';
 import { TextBasedChannel } from './interfaces/TextBasedChannel.js';
 
@@ -65,7 +65,7 @@ export class ThreadOnlyChannel extends GuildChannel {
 		this._patch(data);
 	}
 
-	_patch(data: Record<string, unknown>) {
+	_patch(data: any) {
 		super._patch(data);
 		if ('available_tags' in data) {
 			/**

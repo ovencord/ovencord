@@ -1,6 +1,11 @@
 import { Collection } from '@ovencord/collection';
+import type { APIMessageComponentInteraction, Snowflake } from 'discord-api-types/v10';
+import type { Client } from '../client/Client.js';
 import { Events } from '../util/Events.js';
+import type { GuildMember } from './GuildMember.js';
 import { MessageComponentInteraction } from './MessageComponentInteraction.js';
+import type { Role } from './Role.js';
+import type { User } from './User.js';
 
 /**
  * Represents a {@link ComponentType.MentionableSelect} select menu interaction.
@@ -8,13 +13,13 @@ import { MessageComponentInteraction } from './MessageComponentInteraction.js';
  * @extends {MessageComponentInteraction}
  */
 export class MentionableSelectMenuInteraction extends MessageComponentInteraction {
-	public users: any;
-	public members: any;
-	public roles: any;
-	public values: any;
-	constructor(client: any, data: any) {
+	public users: Collection<Snowflake, User>;
+	public members: Collection<Snowflake, GuildMember | any>;
+	public roles: Collection<Snowflake, Role | any>;
+	public values: Snowflake[];
+	constructor(client: Client, data: APIMessageComponentInteraction) {
 		super(client, data);
-		const { resolved, values } = data.data;
+		const { resolved, values } = data.data as any;
 		const { members, users, roles } = resolved ?? {};
 
 		/**
@@ -47,7 +52,7 @@ export class MentionableSelectMenuInteraction extends MessageComponentInteractio
 
 		if (members) {
 			for (const [id, member] of Object.entries(members)) {
-				const user = users[id];
+				const user = users?.[id];
 				if (!user) {
 					this.client.emit(
 						Events.Debug,
@@ -58,21 +63,21 @@ export class MentionableSelectMenuInteraction extends MessageComponentInteractio
 				}
 
 				this.members.set(
-					id,
-					this.guild?.members._add(Object.assign({ user }, member)) ?? Object.assign({ user }, member),
+					id as Snowflake,
+					this.guild?.members._add({ user, ...(member as any) } as any) ?? ({ user, ...(member as any) } as any),
 				);
 			}
 		}
 
 		if (users) {
-			for (const user of Object.values(users) as any[]) {
-				this.users.set(user.id, this.client.users._add(user));
+			for (const user of Object.values(users)) {
+				this.users.set((user as any).id as Snowflake, this.client.users._add(user as any));
 			}
 		}
 
 		if (roles) {
-			for (const role of Object.values(roles) as any[]) {
-				this.roles.set(role.id, this.guild?.roles._add(role) ?? role);
+			for (const role of Object.values(roles)) {
+				this.roles.set((role as any).id as Snowflake, this.guild?.roles._add(role as any) ?? role);
 			}
 		}
 	}

@@ -1,5 +1,5 @@
 import { Collection } from '@ovencord/collection';
-import type { Snowflake } from 'discord-api-types/v10';
+import type { APIWidget, APIWidgetChannel, Snowflake } from 'discord-api-types/v10';
 import { Routes } from 'discord-api-types/v10';
 import type { Client } from '../client/Client.js';
 import { Base } from './Base.js';
@@ -14,10 +14,10 @@ export class Widget extends Base {
 	public id: Snowflake;
 	public name: string;
 	public instantInvite: string | null;
-	public channels: Collection<Snowflake, Record<string, unknown>>;
+	public channels: Collection<Snowflake, APIWidgetChannel>;
 	public members: Collection<string, WidgetMember>;
 	public presenceCount: number;
-	constructor(client: Client, data: Record<string, unknown>) {
+	constructor(client: Client, data: APIWidget) {
 		super(client);
 		this._patch(data);
 	}
@@ -31,13 +31,13 @@ export class Widget extends Base {
 	 * @property {number} position Position of the channel
 	 */
 
-	_patch(data: Record<string, unknown>) {
+	_patch(data: APIWidget) {
 		/**
 		 * The id of the guild.
 		 *
 		 * @type {Snowflake}
 		 */
-		this.id = data.id as Snowflake;
+		this.id = data.id;
 
 		if ('name' in data) {
 			/**
@@ -45,7 +45,7 @@ export class Widget extends Base {
 			 *
 			 * @type {string}
 			 */
-			this.name = data.name as string;
+			this.name = data.name;
 		}
 
 		if ('instant_invite' in data) {
@@ -54,7 +54,7 @@ export class Widget extends Base {
 			 *
 			 * @type {?string}
 			 */
-			this.instantInvite = (data.instant_invite as string) ?? null;
+			this.instantInvite = data.instant_invite ?? null;
 		} else {
 			this.instantInvite ??= null;
 		}
@@ -66,8 +66,8 @@ export class Widget extends Base {
 		 */
 		this.channels = new Collection();
 		if (Array.isArray(data.channels)) {
-			for (const channel of data.channels as Record<string, unknown>[]) {
-				this.channels.set(channel.id as Snowflake, channel);
+			for (const channel of data.channels) {
+				this.channels.set(channel.id, channel);
 			}
 		}
 
@@ -79,8 +79,8 @@ export class Widget extends Base {
 		 */
 		this.members = new Collection();
 		if (Array.isArray(data.members)) {
-			for (const member of data.members as Record<string, unknown>[]) {
-				this.members.set(member.id as string, new WidgetMember(this.client, member));
+			for (const member of data.members) {
+				this.members.set(member.id, new WidgetMember(this.client, member as any));
 			}
 		}
 
@@ -90,7 +90,7 @@ export class Widget extends Base {
 			 *
 			 * @type {number}
 			 */
-			this.presenceCount = data.presence_count as number;
+			this.presenceCount = data.presence_count;
 		}
 	}
 
@@ -100,7 +100,7 @@ export class Widget extends Base {
 	 * @returns {Promise<Widget>}
 	 */
 	async fetch() {
-		const data = (await this.client.rest.get(Routes.guildWidgetJSON(this.id))) as Record<string, unknown>;
+		const data = (await this.client.rest.get(Routes.guildWidgetJSON(this.id))) as APIWidget;
 		this._patch(data);
 		return this;
 	}

@@ -1,4 +1,8 @@
+import type { APIEmoji, Snowflake } from 'discord-api-types/v10';
+import type { Client } from '../client/Client.js';
+import type { ClientApplication } from './ClientApplication.js';
 import { Emoji } from './Emoji.js';
+import type { User } from './User.js';
 
 /**
  * Represents a custom emoji.
@@ -6,13 +10,13 @@ import { Emoji } from './Emoji.js';
  * @extends {Emoji}
  */
 export class ApplicationEmoji extends Emoji {
-	public application: any;
-	public declare name: any;
-	public author: any;
-	public managed: any;
-	public requiresColons: any;
-	public available: any;
-	constructor(client: any, data: any, application: any) {
+	public application: ClientApplication;
+	public declare name: string;
+	public author: User | null;
+	public managed: boolean;
+	public requiresColons: boolean;
+	public available: boolean;
+	constructor(client: Client, data: APIEmoji, application: ClientApplication) {
 		super(client, data);
 
 		/**
@@ -25,7 +29,7 @@ export class ApplicationEmoji extends Emoji {
 		this._patch(data);
 	}
 
-	_patch(data: any) {
+	_patch(data: APIEmoji) {
 		if ('name' in data) this.name = data.name;
 		if (data.user) {
 			/**
@@ -33,7 +37,7 @@ export class ApplicationEmoji extends Emoji {
 			 *
 			 * @type {User}
 			 */
-			this.author = this.client.users._add(data.user);
+			this.author = (this.client as any).users._add(data.user);
 		}
 
 		if ('managed' in data) {
@@ -91,8 +95,8 @@ export class ApplicationEmoji extends Emoji {
 	 *   .then(emoji => console.log(`Edited emoji ${emoji}`))
 	 *   .catch(console.error);
 	 */
-	async edit(options: any) {
-		return this.application.emojis.edit(this.id, options);
+	async edit(options: { name?: string }) {
+		return this.application.emojis.edit(this.id!, options);
 	}
 
 	/**
@@ -101,7 +105,7 @@ export class ApplicationEmoji extends Emoji {
 	 * @param {string} name The new name for the emoji
 	 * @returns {Promise<ApplicationEmoji>}
 	 */
-	async setName(name: any) {
+	async setName(name: string) {
 		return this.edit({ name });
 	}
 
@@ -111,7 +115,7 @@ export class ApplicationEmoji extends Emoji {
 	 * @returns {Promise<ApplicationEmoji>}
 	 */
 	async delete() {
-		await this.application.emojis.delete(this.id);
+		await this.application.emojis.delete(this.id!);
 		return this;
 	}
 
@@ -121,7 +125,7 @@ export class ApplicationEmoji extends Emoji {
 	 * @param {ApplicationEmoji|APIEmoji} other The emoji to compare it to
 	 * @returns {boolean}
 	 */
-	equals(other: any) {
+	equals(other: ApplicationEmoji | APIEmoji) {
 		if (other instanceof ApplicationEmoji) {
 			return (
 				other.animated === this.animated &&

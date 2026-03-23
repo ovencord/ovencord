@@ -1,5 +1,7 @@
-import { RouteBases } from 'discord-api-types/v10';
+import { type APIInvite, type InviteType, RouteBases, type Snowflake } from 'discord-api-types/v10';
+import type { Client } from '../client/Client.js';
 import { Base } from './Base.js';
+import type { User } from './User.js';
 
 /**
  * The base invite class.
@@ -7,15 +9,15 @@ import { Base } from './Base.js';
  * @extends {Base}
  */
 export class BaseInvite extends Base {
-	public type: any;
-	public code: any;
-	public inviterId: any;
-	public maxAge: any;
-	public createdTimestamp: any;
-	public _expiresTimestamp: any;
-	public channelId: any;
-	public approximateMemberCount: any;
-	constructor(client: any, data: any) {
+	public type: InviteType;
+	public code: string;
+	public inviterId: Snowflake | null;
+	public maxAge: number | null;
+	public createdTimestamp: number | null;
+	public _expiresTimestamp: number | null;
+	public channelId: Snowflake | null;
+	public approximateMemberCount: number | null;
+	constructor(client: Client, data: APIInvite) {
 		super(client);
 
 		/**
@@ -35,19 +37,19 @@ export class BaseInvite extends Base {
 		this._patch(data);
 	}
 
-	_patch(data: any) {
+	_patch(data: Partial<APIInvite>) {
 		if ('inviter_id' in data) {
 			/**
 			 * The id of the user that created this invite.
 			 *
 			 * @type {?Snowflake}
 			 */
-			this.inviterId = data.inviter_id;
+			this.inviterId = data.inviter_id as Snowflake | null;
 		} else {
 			this.inviterId ??= null;
 		}
 
-		if ('inviter' in data) {
+		if ('inviter' in data && data.inviter) {
 			this.client.users._add(data.inviter);
 			this.inviterId ??= data.inviter.id;
 		}
@@ -58,7 +60,7 @@ export class BaseInvite extends Base {
 			 *
 			 * @type {?number}
 			 */
-			this.maxAge = data.max_age;
+			this.maxAge = data.max_age as number | null;
 		} else {
 			this.maxAge ??= null;
 		}
@@ -69,13 +71,13 @@ export class BaseInvite extends Base {
 			 *
 			 * @type {?number}
 			 */
-			this.createdTimestamp = Date.parse(data.created_at);
+			this.createdTimestamp = Date.parse(data.created_at as string);
 		} else {
 			this.createdTimestamp ??= null;
 		}
 
 		if ('expires_at' in data) {
-			this._expiresTimestamp = data.expires_at && Date.parse(data.expires_at);
+			this._expiresTimestamp = data.expires_at && Date.parse(data.expires_at as string);
 		} else {
 			this._expiresTimestamp ??= null;
 		}
@@ -86,7 +88,7 @@ export class BaseInvite extends Base {
 			 *
 			 * @type {?Snowflake}
 			 */
-			this.channelId = data.channel_id;
+			this.channelId = data.channel_id as Snowflake | null;
 		}
 
 		if ('approximate_member_count' in data) {
@@ -95,7 +97,7 @@ export class BaseInvite extends Base {
 			 *
 			 * @type {?number}
 			 */
-			this.approximateMemberCount = data.approximate_member_count;
+			this.approximateMemberCount = data.approximate_member_count as number | null;
 		} else {
 			this.approximateMemberCount ??= null;
 		}
@@ -107,8 +109,8 @@ export class BaseInvite extends Base {
 	 * @type {?User}
 	 * @readonly
 	 */
-	get inviter() {
-		return this.inviterId && this.client.users.resolve(this.inviterId);
+	get inviter(): User | null {
+		return this.inviterId ? this.client.users.resolve(this.inviterId) : null;
 	}
 
 	/**
@@ -175,7 +177,7 @@ export class BaseInvite extends Base {
 		return this.url;
 	}
 
-	toJSON() {
+	toJSON(): Record<string, unknown> {
 		return super.toJSON({
 			url: true,
 			expiresTimestamp: true,

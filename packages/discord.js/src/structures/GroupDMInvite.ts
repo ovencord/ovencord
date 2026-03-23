@@ -17,7 +17,7 @@ export class GroupDMInvite extends BaseInvite {
 	 * @type {?number}
 	 */
 
-	_patch(data: Partial<APIInvite> & Record<string, unknown>) {
+	_patch(data: Partial<APIInvite>) {
 		super._patch(data);
 
 		if ('channel' in data) {
@@ -27,10 +27,10 @@ export class GroupDMInvite extends BaseInvite {
 			 * @type {?PartialGroupDMChannel}
 			 */
 			this.channel =
-				this.client.channels._add(data.channel, null, { cache: false }) ??
-				this.client.channels.cache.get(this.channelId);
+				this.client.channels._add(data.channel as any, null, { cache: false }) ??
+				(this.client.channels.cache.get(this.channelId as string) as PartialGroupDMChannel);
 
-			this.channelId ??= data.channel.id;
+			this.channelId ??= (data.channel as any).id;
 		}
 	}
 }

@@ -109,7 +109,7 @@ export class ApplicationCommand extends Base {
 	public version: Snowflake;
 	constructor(
 		client: Client,
-		data: Partial<APIApplicationCommand> & Record<string, unknown>,
+		data: APIApplicationCommand,
 		guild: Guild | null,
 		guildId: Snowflake | null,
 	) {
@@ -168,7 +168,7 @@ export class ApplicationCommand extends Base {
 		this._patch(data);
 	}
 
-	_patch(data: Partial<ApplicationCommandData> & Partial<APIApplicationCommand> & Record<string, unknown>) {
+	_patch(data: APIApplicationCommand | ApplicationCommandData) {
 		if ('name' in data) {
 			/**
 			 * The name of this command
@@ -231,13 +231,13 @@ export class ApplicationCommand extends Base {
 			this.descriptionLocalized ??= null;
 		}
 
-		if ('options' in data) {
+		if ('options' in data && data.options) {
 			/**
 			 * The options of this command
 			 *
 			 * @type {?ApplicationCommandOption[]}
 			 */
-			this.options = data.options.map(
+			this.options = (data.options as APIApplicationCommandOption[]).map(
 				(option: APIApplicationCommandOption) =>
 					(this.constructor as typeof ApplicationCommand).transformOption(option, true) as ApplicationCommandOption,
 			);
@@ -513,10 +513,7 @@ export class ApplicationCommand extends Base {
 	 * @returns {boolean}
 	 */
 	equals(
-		command: Partial<ApplicationCommand> &
-			Partial<ApplicationCommandData> &
-			Partial<APIApplicationCommand> &
-			Record<string, unknown>,
+		command: ApplicationCommand | ApplicationCommandData | APIApplicationCommand,
 		enforceOptionOrder = false,
 	) {
 		// If given an id, check if the id matches
@@ -543,19 +540,24 @@ export class ApplicationCommand extends Base {
 		if (
 			command.name !== this.name ||
 			('description' in command && command.description !== this.description) ||
-			('version' in command && command.version !== this.version) ||
 			(command.type && command.type !== this.type) ||
 			('nsfw' in command && command.nsfw !== this.nsfw) ||
-			command.options?.length !== this.options?.length ||
+			(command as any).options?.length !== this.options?.length ||
 			defaultMemberPermissions !== (this.defaultMemberPermissions?.bitfield ?? null) ||
-			!Bun.deepEquals(command.nameLocalizations ?? command.name_localizations ?? {}, this.nameLocalizations ?? {}) ||
 			!Bun.deepEquals(
-				command.descriptionLocalizations ?? command.description_localizations ?? {},
+				(command as any).nameLocalizations ?? (command as any).name_localizations ?? {},
+				this.nameLocalizations ?? {},
+			) ||
+			!Bun.deepEquals(
+				(command as any).descriptionLocalizations ?? (command as any).description_localizations ?? {},
 				this.descriptionLocalizations ?? {},
 			) ||
-			!Bun.deepEquals(command.integrationTypes ?? command.integration_types ?? [], this.integrationTypes ?? []) ||
-			!Bun.deepEquals(command.contexts ?? [], this.contexts ?? []) ||
-			('handler' in command && command.handler !== this.handler)
+			!Bun.deepEquals(
+				(command as any).integrationTypes ?? (command as any).integration_types ?? [],
+				this.integrationTypes ?? [],
+			) ||
+			!Bun.deepEquals((command as any).contexts ?? [], this.contexts ?? []) ||
+			('handler' in command && (command as any).handler !== this.handler)
 		) {
 			return false;
 		}

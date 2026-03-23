@@ -43,7 +43,7 @@ import { VoiceStateManager } from '../managers/VoiceStateManager.js';
 import { resolveImage } from '../util/DataResolver.js';
 import { SystemChannelFlagsBitField } from '../util/SystemChannelFlagsBitField.js';
 import { _transformAPIIncidentsData } from '../util/Transformers.js';
-import { discordSort, getSortableGroupTypes, resolvePartialEmoji } from '../util/Util.js';
+import { discordSort, getSortableGroupTypes, type PartialEmoji, resolvePartialEmoji } from '../util/Util.js';
 import { AnonymousGuild } from './AnonymousGuild.js';
 import { GuildAuditLogs } from './GuildAuditLogs.js';
 import { GuildOnboarding } from './GuildOnboarding.js';
@@ -1098,13 +1098,13 @@ export class Guild extends AnonymousGuild {
 				explicit_content_filter: explicitContentFilter,
 				afk_channel_id: afkChannel && this.client.channels.resolveId(afkChannel),
 				afk_timeout: afkTimeout,
-				icon: icon && (await resolveImage(icon)),
-				splash: splash && (await resolveImage(splash)),
-				discovery_splash: discoverySplash && (await resolveImage(discoverySplash)),
-				banner: banner && (await resolveImage(banner)),
+				icon: icon && (await resolveImage(icon as import('../util/DataResolver.js').BufferResolvable)),
+				splash: splash && (await resolveImage(splash as import('../util/DataResolver.js').BufferResolvable)),
+				discovery_splash: discoverySplash && (await resolveImage(discoverySplash as import('../util/DataResolver.js').BufferResolvable)),
+				banner: banner && (await resolveImage(banner as import('../util/DataResolver.js').BufferResolvable)),
 				system_channel_id: systemChannel && this.client.channels.resolveId(systemChannel),
 				system_channel_flags:
-					systemChannelFlags === undefined ? undefined : SystemChannelFlagsBitField.resolve(systemChannelFlags),
+					systemChannelFlags === undefined ? undefined : SystemChannelFlagsBitField.resolve(systemChannelFlags as import('../util/BitField.js').BitFieldResolvable),
 				rules_channel_id: rulesChannel && this.client.channels.resolveId(rulesChannel),
 				public_updates_channel_id: publicUpdatesChannel && this.client.channels.resolveId(publicUpdatesChannel),
 				preferred_locale: preferredLocale,
@@ -1205,9 +1205,9 @@ export class Guild extends AnonymousGuild {
 							role_ids: option.roles?.map((role: unknown) => this.roles.resolveId(role)),
 							title: option.title,
 							description: option.description,
-							emoji_animated: emoji?.animated,
+							emoji_animated: emoji && 'animated' in emoji ? emoji.animated : undefined,
 							emoji_id: emoji?.id,
-							emoji_name: emoji?.name,
+							emoji_name: emoji && 'name' in emoji ? emoji.name : undefined,
 						};
 					}),
 				})),

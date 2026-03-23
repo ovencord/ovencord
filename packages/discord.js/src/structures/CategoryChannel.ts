@@ -40,7 +40,7 @@ export class CategoryChannel extends GuildChannel {
 	 * @type {CategoryChannelChildManager}
 	 * @readonly
 	 */
-	get children() {
+	get children(): CategoryChannelChildManager {
 		return new CategoryChannelChildManager(this);
 	}
 }

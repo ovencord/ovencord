@@ -1,4 +1,4 @@
-import type { Snowflake } from 'discord-api-types/v10';
+import type { APIThreadMember, Snowflake } from 'discord-api-types/v10';
 import { ThreadMemberFlagsBitField } from '../util/ThreadMemberFlagsBitField.js';
 import { Base } from './Base.js';
 import type { GuildMember } from './GuildMember.js';
@@ -15,7 +15,7 @@ export class ThreadMember extends Base {
 	public flags: ThreadMemberFlagsBitField | null;
 	public id: Snowflake;
 	public member: GuildMember | null;
-	constructor(thread: ThreadChannel, data: Record<string, unknown>, extra: Record<string, unknown> = {}) {
+	constructor(thread: ThreadChannel, data: APIThreadMember, extra: { cache?: boolean } = {}) {
 		super(thread.client);
 
 		/**
@@ -49,9 +49,9 @@ export class ThreadMember extends Base {
 		this._patch(data, extra);
 	}
 
-	_patch(data: Record<string, unknown>, extra: Record<string, unknown> = {}) {
-		if ('join_timestamp' in data) this.joinedTimestamp = Date.parse(data.join_timestamp as string);
-		if ('flags' in data) this.flags = new ThreadMemberFlagsBitField(data.flags as number).freeze();
+	_patch(data: Partial<APIThreadMember>, extra: { cache?: boolean } = {}) {
+		if ('join_timestamp' in data) this.joinedTimestamp = Date.parse(data.join_timestamp!);
+		if ('flags' in data) this.flags = new ThreadMemberFlagsBitField(data.flags!).freeze();
 
 		if ('member' in data) {
 			/**
@@ -60,7 +60,6 @@ export class ThreadMember extends Base {
 			 * @type {?GuildMember}
 			 * @private
 			 */
-			// @ts-expect-error
 			this.member = this.thread.guild.members._add(data.member, extra.cache);
 		} else {
 			this.member ??= null;

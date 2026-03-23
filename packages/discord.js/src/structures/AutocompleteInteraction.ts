@@ -1,7 +1,22 @@
-import { InteractionResponseType, Routes } from 'discord-api-types/v10';
+import {
+	type APIApplicationCommandAutocompleteInteraction,
+	type APIApplicationCommandOptionChoice,
+	type ApplicationCommandType,
+	InteractionResponseType,
+	type LocalizationMap,
+	Routes,
+	type Snowflake,
+} from 'discord-api-types/v10';
+import type { Client } from '../client/Client.js';
 import { DiscordjsError, ErrorCodes } from '../errors/index.js';
 import { BaseInteraction } from './BaseInteraction.js';
 import { CommandInteractionOptionResolver } from './CommandInteractionOptionResolver.js';
+
+export interface ApplicationCommandOptionChoiceData {
+	name: string;
+	nameLocalizations?: LocalizationMap;
+	value: string | number;
+}
 
 /**
  * Represents an autocomplete interaction.
@@ -9,13 +24,37 @@ import { CommandInteractionOptionResolver } from './CommandInteractionOptionReso
  * @extends {BaseInteraction}
  */
 export class AutocompleteInteraction extends BaseInteraction {
-	public commandId: any;
-	public commandName: any;
-	public commandType: any;
-	public commandGuildId: any;
-	public responded: any;
-	public options: any;
-	constructor(client: any, data: any) {
+	/**
+	 * The invoked application command's id
+	 */
+	public commandId: Snowflake;
+
+	/**
+	 * The invoked application command's name
+	 */
+	public commandName: string;
+
+	/**
+	 * The invoked application command's type
+	 */
+	public commandType: ApplicationCommandType;
+
+	/**
+	 * The id of the guild the invoked application command is registered to
+	 */
+	public commandGuildId: Snowflake | null;
+
+	/**
+	 * Whether this interaction has already received a response
+	 */
+	public responded: boolean;
+
+	/**
+	 * The options passed to the command
+	 */
+	public options: CommandInteractionOptionResolver;
+
+	constructor(client: Client, data: APIApplicationCommandAutocompleteInteraction) {
 		super(client, data);
 
 		/**
@@ -65,7 +104,12 @@ export class AutocompleteInteraction extends BaseInteraction {
 		 *
 		 * @type {CommandInteractionOptionResolver}
 		 */
-		this.options = new CommandInteractionOptionResolver(this.client, data.data.options ?? [], undefined as any);
+		this.options = new CommandInteractionOptionResolver(
+			this.client,
+			data.data.options ?? [],
+			// This is passed as any because the resolver expects a structure that we don't have here.
+			undefined as unknown as any,
+		);
 	}
 
 	/**
@@ -94,14 +138,14 @@ export class AutocompleteInteraction extends BaseInteraction {
 	 *  .then(() => console.log('Successfully responded to the autocomplete interaction'))
 	 *  .catch(console.error);
 	 */
-	async respond(options: any) {
+	async respond(options: ApplicationCommandOptionChoiceData[]) {
 		if (this.responded) throw new DiscordjsError(ErrorCodes.InteractionAlreadyReplied);
 
 		await this.client.rest.post(Routes.interactionCallback(this.id, this.token), {
 			body: {
 				type: InteractionResponseType.ApplicationCommandAutocompleteResult,
 				data: {
-					choices: options.map(({ nameLocalizations, ...option }: any) => ({
+					choices: options.map(({ nameLocalizations, ...option }) => ({
 						...this.client.options.jsonTransformer(option),
 						name_localizations: nameLocalizations,
 					})),

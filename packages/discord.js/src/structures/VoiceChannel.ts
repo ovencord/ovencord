@@ -125,3 +125,8 @@ export class VoiceChannel extends BaseGuildVoiceChannel {
  * @param {string} [reason] Reason for changing the camera video quality mode.
  * @returns {Promise<VoiceChannel>}
  */
+setVideoQualityMode(videoQualityMode: any, reason?: string)
+: Promise<VoiceChannel>
+{
+	return super.setVideoQualityMode(videoQualityMode, reason) as Promise<VoiceChannel>;
+}

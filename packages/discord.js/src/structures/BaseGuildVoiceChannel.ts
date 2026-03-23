@@ -1,8 +1,18 @@
 import { Collection } from '@ovencord/collection';
-import { PermissionFlagsBits } from 'discord-api-types/v10';
+import {
+	type APIChannel,
+	type APIGuildChannel,
+	type GuildChannelType,
+	PermissionFlagsBits,
+	type Snowflake,
+	type VideoQualityMode,
+} from 'discord-api-types/v10';
+import type { Client } from '../client/Client.js';
 import { GuildMessageManager } from '../managers/GuildMessageManager.js';
+import type { Guild } from './Guild.js';
 import { GuildChannel } from './GuildChannel.js';
 import { TextBasedChannel } from './interfaces/TextBasedChannel.js';
+import type { User } from './User.js';
 
 /**
  * Represents a voice-based guild channel on Discord.
@@ -11,16 +21,16 @@ import { TextBasedChannel } from './interfaces/TextBasedChannel.js';
  * @implements {TextBasedChannel}
  */
 export class BaseGuildVoiceChannel extends GuildChannel {
-	public messages: any;
-	public nsfw: any;
-	public rtcRegion: any;
-	public bitrate: any;
-	public userLimit: any;
-	public videoQualityMode: any;
-	public lastMessageId: any;
-	public rateLimitPerUser: any;
-	constructor(guild: any, data: any, client: any) {
-		super(guild, data, client, false);
+	public messages: GuildMessageManager;
+	public nsfw: boolean;
+	public rtcRegion: string | null;
+	public bitrate: number;
+	public userLimit: number;
+	public videoQualityMode: VideoQualityMode | null;
+	public lastMessageId: Snowflake | null;
+	public rateLimitPerUser: number;
+	constructor(guild: Guild, data: APIGuildChannel<GuildChannelType>, client: Client) {
+		super(guild, data as any, client, false);
 		/**
 		 * A manager of the messages sent to this channel
 		 *
@@ -38,8 +48,8 @@ export class BaseGuildVoiceChannel extends GuildChannel {
 		this._patch(data);
 	}
 
-	_patch(data: any) {
-		super._patch(data);
+	_patch(data: Partial<APIGuildChannel<GuildChannelType>>) {
+		super._patch(data as any);
 
 		if ('rtc_region' in data) {
 			/**
@@ -47,7 +57,7 @@ export class BaseGuildVoiceChannel extends GuildChannel {
 			 *
 			 * @type {?string}
 			 */
-			this.rtcRegion = data.rtc_region;
+			this.rtcRegion = (data as any).rtc_region;
 		}
 
 		if ('bitrate' in data) {
@@ -56,7 +66,7 @@ export class BaseGuildVoiceChannel extends GuildChannel {
 			 *
 			 * @type {number}
 			 */
-			this.bitrate = data.bitrate;
+			this.bitrate = (data as any).bitrate;
 		}
 
 		if ('user_limit' in data) {
@@ -65,7 +75,7 @@ export class BaseGuildVoiceChannel extends GuildChannel {
 			 *
 			 * @type {number}
 			 */
-			this.userLimit = data.user_limit;
+			this.userLimit = (data as any).user_limit;
 		}
 
 		if ('video_quality_mode' in data) {
@@ -74,7 +84,7 @@ export class BaseGuildVoiceChannel extends GuildChannel {
 			 *
 			 * @type {?VideoQualityMode}
 			 */
-			this.videoQualityMode = data.video_quality_mode;
+			this.videoQualityMode = (data as any).video_quality_mode;
 		} else {
 			this.videoQualityMode ??= null;
 		}
@@ -85,11 +95,11 @@ export class BaseGuildVoiceChannel extends GuildChannel {
 			 *
 			 * @type {?Snowflake}
 			 */
-			this.lastMessageId = data.last_message_id;
+			this.lastMessageId = (data as any).last_message_id;
 		}
 
-		if ('messages' in data) {
-			for (const message of data.messages) this.messages._add(message);
+		if ('messages' in data && Array.isArray((data as any).messages)) {
+			for (const message of (data as any).messages) this.messages._add(message as any);
 		}
 
 		if ('rate_limit_per_user' in data) {
@@ -98,11 +108,11 @@ export class BaseGuildVoiceChannel extends GuildChannel {
 			 *
 			 * @type {number}
 			 */
-			this.rateLimitPerUser = data.rate_limit_per_user;
+			this.rateLimitPerUser = (data as any).rate_limit_per_user;
 		}
 
 		if ('nsfw' in data) {
-			this.nsfw = data.nsfw;
+			this.nsfw = Boolean((data as any).nsfw);
 		}
 	}
 
@@ -164,7 +174,7 @@ export class BaseGuildVoiceChannel extends GuildChannel {
 	 *   .then(invite => console.log(`Created an invite with a code of ${invite.code}`))
 	 *   .catch(console.error);
 	 */
-	async createInvite(options: any) {
+	async createInvite(options?: any) {
 		return this.guild.invites.create(this.id, options);
 	}
 
@@ -190,7 +200,7 @@ export class BaseGuildVoiceChannel extends GuildChannel {
 	 *   .then(channel => console.log(`Set bitrate to ${channel.bitrate}bps for ${channel.name}`))
 	 *   .catch(console.error);
 	 */
-	async setBitrate(bitrate: any, reason: any) {
+	async setBitrate(bitrate: number, reason?: string) {
 		return this.edit({ bitrate, reason });
 	}
 
@@ -207,7 +217,7 @@ export class BaseGuildVoiceChannel extends GuildChannel {
 	 * // Remove a fixed region for this channel - let Discord decide automatically
 	 * channel.setRTCRegion(null, 'We want to let Discord decide.');
 	 */
-	async setRTCRegion(rtcRegion: any, reason: any) {
+	async setRTCRegion(rtcRegion: string | null, reason?: string) {
 		return this.edit({ rtcRegion, reason });
 	}
 
@@ -223,7 +233,7 @@ export class BaseGuildVoiceChannel extends GuildChannel {
 	 *   .then(channel => console.log(`Set user limit to ${channel.userLimit} for ${channel.name}`))
 	 *   .catch(console.error);
 	 */
-	async setUserLimit(userLimit: any, reason: any) {
+	async setUserLimit(userLimit: number, reason?: string) {
 		return this.edit({ userLimit, reason });
 	}
 
@@ -234,14 +244,14 @@ export class BaseGuildVoiceChannel extends GuildChannel {
 	 * @param {string} [reason] Reason for changing the camera video quality mode.
 	 * @returns {Promise<BaseGuildVoiceChannel>}
 	 */
-	async setVideoQualityMode(videoQualityMode: any, reason: any) {
+	async setVideoQualityMode(videoQualityMode: VideoQualityMode | null, reason?: string) {
 		return this.edit({ videoQualityMode, reason });
 	}
 
 	// These are here only for documentation purposes - they are implemented by TextBasedChannel
 
 	get lastMessage() {
-		return undefined as any;
+		return this.lastMessageId ? this.messages.cache.get(this.lastMessageId) : null;
 	}
 
 	send() {}

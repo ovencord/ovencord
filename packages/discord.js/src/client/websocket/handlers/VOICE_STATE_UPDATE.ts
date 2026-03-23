@@ -9,7 +9,7 @@ export default (client: Client, { d: data }: GatewayVoiceStateUpdateDispatch) =>
 
 	// Update the state
 	const oldState =
-		guild.voiceStates.cache.get(data.user_id)?._clone() ?? new VoiceState(guild, { user_id: data.user_id });
+		guild.voiceStates.cache.get(data.user_id)?._clone() ?? new VoiceState(guild, { user_id: data.user_id } as any);
 
 	const newState = guild.voiceStates._add(data);
 

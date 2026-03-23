@@ -145,7 +145,7 @@ export class ClientApplication extends Application {
 			const installParams = data.install_params as Record<string, unknown>;
 			this.installParams = {
 				scopes: installParams.scopes as OAuth2Scopes[],
-				permissions: new PermissionsBitField(installParams.permissions as Readonly<PermissionsBitField>).freeze(),
+				permissions: new PermissionsBitField((installParams as any).permissions).freeze(),
 			};
 		} else {
 			this.installParams ??= null;
@@ -192,7 +192,7 @@ export class ClientApplication extends Application {
 						const oauth2 = config.oauth2_install_params as Record<string, unknown>;
 						oauth2InstallParams = {
 							scopes: oauth2.scopes as OAuth2Scopes[],
-							permissions: new PermissionsBitField(oauth2.permissions as Readonly<PermissionsBitField>).freeze(),
+							permissions: new PermissionsBitField((oauth2 as any).permissions).freeze(),
 						};
 					}
 
@@ -288,7 +288,7 @@ export class ClientApplication extends Application {
 			 *
 			 * @type {?User}
 			 */
-			this.bot = this.client.users._add(data.bot as Record<string, unknown>);
+			this.bot = this.client.users._add((data as any).bot);
 		} else {
 			this.bot ??= null;
 		}

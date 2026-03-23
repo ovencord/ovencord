@@ -1,4 +1,8 @@
+import type { APIEmoji, Snowflake } from 'discord-api-types/v10';
+import type { Client } from '../client/Client.js';
 import { Emoji } from './Emoji.js';
+import type { Guild } from './Guild.js';
+import type { GuildPreview } from './GuildPreview.js';
 
 /**
  * Parent class for {@link GuildEmoji} and {@link GuildPreviewEmoji}.
@@ -7,12 +11,13 @@ import { Emoji } from './Emoji.js';
  * @abstract
  */
 export class BaseGuildEmoji extends Emoji {
-	public guild: any;
-	public requiresColons: any;
-	public managed: any;
-	public available: any;
-	public declare name: any;
-	constructor(client: any, data: any, guild: any) {
+	public guild: Guild | GuildPreview;
+	public requiresColons: boolean | null;
+	public managed: boolean | null;
+	public available: boolean | null;
+	public declare name: string | null;
+
+	constructor(client: Client, data: APIEmoji, guild: Guild | GuildPreview) {
 		super(client, data);
 
 		/**
@@ -29,33 +34,18 @@ export class BaseGuildEmoji extends Emoji {
 		this._patch(data);
 	}
 
-	_patch(data: any) {
+	_patch(data: APIEmoji) {
 		if ('name' in data) this.name = data.name;
 
 		if ('require_colons' in data) {
-			/**
-			 * Whether or not this emoji requires colons surrounding it
-			 *
-			 * @type {?boolean}
-			 */
 			this.requiresColons = data.require_colons;
 		}
 
 		if ('managed' in data) {
-			/**
-			 * Whether this emoji is managed by an external service
-			 *
-			 * @type {?boolean}
-			 */
 			this.managed = data.managed;
 		}
 
 		if ('available' in data) {
-			/**
-			 * Whether this emoji is available
-			 *
-			 * @type {?boolean}
-			 */
 			this.available = data.available;
 		}
 	}

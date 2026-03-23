@@ -1,7 +1,10 @@
 import { DiscordSnowflake } from '@ovencord/util';
+import type { APISoundboardSound, Snowflake } from 'discord-api-types/v10';
+import type { Client } from '../client/Client.js';
 import { DiscordjsError, ErrorCodes } from '../errors/index.js';
 import { Base } from './Base.js';
 import { Emoji } from './Emoji.js';
+import type { User } from './User.js';
 
 /**
  * Represents a soundboard sound.
@@ -9,46 +12,46 @@ import { Emoji } from './Emoji.js';
  * @extends {Base}
  */
 export class SoundboardSound extends Base {
-	public soundId: string;
+	public soundId: Snowflake;
 	public available: boolean | null = null;
 	public name: string | null = null;
 	public volume: number | null = null;
-	public _emoji: any = null;
-	public guildId: string | null = null;
-	public user: any = null;
+	public _emoji: { id: Snowflake | null; name: string | null } | null = null;
+	public guildId: Snowflake | null = null;
+	public user: User | null = null;
 
-	constructor(client: any, data: any) {
+	constructor(client: Client, data: APISoundboardSound) {
 		super(client);
 		this.soundId = data.sound_id;
 		this._patch(data);
 	}
 
-	override _patch(data: any) {
+	override _patch(data: Partial<APISoundboardSound>) {
 		if ('available' in data) {
-			this.available = data.available;
+			this.available = data.available ?? null;
 		}
 
 		if ('name' in data) {
-			this.name = data.name;
+			this.name = data.name ?? null;
 		}
 
 		if ('volume' in data) {
-			this.volume = data.volume;
+			this.volume = data.volume ?? null;
 		}
 
-		if ('emoji_id' in data) {
+		if ('emoji_id' in data || 'emoji_name' in data) {
 			this._emoji = {
-				id: data.emoji_id,
-				name: data.emoji_name,
+				id: data.emoji_id ?? null,
+				name: data.emoji_name ?? null,
 			};
 		}
 
 		if ('guild_id' in data) {
-			this.guildId = data.guild_id;
+			this.guildId = data.guild_id ?? null;
 		}
 
-		if ('user' in data) {
-			this.user = (this.client as any).users._add(data.user);
+		if (data.user) {
+			this.user = this.client.users._add(data.user);
 		}
 	}
 

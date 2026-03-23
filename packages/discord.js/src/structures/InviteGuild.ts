@@ -18,8 +18,8 @@ export class InviteGuild extends AnonymousGuild {
 		 *
 		 * @type {?WelcomeScreen}
 		 */
-		this.welcomeScreen = (data as unknown as { welcome_screen?: Record<string, unknown> }).welcome_screen
-			? new WelcomeScreen(this as any, (data as unknown as { welcome_screen: Record<string, unknown> }).welcome_screen)
+		this.welcomeScreen = (data as any).welcome_screen
+			? new WelcomeScreen(this as any, (data as any).welcome_screen as any)
 			: null;
 	}
 }

@@ -1,3 +1,4 @@
+import type { ImageURLOptions } from '@ovencord/rest';
 import {
 	type APIGuildMember,
 	type APIInteractionDataResolvedGuildMember,
@@ -60,7 +61,7 @@ export class GuildMember extends Base {
 	public avatarDecorationData: AvatarDecorationData | null;
 	constructor(
 		client: Client,
-		data: APIGuildMember | (APIInteractionDataResolvedGuildMember & { user?: APIUser }) | any,
+		data: APIGuildMember | (APIInteractionDataResolvedGuildMember & { user?: APIUser }),
 		guild: Guild,
 	) {
 		super(client);
@@ -239,7 +240,7 @@ export class GuildMember extends Base {
 	 * @readonly
 	 */
 	get voice() {
-		return this.guild.voiceStates.cache.get(this.id) ?? new VoiceState(this.guild, { user_id: this.id });
+		return this.guild.voiceStates.cache.get(this.id) ?? new VoiceState(this.guild, { user_id: this.id } as any);
 	}
 
 	/**
@@ -248,7 +249,7 @@ export class GuildMember extends Base {
 	 * @param {ImageURLOptions} [options={}] Options for the image URL
 	 * @returns {?string}
 	 */
-	avatarURL(options = {}) {
+	avatarURL(options: ImageURLOptions = {}) {
 		return this.avatar && this.client.rest.cdn.guildMemberAvatar(this.guild.id, this.id, this.avatar, options);
 	}
 
@@ -267,7 +268,7 @@ export class GuildMember extends Base {
 	 * @param {ImageURLOptions} [options={}] Options for the banner URL
 	 * @returns {?string}
 	 */
-	bannerURL(options = {}) {
+	bannerURL(options: ImageURLOptions = {}) {
 		return this.banner && this.client.rest.cdn.guildMemberBanner(this.guild.id, this.id, this.banner, options);
 	}
 
@@ -278,8 +279,8 @@ export class GuildMember extends Base {
 	 * @param {ImageURLOptions} [options={}] Options for the image URL
 	 * @returns {string}
 	 */
-	displayAvatarURL(options?: any) {
-		return this.avatarURL(options) ?? this.user.displayAvatarURL(options);
+	displayAvatarURL(options: ImageURLOptions = {}) {
+		return this.avatarURL(options) ?? this.user.displayAvatarURL(options as any);
 	}
 
 	/**
@@ -289,8 +290,8 @@ export class GuildMember extends Base {
 	 * @param {ImageURLOptions} [options={}] Options for the image URL
 	 * @returns {?string}
 	 */
-	displayBannerURL(options?: any) {
-		return this.bannerURL(options) ?? this.user.bannerURL(options);
+	displayBannerURL(options: ImageURLOptions = {}) {
+		return this.bannerURL(options) ?? this.user.bannerURL(options as any);
 	}
 
 	/**
@@ -622,10 +623,10 @@ export class GuildMember extends Base {
 	 *   .then(message => console.log(`Sent message: ${message.content} to ${guildMember.displayName}`))
 	 *   .catch(console.error);
 	 */
-	async send(options: string | MessagePayload | Record<string, any>) {
+	async send(options: string | MessagePayload | Record<string, unknown>): Promise<Message> {
 		const dmChannel = await this.createDM();
 
-		return this.client.channels.createMessage(dmChannel, options);
+		return this.client.channels.createMessage(dmChannel, options as any);
 	}
 
 	/**
@@ -637,25 +638,25 @@ export class GuildMember extends Base {
 	 * @returns {boolean}
 	 */
 	equals(member: GuildMember) {
-		const isMember = member && member instanceof this.constructor;
-		const m = member;
+		const isMember = member && member instanceof GuildMember;
+		if (!isMember) return false;
+
 		return (
-			isMember &&
-			this.id === m.id &&
-			this.partial === m.partial &&
-			this.guild.id === m.guild.id &&
-			this.joinedTimestamp === m.joinedTimestamp &&
-			this.nickname === m.nickname &&
-			this.avatar === m.avatar &&
-			this.banner === m.banner &&
-			this.pending === m.pending &&
-			this.communicationDisabledUntilTimestamp === m.communicationDisabledUntilTimestamp &&
-			this.flags.bitfield === m.flags.bitfield &&
-			(this._roles === m._roles ||
-				(this._roles.length === m._roles.length &&
-					this._roles.every((role: any, index: any) => role === m._roles[index]))) &&
-			this.avatarDecorationData?.asset === m.avatarDecorationData?.asset &&
-			this.avatarDecorationData?.skuId === m.avatarDecorationData?.skuId
+			this.id === member.id &&
+			this.partial === member.partial &&
+			this.guild.id === member.guild.id &&
+			this.joinedTimestamp === member.joinedTimestamp &&
+			this.nickname === member.nickname &&
+			this.avatar === member.avatar &&
+			this.banner === member.banner &&
+			this.pending === member.pending &&
+			this.communicationDisabledUntilTimestamp === member.communicationDisabledUntilTimestamp &&
+			this.flags.bitfield === member.flags.bitfield &&
+			(this._roles === member._roles ||
+				(this._roles.length === member._roles.length &&
+					this._roles.every((role, index) => role === member._roles[index]))) &&
+			this.avatarDecorationData?.asset === member.avatarDecorationData?.asset &&
+			this.avatarDecorationData?.skuId === member.avatarDecorationData?.skuId
 		);
 	}
 
@@ -672,12 +673,12 @@ export class GuildMember extends Base {
 	}
 
 	toJSON() {
-		const json: any = super.toJSON({
+		const json = super.toJSON({
 			guild: 'guildId',
 			user: 'userId',
 			displayName: true,
 			roles: true,
-		});
+		}) as any;
 		json.avatarURL = this.avatarURL({});
 		json.bannerURL = this.bannerURL({});
 		json.displayAvatarURL = this.displayAvatarURL({});

@@ -1,7 +1,11 @@
+import type { APIEmoji, Snowflake } from 'discord-api-types/v10';
 import { PermissionFlagsBits } from 'discord-api-types/v10';
+import type { Client } from '../client/Client.js';
 import { DiscordjsError, ErrorCodes } from '../errors/index.js';
 import { GuildEmojiRoleManager } from '../managers/GuildEmojiRoleManager.js';
 import { BaseGuildEmoji } from './BaseGuildEmoji.js';
+import type { Guild } from './Guild.js';
+import type { User } from './User.js';
 
 /**
  * Represents a custom emoji.
@@ -9,9 +13,9 @@ import { BaseGuildEmoji } from './BaseGuildEmoji.js';
  * @extends {BaseGuildEmoji}
  */
 export class GuildEmoji extends BaseGuildEmoji {
-	public author: any;
-	public _roles: any;
-	constructor(client: any, data: any, guild: any) {
+	public author: User | null;
+	public _roles: Snowflake[];
+	constructor(client: Client, data: APIEmoji, guild: Guild) {
 		super(client, data, guild);
 
 		/**
@@ -46,7 +50,7 @@ export class GuildEmoji extends BaseGuildEmoji {
 		return clone;
 	}
 
-	_patch(data: any) {
+	_patch(data: APIEmoji) {
 		super._patch(data);
 
 		if (data.user) this.author = this.client.users._add(data.user);
@@ -60,6 +64,7 @@ export class GuildEmoji extends BaseGuildEmoji {
 	 * @readonly
 	 */
 	get deletable() {
+		if (!('members' in this.guild)) return false;
 		if (!this.guild.members.me) throw new DiscordjsError(ErrorCodes.GuildUncachedMe);
 		return !this.managed && this.guild.members.me.permissions.has(PermissionFlagsBits.ManageGuildExpressions);
 	}
@@ -103,8 +108,8 @@ export class GuildEmoji extends BaseGuildEmoji {
 	 *   .then(emoji => console.log(`Edited emoji ${emoji}`))
 	 *   .catch(console.error);
 	 */
-	async edit(options: any) {
-		return this.guild.emojis.edit(this.id, options);
+	async edit(options: { name?: string; roles?: Snowflake[] }) {
+		return this.guild.emojis.edit(this.id!, options);
 	}
 
 	/**
@@ -114,8 +119,8 @@ export class GuildEmoji extends BaseGuildEmoji {
 	 * @param {string} [reason] Reason for changing the emoji's name
 	 * @returns {Promise<GuildEmoji>}
 	 */
-	async setName(name: any, reason: any) {
-		return this.edit({ name, reason });
+	async setName(name: string, reason?: string) {
+		return this.edit({ name, reason } as any);
 	}
 
 	/**
@@ -124,8 +129,8 @@ export class GuildEmoji extends BaseGuildEmoji {
 	 * @param {string} [reason] Reason for deleting the emoji
 	 * @returns {Promise<GuildEmoji>}
 	 */
-	async delete(reason: any) {
-		await this.guild.emojis.delete(this.id, reason);
+	async delete(reason?: string) {
+		await this.guild.emojis.delete(this.id!, reason);
 		return this;
 	}
 
@@ -135,7 +140,7 @@ export class GuildEmoji extends BaseGuildEmoji {
 	 * @param {GuildEmoji|APIEmoji} other The emoji to compare it to
 	 * @returns {boolean}
 	 */
-	equals(other: any) {
+	equals(other: GuildEmoji | APIEmoji) {
 		if (other instanceof GuildEmoji) {
 			return (
 				other.id === this.id &&

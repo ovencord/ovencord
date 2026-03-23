@@ -1,4 +1,4 @@
-import type { TeamMemberMembershipState, TeamMemberRole } from 'discord-api-types/v10';
+import type { APITeamMember, TeamMemberMembershipState, TeamMemberRole } from 'discord-api-types/v10';
 import { Base } from './Base.js';
 import type { Team } from './Team.js';
 import type { User } from './User.js';
@@ -13,7 +13,7 @@ export class TeamMember extends Base {
 	public membershipState: TeamMemberMembershipState;
 	public user: User;
 	public role: TeamMemberRole;
-	constructor(team: Team, data: Record<string, unknown>) {
+	constructor(team: Team, data: APITeamMember) {
 		super(team.client);
 
 		/**
@@ -26,14 +26,14 @@ export class TeamMember extends Base {
 		this._patch(data);
 	}
 
-	_patch(data: Record<string, unknown>) {
+	_patch(data: Partial<APITeamMember>) {
 		if ('membership_state' in data) {
 			/**
 			 * The permissions this Team Member has with regard to the team
 			 *
 			 * @type {TeamMemberMembershipState}
 			 */
-			this.membershipState = data.membership_state as TeamMemberMembershipState;
+			this.membershipState = data.membership_state!;
 		}
 
 		if ('user' in data) {
@@ -42,7 +42,7 @@ export class TeamMember extends Base {
 			 *
 			 * @type {User}
 			 */
-			this.user = this.client.users._add(data.user);
+			this.user = this.client.users._add(data.user!);
 		}
 
 		if ('role' in data) {
@@ -51,7 +51,7 @@ export class TeamMember extends Base {
 			 *
 			 * @type {TeamMemberRole}
 			 */
-			this.role = data.role as TeamMemberRole;
+			this.role = data.role!;
 		}
 	}
 

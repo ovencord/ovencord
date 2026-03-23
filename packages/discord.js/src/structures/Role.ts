@@ -260,8 +260,7 @@ export class Role extends Base {
 	get members() {
 		return this.id === this.guild.id
 			? this.guild.members.cache.clone()
-			: // @ts-expect-error
-				this.guild.members.cache.filter((member) => member._roles.includes(this.id));
+			: this.guild.members.cache.filter((member: any) => member._roles.includes(this.id));
 	}
 
 	/**
@@ -576,7 +575,7 @@ export class Role extends Base {
 		return roleMention(this.id);
 	}
 
-	toJSON() {
+	toJSON(): Record<string, unknown> {
 		return {
 			...super.toJSON({ createdTimestamp: true }),
 			permissions: this.permissions.toJSON(),

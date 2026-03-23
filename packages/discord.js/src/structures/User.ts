@@ -49,7 +49,7 @@ export class User extends Base {
 	public primaryGuild: UserPrimaryGuild | null;
 	public avatar: string | null;
 	public banner: string | null;
-	constructor(client: Client, data: Record<string, unknown>) {
+	constructor(client: Client, data: APIUser) {
 		super(client);
 
 		/**
@@ -57,7 +57,7 @@ export class User extends Base {
 		 *
 		 * @type {Snowflake}
 		 */
-		this.id = data.id as Snowflake;
+		this.id = data.id;
 
 		this.bot = null;
 
@@ -68,16 +68,16 @@ export class User extends Base {
 		this._patch(data);
 	}
 
-	_patch(data: Record<string, unknown>) {
+	_patch(data: Partial<APIUser>) {
 		if ('username' in data) {
 			/**
 			 * The username of the user
 			 *
 			 * @type {?string}
 			 */
-			this.username = data.username as string;
+			this.username = data.username!;
 		} else {
-			this.username ??= null as unknown as string;
+			this.username ??= null!;
 		}
 
 		if ('global_name' in data) {
@@ -86,7 +86,7 @@ export class User extends Base {
 			 *
 			 * @type {?string}
 			 */
-			this.globalName = data.global_name as string;
+			this.globalName = data.global_name ?? null;
 		} else {
 			this.globalName ??= null;
 		}
@@ -109,9 +109,9 @@ export class User extends Base {
 			 *
 			 * @type {?string}
 			 */
-			this.discriminator = data.discriminator as string;
+			this.discriminator = data.discriminator!;
 		} else {
-			this.discriminator ??= null as unknown as string;
+			this.discriminator ??= null!;
 		}
 
 		if ('avatar' in data) {
@@ -120,7 +120,7 @@ export class User extends Base {
 			 *
 			 * @type {?string}
 			 */
-			this.avatar = data.avatar as string;
+			this.avatar = data.avatar ?? null;
 		} else {
 			this.avatar ??= null;
 		}
@@ -132,7 +132,7 @@ export class User extends Base {
 			 *
 			 * @type {?string}
 			 */
-			this.banner = data.banner as string;
+			this.banner = data.banner ?? null;
 		} else if (this.banner !== null) {
 			this.banner ??= undefined;
 		}
@@ -144,7 +144,7 @@ export class User extends Base {
 			 *
 			 * @type {?number}
 			 */
-			this.accentColor = data.accent_color as number;
+			this.accentColor = data.accent_color ?? null;
 		} else if (this.accentColor !== null) {
 			this.accentColor ??= undefined;
 		}
@@ -166,7 +166,7 @@ export class User extends Base {
 			 *
 			 * @type {?UserFlagsBitField}
 			 */
-			this.flags = new UserFlagsBitField(data.public_flags as number);
+			this.flags = new UserFlagsBitField(data.public_flags!);
 		}
 
 		/**
@@ -176,7 +176,7 @@ export class User extends Base {
 		 */
 
 		if ('avatar_decoration_data' in data) {
-			const decoration = data.avatar_decoration_data as Record<string, unknown> | null;
+			const decoration = data.avatar_decoration_data;
 			if (decoration) {
 				/**
 				 * The user avatar decoration's data
@@ -184,8 +184,8 @@ export class User extends Base {
 				 * @type {?AvatarDecorationData}
 				 */
 				this.avatarDecorationData = {
-					asset: decoration.asset as string,
-					skuId: decoration.sku_id as Snowflake,
+					asset: decoration.asset,
+					skuId: decoration.sku_id,
 				};
 			} else {
 				this.avatarDecorationData = null;
@@ -213,7 +213,7 @@ export class User extends Base {
 			 *
 			 * @type {?Collectibles}
 			 */
-			this.collectibles = _transformCollectibles(data.collectibles as Record<string, unknown>) as Collectibles;
+			this.collectibles = _transformCollectibles(data.collectibles) as Collectibles;
 		} else {
 			this.collectibles = null;
 		}
@@ -227,7 +227,7 @@ export class User extends Base {
 		 */
 
 		if ('primary_guild' in data) {
-			const primary = data.primary_guild as Record<string, unknown> | null;
+			const primary = data.primary_guild;
 			if (primary) {
 				/**
 				 * The primary guild of the user
@@ -235,10 +235,10 @@ export class User extends Base {
 				 * @type {?UserPrimaryGuild}
 				 */
 				this.primaryGuild = {
-					identityGuildId: primary.identity_guild_id as Snowflake,
-					identityEnabled: primary.identity_enabled as boolean,
-					tag: primary.tag as string,
-					badge: primary.badge as string,
+					identityGuildId: primary.identity_guild_id,
+					identityEnabled: primary.identity_enabled,
+					tag: primary.tag,
+					badge: primary.badge,
 				};
 			} else {
 				this.primaryGuild = null;
@@ -319,7 +319,7 @@ export class User extends Base {
 	 * @param {ImageURLOptions} [options={}] Options for the image URL
 	 * @returns {string}
 	 */
-	displayAvatarURL(options: Record<string, unknown>) {
+	displayAvatarURL(options = {}) {
 		return this.avatarURL(options) ?? this.defaultAvatarURL;
 	}
 
@@ -353,7 +353,7 @@ export class User extends Base {
 	 */
 	guildTagBadgeURL(options = {}) {
 		return this.primaryGuild?.badge
-			? this.client.rest.cdn.guildTagBadge(this.primaryGuild.identityGuildId, this.primaryGuild.badge, options)
+			? this.client.rest.cdn.guildTagBadge(this.primaryGuild.identityGuildId!, this.primaryGuild.badge, options)
 			: null;
 	}
 
@@ -423,7 +423,7 @@ export class User extends Base {
 	 *   .then(message => console.log(`Sent message: ${message.content} to ${user.tag}`))
 	 *   .catch(console.error);
 	 */
-	async send(options: Record<string, unknown> | string) {
+	async send(options: any) {
 		const dmChannel = await this.createDM();
 
 		return this.client.channels.createMessage(dmChannel, options);
@@ -468,8 +468,8 @@ export class User extends Base {
 	 * @returns {boolean}
 	 * @private
 	 */
-	_equals(user: APIUser | Record<string, unknown>) {
-		const u = user as any;
+	_equals(user: APIUser) {
+		const u = user;
 		return (
 			u &&
 			this.id === u.id &&
@@ -485,16 +485,16 @@ export class User extends Base {
 					this.avatarDecorationData?.skuId === u.avatar_decoration_data?.sku_id
 				: true) &&
 			('collectibles' in u
-				? this.collectibles?.nameplate?.skuId === u.collectibles?.nameplate?.sku_id &&
-					this.collectibles?.nameplate?.asset === u.collectibles?.nameplate?.asset &&
-					this.collectibles?.nameplate?.label === u.collectibles?.nameplate?.label &&
-					this.collectibles?.nameplate?.palette === u.collectibles?.nameplate?.palette
+				? this.collectibles?.nameplate?.skuId === (u.collectibles as any)?.nameplate?.sku_id &&
+					this.collectibles?.nameplate?.asset === (u.collectibles as any)?.nameplate?.asset &&
+					this.collectibles?.nameplate?.label === (u.collectibles as any)?.nameplate?.label &&
+					this.collectibles?.nameplate?.palette === (u.collectibles as any)?.nameplate?.palette
 				: true) &&
 			('primary_guild' in u
-				? this.primaryGuild?.identityGuildId === u.primary_guild?.identity_guild_id &&
-					this.primaryGuild?.identityEnabled === u.primary_guild?.identity_enabled &&
-					this.primaryGuild?.tag === u.primary_guild?.tag &&
-					this.primaryGuild?.badge === u.primary_guild?.badge
+				? this.primaryGuild?.identityGuildId === (u.primary_guild as any)?.identity_guild_id &&
+					this.primaryGuild?.identityEnabled === (u.primary_guild as any)?.identity_enabled &&
+					this.primaryGuild?.tag === (u.primary_guild as any)?.tag &&
+					this.primaryGuild?.badge === (u.primary_guild as any)?.badge
 				: true)
 		);
 	}
@@ -513,25 +513,18 @@ export class User extends Base {
 	 * When concatenated with a string, this automatically returns the user's mention instead of the User object.
 	 *
 	 * @returns {string}
-	 * @example
-	 * // Logs: Hello from <@123456789012345678>!
-	 * console.log(`Hello from ${user}!`);
 	 */
 	toString() {
 		return userMention(this.id);
 	}
 
-	// @ts-expect-error
-	toJSON(...props) {
-		const json = super.toJSON(
-			{
-				createdTimestamp: true,
-				defaultAvatarURL: true,
-				hexAccentColor: true,
-				tag: true,
-			},
-			...props,
-		);
+	toJSON() {
+		const json = super.toJSON({
+			createdTimestamp: true,
+			defaultAvatarURL: true,
+			hexAccentColor: true,
+			tag: true,
+		});
 		json.avatarURL = this.avatarURL();
 		json.displayAvatarURL = this.displayAvatarURL({});
 		json.bannerURL = this.banner ? this.bannerURL() : this.banner;

@@ -196,7 +196,10 @@ export class AutoModerationRule extends Base {
 			 * @type {Collection<Snowflake, Role>}
 			 */
 			this.exemptRoles = new Collection(
-				data.exempt_roles.map((exemptRole) => [exemptRole, this.guild.roles.cache.get(exemptRole) as Role]),
+				(data.exempt_roles as string[]).map((exemptRole) => [
+					exemptRole,
+					this.guild.roles.cache.get(exemptRole) as Role,
+				]),
 			);
 		}
 
@@ -207,7 +210,7 @@ export class AutoModerationRule extends Base {
 			 * @type {Collection<Snowflake, GuildChannel|ThreadChannel>}
 			 */
 			this.exemptChannels = new Collection(
-				data.exempt_channels.map((exemptChannel) => [
+				(data.exempt_channels as string[]).map((exemptChannel) => [
 					exemptChannel,
 					this.guild.channels.cache.get(exemptChannel) as GuildChannel | ThreadChannel,
 				]),

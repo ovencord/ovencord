@@ -64,4 +64,10 @@ export class InteractionWebhook {
 	}
 }
 
-Webhook.applyToClass(InteractionWebhook, ['sendSlackMessage', 'edit', 'delete', 'createdTimestamp', 'createdAt']);
+Webhook.applyToClass(InteractionWebhook as any, [
+	'sendSlackMessage',
+	'edit',
+	'delete',
+	'createdTimestamp',
+	'createdAt',
+]);

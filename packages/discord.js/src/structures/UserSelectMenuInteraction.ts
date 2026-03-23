@@ -1,5 +1,5 @@
 import { Collection } from '@ovencord/collection';
-import type { Snowflake } from 'discord-api-types/v10';
+import type { APIInteractionDataResolved, APIMessageComponentInteraction, Snowflake } from 'discord-api-types/v10';
 import type { Client } from '../client/Client.js';
 import { Events } from '../util/Events.js';
 import type { GuildMember } from './GuildMember.js';
@@ -13,12 +13,12 @@ import type { User } from './User.js';
  */
 export class UserSelectMenuInteraction extends MessageComponentInteraction {
 	public users: Collection<Snowflake, User>;
-	public members: Collection<Snowflake, GuildMember | Record<string, unknown>>;
+	public members: Collection<Snowflake, GuildMember | any>;
 	public values: Snowflake[];
-	constructor(client: Client, data: Record<string, unknown>) {
+	constructor(client: Client, data: APIMessageComponentInteraction) {
 		super(client, data);
-		const dataData = data.data as Record<string, unknown>;
-		const resolved = dataData.resolved as Record<string, unknown> | undefined;
+		const dataData = data.data as any;
+		const resolved = dataData.resolved as APIInteractionDataResolved | undefined;
 		const values = dataData.values as Snowflake[] | undefined;
 
 		/**
@@ -42,24 +42,29 @@ export class UserSelectMenuInteraction extends MessageComponentInteraction {
 		 */
 		this.members = new Collection();
 
-		for (const user of Object.values((resolved?.users ?? {}) as Record<string, unknown>)) {
-			// @ts-expect-error
-			this.users.set(user.id as Snowflake, this.client.users._add(user));
+		if (resolved?.users) {
+			for (const user of Object.values(resolved.users)) {
+				this.users.set(user.id as Snowflake, this.client.users._add(user));
+			}
 		}
 
-		for (const [id, member] of Object.entries((resolved?.members ?? {}) as Record<string, unknown>)) {
-			const users = resolved?.users as Record<string, unknown>;
-			const user = users[id];
+		if (resolved?.members) {
+			for (const [id, member] of Object.entries(resolved.members)) {
+				const user = resolved.users?.[id];
 
-			if (!user) {
-				this.client.emit(Events.Debug, `[UserSelectMenuInteraction] Received a member without a user, skipping ${id}`);
-				continue;
+				if (!user) {
+					this.client.emit(
+						Events.Debug,
+						`[UserSelectMenuInteraction] Received a member without a user, skipping ${id}`,
+					);
+					continue;
+				}
+
+				this.members.set(
+					id as Snowflake,
+					this.guild?.members._add({ user, ...member } as any) ?? ({ user, ...member } as any),
+				);
 			}
-
-			this.members.set(
-				id,
-				this.guild?.members._add(Object.assign({ user }, member)) ?? Object.assign({ user }, member),
-			);
 		}
 	}
 }

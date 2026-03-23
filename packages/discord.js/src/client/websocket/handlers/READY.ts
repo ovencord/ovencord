@@ -8,7 +8,7 @@ export default (client: Client, { d: data }: GatewayReadyDispatch, shardId: numb
 	if (client.user) {
 		client.user._patch(data.user);
 	} else {
-		client.user = new ClientUser(client, data.user);
+		client.user = new ClientUser(client, data.user as any);
 		client.users.cache.set(client.user.id, client.user);
 	}
 
