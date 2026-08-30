@@ -3,7 +3,7 @@ import { kMixinConstruct, kMixinToJSON } from './utils/symbols.js';
 
 export type Mixinable<ClassType> = new (...args: unknown[]) => ClassType;
 
-export type MixinBase<BaseClass extends Structure<{}>> =
+export type MixinBase<BaseClass extends Structure<any>> =
 	BaseClass extends Structure<infer DataType, infer Omitted> ? Structure<DataType, Omitted> : never;
 
 /**
@@ -32,9 +32,9 @@ export type MixinBase<BaseClass extends Structure<{}>> =
  * ```
  * @typeParam DestinationClass - The class to be mixed, ensures that the mixins provided can be used with this destination
  */
-export function Mixin<DestinationClass extends typeof Structure<{}>>(
+export function Mixin<DestinationClass extends typeof Structure<any>>(
 	destination: DestinationClass,
-	mixins: Mixinable<MixinBase<DestinationClass['prototype']>>[],
+	mixins: Mixinable<any>[],
 ) {
 	const dataTemplates: Record<string, unknown>[] = [];
 	const dataOptimizations: ((data: unknown) => void)[] = [];
@@ -43,7 +43,7 @@ export function Mixin<DestinationClass extends typeof Structure<{}>>(
 
 	for (const mixin of mixins) {
 		// The entire prototype chain, in reverse order, since we want to copy it all
-		const prototypeChain: MixinBase<DestinationClass['prototype']>[] = [];
+		const prototypeChain: any[] = [];
 		let extendedClass = mixin;
 		while (extendedClass.prototype !== undefined) {
 			if (

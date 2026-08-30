@@ -5,6 +5,7 @@ export type ReplaceOmittedWithUnknown<Omitted extends keyof Data | '', Data> = {
 export type CollapseUnion<Type> = Type extends infer Union ? { [Key in keyof Union]: Union[Key] } : never;
 
 export type OptionalPropertyNames<Type> = {
+	// biome-ignore lint/complexity/noBannedTypes: Type level check using empty object type inference
 	[Key in keyof Type]-?: {} extends { [Prop in Key]: Type[Key] } ? Key : never;
 }[keyof Type];
 

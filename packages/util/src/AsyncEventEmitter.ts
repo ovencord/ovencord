@@ -1,19 +1,21 @@
 import { AsyncQueue } from './AsyncQueue.js';
 
 export type EventMap = Record<string | symbol, any[]>;
+export type Listener = (...args: any[]) => void | Promise<void>;
 
 export class AsyncEventEmitter<Events extends Record<keyof Events, any[]> = any> {
-	private _listeners = new Map<keyof Events | string | symbol, Set<Function>>();
+	private _listeners = new Map<keyof Events | string | symbol, Set<Listener>>();
 	private _maxListeners = 10;
 
 	public on<K extends keyof Events>(event: K, listener: (...args: Events[K]) => void | Promise<void>): this;
 	public on<K extends string | symbol>(event: K, listener: (...args: any[]) => void | Promise<void>): this;
-	public on(event: string | symbol, listener: Function): this {
-		if (!this._listeners.has(event)) {
-			this._listeners.set(event, new Set());
+	public on(event: string | symbol, listener: Listener): this {
+		let listeners = this._listeners.get(event);
+		if (!listeners) {
+			listeners = new Set();
+			this._listeners.set(event, listeners);
 		}
 
-		const listeners = this._listeners.get(event)!;
 		listeners.add(listener);
 
 		if (listeners.size > this._maxListeners) {
@@ -29,13 +31,13 @@ export class AsyncEventEmitter<Events extends Record<keyof Events, any[]> = any>
 
 	public addListener<K extends keyof Events>(event: K, listener: (...args: Events[K]) => void | Promise<void>): this;
 	public addListener<K extends string | symbol>(event: K, listener: (...args: any[]) => void | Promise<void>): this;
-	public addListener(event: string | symbol, listener: Function): this {
+	public addListener(event: string | symbol, listener: Listener): this {
 		return this.on(event, listener as any);
 	}
 
 	public once<K extends keyof Events>(event: K, listener: (...args: Events[K]) => void | Promise<void>): this;
 	public once<K extends string | symbol>(event: K, listener: (...args: any[]) => void | Promise<void>): this;
-	public once(event: string | symbol, listener: Function): this {
+	public once(event: string | symbol, listener: Listener): this {
 		const wrapper = async (...args: any[]) => {
 			this.off(event, wrapper);
 			await listener(...args);
@@ -52,7 +54,7 @@ export class AsyncEventEmitter<Events extends Record<keyof Events, any[]> = any>
 
 	public off<K extends keyof Events>(event: K, listener: (...args: Events[K]) => void | Promise<void>): this;
 	public off<K extends string | symbol>(event: K, listener: (...args: any[]) => void | Promise<void>): this;
-	public off(event: string | symbol, listener: Function): this {
+	public off(event: string | symbol, listener: Listener): this {
 		const listeners = this._listeners.get(event);
 		if (!listeners) return this;
 
@@ -71,7 +73,7 @@ export class AsyncEventEmitter<Events extends Record<keyof Events, any[]> = any>
 
 	public removeListener<K extends keyof Events>(event: K, listener: (...args: Events[K]) => void | Promise<void>): this;
 	public removeListener<K extends string | symbol>(event: K, listener: (...args: any[]) => void | Promise<void>): this;
-	public removeListener(event: string | symbol, listener: Function): this {
+	public removeListener(event: string | symbol, listener: Listener): this {
 		return this.off(event, listener as any);
 	}
 
@@ -136,7 +138,7 @@ export class AsyncEventEmitter<Events extends Record<keyof Events, any[]> = any>
 		return Array.from(this._listeners.keys());
 	}
 
-	public rawListeners(event: keyof Events | string | symbol): Function[] {
+	public rawListeners(event: keyof Events | string | symbol): Listener[] {
 		return Array.from(this._listeners.get(event) ?? []);
 	}
 

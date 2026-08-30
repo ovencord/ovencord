@@ -33,6 +33,7 @@ export { SKUFlagsBitField } from './util/SKUFlagsBitField.js';
 
 import { DiscordSnowflake as SnowflakeUtil } from '@ovencord/util';
 export { SnowflakeUtil };
+export type { ApplicationCommandOptionAllowedChannelType } from '@ovencord/builders';
 export * from '@ovencord/builders';
 export { ButtonBuilder } from '@ovencord/builders';
 export * from '@ovencord/formatters';
