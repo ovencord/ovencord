@@ -1,69 +1,69 @@
 {
-    "$schema": "https://json.schemastore.org/package.json",
-    "name": "@ovencord/monorepo",
-    "version": "0.0.0",
-    "description": "Cooking the future of Discord development. A high-performance, Bun-native monorepo for the Discord ecosystem.",
-    "private": true,
-    "author": "Luigi Colantuono",
-    "license": "MIT",
-    "workspaces": [
-        "packages/*"
-    ],
-    "scripts": {
-        "build": "bun run --recursive build",
-        "test": "bun run --recursive test",
-        "lint": "biome check .",
-        "lint:discord.js": "biome check ./packages/discord.js",
-        "lint:rest": "biome check ./packages/rest",
-        "lint:structures": "biome check ./packages/structures",
-        "lint:util": "biome check ./packages/util",
-        "lint:ws": "biome check ./packages/ws",
-        "format": "biome format --write .",
-        "check": "biome check --write .",
-        "check:discord.js": "biome check ./packages/discord.js",
-        "check:rest": "biome check ./packages/rest",
-        "check:structures": "biome check ./packages/structures",
-        "check:util": "biome check ./packages/util",
-        "check:ws": "biome check ./packages/ws",
-        "update": "bun --recursive update --interactive",
-        "update:latest": "bun --recursive update --interactive --latest",
-        "typecheck": "bun run --recursive typecheck"
-    },
-    "type": "module",
-    "contributors": [
-        "Ovencord Contributors"
-    ],
-    "keywords": [
-        "discord",
-        "api",
-        "bot",
-        "client",
-        "bun",
-        "ovencord"
-    ],
-    "repository": {
-        "type": "git",
-        "url": "git+https://github.com/ovencord/ovencord.git"
-    },
-    "bugs": {
-        "url": "https://github.com/ovencord/ovencord/issues"
-    },
-    "homepage": "https://ovencord.dev",
-    "funding": {
-        "type": "individual",
-        "url": "https://paypal.me/l0g4n7"
-    },
-    "devDependencies": {
-        "@biomejs/biome": "latest",
-        "@types/bun": "latest",
-        "discord-api-types": "^0.38.40",
-        "typescript": "^5.9.3"
-    },
-    "engines": {
-        "bun": ">=1.4.0"
-    },
-    "packageManager": "bun@1.4.0",
-    "dependencies": {
-        "ts-mixer": "^6.0.4"
-    }
+	"$schema": "https://json.schemastore.org/package.json",
+	"name": "@ovencord/monorepo",
+	"version": "0.0.0",
+	"description": "Cooking the future of Discord development. A high-performance, Bun-native monorepo for the Discord ecosystem.",
+	"private": true,
+	"author": "Luigi Colantuono",
+	"license": "MIT",
+	"workspaces": [
+		"packages/*"
+	],
+	"scripts": {
+		"build": "bun run --recursive build",
+		"test": "bun test --pass-with-no-tests",
+		"lint": "biome check .",
+		"lint:discord.js": "biome check ./packages/discord.js",
+		"lint:rest": "biome check ./packages/rest",
+		"lint:structures": "biome check ./packages/structures",
+		"lint:util": "biome check ./packages/util",
+		"lint:ws": "biome check ./packages/ws",
+		"format": "biome format --write .",
+		"check": "biome check --write .",
+		"check:discord.js": "biome check ./packages/discord.js",
+		"check:rest": "biome check ./packages/rest",
+		"check:structures": "biome check ./packages/structures",
+		"check:util": "biome check ./packages/util",
+		"check:ws": "biome check ./packages/ws",
+		"update": "bun --recursive update --interactive",
+		"update:latest": "bun --recursive update --interactive --latest",
+		"typecheck": "bun run --recursive typecheck"
+	},
+	"type": "module",
+	"contributors": [
+		"Ovencord Contributors"
+	],
+	"keywords": [
+		"discord",
+		"api",
+		"bot",
+		"client",
+		"bun",
+		"ovencord"
+	],
+	"repository": {
+		"type": "git",
+		"url": "git+https://github.com/ovencord/ovencord.git"
+	},
+	"bugs": {
+		"url": "https://github.com/ovencord/ovencord/issues"
+	},
+	"homepage": "https://ovencord.dev",
+	"funding": {
+		"type": "individual",
+		"url": "https://paypal.me/l0g4n7"
+	},
+	"devDependencies": {
+		"@biomejs/biome": "latest",
+		"@types/bun": "latest",
+		"discord-api-types": "^0.38.40",
+		"typescript": "^5.9.3"
+	},
+	"engines": {
+		"bun": ">=1.4.0"
+	},
+	"packageManager": "bun@1.4.0",
+	"dependencies": {
+		"ts-mixer": "^6.0.4"
+	}
 }

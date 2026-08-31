@@ -41,10 +41,7 @@ export class Emoji extends Base {
 				(options as unknown as { animated?: boolean }).animated ?? (this.animated || undefined);
 		}
 
-		return (this.client as unknown as { rest: { cdn: { emoji: Function } } }).rest.cdn.emoji(
-			this.id,
-			resolvedOptions,
-		);
+		return (this.client as unknown as { rest: { cdn: { emoji: Function } } }).rest.cdn.emoji(this.id, resolvedOptions);
 	}
 
 	get createdTimestamp(): number | null {

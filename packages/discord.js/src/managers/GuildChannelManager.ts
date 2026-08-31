@@ -18,15 +18,13 @@ import type { BaseFetchOptions } from './UserManager.js';
 
 let cacheWarningEmitted = false;
 
-export type GuildChannelResolvable = GuildChannel | ThreadChannel | Snowflake | string;
-
 /**
  * Data that can be resolved to give a Guild Channel object. This can be:
  * - A GuildChannel object
  * - A ThreadChannel object
  * - A Snowflake
  */
-export type GuildChannelResolvable = GuildChannel | ThreadChannel | string;
+export type GuildChannelResolvable = GuildChannel | ThreadChannel | Snowflake | string;
 
 /**
  * Manages API methods for GuildChannels and stores their cache.
