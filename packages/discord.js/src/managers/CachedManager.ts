@@ -56,13 +56,15 @@ export abstract class CachedManager<K = any, Holds = any, R = any> extends DataM
 		let existing = this._cache?.get(id);
 
 		if (existing && !(args[0] === false || (extraOptions && extraOptions.cache === false))) {
-			if (typeof existing._patch === 'function') {
-				existing._patch(data);
+			if (typeof (existing as any)._patch === 'function') {
+				(existing as any)._patch(data);
 			}
 			return existing;
 		}
 
-		const entry = this.holds ? new this.holds(this.client, data, ...(extraOptions.extras ?? [])) : data;
+		const entry = this.holds
+			? (new (this.holds as any)(this.client, data, ...(extraOptions.extras ?? [])) as Holds)
+			: (data as Holds);
 
 		if (isCache && this._cache && id) {
 			this._cache.set(id, entry);

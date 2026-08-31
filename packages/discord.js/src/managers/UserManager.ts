@@ -27,7 +27,7 @@ export type UserResolvable = User | Snowflake | Message | GuildMember | ThreadMe
  *
  * @extends {CachedManager}
  */
-export class UserManager extends CachedManager {
+export class UserManager extends CachedManager<Snowflake, User, UserResolvable> {
 	constructor(client: Client, iterable?: Iterable<APIUser>) {
 		super(client, User, iterable);
 	}
@@ -48,9 +48,9 @@ export class UserManager extends CachedManager {
 	 */
 	dmChannel(userId: Snowflake) {
 		return (
-			// @ts-expect-error
-			this.client.channels.cache.find((channel) => channel.type === ChannelType.DM && channel.recipientId === userId) ??
-			null
+			(this.client.channels.cache as any).find(
+				(channel: any) => channel.type === ChannelType.DM && channel.recipientId === userId,
+			) ?? null
 		);
 	}
 
