@@ -1,7 +1,17 @@
+import type {
+	ActivityType,
+	GatewayActivity,
+	GatewayActivityAssets,
+	GatewayPresenceUpdate,
+	PresenceUpdateStatus,
+	Snowflake,
+} from 'discord-api-types/v10';
+import type { Client } from '../client/Client.js';
 import { ActivityFlagsBitField } from '../util/ActivityFlagsBitField.js';
 import { flatten } from '../util/Util.js';
 import { Base } from './Base.js';
 import { Emoji } from './Emoji.js';
+import type { Guild } from './Guild.js';
 
 /**
  * Activity sent in a message.
@@ -30,18 +40,37 @@ import { Emoji } from './Emoji.js';
  * @typedef {string} ClientPresenceStatus
  */
 
+export type PresenceStatus = PresenceUpdateStatus | 'offline' | 'invisible';
+export type ClientPresenceStatusString = 'online' | 'idle' | 'dnd';
+
+export interface ClientPresenceStatusData {
+	web?: string | null;
+	mobile?: string | null;
+	desktop?: string | null;
+}
+
+export interface ActivityTimestamps {
+	start: Date | null;
+	end: Date | null;
+}
+
+export interface ActivityParty {
+	id?: string | null;
+	size?: [number, number]; // [current, max]
+}
+
 /**
  * Represents a user's presence.
  *
  * @extends {Base}
  */
 export class Presence extends Base {
-	public userId: any;
-	public guild: any;
-	public status: any;
-	public activities: any;
-	public clientStatus: any;
-	constructor(client: any, data = {}) {
+	public userId: Snowflake;
+	public guild: Guild | null;
+	public status: PresenceStatus;
+	public activities: Activity[];
+	public clientStatus: ClientPresenceStatusData | null;
+	constructor(client: Client, data: Partial<GatewayPresenceUpdate> & { guild?: Guild } = {}) {
 		super(client);
 
 		/**
@@ -49,7 +78,6 @@ export class Presence extends Base {
 		 *
 		 * @type {Snowflake}
 		 */
-		// @ts-expect-error
 		this.userId = data.user.id;
 
 		/**
@@ -57,7 +85,6 @@ export class Presence extends Base {
 		 *
 		 * @type {?Guild}
 		 */
-		// @ts-expect-error
 		this.guild = data.guild ?? null;
 
 		this._patch(data);
@@ -83,7 +110,7 @@ export class Presence extends Base {
 		return this.guild.members.resolve(this.userId);
 	}
 
-	_patch(data: any) {
+	_patch(data: Partial<GatewayPresenceUpdate> & { guild?: Guild }) {
 		if ('status' in data) {
 			/**
 			 * The status of this presence
@@ -101,8 +128,7 @@ export class Presence extends Base {
 			 *
 			 * @type {Activity[]}
 			 */
-			// @ts-expect-error
-			this.activities = data.activities.map((activity) => new Activity(this, activity));
+			this.activities = data.activities.map((activity: GatewayActivity) => new Activity(this, activity));
 		} else {
 			this.activities ??= [];
 		}
@@ -120,7 +146,7 @@ export class Presence extends Base {
 			 *
 			 * @type {?ClientPresenceStatusData}
 			 */
-			this.clientStatus = data.client_status;
+			this.clientStatus = data.client_status as ClientPresenceStatusData;
 		} else {
 			this.clientStatus ??= null;
 		}
@@ -130,7 +156,6 @@ export class Presence extends Base {
 
 	_clone() {
 		const clone = Object.assign(Object.create(this), this);
-		// @ts-expect-error
 		clone.activities = this.activities.map((activity) => activity._clone());
 		return clone;
 	}
@@ -141,7 +166,7 @@ export class Presence extends Base {
 	 * @param {Presence} presence The presence to compare with
 	 * @returns {boolean}
 	 */
-	equals(presence: any) {
+	equals(presence: Presence | undefined | null) {
 		return (
 			this === presence ||
 			(presence &&
@@ -149,8 +174,7 @@ export class Presence extends Base {
 				this.clientStatus?.web === presence.clientStatus?.web &&
 				this.clientStatus?.mobile === presence.clientStatus?.mobile &&
 				this.clientStatus?.desktop === presence.clientStatus?.desktop &&
-				this.activities.length === presence.activities.length &&
-				this.activities.every((activity: any, index: any) => activity.equals(presence.activities[index])))
+				this.activities.every((activity, index) => activity.equals(presence.activities[index])))
 		);
 	}
 
@@ -163,21 +187,22 @@ export class Presence extends Base {
  * Represents an activity that is part of a user's presence.
  */
 export class Activity {
-	public name: any;
-	public type: any;
-	public url: any;
-	public details: any;
-	public state: any;
-	public applicationId: any;
-	public timestamps: any;
-	public party: any;
-	public syncId: any;
-	public assets: any;
-	public flags: any;
-	public emoji: any;
-	public buttons: any;
-	public createdTimestamp: any;
-	constructor(presence: any, data: any) {
+	public name: string;
+	public type: ActivityType;
+	public url: string | null;
+	public details: string | null;
+	public state: string | null;
+	public applicationId: Snowflake | null;
+	public timestamps: ActivityTimestamps | null;
+	public party: ActivityParty | null;
+	public syncId: string | null;
+	public assets: RichPresenceAssets | null;
+	public flags: Readonly<ActivityFlagsBitField>;
+	public emoji: Emoji | null;
+	public buttons: string[];
+	public createdTimestamp: number;
+	public readonly presence!: Presence;
+	constructor(presence: Presence, data: GatewayActivity) {
 		/**
 		 * The presence of the Activity
 		 *
@@ -291,14 +316,9 @@ export class Activity {
 		 *
 		 * @type {?Emoji}
 		 */
-		this.emoji = data.emoji ? new Emoji(presence.client, data.emoji) : null;
+		this.emoji = data.emoji ? new Emoji(presence.client, data.emoji as any) : null;
 
-		/**
-		 * The labels of the buttons of this rich presence
-		 *
-		 * @type {string[]}
-		 */
-		this.buttons = data.buttons ?? [];
+		this.buttons = data.buttons?.map((b: { label: string } | string) => (typeof b === 'string' ? b : b.label)) ?? [];
 
 		/**
 		 * Creation date of the activity
@@ -314,7 +334,7 @@ export class Activity {
 	 * @param {Activity} activity The activity to compare with
 	 * @returns {boolean}
 	 */
-	equals(activity: any) {
+	equals(activity: Activity) {
 		return (
 			this === activity ||
 			(activity &&
@@ -356,12 +376,13 @@ export class Activity {
  * Assets for a rich presence
  */
 export class RichPresenceAssets {
-	public largeText: any;
-	public smallText: any;
-	public largeImage: any;
-	public smallImage: any;
-	public activity: any;
-	constructor(activity: any, assets: any) {
+	public largeText: string | null;
+	public smallText: string | null;
+	public largeImage: string | Snowflake | null;
+	public smallImage: string | Snowflake | null;
+	public activity: Activity;
+	public readonly presence!: Presence; // Required for type checking since it's accessed via `.activity.presence`
+	constructor(activity: Activity, assets: GatewayActivityAssets) {
 		/**
 		 * The activity of the RichPresenceAssets
 		 *

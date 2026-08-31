@@ -13,7 +13,7 @@ export class ChannelFlagsBitField extends BitField {
 	 * @type {ChannelFlags}
 	 * @memberof ChannelFlagsBitField
 	 */
-	static Flags = ChannelFlags;
+	static override Flags: Record<string, number | bigint> = ChannelFlags as unknown as Record<string, number | bigint>;
 }
 
 /**

@@ -2,14 +2,19 @@ import { Collection } from '@ovencord/collection';
 import { messageLink } from '@ovencord/formatters';
 import { DiscordSnowflake } from '@ovencord/util';
 import {
+	type APIMessage,
 	ChannelType,
 	type ComponentType,
+	type GatewayMessageCreateDispatchData,
+	type GatewayMessageReactionAddDispatchData,
 	InteractionType,
 	MessageFlags,
 	MessageReferenceType,
 	MessageType,
 	PermissionFlagsBits,
+	type Snowflake,
 } from 'discord-api-types/v10';
+import type { Client } from '../client/Client.js';
 import { DiscordjsError, ErrorCodes } from '../errors/index.js';
 import { ReactionManager } from '../managers/ReactionManager.js';
 import { createComponent, findComponentByCustomId } from '../util/Components.js';
@@ -21,6 +26,7 @@ import { cleanContent, resolvePartialEmoji, transformResolved } from '../util/Ut
 import { Attachment } from './Attachment.js';
 import { Base } from './Base.js';
 import { ClientApplication } from './ClientApplication.js';
+import type { Component } from './Component.js';
 import { Embed } from './Embed.js';
 import { InteractionCollector } from './InteractionCollector.js';
 import type { CollectorOptions } from './interfaces/Collector.js';
@@ -29,6 +35,7 @@ import { MessagePayload } from './MessagePayload.js';
 import { Poll } from './Poll.js';
 import { ReactionCollector, type ReactionCollectorOptions } from './ReactionCollector.js';
 import { Sticker } from './Sticker.js';
+import type { User } from './User.js';
 export interface AwaitReactionsOptions extends ReactionCollectorOptions {
 	errors?: string[];
 }
@@ -40,44 +47,83 @@ export interface MessageComponentCollectorOptions extends CollectorOptions {
 	maxUsers?: number;
 }
 
+export interface RoleSubscriptionData {
+	roleSubscriptionListingId: Snowflake;
+	tierName: string;
+	totalMonthsSubscribed: number;
+	isRenewal: boolean;
+}
+
+export interface MessageReference {
+	channelId: Snowflake;
+	guildId?: Snowflake;
+	messageId?: Snowflake;
+	type: MessageReferenceType;
+}
+
+export interface MessageInteractionMetadata {
+	id: Snowflake;
+	type: InteractionType;
+	user: User;
+	authorizingIntegrationOwners: Record<string, string>;
+	originalResponseMessageId?: Snowflake;
+	interactedMessageId?: Snowflake;
+	triggeringInteractionMetadata?: MessageInteractionMetadata;
+}
+
+export interface MessageCall {
+	readonly endedAt: Date | null;
+	endedTimestamp: number | null;
+	participants: Snowflake[];
+}
+
+export interface MessageActivity {
+	partyId: string;
+	type: number;
+}
+
+export interface MessageReplyOptions extends Record<string, unknown> {
+	failIfNotExists?: boolean;
+}
+
 /**
  * Represents a message on Discord.
  *
  * @extends {Base}
  */
 export class Message extends Base {
-	public channelId: any;
-	public guildId: any;
-	public id: any;
-	public createdTimestamp: any;
-	public type: any;
-	public system: any;
-	public content: any;
-	public author: any;
-	public pinned: any;
-	public tts: any;
-	public nonce: any;
-	public embeds: any;
-	public components: any;
-	public attachments: any;
-	public stickers: any;
-	public position: any;
-	public roleSubscriptionData: any;
-	public resolved: any;
-	public editedTimestamp: any;
-	public reactions: any;
-	public mentions: any;
-	public webhookId: any;
-	public groupActivityApplication: any;
-	public applicationId: any;
-	public activity: any;
-	public flags: any;
-	public reference: any;
-	public interactionMetadata: any;
-	public poll: any;
-	public messageSnapshots: any;
-	public call: any;
-	constructor(client: any, data: any) {
+	public channelId: Snowflake;
+	public guildId: Snowflake | null;
+	public id: Snowflake;
+	public createdTimestamp: number;
+	public type: MessageType | null;
+	public system: boolean | null;
+	public content: string | null;
+	public author: User | null;
+	public pinned: boolean | null;
+	public tts: boolean | null;
+	public nonce: string | number | null;
+	public embeds: Embed[];
+	public components: Component[];
+	public attachments: Collection<Snowflake, Attachment>;
+	public stickers: Collection<Snowflake, Sticker>;
+	public position: number | null;
+	public roleSubscriptionData: RoleSubscriptionData | null;
+	public resolved: unknown | null;
+	public editedTimestamp: number | null;
+	public reactions: ReactionManager;
+	public mentions: MessageMentions;
+	public webhookId: Snowflake | null;
+	public groupActivityApplication: ClientApplication | null;
+	public applicationId: Snowflake | null;
+	public activity: MessageActivity | null;
+	public flags: Readonly<MessageFlagsBitField>;
+	public reference: MessageReference | null;
+	public interactionMetadata: MessageInteractionMetadata | null;
+	public poll: Poll | null;
+	public messageSnapshots: Collection<Snowflake, Message>;
+	public call: MessageCall | null;
+	constructor(client: Client, data: Partial<GatewayMessageCreateDispatchData> & Record<string, unknown>) {
 		super(client);
 
 		/**
@@ -85,25 +131,25 @@ export class Message extends Base {
 		 *
 		 * @type {Snowflake}
 		 */
-		this.channelId = data.channel_id;
+		this.channelId = data.channel_id as Snowflake;
 
 		/**
 		 * The id of the guild the message was sent in, if any
 		 *
 		 * @type {?Snowflake}
 		 */
-		this.guildId = data.guild_id ?? this.channel?.guild?.id ?? null;
+		this.guildId = (data.guild_id ?? this.channel?.guild?.id ?? null) as Snowflake | null;
 
 		this._patch(data);
 	}
 
-	_patch(data: any) {
+	_patch(data: Partial<GatewayMessageCreateDispatchData> & Record<string, unknown>) {
 		/**
 		 * The message's id
 		 *
 		 * @type {Snowflake}
 		 */
-		this.id = data.id;
+		this.id = data.id as Snowflake;
 
 		/**
 		 * The timestamp the message was sent at
@@ -198,7 +244,6 @@ export class Message extends Base {
 			 *
 			 * @type {Embed[]}
 			 */
-			// @ts-expect-error
 			this.embeds = data.embeds.map((embed) => new Embed(embed));
 		} else {
 			this.embeds = this.embeds?.slice() ?? [];
@@ -212,7 +257,6 @@ export class Message extends Base {
 			 *
 			 * @type {Component[]}
 			 */
-			// @ts-expect-error
 			this.components = data.components.map((component) => createComponent(component));
 		} else {
 			this.components = this.components?.slice() ?? [];
@@ -243,8 +287,10 @@ export class Message extends Base {
 			 * @type {Collection<Snowflake, Sticker>}
 			 */
 			this.stickers = new Collection(
-				// @ts-expect-error
-				(data.sticker_items ?? data.stickers)?.map((sticker) => [sticker.id, new Sticker(this.client, sticker)]),
+				(data.sticker_items ?? data.stickers)?.map((sticker) => [
+					sticker.id,
+					new Sticker(this.client, sticker as import('discord-api-types/v10').APISticker),
+				]),
 			);
 		} else {
 			this.stickers = new Collection(this.stickers);
@@ -324,7 +370,7 @@ export class Message extends Base {
 			this.reactions = new ReactionManager(this);
 			if (data.reactions?.length > 0) {
 				for (const reaction of data.reactions) {
-					this.reactions._add(reaction);
+					this.reactions._add(reaction, true);
 				}
 			}
 		} else {
@@ -500,20 +546,26 @@ export class Message extends Base {
 			 *
 			 * @type {Collection<Snowflake, Message>}
 			 */
-			this.messageSnapshots = data.message_snapshots.reduce((coll: any, snapshot: any) => {
-				const channel = this.client.channels.resolve(this.reference.channelId);
+			this.messageSnapshots = data.message_snapshots.reduce<Collection<Snowflake, Message>>((coll, snapshot) => {
+				const channel = this.client.channels.resolve(this.reference?.channelId as string);
+				const snapshotObj = snapshot as unknown as Record<string, Record<string, unknown>>;
 				const snapshotData = {
-					...snapshot.message,
-					id: this.reference.messageId,
-					channel_id: this.reference.channelId,
-					guild_id: this.reference.guildId,
+					...(snapshotObj.message || {}),
+					id: this.reference?.messageId,
+					channel_id: this.reference?.channelId,
+					guild_id: this.reference?.guildId,
 				};
 
 				return coll.set(
-					this.reference.messageId,
-					channel ? channel.messages._add(snapshotData) : new (this.constructor as any)(this.client, snapshotData),
+					this.reference?.messageId as string,
+					channel
+						? channel.messages._add(snapshotData)
+						: new (this.constructor as typeof Message)(
+								this.client,
+								snapshotData as unknown as Partial<GatewayMessageCreateDispatchData> & Record<string, unknown>,
+							),
 				);
-			}, new Collection());
+			}, new Collection<Snowflake, Message>());
 		} else {
 			this.messageSnapshots ??= new Collection();
 		}
@@ -867,7 +919,7 @@ export class Message extends Base {
 	 *   .then(msg => console.log(`Updated the content of a message to ${msg.content}`))
 	 *   .catch(console.error);
 	 */
-	async edit(options: any) {
+	async edit(options: unknown) {
 		if (!this.channel) throw new DiscordjsError(ErrorCodes.ChannelNotCached);
 		return this.channel.messages.edit(this, options);
 	}
@@ -900,7 +952,7 @@ export class Message extends Base {
 	 *   .then(console.log)
 	 *   .catch(console.error)
 	 */
-	async pin(reason: any) {
+	async pin(reason?: string) {
 		if (!this.channel) throw new DiscordjsError(ErrorCodes.ChannelNotCached);
 		await this.channel.messages.pin(this.id, reason);
 		return this;
@@ -917,7 +969,7 @@ export class Message extends Base {
 	 *   .then(console.log)
 	 *   .catch(console.error)
 	 */
-	async unpin(reason: any) {
+	async unpin(reason?: string) {
 		if (!this.channel) throw new DiscordjsError(ErrorCodes.ChannelNotCached);
 		await this.channel.messages.unpin(this.id, reason);
 		return this;
@@ -939,19 +991,20 @@ export class Message extends Base {
 	 *   .then(console.log)
 	 *   .catch(console.error);
 	 */
-	async react(emoji: any) {
+	async react(emoji: unknown) {
 		if (!this.channel) throw new DiscordjsError(ErrorCodes.ChannelNotCached);
 		await this.channel.messages.react(this.id, emoji);
 
-		return this.client.actions.MessageReactionAdd.handle(
+		const result = this.client.actions.MessageReactionAdd.handle(
 			{
 				[this.client.actions.injectedUser]: this.client.user,
 				[this.client.actions.injectedChannel]: this.channel,
 				[this.client.actions.injectedMessage]: this,
 				emoji: resolvePartialEmoji(emoji),
-			},
+			} as unknown as GatewayMessageReactionAddDispatchData,
 			true,
-		).reaction;
+		);
+		return result ? result.reaction : null;
 	}
 
 	/**
@@ -971,14 +1024,6 @@ export class Message extends Base {
 	}
 
 	/**
-	 * Options provided when sending a message as an inline reply.
-	 *
-	 * @typedef {BaseMessageCreateOptions} MessageReplyOptions
-	 * @property {boolean} [failIfNotExists=this.client.options.failIfNotExists] Whether to error if the referenced
-	 * message does not exist (creates a standard message in this case when false)
-	 */
-
-	/**
 	 * Send an inline reply to this message.
 	 *
 	 * @param {string|MessagePayload|MessageReplyOptions} options The options to provide
@@ -989,8 +1034,8 @@ export class Message extends Base {
 	 *   .then(() => console.log(`Replied to message "${message.content}"`))
 	 *   .catch(console.error);
 	 */
-	async reply(options: any) {
-		let data: any;
+	async reply(options: string | MessagePayload | MessageReplyOptions) {
+		let data: Record<string, unknown> | MessagePayload;
 
 		if (options instanceof MessagePayload) {
 			data = options;
@@ -1001,7 +1046,7 @@ export class Message extends Base {
 					channelId: this.channelId,
 					guildId: this.guildId ?? undefined,
 					type: MessageReferenceType.Default,
-					failIfNotExists: options?.failIfNotExists ?? this.client.options.failIfNotExists,
+					failIfNotExists: (options as MessageReplyOptions)?.failIfNotExists ?? this.client.options.failIfNotExists,
 				},
 			});
 		}
@@ -1015,7 +1060,7 @@ export class Message extends Base {
 	 * @param {TextChannelResolvable} channel The channel to forward this message to.
 	 * @returns {Promise<Message>}
 	 */
-	async forward(channel: any) {
+	async forward(channel: unknown) {
 		return this.client.channels.createMessage(channel, {
 			messageReference: {
 				messageId: this.id,
@@ -1109,7 +1154,7 @@ export class Message extends Base {
 	 * @param {string} customId The custom id to resolve against
 	 * @returns {?MessageActionRowComponent}
 	 */
-	resolveComponent(customId: any) {
+	resolveComponent(customId: string) {
 		return findComponentByCustomId(this.components, customId);
 	}
 
@@ -1122,7 +1167,7 @@ export class Message extends Base {
 	 * @param {APIMessage} [rawData] Raw data passed through the WebSocket about this message
 	 * @returns {boolean}
 	 */
-	equals(message: any, rawData: any) {
+	equals(message: Message | null, rawData: APIMessage) {
 		if (!message) return false;
 		const embedUpdate = !message.author && !message.attachments;
 		if (embedUpdate) return this.id === message.id && this.embeds.length === message.embeds.length;
@@ -1135,9 +1180,8 @@ export class Message extends Base {
 			this.tts === message.tts &&
 			this.attachments.size === message.attachments.size &&
 			this.embeds.length === message.embeds.length &&
-			// @ts-expect-error
 			this.attachments.every((attachment) => message.attachments.has(attachment.id)) &&
-			this.embeds.every((embed: any, index: any) => embed.equals(message.embeds[index]));
+			this.embeds.every((embed: Embed, index: number) => embed.equals(message.embeds[index]));
 
 		if (equal && rawData) {
 			equal =

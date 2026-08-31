@@ -1,5 +1,8 @@
+import type { APIGuildForumTag, SortOrderType, ThreadAutoArchiveDuration } from 'discord-api-types/v10';
+import type { Client } from '../client/Client.js';
 import { GuildForumThreadManager } from '../managers/GuildForumThreadManager.js';
 import { transformAPIGuildDefaultReaction, transformAPIGuildForumTag } from '../util/Channels.js';
+import type { Guild } from './Guild.js';
 import { GuildChannel } from './GuildChannel.js';
 import { TextBasedChannel } from './interfaces/TextBasedChannel.js';
 
@@ -27,11 +30,10 @@ import { TextBasedChannel } from './interfaces/TextBasedChannel.js';
  * @property {?GuildForumTagEmoji} [emoji] The emoji of this tag
  */
 
-/**
- * @typedef {Object} DefaultReactionEmoji
- * @property {?Snowflake} id The id of a guild's custom emoji
- * @property {?string} name The unicode character of the emoji
- */
+export interface DefaultReactionEmoji {
+	id: string | null;
+	name: string | null;
+}
 
 /**
  * Represents symbols utilized by thread-only channels.
@@ -41,16 +43,16 @@ import { TextBasedChannel } from './interfaces/TextBasedChannel.js';
  * @abstract
  */
 export class ThreadOnlyChannel extends GuildChannel {
-	public threads: any;
-	public availableTags: any;
-	public defaultReactionEmoji: any;
-	public defaultThreadRateLimitPerUser: any;
-	public rateLimitPerUser: any;
-	public defaultAutoArchiveDuration: any;
-	public nsfw: any;
-	public declare topic: any;
-	public defaultSortOrder: any;
-	constructor(guild: any, data: any, client: any) {
+	public threads: GuildForumThreadManager;
+	public availableTags: APIGuildForumTag[];
+	public defaultReactionEmoji: DefaultReactionEmoji | null;
+	public defaultThreadRateLimitPerUser: number | null;
+	public rateLimitPerUser: number | null;
+	public defaultAutoArchiveDuration: ThreadAutoArchiveDuration | null;
+	public nsfw: boolean;
+	public declare topic: string | null;
+	public defaultSortOrder: SortOrderType | null;
+	constructor(guild: Guild, data: Record<string, unknown>, client: Client) {
 		super(guild, data, client, false);
 
 		/**
@@ -96,7 +98,7 @@ export class ThreadOnlyChannel extends GuildChannel {
 			 *
 			 * @type {?number}
 			 */
-			this.defaultThreadRateLimitPerUser = data.default_thread_rate_limit_per_user;
+			this.defaultThreadRateLimitPerUser = data.default_thread_rate_limit_per_user as number;
 		} else {
 			this.defaultThreadRateLimitPerUser ??= null;
 		}
@@ -107,7 +109,7 @@ export class ThreadOnlyChannel extends GuildChannel {
 			 *
 			 * @type {?number}
 			 */
-			this.rateLimitPerUser = data.rate_limit_per_user;
+			this.rateLimitPerUser = data.rate_limit_per_user as number;
 		} else {
 			this.rateLimitPerUser ??= null;
 		}
@@ -118,7 +120,7 @@ export class ThreadOnlyChannel extends GuildChannel {
 			 *
 			 * @type {?ThreadAutoArchiveDuration}
 			 */
-			this.defaultAutoArchiveDuration = data.default_auto_archive_duration;
+			this.defaultAutoArchiveDuration = data.default_auto_archive_duration as ThreadAutoArchiveDuration;
 		} else {
 			this.defaultAutoArchiveDuration ??= null;
 		}
@@ -129,7 +131,7 @@ export class ThreadOnlyChannel extends GuildChannel {
 			 *
 			 * @type {boolean}
 			 */
-			this.nsfw = data.nsfw;
+			this.nsfw = data.nsfw as boolean;
 		} else {
 			this.nsfw ??= false;
 		}
@@ -140,7 +142,7 @@ export class ThreadOnlyChannel extends GuildChannel {
 			 *
 			 * @type {?string}
 			 */
-			this.topic = data.topic;
+			this.topic = data.topic as string;
 		}
 
 		if ('default_sort_order' in data) {
@@ -149,7 +151,7 @@ export class ThreadOnlyChannel extends GuildChannel {
 			 *
 			 * @type {?SortOrderType}
 			 */
-			this.defaultSortOrder = data.default_sort_order;
+			this.defaultSortOrder = data.default_sort_order as SortOrderType;
 		} else {
 			this.defaultSortOrder ??= null;
 		}
@@ -162,7 +164,7 @@ export class ThreadOnlyChannel extends GuildChannel {
 	 * @param {string} [reason] Reason for changing the available tags
 	 * @returns {Promise<this>}
 	 */
-	async setAvailableTags(availableTags: any, reason: any) {
+	async setAvailableTags(availableTags: APIGuildForumTag[], reason?: string) {
 		return this.edit({ availableTags, reason });
 	}
 
@@ -173,7 +175,7 @@ export class ThreadOnlyChannel extends GuildChannel {
 	 * @param {string} [reason] Reason for changing the default reaction emoji
 	 * @returns {Promise<this>}
 	 */
-	async setDefaultReactionEmoji(defaultReactionEmoji: any, reason: any) {
+	async setDefaultReactionEmoji(defaultReactionEmoji: DefaultReactionEmoji | null, reason?: string) {
 		return this.edit({ defaultReactionEmoji, reason });
 	}
 
@@ -184,7 +186,7 @@ export class ThreadOnlyChannel extends GuildChannel {
 	 * @param {string} [reason] Reason for changing the default rate limit
 	 * @returns {Promise<this>}
 	 */
-	async setDefaultThreadRateLimitPerUser(defaultThreadRateLimitPerUser: any, reason: any) {
+	async setDefaultThreadRateLimitPerUser(defaultThreadRateLimitPerUser: number, reason?: string) {
 		return this.edit({ defaultThreadRateLimitPerUser, reason });
 	}
 
@@ -199,7 +201,7 @@ export class ThreadOnlyChannel extends GuildChannel {
 	 *   .then(invite => console.log(`Created an invite with a code of ${invite.code}`))
 	 *   .catch(console.error);
 	 */
-	async createInvite(options: any) {
+	async createInvite(options: Record<string, unknown>) {
 		return this.guild.invites.create(this.id, options);
 	}
 
@@ -210,7 +212,7 @@ export class ThreadOnlyChannel extends GuildChannel {
 	 * @param {boolean} [cache=true] Whether to cache the fetched invites
 	 * @returns {Promise<Collection<string, Invite>>}
 	 */
-	async fetchInvites(cache: any) {
+	async fetchInvites(cache?: boolean) {
 		return this.guild.invites.fetch({ channelId: this.id, cache });
 	}
 
@@ -221,7 +223,7 @@ export class ThreadOnlyChannel extends GuildChannel {
 	 * @param {string} [reason] Reason for changing the channel's default auto archive duration
 	 * @returns {Promise<this>}
 	 */
-	async setDefaultAutoArchiveDuration(defaultAutoArchiveDuration: any, reason: any) {
+	async setDefaultAutoArchiveDuration(defaultAutoArchiveDuration: ThreadAutoArchiveDuration, reason?: string) {
 		return this.edit({ defaultAutoArchiveDuration, reason });
 	}
 
@@ -237,7 +239,7 @@ export class ThreadOnlyChannel extends GuildChannel {
 	 *   .then(newChannel => console.log(`Channel's new topic is ${newChannel.topic}`))
 	 *   .catch(console.error);
 	 */
-	async setTopic(topic: any, reason: any) {
+	async setTopic(topic: string | null, reason?: string) {
 		return this.edit({ topic, reason });
 	}
 
@@ -248,7 +250,7 @@ export class ThreadOnlyChannel extends GuildChannel {
 	 * @param {string} [reason] Reason for changing the default sort order
 	 * @returns {Promise<this>}
 	 */
-	async setDefaultSortOrder(defaultSortOrder: any, reason: any) {
+	async setDefaultSortOrder(defaultSortOrder: SortOrderType | null, reason?: string) {
 		return this.edit({ defaultSortOrder, reason });
 	}
 

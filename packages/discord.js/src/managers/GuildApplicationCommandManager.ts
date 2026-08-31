@@ -1,3 +1,4 @@
+import type { Guild } from '../structures/Guild.js';
 import { ApplicationCommandManager } from './ApplicationCommandManager.js';
 import { ApplicationCommandPermissionsManager } from './ApplicationCommandPermissionsManager.js';
 
@@ -7,10 +8,10 @@ import { ApplicationCommandPermissionsManager } from './ApplicationCommandPermis
  * @extends {ApplicationCommandManager}
  */
 export class GuildApplicationCommandManager extends ApplicationCommandManager {
-	public guild: any;
-	public permissions: any;
-	constructor(guild: any, iterable?: any) {
-		super(guild.client, iterable);
+	public guild: Guild;
+	public permissions: ApplicationCommandPermissionsManager;
+	constructor(guild: Guild, iterable?: any) {
+		super(guild.client as any, iterable);
 
 		/**
 		 * The guild that this manager belongs to

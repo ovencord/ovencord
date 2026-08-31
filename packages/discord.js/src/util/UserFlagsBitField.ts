@@ -13,7 +13,7 @@ export class UserFlagsBitField extends BitField {
 	 * @type {UserFlags}
 	 * @memberof UserFlagsBitField
 	 */
-	static Flags = UserFlags;
+	static override Flags: Record<string, number | bigint> = UserFlags as unknown as Record<string, number | bigint>;
 }
 
 /**

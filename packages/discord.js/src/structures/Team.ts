@@ -1,5 +1,7 @@
 import { Collection } from '@ovencord/collection';
 import { DiscordSnowflake } from '@ovencord/util';
+import type { APITeam, Snowflake } from 'discord-api-types/v10';
+import type { Client } from '../client/Client.js';
 import { Base } from './Base.js';
 import { TeamMember } from './TeamMember.js';
 
@@ -9,23 +11,23 @@ import { TeamMember } from './TeamMember.js';
  * @extends {Base}
  */
 export class Team extends Base {
-	public id: any;
-	public name: any;
-	public icon: any;
-	public ownerId: any;
-	public members: any;
-	constructor(client: any, data: any) {
+	public id: Snowflake;
+	public name: string;
+	public icon: string | null;
+	public ownerId: Snowflake | null;
+	public members: Collection<Snowflake, TeamMember>;
+	constructor(client: Client, data: APITeam) {
 		super(client);
 		this._patch(data);
 	}
 
-	_patch(data: any) {
+	_patch(data: Partial<APITeam>) {
 		/**
 		 * The Team's id
 		 *
 		 * @type {Snowflake}
 		 */
-		this.id = data.id;
+		this.id = data.id!;
 
 		if ('name' in data) {
 			/**
@@ -33,7 +35,7 @@ export class Team extends Base {
 			 *
 			 * @type {string}
 			 */
-			this.name = data.name;
+			this.name = data.name!;
 		}
 
 		if ('icon' in data) {
@@ -42,7 +44,7 @@ export class Team extends Base {
 			 *
 			 * @type {?string}
 			 */
-			this.icon = data.icon;
+			this.icon = data.icon!;
 		} else {
 			this.icon ??= null;
 		}
@@ -53,7 +55,7 @@ export class Team extends Base {
 			 *
 			 * @type {?Snowflake}
 			 */
-			this.ownerId = data.owner_user_id;
+			this.ownerId = data.owner_user_id!;
 		} else {
 			this.ownerId ??= null;
 		}
@@ -65,9 +67,11 @@ export class Team extends Base {
 		 */
 		this.members = new Collection();
 
-		for (const memberData of data.members) {
-			const member = new TeamMember(this, memberData);
-			this.members.set(member.id, member);
+		if (data.members) {
+			for (const memberData of data.members) {
+				const member = new TeamMember(this, memberData);
+				this.members.set(member.id, member);
+			}
 		}
 	}
 

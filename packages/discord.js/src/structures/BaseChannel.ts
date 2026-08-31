@@ -1,6 +1,7 @@
 import { channelLink, channelMention } from '@ovencord/formatters';
 import { DiscordSnowflake } from '@ovencord/util';
-import { ChannelType, Routes } from 'discord-api-types/v10';
+import { type APIChannel, ChannelType, Routes, type Snowflake } from 'discord-api-types/v10';
+import type { Client } from '../client/Client.js';
 import { ChannelFlagsBitField } from '../util/ChannelFlagsBitField.js';
 import { ThreadChannelTypes } from '../util/Constants.js';
 import { Base } from './Base.js';
@@ -12,41 +13,43 @@ import { Base } from './Base.js';
  * @abstract
  */
 export class BaseChannel extends Base {
-	public type: any;
-	public flags: any;
-	public id: any;
-	public guildId: any;
-	constructor(client: any, data: any, immediatePatch = true) {
+	/**
+	 * The type of the channel
+	 */
+	public type: ChannelType;
+
+	/**
+	 * The flags that are applied to the channel.
+	 */
+	public flags: Readonly<ChannelFlagsBitField> | null;
+
+	/**
+	 * The channel's id
+	 */
+	public id: Snowflake;
+
+	/**
+	 * The id of the guild this channel belongs to
+	 */
+	public guildId: Snowflake | null;
+
+	constructor(client: Client, data: APIChannel, immediatePatch = true) {
 		super(client);
 
-		/**
-		 * The type of the channel
-		 *
-		 * @type {ChannelType}
-		 */
 		this.type = data.type;
+
+		this.guildId = (data as APIChannel & { guild_id?: Snowflake }).guild_id ?? null;
 
 		if (data && immediatePatch) this._patch(data);
 	}
 
-	_patch(data: any) {
+	_patch(data: APIChannel) {
 		if ('flags' in data) {
-			/**
-			 * The flags that are applied to the channel.
-			 * <info>This is only `null` in a {@link PartialGroupDMChannel}. In all other cases, it is not `null`.</info>
-			 *
-			 * @type {?Readonly<ChannelFlagsBitField>}
-			 */
 			this.flags = new ChannelFlagsBitField(data.flags).freeze();
 		} else {
 			this.flags ??= new ChannelFlagsBitField().freeze();
 		}
 
-		/**
-		 * The channel's id
-		 *
-		 * @type {Snowflake}
-		 */
 		this.id = data.id;
 	}
 
@@ -182,8 +185,7 @@ export class BaseChannel extends Base {
 		return 'send' in this;
 	}
 
-	// @ts-expect-error
-	toJSON(...props) {
+	toJSON(...props: Record<string, boolean | string>[]): Record<string, unknown> {
 		return super.toJSON({ createdTimestamp: true }, ...props);
 	}
 }

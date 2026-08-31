@@ -1,4 +1,4 @@
-import { makeURLSearchParams } from '@ovencord/rest';
+import { type ImageURLOptions, makeURLSearchParams } from '@ovencord/rest';
 import { DiscordSnowflake } from '@ovencord/util';
 import type { APIPartialGuild, Snowflake } from 'discord-api-types/v10';
 import { GuildFeature, Routes } from 'discord-api-types/v10';
@@ -107,7 +107,7 @@ export class BaseGuild extends Base {
 	 * @param {ImageURLOptions} [options={}] Options for the image URL
 	 * @returns {?string}
 	 */
-	iconURL(options = {}) {
+	iconURL(options: ImageURLOptions = {}) {
 		return this.icon && this.client.rest.cdn.icon(this.id, this.icon, options);
 	}
 
@@ -128,7 +128,19 @@ export class BaseGuild extends Base {
 	 *
 	 * @returns {string}
 	 */
-	toString() {
+	toJSON(...props: Record<string, boolean | string>[]): Record<string, unknown> {
+		return super.toJSON(
+			{
+				name: true,
+				icon: true,
+				features: true,
+				createdTimestamp: true,
+			},
+			...props,
+		);
+	}
+
+	toString(): string {
 		return this.name;
 	}
 }

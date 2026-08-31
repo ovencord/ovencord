@@ -1,5 +1,6 @@
 import type {
 	APIApplicationCommandInteraction,
+	APIApplicationCommandInteractionDataBasicOption,
 	APIChatInputApplicationCommandInteractionData,
 } from 'discord-api-types/v10';
 import type { Client } from '../client/Client.js';
@@ -24,8 +25,9 @@ export class ChatInputCommandInteraction extends CommandInteraction {
 		 */
 		this.options = new CommandInteractionOptionResolver(
 			this.client,
-			(data.data as APIChatInputApplicationCommandInteractionData).options?.map((option: unknown) =>
-				this.transformOption(option, (data.data as APIChatInputApplicationCommandInteractionData).resolved),
+			(data.data as APIChatInputApplicationCommandInteractionData).options?.map(
+				(option: APIApplicationCommandInteractionDataBasicOption) =>
+					this.transformOption(option as any, (data.data as APIChatInputApplicationCommandInteractionData).resolved),
 			) ?? [],
 			transformResolved(
 				{ client: this.client, guild: this.guild, channel: this.channel },

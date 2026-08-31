@@ -14,7 +14,7 @@ export class WelcomeScreen extends Base {
 	public guild: Guild;
 	public description: string | null;
 	public welcomeChannels: Collection<Snowflake, WelcomeChannel>;
-	constructor(guild: Guild, data: APIGuildWelcomeScreen | Record<string, unknown>) {
+	constructor(guild: Guild, data: APIGuildWelcomeScreen) {
 		super(guild.client);
 
 		/**

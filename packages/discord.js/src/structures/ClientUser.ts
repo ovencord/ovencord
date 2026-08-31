@@ -1,4 +1,4 @@
-import { Routes } from 'discord-api-types/v10';
+import { type APIUser, Routes } from 'discord-api-types/v10';
 import { resolveImage } from '../util/DataResolver.js';
 import { User } from './User.js';
 
@@ -7,10 +7,17 @@ import { User } from './User.js';
  *
  * @extends {User}
  */
+export interface PresenceData {
+	status?: string;
+	afk?: boolean;
+	activities?: any[];
+	shardId?: number | number[];
+}
+
 export class ClientUser extends User {
-	public verified: any;
-	public mfaEnabled: any;
-	_patch(data: any) {
+	public verified: boolean;
+	public mfaEnabled: boolean | null;
+	_patch(data: Partial<APIUser>) {
 		super._patch(data);
 
 		if ('verified' in data) {
@@ -33,7 +40,7 @@ export class ClientUser extends User {
 			this.mfaEnabled ??= null;
 		}
 
-		if ('token' in data) this.client.token = data.token;
+		if ('token' in data) this.client.token = data.token as any;
 	}
 
 	/**
@@ -61,7 +68,7 @@ export class ClientUser extends User {
 	 * @param {ClientUserEditOptions} options The options to provide
 	 * @returns {Promise<ClientUser>}
 	 */
-	async edit({ username, avatar, banner }: any) {
+	async edit({ username, avatar, banner }: { username?: string; avatar?: any; banner?: any }) {
 		const data = await this.client.rest.patch(Routes.user(), {
 			body: {
 				username,
@@ -70,7 +77,7 @@ export class ClientUser extends User {
 			},
 		});
 
-		const { updated } = this.client.actions.UserUpdate.handle(data);
+		const { updated } = this.client.actions.UserUpdate.handle(data as any);
 		return updated ?? this;
 	}
 
@@ -87,7 +94,7 @@ export class ClientUser extends User {
 	 *   .then(user => console.log(`My new username is ${user.username}`))
 	 *   .catch(console.error);
 	 */
-	async setUsername(username: any) {
+	async setUsername(username: string) {
 		return this.edit({ username });
 	}
 
@@ -150,8 +157,8 @@ export class ClientUser extends User {
 	 * // Set the client user's presence
 	 * client.user.setPresence({ activities: [{ name: 'with discord.js' }], status: 'idle' });
 	 */
-	async setPresence(data: any) {
-		return this.client.presence.set(data);
+	async setPresence(data: PresenceData) {
+		return this.client.presence.set(data as any);
 	}
 
 	/**
@@ -174,7 +181,7 @@ export class ClientUser extends User {
 	 * // Set the client user's status
 	 * client.user.setStatus('idle');
 	 */
-	async setStatus(status: any, shardId: any) {
+	async setStatus(status: any, shardId?: number | number[]) {
 		return this.setPresence({ status, shardId });
 	}
 
@@ -199,8 +206,7 @@ export class ClientUser extends User {
 	 * // Set the client user's activity
 	 * client.user.setActivity('discord.js', { type: ActivityType.Watching });
 	 */
-	async setActivity(name: any, options = {}) {
-		// @ts-expect-error
+	async setActivity(name: string | any, options: any = {}) {
 		if (!name) return this.setPresence({ activities: [], shardId: options.shardId });
 
 		const activity = { ...options, ...(typeof name === 'object' ? name : { name }) };
@@ -214,7 +220,7 @@ export class ClientUser extends User {
 	 * @param {number|number[]} [shardId] Shard Id(s) to have the AFK flag set on
 	 * @returns {Promise<ClientPresence>}
 	 */
-	async setAFK(afk: any = true, shardId: any = undefined) {
+	async setAFK(afk: boolean = true, shardId?: number | number[]) {
 		return this.setPresence({ afk, shardId });
 	}
 }

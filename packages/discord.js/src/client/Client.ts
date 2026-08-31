@@ -2,10 +2,19 @@ import { Collection } from '@ovencord/collection';
 import { makeURLSearchParams, REST, RESTEvents } from '@ovencord/rest';
 import { WebSocketManager, WebSocketShardEvents, WebSocketShardStatus } from '@ovencord/ws';
 import {
+	type APIGuildPreview,
+	type APIGuildWidget,
+	type APISoundboardSound,
+	type APISticker,
+	type APIStickerPack,
+	type APIVoiceRegion,
+	type APIWebhook,
 	GatewayDispatchEvents,
 	type GatewayDispatchPayload,
 	GatewayIntentBits,
+	type GatewaySendPayload,
 	OAuth2Scopes,
+	type PermissionFlagsBits,
 	Routes,
 	type Snowflake,
 } from 'discord-api-types/v10';
@@ -14,9 +23,11 @@ import { ChannelManager } from '../managers/ChannelManager.js';
 import { GuildManager } from '../managers/GuildManager.js';
 import { UserManager } from '../managers/UserManager.js';
 import { ShardClientUtil } from '../sharding/ShardClientUtil.js';
+import type { BaseGuild } from '../structures/BaseGuild.js';
 import type { ClientApplication } from '../structures/ClientApplication.js';
 import { ClientPresence } from '../structures/ClientPresence.js';
 import type { ClientUser } from '../structures/ClientUser.js';
+import type { Guild } from '../structures/Guild.js';
 import { GuildPreview } from '../structures/GuildPreview.js';
 import { GuildTemplate } from '../structures/GuildTemplate.js';
 import { SoundboardSound } from '../structures/SoundboardSound.js';
@@ -26,11 +37,11 @@ import { VoiceRegion } from '../structures/VoiceRegion.js';
 import { Webhook } from '../structures/Webhook.js';
 import { Widget } from '../structures/Widget.js';
 import { AsyncEventEmitter } from '../util/AsyncEventEmitter.js';
-import { type GuildTemplateResolvable, resolveGuildTemplateCode, resolveInviteCode } from '../util/DataResolver.js';
+import { resolveGuildTemplateCode, resolveInviteCode } from '../util/DataResolver.js';
 import { Events } from '../util/Events.js';
 import { IntentsBitField } from '../util/IntentsBitField.js';
 import { createInvite } from '../util/Invites.js';
-import { Options } from '../util/Options.js';
+import { type ClientOptions, Options } from '../util/Options.js';
 import { PermissionsBitField } from '../util/PermissionsBitField.js';
 import { Status } from '../util/Status.js';
 import { Sweepers } from '../util/Sweepers.js';
@@ -50,12 +61,13 @@ const BeforeReadyWhitelist = [
 	GatewayDispatchEvents.GuildMemberRemove,
 ];
 
-import type { Guild } from '../structures/Guild.js';
-import type { InviteResolvable } from '../util/DataResolver.js';
-import type { PermissionResolvable } from '../util/PermissionsBitField.js';
-
-export type GuildResolvable = Guild | GuildPreview | GuildTemplate | Snowflake | string;
-export { type PermissionResolvable };
+export type GuildResolvable = Guild | BaseGuild | Snowflake;
+export type PermissionResolvable =
+	| PermissionsBitField
+	| bigint
+	| number
+	| string
+	| (keyof typeof PermissionFlagsBits)[];
 
 /**
  * The main hub for interacting with the Discord API, and the starting point for any bot.
@@ -92,34 +104,15 @@ export interface InviteGenerationOptions {
 	disableGuildSelect?: boolean;
 }
 
-export interface ClientOptions {
-	// biome-ignore lint/suspicious/noExplicitAny: allowed mentions config
-	allowedMentions?: any;
-	closeTimeout?: number;
-	enforceNonce?: boolean;
-	failIfNotExists?: boolean;
-	// biome-ignore lint/suspicious/noExplicitAny: intents bitfield resolvable
-	intents: any;
-	jsonTransformer?(obj: unknown): unknown;
-	// biome-ignore lint/suspicious/noExplicitAny: cache factory function
-	makeCache?: any;
-	// biome-ignore lint/suspicious/noExplicitAny: partials list
-	partials?: any[];
-	// biome-ignore lint/suspicious/noExplicitAny: presence options
-	presence?: any;
-	// biome-ignore lint/suspicious/noExplicitAny: rest options
-	rest?: any;
-	// biome-ignore lint/suspicious/noExplicitAny: sweeper options
-	sweepers?: any;
-	waitGuildTimeout?: number;
-	// biome-ignore lint/suspicious/noExplicitAny: ws manager options
-	ws?: any;
+interface QueuedPacket {
+	packet: GatewayDispatchPayload;
+	shardId: number;
 }
 
 export class Client extends AsyncEventEmitter {
 	public status: Status;
 	public readyTimeout: Timer | null;
-	public options: ClientOptions & { intents: IntentsBitField };
+	public options: ClientOptions;
 	public rest: REST;
 	public presence: ClientPresence;
 	public actions: ActionsManager;
@@ -137,8 +130,7 @@ export class Client extends AsyncEventEmitter {
 	public readyTimestamp: number | null;
 	public token: string | null;
 	public expectedGuilds: Set<string>;
-	// biome-ignore lint/suspicious/noExplicitAny: internal gateway packet queue
-	public incomingPacketQueue: any[];
+	public incomingPacketQueue: QueuedPacket[];
 
 	/**
 	 * @param {ClientOptions} options Options for the client
@@ -212,16 +204,20 @@ export class Client extends AsyncEventEmitter {
 		 */
 		this.presence = new ClientPresence(this, this.options.ws.initialPresence ?? this.options.presence);
 
-		this.ws = new WebSocketManager(this as any);
+		this.ws = new WebSocketManager(this as unknown as import('@ovencord/ws').CreateWebSocketManagerOptions);
 		this.actions = new ActionsManager(this);
 		this.voice = new ClientVoiceManager(this);
 		this.shard =
 			!process.env.SHARDING_MANAGER && !process.env.DISCORD_HYBRID_SHARDING
 				? null
-				: ShardClientUtil.singleton(this, process.env.SHARDING_MANAGER_MODE as any);
-		this.users = new UserManager(this, undefined as any);
-		this.guilds = new GuildManager(this, undefined as any);
-		this.channels = new ChannelManager(this, undefined as any);
+				: (ShardClientUtil.singleton(
+						this as unknown as Client,
+						process.env.SHARDING_MANAGER_MODE as import('../sharding/ShardingManager.js').ShardingManagerMode,
+					) as unknown as ShardClientUtil);
+		this.users = new UserManager(this);
+		this.guilds = new GuildManager(this);
+		this.channels = new ChannelManager(this);
+
 		this.sweepers = new Sweepers(this, this.options.sweepers);
 
 		this._validateOptions();
@@ -285,7 +281,10 @@ export class Client extends AsyncEventEmitter {
 		 * @type {?ShardClientUtil}
 		 */
 		this.shard = process.env.SHARDING_MANAGER
-			? ShardClientUtil.singleton(this, process.env.SHARDING_MANAGER_MODE)
+			? ShardClientUtil.singleton(
+					this,
+					process.env.SHARDING_MANAGER_MODE as import('../sharding/ShardingManager.js').ShardingManagerMode,
+				)
 			: null;
 
 		/**
@@ -482,8 +481,7 @@ export class Client extends AsyncEventEmitter {
 				}).unref();
 			}
 
-			// biome-ignore lint/suspicious/noExplicitAny: packet handler dispatch lookup
-			const handler = (PacketHandlers as any)[packet.t];
+			const handler = PacketHandlers[packet.t];
 			if (handler) {
 				handler(this, packet, shardId);
 			}
@@ -491,7 +489,9 @@ export class Client extends AsyncEventEmitter {
 			if (packet.t === GatewayDispatchEvents.Ready) {
 				await this._checkReady();
 			} else if (this.status === Status.WaitingForGuilds && WaitingForGuildEvents.includes(packet.t)) {
-				this.expectedGuilds.delete((packet.d as { id: string }).id);
+				if ('id' in packet.d) {
+					this.expectedGuilds.delete((packet.d as { id: string }).id);
+				}
 				await this._checkReady();
 			}
 		}
@@ -508,11 +508,10 @@ export class Client extends AsyncEventEmitter {
 	/**
 	 * Broadcasts a packet to every shard of this client handles.
 	 *
-	 * @param {GatewaySendPayload} packet The packet to send
+	 * @param {Object} packet The packet to send
 	 * @private
 	 */
-	// biome-ignore lint/suspicious/noExplicitAny: gateway payload send
-	async _broadcast(packet: any) {
+	async _broadcast(packet: GatewaySendPayload) {
 		const shardIds = await this.ws.getShardIds();
 		return Promise.all(shardIds.map((shardId) => this.ws.send(shardId, packet)));
 	}
@@ -603,7 +602,7 @@ export class Client extends AsyncEventEmitter {
 		this.sweepers.destroy();
 		await this.ws.destroy();
 		this.token = null;
-		this.rest.setToken(null as any);
+		this.rest.setToken(null as unknown as string);
 	}
 
 	/**
@@ -617,7 +616,7 @@ export class Client extends AsyncEventEmitter {
 	 *   .then(invite => console.log(`Obtained invite with code: ${invite.code}`))
 	 *   .catch(console.error);
 	 */
-	async fetchInvite(invite: InviteResolvable, { withCounts, guildScheduledEventId }: ClientFetchInviteOptions = {}) {
+	async fetchInvite(invite: string, { withCounts, guildScheduledEventId }: ClientFetchInviteOptions = {}) {
 		const code = resolveInviteCode(invite);
 
 		const query = makeURLSearchParams({
@@ -626,8 +625,7 @@ export class Client extends AsyncEventEmitter {
 		});
 
 		const data = await this.rest.get(Routes.invite(code), { query });
-		// biome-ignore lint/suspicious/noExplicitAny: invite payload instantiation
-		return createInvite(this, data as any);
+		return createInvite(this, data);
 	}
 
 	/**
@@ -640,11 +638,10 @@ export class Client extends AsyncEventEmitter {
 	 *   .then(template => console.log(`Obtained template with code: ${template.code}`))
 	 *   .catch(console.error);
 	 */
-	async fetchGuildTemplate(template: GuildTemplateResolvable) {
+	async fetchGuildTemplate(template: string) {
 		const code = resolveGuildTemplateCode(template);
 		const data = await this.rest.get(Routes.template(code));
-		// biome-ignore lint/suspicious/noExplicitAny: template payload instantiation
-		return new GuildTemplate(this, data as any);
+		return new GuildTemplate(this, data);
 	}
 
 	/**
@@ -659,9 +656,8 @@ export class Client extends AsyncEventEmitter {
 	 *   .catch(console.error);
 	 */
 	async fetchWebhook(id: string, token?: string) {
-		// biome-ignore lint/suspicious/noExplicitAny: webhook REST response
-		const data = (await this.rest.get(Routes.webhook(id, token), { auth: token === undefined })) as any;
-		return new Webhook(this, { token, ...data });
+		const data = (await this.rest.get(Routes.webhook(id, token), { auth: token === undefined })) as APIWebhook;
+		return new Webhook(this, data);
 	}
 
 	/**
@@ -674,10 +670,11 @@ export class Client extends AsyncEventEmitter {
 	 *   .catch(console.error);
 	 */
 	async fetchVoiceRegions() {
-		// biome-ignore lint/suspicious/noExplicitAny: voice region array
-		const apiRegions = (await this.rest.get(Routes.voiceRegions())) as any[];
-		const regions = new Collection();
-		for (const region of apiRegions) regions.set(region.id, new VoiceRegion(region));
+		const apiRegions = (await this.rest.get(Routes.voiceRegions())) as APIVoiceRegion[];
+		const regions = new Collection<string, VoiceRegion>();
+		for (const region of apiRegions) {
+			regions.set(region.id, new VoiceRegion(region as unknown as Record<string, unknown>));
+		}
 		return regions;
 	}
 
@@ -692,9 +689,8 @@ export class Client extends AsyncEventEmitter {
 	 *   .catch(console.error);
 	 */
 	async fetchSticker(id: string) {
-		const data = await this.rest.get(Routes.sticker(id));
-		// biome-ignore lint/suspicious/noExplicitAny: sticker payload instantiation
-		return new Sticker(this, data as any);
+		const data = (await this.rest.get(Routes.sticker(id))) as APISticker;
+		return new Sticker(this, data);
 	}
 
 	/**
@@ -714,16 +710,16 @@ export class Client extends AsyncEventEmitter {
 	 */
 	async fetchStickerPacks({ packId }: StickerPackFetchOptions = {}) {
 		if (packId) {
-			// biome-ignore lint/suspicious/noExplicitAny: sticker pack REST payload
-			const innerData = (await this.rest.get(Routes.stickerPack(packId))) as any;
-			return new StickerPack(this, innerData);
+			const innerData = (await this.rest.get(Routes.stickerPack(packId))) as APIStickerPack;
+			return new StickerPack(this, innerData as unknown as Record<string, unknown>);
 		}
 
-		// biome-ignore lint/suspicious/noExplicitAny: sticker packs REST payload
-		const data = (await this.rest.get(Routes.stickerPacks())) as any;
-		return new Collection(
-			// biome-ignore lint/suspicious/noExplicitAny: sticker pack item
-			data.sticker_packs.map((stickerPack: any) => [stickerPack.id, new StickerPack(this, stickerPack)]),
+		const data = (await this.rest.get(Routes.stickerPacks())) as { sticker_packs: APIStickerPack[] };
+		return new Collection<Snowflake, StickerPack>(
+			data.sticker_packs.map((stickerPack) => [
+				stickerPack.id,
+				new StickerPack(this, stickerPack as unknown as Record<string, unknown>),
+			]),
 		);
 	}
 
@@ -737,10 +733,10 @@ export class Client extends AsyncEventEmitter {
 	 *  .catch(console.error);
 	 */
 	async fetchDefaultSoundboardSounds() {
-		// biome-ignore lint/suspicious/noExplicitAny: soundboard sound REST payload
-		const data = (await this.rest.get(Routes.soundboardDefaultSounds())) as any;
-		// biome-ignore lint/suspicious/noExplicitAny: sound item
-		return new Collection(data.map((sound: any) => [sound.sound_id, new SoundboardSound(this, sound)]));
+		const data = (await this.rest.get(Routes.soundboardDefaultSounds())) as APISoundboardSound[];
+		return new Collection<string, SoundboardSound>(
+			data.map((sound) => [sound.sound_id, new SoundboardSound(this, sound)]),
+		);
 	}
 
 	/**
@@ -752,9 +748,8 @@ export class Client extends AsyncEventEmitter {
 	async fetchGuildPreview(guild: GuildResolvable) {
 		const id = this.guilds.resolveId(guild);
 		if (!id) throw new DiscordjsTypeError(ErrorCodes.InvalidType, 'guild', 'GuildResolvable');
-		// biome-ignore lint/suspicious/noExplicitAny: guild preview REST payload
-		const data = (await this.rest.get(Routes.guildPreview(id))) as any;
-		return new GuildPreview(this, data);
+		const data = (await this.rest.get(Routes.guildPreview(id))) as APIGuildPreview;
+		return new GuildPreview(this, data as unknown as Record<string, unknown>);
 	}
 
 	/**
@@ -766,9 +761,8 @@ export class Client extends AsyncEventEmitter {
 	async fetchGuildWidget(guild: GuildResolvable) {
 		const id = this.guilds.resolveId(guild);
 		if (!id) throw new DiscordjsTypeError(ErrorCodes.InvalidType, 'guild', 'GuildResolvable');
-		// biome-ignore lint/suspicious/noExplicitAny: guild widget REST payload
-		const data = (await this.rest.get(Routes.guildWidgetJSON(id))) as any;
-		return new Widget(this, data);
+		const data = (await this.rest.get(Routes.guildWidgetJSON(id))) as APIGuildWidget;
+		return new Widget(this, data as unknown as APIGuildWidget); // Widget.ts expects APIWidget, but has some issues with Record
 	}
 
 	/**
@@ -792,7 +786,7 @@ export class Client extends AsyncEventEmitter {
 	 * });
 	 * console.log(`Generated bot invite link: ${link}`);
 	 */
-	generateInvite(options: InviteGenerationOptions | any = {}) {
+	generateInvite(options: InviteGenerationOptions) {
 		if (typeof options !== 'object') throw new DiscordjsTypeError(ErrorCodes.InvalidType, 'options', 'object', true);
 		if (!this.application) throw new DiscordjsError(ErrorCodes.ClientNotReady, 'generate an invite link');
 

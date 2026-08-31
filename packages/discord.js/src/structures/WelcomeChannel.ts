@@ -1,5 +1,8 @@
+import type { APIGuildWelcomeScreenChannel, Snowflake } from 'discord-api-types/v10';
 import { Base } from './Base.js';
 import { Emoji } from './Emoji.js';
+import type { Guild } from './Guild.js';
+import type { InviteGuild } from './InviteGuild.js';
 
 /**
  * Represents a channel link in a guild's welcome screen.
@@ -7,11 +10,11 @@ import { Emoji } from './Emoji.js';
  * @extends {Base}
  */
 export class WelcomeChannel extends Base {
-	public guild: any;
-	public description: any;
-	public _emoji: any;
-	public channelId: any;
-	constructor(guild: any, data: any) {
+	public guild: Guild | InviteGuild;
+	public description: string;
+	public _emoji: { name: string | null; id: Snowflake | null };
+	public channelId: Snowflake;
+	constructor(guild: Guild | InviteGuild, data: APIGuildWelcomeScreenChannel) {
 		super(guild.client);
 
 		/**
@@ -26,7 +29,7 @@ export class WelcomeChannel extends Base {
 		 *
 		 * @type {string}
 		 */
-		this.description = data.description;
+		this.description = data.description as string;
 
 		/**
 		 * The raw emoji data
@@ -44,7 +47,7 @@ export class WelcomeChannel extends Base {
 		 *
 		 * @type {Snowflake}
 		 */
-		this.channelId = data.channel_id;
+		this.channelId = data.channel_id as Snowflake;
 	}
 
 	/**
@@ -62,6 +65,12 @@ export class WelcomeChannel extends Base {
 	 * @type {GuildEmoji|Emoji}
 	 */
 	get emoji() {
-		return this.guild.emojis.cache.get(this._emoji.id) ?? new Emoji(this.client, this._emoji);
+		return (
+			('emojis' in this.guild ? this.guild.emojis.cache.get(this._emoji.id) : null) ??
+			new Emoji(this.client, {
+				name: this._emoji.name,
+				id: this._emoji.id,
+			} as import('discord-api-types/v10').APIEmoji)
+		);
 	}
 }

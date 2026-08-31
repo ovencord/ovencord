@@ -1,11 +1,22 @@
 import { SnowflakeClass as Snowflake } from '@ovencord/util';
-import { ChannelType, PermissionFlagsBits } from 'discord-api-types/v10';
+import {
+	type APIChannel,
+	type APIGuildChannel,
+	ChannelType,
+	type GuildChannelType,
+	PermissionFlagsBits,
+} from 'discord-api-types/v10';
+import type { Client } from '../client/Client.js';
 import { DiscordjsError, ErrorCodes } from '../errors/index.js';
 import { PermissionOverwriteManager } from '../managers/PermissionOverwriteManager.js';
 import { VoiceBasedChannelTypes } from '../util/Constants.js';
 import { PermissionsBitField } from '../util/PermissionsBitField.js';
 import { getSortableGroupTypes } from '../util/Util.js';
 import { BaseChannel } from './BaseChannel.js';
+import type { CategoryChannel } from './CategoryChannel.js';
+import type { Guild } from './Guild.js';
+import type { GuildMember } from './GuildMember.js';
+import type { Role } from './Role.js';
 
 /**
  * Represents a guild channel from any of the following:
@@ -21,18 +32,23 @@ import { BaseChannel } from './BaseChannel.js';
  * @abstract
  */
 export class GuildChannel extends BaseChannel {
-	public guild: any;
+	public guild: Guild;
 
-	public guildId: any;
-	public permissionOverwrites: any;
-	public name: any;
-	public rawPosition: any;
-	public parentId: any;
-	public declare type: any;
-	public declare id: any;
-	public topic: any;
-	constructor(guild: any, data: any, client: any, immediatePatch = true) {
-		super(client, data, false);
+	public guildId: string;
+	public permissionOverwrites: PermissionOverwriteManager;
+	public name: string;
+	public rawPosition: number;
+	public parentId: string | null;
+	public declare type: ChannelType;
+	public declare id: string;
+	public topic: string | null;
+	constructor(
+		guild: Guild,
+		data: Partial<APIGuildChannel<GuildChannelType>> & Record<string, unknown>,
+		client: Client | null,
+		immediatePatch = true,
+	) {
+		super(client, data as unknown as APIChannel, false);
 
 		/**
 		 * The guild the channel is in
@@ -56,11 +72,11 @@ export class GuildChannel extends BaseChannel {
 		 */
 		this.permissionOverwrites = new PermissionOverwriteManager(this);
 
-		if (data && immediatePatch) this._patch(data);
+		if (data && immediatePatch) this._patch(data as unknown as APIChannel);
 	}
 
-	_patch(data: any) {
-		super._patch(data);
+	_patch(data: APIChannel) {
+		super._patch(data as unknown as APIChannel);
 
 		if ('name' in data) {
 			/**
@@ -77,7 +93,7 @@ export class GuildChannel extends BaseChannel {
 			 *
 			 * @type {number}
 			 */
-			this.rawPosition = data.position;
+			this.rawPosition = data.position as number;
 		}
 
 		if ('guild_id' in data) {
@@ -98,7 +114,7 @@ export class GuildChannel extends BaseChannel {
 		if ('permission_overwrites' in data) {
 			this.permissionOverwrites.cache.clear();
 			for (const overwrite of data.permission_overwrites) {
-				this.permissionOverwrites._add(overwrite);
+				this.permissionOverwrites._add(overwrite, true);
 			}
 		}
 	}
@@ -193,26 +209,31 @@ export class GuildChannel extends BaseChannel {
 	 * will return all permissions
 	 * @returns {?Readonly<PermissionsBitField>}
 	 */
-	permissionsFor(memberOrRole: any, checkAdmin = true) {
+	permissionsFor(memberOrRole: GuildMember | Role | string | undefined | null, checkAdmin = true) {
 		const member = this.guild.members.resolve(memberOrRole);
 		if (member) return this.memberPermissions(member, checkAdmin);
 		const role = this.guild.roles.resolve(memberOrRole);
 		return role && this.rolePermissions(role, checkAdmin);
 	}
 
-	overwritesFor(member: any, verified: any = false, roles: any = null): any {
-		const resolvedMember = verified ? member : this.guild.members.resolve(member);
-		if (!resolvedMember) return [];
+	overwritesFor(
+		member: GuildMember | string,
+		verified = false,
+		roles: ReturnType<GuildMember['roles']['cache']['values']> | Iterable<Role> | null = null,
+	) {
+		const resolvedMember = verified ? (member as GuildMember) : this.guild.members.resolve(member);
+		if (!resolvedMember) return { everyone: undefined, roles: [], member: undefined };
 
-		const resolvedRoles = roles ?? resolvedMember.roles.cache;
+		const resolvedRoles = roles ?? resolvedMember.roles.cache.values();
+		const roleIds = new Set(Array.from(resolvedRoles).map((r: Role | string) => (typeof r === 'string' ? r : r.id)));
 		const roleOverwrites = [];
-		let memberOverwrites: any;
-		let everyoneOverwrites: any;
+		let memberOverwrites: ReturnType<PermissionOverwriteManager['cache']['get']> | undefined;
+		let everyoneOverwrites: ReturnType<PermissionOverwriteManager['cache']['get']> | undefined;
 
 		for (const overwrite of this.permissionOverwrites.cache.values()) {
 			if (overwrite.id === this.guild.id) {
 				everyoneOverwrites = overwrite;
-			} else if (resolvedRoles.has(overwrite.id)) {
+			} else if (roleIds.has(overwrite.id)) {
 				roleOverwrites.push(overwrite);
 			} else if (overwrite.id === resolvedMember.id) {
 				memberOverwrites = overwrite;
@@ -235,34 +256,28 @@ export class GuildChannel extends BaseChannel {
 	 * @returns {Readonly<PermissionsBitField>}
 	 * @private
 	 */
-	memberPermissions(member: any, checkAdmin: any) {
+	memberPermissions(member: GuildMember, checkAdmin: boolean) {
 		if (checkAdmin && member.id === this.guild.ownerId) {
 			return new PermissionsBitField(PermissionsBitField.All).freeze();
 		}
 
 		const roles = member.roles.cache;
-		// @ts-expect-error
 		const permissions = new PermissionsBitField(roles.map((role) => role.permissions));
 
 		if (checkAdmin && permissions.has(PermissionFlagsBits.Administrator)) {
 			return new PermissionsBitField(PermissionsBitField.All).freeze();
 		}
 
-		const overwrites: any = this.overwritesFor(member, true, roles);
+		const overwrites = this.overwritesFor(member, true, roles.values());
 
-		return (
-			permissions
-				.remove(overwrites.everyone?.deny ?? PermissionsBitField.DefaultBit)
-				.add(overwrites.everyone?.allow ?? PermissionsBitField.DefaultBit)
-				.remove(
-					overwrites.roles.length > 0 ? overwrites.roles.map((role: any) => role.deny) : PermissionsBitField.DefaultBit,
-				)
-				// @ts-expect-error
-				.add(overwrites.roles.length > 0 ? overwrites.roles.map((role) => role.allow) : PermissionsBitField.DefaultBit)
-				.remove(overwrites.member?.deny ?? PermissionsBitField.DefaultBit)
-				.add(overwrites.member?.allow ?? PermissionsBitField.DefaultBit)
-				.freeze()
-		);
+		return permissions
+			.remove(overwrites.everyone?.deny ?? PermissionsBitField.DefaultBit)
+			.add(overwrites.everyone?.allow ?? PermissionsBitField.DefaultBit)
+			.remove(overwrites.roles.length > 0 ? overwrites.roles.map((role) => role.deny) : PermissionsBitField.DefaultBit)
+			.add(overwrites.roles.length > 0 ? overwrites.roles.map((role) => role.allow) : PermissionsBitField.DefaultBit)
+			.remove(overwrites.member?.deny ?? PermissionsBitField.DefaultBit)
+			.add(overwrites.member?.allow ?? PermissionsBitField.DefaultBit)
+			.freeze();
 	}
 
 	/**
@@ -274,7 +289,7 @@ export class GuildChannel extends BaseChannel {
 	 * @returns {Readonly<PermissionsBitField>}
 	 * @private
 	 */
-	rolePermissions(role: any, checkAdmin: any) {
+	rolePermissions(role: Role, checkAdmin: boolean) {
 		if (checkAdmin && role.permissions.has(PermissionFlagsBits.Administrator)) {
 			return new PermissionsBitField(PermissionsBitField.All).freeze();
 		}
@@ -329,7 +344,7 @@ export class GuildChannel extends BaseChannel {
 	 *   .then(console.log)
 	 *   .catch(console.error);
 	 */
-	async edit(options: any) {
+	async edit(options: Record<string, unknown>) {
 		return this.guild.channels.edit(this, options);
 	}
 
@@ -345,7 +360,7 @@ export class GuildChannel extends BaseChannel {
 	 *   .then(newChannel => console.log(`Channel's new name is ${newChannel.name}`))
 	 *   .catch(console.error);
 	 */
-	async setName(name: any, reason: any) {
+	async setName(name: string, reason?: string) {
 		return this.edit({ name, reason });
 	}
 
@@ -374,7 +389,10 @@ export class GuildChannel extends BaseChannel {
 	 *   .then(channel => console.log(`Moved ${message.channel.name} to ${channel.parent.name}`))
 	 *   .catch(console.error);
 	 */
-	async setParent(channel: any, { lockPermissions = false, reason }: any = {}) {
+	async setParent(
+		channel: CategoryChannel | string | null,
+		{ lockPermissions = false, reason }: { lockPermissions?: boolean; reason?: string } = {},
+	) {
 		return this.edit({
 			parent: channel ?? null,
 			lockPermissions,
@@ -402,7 +420,7 @@ export class GuildChannel extends BaseChannel {
 	 *   .then(newChannel => console.log(`Channel's new position is ${newChannel.position}`))
 	 *   .catch(console.error);
 	 */
-	async setPosition(position: any, options = {}) {
+	async setPosition(position: number, options: Record<string, unknown> = {}) {
 		return this.guild.channels.setPosition(this, position, options);
 	}
 
@@ -419,18 +437,19 @@ export class GuildChannel extends BaseChannel {
 	 * @param {GuildChannelCloneOptions} [options] The options for cloning this channel
 	 * @returns {Promise<GuildChannel>}
 	 */
-	async clone(options = {}) {
+	async clone(options: Record<string, unknown> = {}) {
+		// LAST RESORT: casting to access channel type specific properties dynamically
+		const self = this as unknown as { nsfw?: boolean; bitrate?: number; userLimit?: number; rateLimitPerUser?: number };
 		return this.guild.channels.create({
-			// @ts-expect-error
 			name: options.name ?? this.name,
 			permissionOverwrites: this.permissionOverwrites.cache,
-			topic: (this as any).topic,
+			topic: this.topic,
 			type: this.type,
-			nsfw: (this as any).nsfw,
+			nsfw: self.nsfw,
 			parent: this.parent,
-			bitrate: (this as any).bitrate,
-			userLimit: (this as any).userLimit,
-			rateLimitPerUser: (this as any).rateLimitPerUser,
+			bitrate: self.bitrate,
+			userLimit: self.userLimit,
+			rateLimitPerUser: self.rateLimitPerUser,
 			position: this.rawPosition,
 			reason: null,
 			...options,
@@ -444,7 +463,9 @@ export class GuildChannel extends BaseChannel {
 	 * @param {GuildChannel} channel Channel to compare with
 	 * @returns {boolean}
 	 */
-	equals(channel: any) {
+	equals(
+		channel: GuildChannel | (Partial<APIGuildChannel<GuildChannelType>> & Record<string, unknown>) | null | undefined,
+	) {
 		let equal =
 			channel &&
 			this.id === channel.id &&
@@ -454,10 +475,11 @@ export class GuildChannel extends BaseChannel {
 			this.name === channel.name;
 
 		if (equal) {
-			if (this.permissionOverwrites && channel.permissionOverwrites) {
-				equal = this.permissionOverwrites.cache.equals(channel.permissionOverwrites.cache);
+			const channelPermissionOverwrites = channel instanceof GuildChannel ? channel.permissionOverwrites : undefined;
+			if (this.permissionOverwrites && channelPermissionOverwrites) {
+				equal = this.permissionOverwrites.cache.equals(channelPermissionOverwrites.cache);
 			} else {
-				equal = !this.permissionOverwrites && !channel.permissionOverwrites;
+				equal = !this.permissionOverwrites && !channelPermissionOverwrites;
 			}
 		}
 
@@ -481,7 +503,7 @@ export class GuildChannel extends BaseChannel {
 	 * @readonly
 	 */
 	get manageable() {
-		const permissions = this.permissionsFor(this.client.user);
+		const permissions = this.permissionsFor(this.client.user?.id);
 		if (!permissions) return false;
 
 		// This flag allows managing even if timed out
@@ -503,7 +525,7 @@ export class GuildChannel extends BaseChannel {
 	 * @readonly
 	 */
 	get viewable() {
-		const permissions = this.permissionsFor(this.client.user);
+		const permissions = this.permissionsFor(this.client.user?.id);
 		if (!permissions) return false;
 		return permissions.has(PermissionFlagsBits.ViewChannel, false);
 	}
@@ -519,8 +541,7 @@ export class GuildChannel extends BaseChannel {
 	 *   .then(console.log)
 	 *   .catch(console.error);
 	 */
-	// @ts-expect-error
-	async delete(reason: any) {
+	async delete(reason?: string) {
 		await this.guild.channels.delete(this.id, reason);
 		return this;
 	}

@@ -1,6 +1,10 @@
 import { Collection } from '@ovencord/collection';
+import type { APIInteractionDataResolved, APIMessageComponentInteraction, Snowflake } from 'discord-api-types/v10';
+import type { Client } from '../client/Client.js';
 import { Events } from '../util/Events.js';
+import type { GuildMember } from './GuildMember.js';
 import { MessageComponentInteraction } from './MessageComponentInteraction.js';
+import type { User } from './User.js';
 
 /**
  * Represents a {@link ComponentType.UserSelect} select menu interaction.
@@ -8,12 +12,14 @@ import { MessageComponentInteraction } from './MessageComponentInteraction.js';
  * @extends {MessageComponentInteraction}
  */
 export class UserSelectMenuInteraction extends MessageComponentInteraction {
-	public users: any;
-	public members: any;
-	public values: any;
-	constructor(client: any, data: any) {
+	public users: Collection<Snowflake, User>;
+	public members: Collection<Snowflake, GuildMember | any>;
+	public values: Snowflake[];
+	constructor(client: Client, data: APIMessageComponentInteraction) {
 		super(client, data);
-		const { resolved, values } = data.data;
+		const dataData = data.data as any;
+		const resolved = dataData.resolved as APIInteractionDataResolved | undefined;
+		const values = dataData.values as Snowflake[] | undefined;
 
 		/**
 		 * An array of the selected user ids
@@ -36,22 +42,29 @@ export class UserSelectMenuInteraction extends MessageComponentInteraction {
 		 */
 		this.members = new Collection();
 
-		for (const user of Object.values((resolved?.users ?? {}) as any) as any[]) {
-			this.users.set(user.id, this.client.users._add(user));
+		if (resolved?.users) {
+			for (const user of Object.values(resolved.users)) {
+				this.users.set(user.id as Snowflake, this.client.users._add(user));
+			}
 		}
 
-		for (const [id, member] of Object.entries((resolved?.members ?? {}) as any) as any[]) {
-			const user = resolved.users[id];
+		if (resolved?.members) {
+			for (const [id, member] of Object.entries(resolved.members)) {
+				const user = resolved.users?.[id];
 
-			if (!user) {
-				this.client.emit(Events.Debug, `[UserSelectMenuInteraction] Received a member without a user, skipping ${id}`);
-				continue;
+				if (!user) {
+					this.client.emit(
+						Events.Debug,
+						`[UserSelectMenuInteraction] Received a member without a user, skipping ${id}`,
+					);
+					continue;
+				}
+
+				this.members.set(
+					id as Snowflake,
+					this.guild?.members._add({ user, ...member } as any) ?? ({ user, ...member } as any),
+				);
 			}
-
-			this.members.set(
-				id,
-				this.guild?.members._add(Object.assign({ user }, member)) ?? Object.assign({ user }, member),
-			);
 		}
 	}
 }

@@ -1,10 +1,23 @@
 import { Collection } from '@ovencord/collection';
 import { DiscordSnowflake } from '@ovencord/util';
-import { ApplicationCommandType, ComponentType, InteractionType } from 'discord-api-types/v10';
+import {
+	type APIInteraction,
+	type APIInteractionGuildMember,
+	ApplicationCommandType,
+	ComponentType,
+	type InteractionContextType,
+	InteractionType,
+	type Locale,
+	type Snowflake,
+} from 'discord-api-types/v10';
+import type { Client } from '../client/Client.js';
 import { SelectMenuTypes } from '../util/Constants.js';
 import { PermissionsBitField } from '../util/PermissionsBitField.js';
 import { AuthorizingIntegrationOwners } from './AuthorizingIntegrationOwners.js';
 import { Base } from './Base.js';
+import type { Entitlement } from './Entitlement.js';
+import type { GuildMember } from './GuildMember.js';
+import type { User } from './User.js';
 
 /**
  * Represents an interaction.
@@ -13,157 +26,142 @@ import { Base } from './Base.js';
  * @abstract
  */
 export class BaseInteraction extends Base {
-	public type: any;
-	public id: any;
-	public applicationId: any;
-	public channelId: any;
-	public guildId: any;
-	public user: any;
-	public member: any;
-	public version: any;
-	public appPermissions: any;
-	public memberPermissions: any;
-	public locale: any;
-	public guildLocale: any;
-	public entitlements: any;
-	public authorizingIntegrationOwners: any;
-	public context: any;
-	public attachmentSizeLimit: any;
-	public commandType: any;
-	public componentType: any;
-	public token: any;
-	constructor(client: any, data: any) {
+	/**
+	 * The interaction's type
+	 */
+	public type: InteractionType;
+
+	/**
+	 * The interaction's id
+	 */
+	public id: Snowflake;
+
+	/**
+	 * The interaction's token
+	 * @readonly
+	 */
+	public readonly token: string;
+
+	/**
+	 * The application's id
+	 */
+	public applicationId: Snowflake;
+
+	/**
+	 * The id of the channel this interaction was sent in
+	 */
+	public channelId: Snowflake | null;
+
+	/**
+	 * The id of the guild this interaction was sent in
+	 */
+	public guildId: Snowflake | null;
+
+	/**
+	 * The user who created this interaction
+	 */
+	public user: User;
+
+	/**
+	 * If this interaction was sent in a guild, the member which sent it
+	 */
+	public member: GuildMember | APIInteractionGuildMember | null;
+
+	/**
+	 * The version
+	 */
+	public version: number;
+
+	/**
+	 * Set of permissions the application or bot has within the channel the interaction was sent from
+	 */
+	public appPermissions: Readonly<PermissionsBitField>;
+
+	/**
+	 * The permissions of the member, if one exists, in the channel this interaction was executed in
+	 */
+	public memberPermissions: Readonly<PermissionsBitField> | null;
+
+	/**
+	 * The locale of the user who invoked this interaction
+	 */
+	public locale: Locale;
+
+	/**
+	 * The preferred locale from the guild this interaction was sent in
+	 */
+	public guildLocale: Locale | null;
+
+	/**
+	 * The entitlements for the invoking user, representing access to premium SKUs
+	 */
+	public entitlements: Collection<Snowflake, Entitlement>;
+
+	/**
+	 * Mapping of integration types that the application was authorized for the related user or guild ids
+	 */
+	public authorizingIntegrationOwners: AuthorizingIntegrationOwners;
+
+	/**
+	 * Context where the interaction was triggered from
+	 * @see {@link https://discord.com/developers/docs/interactions/receiving-and-responding#interaction-object-authorizing-integration-owners-object}
+	 */
+	public context: InteractionContextType | null;
+
+	/**
+	 * Attachment size limit in bytes
+	 */
+	public attachmentSizeLimit: number;
+
+	public commandType: ApplicationCommandType | null;
+	public componentType: ComponentType | null;
+
+	constructor(client: Client, data: APIInteraction) {
 		super(client);
 
-		/**
-		 * The interaction's type
-		 *
-		 * @type {InteractionType}
-		 */
 		this.type = data.type;
 
-		/**
-		 * The interaction's id
-		 *
-		 * @type {Snowflake}
-		 */
-		this.id = data.id;
-
-		/**
-		 * The interaction's token
-		 *
-		 * @type {string}
-		 * @name BaseInteraction#token
-		 * @readonly
-		 */
 		Object.defineProperty(this, 'token', { value: data.token, configurable: true, writable: true });
 
-		/**
-		 * The application's id
-		 *
-		 * @type {Snowflake}
-		 */
 		this.applicationId = data.application_id;
 
-		/**
-		 * The id of the channel this interaction was sent in
-		 *
-		 * @type {?Snowflake}
-		 */
 		this.channelId = data.channel?.id ?? null;
 
-		/**
-		 * The id of the guild this interaction was sent in
-		 *
-		 * @type {?Snowflake}
-		 */
 		this.guildId = data.guild_id ?? null;
 
-		/**
-		 * The user who created this interaction
-		 *
-		 * @type {User}
-		 */
-		this.user = this.client.users._add(data.user ?? data.member.user);
+		this.user = this.client.users._add(data.user ?? (data as any).member?.user);
 
-		/**
-		 * If this interaction was sent in a guild, the member which sent it
-		 *
-		 * @type {?(GuildMember|APIInteractionGuildMember)}
-		 */
 		this.member = data.member ? (this.guild?.members._add(data.member) ?? data.member) : null;
 
-		/**
-		 * The version
-		 *
-		 * @type {number}
-		 */
 		this.version = data.version;
 
-		/**
-		 * Set of permissions the application or bot has within the channel the interaction was sent from
-		 *
-		 * @type {Readonly<PermissionsBitField>}
-		 */
 		this.appPermissions = new PermissionsBitField(data.app_permissions).freeze();
 
-		/**
-		 * The permissions of the member, if one exists, in the channel this interaction was executed in
-		 *
-		 * @type {?Readonly<PermissionsBitField>}
-		 */
 		this.memberPermissions = data.member?.permissions
 			? new PermissionsBitField(data.member.permissions).freeze()
 			: null;
 
-		/**
-		 * The locale of the user who invoked this interaction
-		 *
-		 * @type {Locale}
-		 */
-		this.locale = data.locale;
+		this.locale = (data as Extract<APIInteraction, { locale: Locale }>).locale;
 
-		/**
-		 * The preferred locale from the guild this interaction was sent in
-		 *
-		 * @type {?Locale}
-		 */
-		this.guildLocale = data.guild_locale ?? null;
+		this.guildLocale = (data as any).guild_locale ?? null;
 
-		/**
-		 * The entitlements for the invoking user, representing access to premium SKUs
-		 *
-		 * @type {Collection<Snowflake, Entitlement>}
-		 */
-		this.entitlements = data.entitlements.reduce(
-			(coll: any, entitlement: any) => coll.set(entitlement.id, this.client.application.entitlements._add(entitlement)),
-			new Collection(),
+		this.entitlements = ((data as any).entitlements ?? []).reduce(
+			(coll: Collection<Snowflake, Entitlement>, entitlement: any) =>
+				coll.set(entitlement.id, this.client.application.entitlements._add(entitlement)),
+			new Collection<Snowflake, Entitlement>(),
 		);
 
-		/**
-		 * Mapping of integration types that the application was authorized for the related user or guild ids
-		 *
-		 * @type {AuthorizingIntegrationOwners}
-		 * @see {@link https://discord.com/developers/docs/interactions/receiving-and-responding#interaction-object-authorizing-integration-owners-object}
-		 */
 		this.authorizingIntegrationOwners = new AuthorizingIntegrationOwners(
 			this.client,
-			data.authorizing_integration_owners,
+			(data as any).authorizing_integration_owners,
 		);
 
-		/**
-		 * Context where the interaction was triggered from
-		 *
-		 * @type {?InteractionContextType}
-		 */
-		this.context = data.context ?? null;
+		this.context = (data as any).context ?? null;
 
-		/**
-		 * Attachment size limit in bytes
-		 *
-		 * @type {number}
-		 */
-		this.attachmentSizeLimit = data.attachment_size_limit;
+		this.attachmentSizeLimit = (data as any).attachment_size_limit;
+
+		this.commandType = (data as any).data?.type ?? null;
+		this.componentType = (data as any).data?.component_type ?? null;
 	}
 
 	/**

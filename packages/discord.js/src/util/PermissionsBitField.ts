@@ -1,8 +1,5 @@
 import { PermissionFlagsBits } from 'discord-api-types/v10';
-import { BitField, type BitFieldResolvable } from './BitField.js';
-
-export type PermissionsString = keyof typeof PermissionFlagsBits;
-export type PermissionResolvable = BitFieldResolvable<PermissionsString, bigint>;
+import { BitField } from './BitField.js';
 
 /**
  * Data structure that makes it easy to interact with a permission bitfield. All {@link GuildMember}s have a set of
@@ -19,7 +16,10 @@ export class PermissionsBitField extends BitField {
 	 * @memberof PermissionsBitField
 	 * @see {@link https://discord.com/developers/docs/topics/permissions#permissions-bitwise-permission-flags}
 	 */
-	static override Flags = PermissionFlagsBits;
+	static override Flags: Record<string, number | bigint> = PermissionFlagsBits as unknown as Record<
+		string,
+		number | bigint
+	>;
 
 	/**
 	 * Bitfield representing every permission combined
@@ -27,6 +27,7 @@ export class PermissionsBitField extends BitField {
 	 * @type {bigint}
 	 * @memberof PermissionsBitField
 	 */
+
 	static All = Object.values(PermissionFlagsBits).reduce((all, perm) => all | perm, 0n);
 
 	/**
@@ -51,7 +52,7 @@ export class PermissionsBitField extends BitField {
 	 * @memberof PermissionsBitField
 	 * @private
 	 */
-	static override DefaultBit = BigInt(0);
+	static DefaultBit = BigInt(0);
 
 	/**
 	 * Bitfield of the packed bits
@@ -59,7 +60,16 @@ export class PermissionsBitField extends BitField {
 	 * @type {bigint}
 	 * @name PermissionsBitField#bitfield
 	 */
-	public declare bitfield: bigint;
+
+	/**
+	 * Data that can be resolved to give a permission number. This can be:
+	 * - A string (see {@link PermissionsBitField.Flags})
+	 * - A permission number
+	 * - An instance of {@link PermissionsBitField}
+	 * - An Array of PermissionResolvable
+	 *
+	 * @typedef {string|bigint|PermissionsBitField|PermissionResolvable[]} PermissionResolvable
+	 */
 
 	/**
 	 * Gets all given bits that are missing from the bitfield.
@@ -68,7 +78,7 @@ export class PermissionsBitField extends BitField {
 	 * @param {boolean} [checkAdmin=true] Whether to allow the administrator permission to override
 	 * @returns {string[]}
 	 */
-	override missing(bits: BitFieldResolvable<PermissionsString, bigint>, checkAdmin = true): string[] {
+	missing(bits: any, checkAdmin = true) {
 		return checkAdmin && this.has(PermissionFlagsBits.Administrator) ? [] : super.missing(bits);
 	}
 
@@ -79,7 +89,7 @@ export class PermissionsBitField extends BitField {
 	 * @param {boolean} [checkAdmin=true] Whether to allow the administrator permission to override
 	 * @returns {boolean}
 	 */
-	override any(permission: PermissionResolvable, checkAdmin = true): boolean {
+	any(permission: any, checkAdmin = true) {
 		return (checkAdmin && super.has(PermissionFlagsBits.Administrator)) || super.any(permission);
 	}
 
@@ -90,7 +100,7 @@ export class PermissionsBitField extends BitField {
 	 * @param {boolean} [checkAdmin=true] Whether to allow the administrator permission to override
 	 * @returns {boolean}
 	 */
-	override has(permission: PermissionResolvable, checkAdmin = true): boolean {
+	has(permission: any, checkAdmin = true) {
 		return (checkAdmin && super.has(PermissionFlagsBits.Administrator)) || super.has(permission);
 	}
 
@@ -99,7 +109,7 @@ export class PermissionsBitField extends BitField {
 	 *
 	 * @returns {string[]}
 	 */
-	override toArray(): PermissionsString[] {
-		return super.toArray(false) as PermissionsString[];
+	toArray() {
+		return super.toArray(false);
 	}
 }

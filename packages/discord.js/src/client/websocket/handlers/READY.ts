@@ -14,7 +14,7 @@ export default (client: Client, { d: data }: GatewayReadyDispatch, shardId: numb
 
 	for (const guild of data.guilds) {
 		client.expectedGuilds.add(guild.id);
-		(guild as any).shardId = shardId;
+		(guild as (typeof data.guilds)[number] & { shardId: number }).shardId = shardId;
 		client.guilds._add(guild);
 	}
 

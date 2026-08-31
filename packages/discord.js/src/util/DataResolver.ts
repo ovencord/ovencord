@@ -5,59 +5,57 @@ import { BaseInvite } from '../structures/BaseInvite.js';
 // Fixes circular dependencies.
 const getGuildTemplate = lazy(() => require('../structures/GuildTemplate.js').GuildTemplate);
 
+/**
+ * Data that can be resolved to give an invite code. This can be:
+ * - An invite code
+ * - An invite URL
+ */
 export type InviteResolvable = string;
-export type GuildTemplateResolvable = string;
-export type BufferResolvable =
-	| Buffer
-	| Uint8Array
-	| ArrayBuffer
-	| Blob
-	| string
-	| AsyncIterable<Uint8Array | ArrayBuffer | Buffer>;
-export type Base64Resolvable = Buffer | Uint8Array | string;
-
-export interface ResolvedFile {
-	data: Buffer | Uint8Array;
-	contentType?: string;
-}
 
 /**
- * Resolves the string to a code based on the passed regex.
- *
- * @param {string} data The string to resolve
- * @param {RegExp} regex The RegExp used to extract the code
- * @returns {string}
+ * Data that can be resolved to give a template code. This can be:
+ * - A template code
+ * - A template URL
  */
+export type GuildTemplateResolvable = string;
+
 export function resolveCode(data: string, regex: RegExp): string {
 	return regex.exec(data)?.[1] ?? data;
 }
 
-/**
- * Resolves InviteResolvable to an invite code.
- *
- * @param {InviteResolvable} data The invite resolvable to resolve
- * @returns {string}
- */
 export function resolveInviteCode(data: InviteResolvable): string {
 	return resolveCode(data, BaseInvite.InvitesPattern);
 }
 
-/**
- * Resolves GuildTemplateResolvable to a template code.
- *
- * @param {GuildTemplateResolvable} data The template resolvable to resolve
- * @returns {string}
- */
 export function resolveGuildTemplateCode(data: GuildTemplateResolvable): string {
 	return resolveCode(data, getGuildTemplate().GuildTemplatesPattern);
 }
 
 /**
- * Resolves a BufferResolvable to a Buffer.
- *
- * @param {BufferResolvable} resource The buffer or stream resolvable to resolve
- * @returns {Promise<ResolvedFile>}
+ * Data that can be resolved to give a Buffer. This can be:
+ * - A Buffer
+ * - The path to a local file
+ * - A URL
  */
+export type BufferResolvable =
+	| string
+	| Buffer
+	| Uint8Array
+	| ArrayBuffer
+	| Blob
+	| AsyncIterable<Uint8Array | ArrayBuffer | string>;
+
+/**
+ * @typedef {Object} ResolvedFile
+ * @property {Buffer | Uint8Array} data Buffer containing the file data
+ * @property {string} [contentType] Content-Type of the file
+ * @private
+ */
+export interface ResolvedFile {
+	data: Buffer | Uint8Array;
+	contentType?: string;
+}
+
 export async function resolveFile(resource: BufferResolvable): Promise<ResolvedFile> {
 	if (Buffer.isBuffer(resource)) return { data: resource };
 
@@ -75,11 +73,15 @@ export async function resolveFile(resource: BufferResolvable): Promise<ResolvedF
 		};
 	}
 
-	if (typeof (resource as AsyncIterable<Uint8Array | ArrayBuffer | Buffer>)[Symbol.asyncIterator] === 'function') {
+	if (resource && Symbol.asyncIterator in (resource as object)) {
+		const iterable = resource as AsyncIterable<Uint8Array | ArrayBuffer | string>;
 		const chunks: Uint8Array[] = [];
 		let totalLen = 0;
-		for await (const data of resource as AsyncIterable<Uint8Array | ArrayBuffer | Buffer>) {
-			const chunk = data instanceof Uint8Array ? data : new Uint8Array(data);
+		for await (const data of iterable) {
+			const chunk =
+				data instanceof Uint8Array
+					? data
+					: new Uint8Array(typeof data === 'string' ? Buffer.from(data) : (data as ArrayBuffer));
 			chunks.push(chunk);
 			totalLen += chunk.byteLength;
 		}
@@ -95,7 +97,7 @@ export async function resolveFile(resource: BufferResolvable): Promise<ResolvedF
 	if (typeof resource === 'string') {
 		if (/^https?:\/\//.test(resource)) {
 			const res = await fetch(resource);
-			return { data: Buffer.from(await res.arrayBuffer()), contentType: res.headers.get('content-type') ?? undefined };
+			return { data: Buffer.from(await res.arrayBuffer()), contentType: res.headers.get('content-type') };
 		}
 
 		const bunFile = Bun.file(resource);
@@ -107,6 +109,13 @@ export async function resolveFile(resource: BufferResolvable): Promise<ResolvedF
 }
 
 /**
+ * Data that resolves to give a Base64 string, typically for image uploading. This can be:
+ * - A Buffer
+ * - A base64 string
+ */
+export type Base64Resolvable = Buffer | string;
+
+/**
  * Resolves a Base64Resolvable to a Base 64 string.
  *
  * @param {Base64Resolvable} data The base 64 resolvable you want to resolve
@@ -115,24 +124,15 @@ export async function resolveFile(resource: BufferResolvable): Promise<ResolvedF
  */
 export function resolveBase64(data: Base64Resolvable, contentType = 'image/jpg'): string {
 	if (Buffer.isBuffer(data)) return `data:${contentType};base64,${data.toString('base64')}`;
-	if (data instanceof Uint8Array) return `data:${contentType};base64,${Buffer.from(data).toString('base64')}`;
 	return data;
 }
 
-/**
- * Resolves a Base64Resolvable, a string, or a BufferResolvable to a Base 64 image.
- *
- * @param {BufferResolvable|Base64Resolvable} image The image to be resolved
- * @returns {Promise<?string>}
- */
-export async function resolveImage(
-	image: BufferResolvable | Base64Resolvable | null | undefined,
-): Promise<string | null> {
+export async function resolveImage(image: BufferResolvable | Base64Resolvable): Promise<string | null> {
 	if (!image) return null;
 	if (typeof image === 'string' && image.startsWith('data:')) {
 		return image;
 	}
 
-	const file = await resolveFile(image);
-	return resolveBase64(file.data);
+	const file = await resolveFile(image as BufferResolvable);
+	return resolveBase64(Buffer.from(file.data), 'image/jpg');
 }

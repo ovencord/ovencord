@@ -1,7 +1,18 @@
 import { Collection } from '@ovencord/collection';
 import { lazy } from '@ovencord/util';
-import { ChannelType, RouteBases, Routes } from 'discord-api-types/v10';
+import {
+	type APIChannel,
+	type APIEmoji,
+	type APIInteractionDataResolved,
+	ChannelType,
+	RouteBases,
+	Routes,
+	type Snowflake,
+} from 'discord-api-types/v10';
+import type { Client } from '../client/Client.js';
 import { DiscordjsError, DiscordjsRangeError, DiscordjsTypeError, ErrorCodes } from '../errors/index.js';
+import type { BaseChannel } from '../structures/BaseChannel.js';
+import type { Role } from '../structures/Role.js';
 import { Colors } from './Colors.js';
 
 // Fixes circular dependencies.
@@ -9,22 +20,68 @@ const getAttachment = lazy(() => require('../structures/Attachment.js').Attachme
 const getGuildChannel = lazy(() => require('../structures/GuildChannel.js').GuildChannel);
 const getSKU = lazy(() => require('../structures/SKU.js').SKU);
 
-const isObject = (data: any): boolean => typeof data === 'object' && data !== null;
+const isObject = (data: unknown): data is object => typeof data === 'object' && data !== null;
 
 /**
- * Flatten an object. Any properties that are collections will get converted to an array of keys.
- *
- * @param {Object} obj The object to flatten.
- * @param {...Object<string, boolean|string>} [props] Specific properties to include/exclude.
- * @returns {Object}
+ * Data that can be resolved into a color.
  */
-export function flatten(obj: any, ...props: any[]): any {
+export type ColorResolvable = keyof typeof Colors | 'Random' | 'Default' | number | [number, number, number];
+
+/**
+ * Data for a partial emoji.
+ */
+export interface PartialEmoji {
+	animated: boolean;
+	id?: Snowflake;
+	name: string;
+}
+
+/**
+ * Data for a partial emoji with only an id.
+ */
+export interface PartialEmojiOnlyId {
+	id: Snowflake;
+}
+
+/**
+ * Data that can be resolved into an emoji.
+ */
+export type EmojiIdentifierResolvable =
+	| string
+	| Snowflake
+	| APIEmoji
+	| { id?: Snowflake; name?: string; animated?: boolean };
+
+/**
+ * Data to support the transformation of resolved data.
+ */
+export interface SupportingInteractionResolvedData {
+	client: Client;
+	guild?: any; // Guild remains complex due to circularity
+	channel?: any; // Channel remains complex due to circularity
+}
+
+/**
+ * Options used to make an error object.
+ */
+export interface MakeErrorOptions {
+	name: string;
+	message: string;
+	stack?: string;
+}
+
+export function flatten(obj: unknown, ...props: Record<string, boolean | string>[]): any {
 	return _flatten(obj, new WeakSet(), 0, ...props);
 }
 
 const MAX_FLATTEN_DEPTH = 10;
 
-function _flatten(obj: any, seen: WeakSet<object>, depth: number, ...props: any[]): any {
+function _flatten(
+	obj: unknown,
+	seen: WeakSet<object>,
+	depth: number,
+	...props: Record<string, boolean | string>[]
+): any {
 	if (!isObject(obj)) return obj;
 
 	// Depth guard — prevents stack overflow from deeply nested object trees
@@ -48,10 +105,11 @@ function _flatten(obj: any, seen: WeakSet<object>, depth: number, ...props: any[
 		if (!newProp) continue;
 		newProp = newProp === true ? prop : newProp;
 
-		const element = obj[prop];
+		const element = (obj as any)[prop];
 		const elemIsObj = isObject(element);
-		const elementValueOf = elemIsObj && typeof element.valueOf === 'function' ? element.valueOf() : null;
-		const hasToJSON = elemIsObj && typeof element.toJSON === 'function';
+		const elementValueOf =
+			elemIsObj && typeof (element as any).valueOf === 'function' ? (element as any).valueOf() : null;
+		const hasToJSON = elemIsObj && typeof (element as any).toJSON === 'function';
 
 		// If it's a Collection, make the array of keys
 		if (element instanceof Collection) out[newProp as string] = Array.from(element.keys());
@@ -59,13 +117,13 @@ function _flatten(obj: any, seen: WeakSet<object>, depth: number, ...props: any[
 		else if (elementValueOf instanceof Collection) out[newProp as string] = Array.from(elementValueOf.keys());
 		// If it's an array, call toJSON function on each element if present, otherwise flatten each element
 		else if (Array.isArray(element))
-			out[newProp as string] = element.map((elm) => elm.toJSON?.() ?? _flatten(elm, seen, depth + 1));
+			out[newProp as string] = element.map((elm: any) => (elm as any).toJSON?.() ?? _flatten(elm, seen, depth + 1));
 		// If it's an object with a primitive `valueOf`, use that value
 		else if (typeof elementValueOf !== 'object') out[newProp as string] = elementValueOf;
 		// If it's an object with a toJSON function, use the return value of it
-		else if (hasToJSON) out[newProp as string] = element.toJSON();
+		else if (hasToJSON) out[newProp as string] = (element as any).toJSON();
 		// If element is an object, use the flattened version of it
-		else if (typeof element === 'object') out[newProp as string] = _flatten(element, seen, depth + 1);
+		else if (typeof element === 'object') out[newProp as string] = _flatten(element, seen, depth + 1, ...props);
 		// If it's a primitive
 		else if (!elemIsObj) out[newProp as string] = element;
 	}
@@ -79,19 +137,12 @@ function _flatten(obj: any, seen: WeakSet<object>, depth: number, ...props: any[
  * @property {number} [multipleOf=1] The multiple the shard count should round up to. (16 for large bot sharding)
  */
 
-/**
- * Gets the recommended shard count from Discord.
- *
- * @param {string} token Discord auth token
- * @param {FetchRecommendedShardCountOptions} [options] Options for fetching the recommended shard count
- * @returns {Promise<number>} The recommended number of shards
- */
 export async function fetchRecommendedShardCount(
 	token: string,
 	{ guildsPerShard = 1_000, multipleOf = 1 } = {},
 ): Promise<number> {
 	if (!token) throw new DiscordjsError(ErrorCodes.TokenMissing);
-	const response = await fetch(RouteBases.api + Routes.gatewayBot(), {
+	const response = await fetch(`${RouteBases.api}${Routes.gatewayBot()}`, {
 		method: 'GET',
 		headers: { Authorization: `Bot ${token.replace(/^bot\s*/i, '')}` },
 	});
@@ -100,65 +151,32 @@ export async function fetchRecommendedShardCount(
 		throw response;
 	}
 
-	const { shards }: any = await response.json();
+	const { shards } = (await response.json()) as { shards: number };
 	return Math.ceil((shards * (1_000 / guildsPerShard)) / multipleOf) * multipleOf;
 }
 
-/**
- * A partial emoji object.
- *
- * @typedef {Object} PartialEmoji
- * @property {boolean} animated Whether the emoji is animated
- * @property {Snowflake|undefined} id The id of the emoji
- * @property {string} name The name of the emoji
- */
-
-/**
- * Parses emoji info out of a string. The string must be one of:
- * - A UTF-8 emoji (no id)
- * - A URL-encoded UTF-8 emoji (no id)
- * - A Discord custom emoji (`<:name:id>` or `<a:name:id>`)
- *
- * @param {string} text Emoji string to parse
- * @returns {?PartialEmoji}
- */
-export function parseEmoji(text: string): any {
+export function parseEmoji(text: string): PartialEmoji | null {
 	const decodedText = text.includes('%') ? decodeURIComponent(text) : text;
 	if (!decodedText.includes(':')) return { animated: false, name: decodedText, id: undefined };
 	const match = /<?(?:(?<animated>a):)?(?<name>\w{2,32}):(?<id>\d{17,19})?>?/.exec(decodedText);
-	return match && { animated: Boolean(match.groups?.animated), name: match.groups?.name, id: match.groups?.id };
+	return (
+		match && {
+			animated: Boolean(match.groups?.animated),
+			name: match.groups?.name as string,
+			id: match.groups?.id as Snowflake,
+		}
+	);
 }
 
-/**
- * A partial emoji object with only an id.
- *
- * @typedef {Object} PartialEmojiOnlyId
- * @property {Snowflake} id The id of the emoji
- */
-
-/**
- * Resolves a partial emoji object from an {@link EmojiIdentifierResolvable}, without checking a Client.
- *
- * @param {Emoji|EmojiIdentifierResolvable} emoji Emoji identifier to resolve
- * @returns {?(PartialEmoji|PartialEmojiOnlyId)} Supplying a snowflake yields `PartialEmojiOnlyId`.
- */
-export function resolvePartialEmoji(emoji: any): any {
+export function resolvePartialEmoji(emoji: EmojiIdentifierResolvable): PartialEmoji | PartialEmojiOnlyId | null {
 	if (!emoji) return null;
 	if (typeof emoji === 'string') return /^\d{17,19}$/.test(emoji) ? { id: emoji } : parseEmoji(emoji);
-	const { id, name, animated } = emoji;
+	const { id, name, animated } = emoji as { id?: Snowflake; name?: string; animated?: boolean };
 	if (!id && !name) return null;
 	return { id, name, animated: Boolean(animated) };
 }
 
-/**
- * Resolves a {@link GuildEmoji} from an emoji id.
- *
- * @param {Client} client The client to use to resolve the emoji
- * @param {Snowflake} emojiId The emoji id to resolve
- * @returns {?GuildEmoji}
- * @private
- */
-export function resolveGuildEmoji(client: any, emojiId: string): any {
+export function resolveGuildEmoji(client: Client, emojiId: string): any {
 	for (const guild of client.guilds.cache.values()) {
 		if (!guild.available) {
 			continue;
@@ -174,38 +192,14 @@ export function resolveGuildEmoji(client: any, emojiId: string): any {
 	return null;
 }
 
-/**
- * Options used to make an error object.
- *
- * @typedef {Object} MakeErrorOptions
- * @property {string} name Error type
- * @property {string} message Message for the error
- * @property {string} stack Stack for the error
- * @private
- */
-
-/**
- * Makes an Error from a plain info object.
- *
- * @param {MakeErrorOptions} obj Error info
- * @returns {Error}
- * @private
- */
-export function makeError(obj: any): Error {
+export function makeError(obj: MakeErrorOptions): Error {
 	const err = new Error(obj.message);
 	err.name = obj.name;
-	err.stack = obj.stack;
+	if (obj.stack) err.stack = obj.stack;
 	return err;
 }
 
-/**
- * Makes a plain error info object from an Error.
- *
- * @param {Error} err Error to get info from
- * @returns {MakeErrorOptions}
- * @private
- */
-export function makePlainError(err: Error): any {
+export function makePlainError(err: Error): MakeErrorOptions {
 	return {
 		name: err.name,
 		message: err.message,
@@ -250,17 +244,7 @@ export function getSortableGroupTypes(type: ChannelType): ChannelType[] {
 	}
 }
 
-/**
- * Moves an element in an array *in place*.
- *
- * @param {Array<*>} array Array to modify
- * @param {*} element Element to move
- * @param {number} newIndex Index or offset to move the element to
- * @param {boolean} [offset=false] Move the element by an offset amount rather than to a set index
- * @returns {number}
- * @private
- */
-export function moveElementInArray(array: any[], element: any, newIndex: number, offset = false): number {
+export function moveElementInArray<T>(array: T[], element: T, newIndex: number, offset = false): number {
 	const index = array.indexOf(element);
 	const targetIndex = (offset ? index : 0) + newIndex;
 	if (targetIndex > -1 && targetIndex < array.length) {
@@ -271,18 +255,9 @@ export function moveElementInArray(array: any[], element: any, newIndex: number,
 	return array.indexOf(element);
 }
 
-/**
- * Verifies the provided data is a string, otherwise throws provided error.
- *
- * @param {string} data The string resolvable to resolve
- * @param {Function} [error=Error] The Error constructor to instantiate. Defaults to Error
- * @param {string} [errorMessage="Expected string, got <data> instead."] The error message to throw with. Defaults to "Expected string, got <data> instead."
- * @param {boolean} [allowEmpty=true] Whether an empty string should be allowed
- * @returns {string}
- */
 export function verifyString(
-	data: any,
-	error: any = Error,
+	data: unknown,
+	error: ErrorConstructor = Error,
 	errorMessage = `Expected a string, got ${data} instead.`,
 	allowEmpty = true,
 ): string {
@@ -291,14 +266,8 @@ export function verifyString(
 	return data;
 }
 
-/**
- * Resolves a ColorResolvable into a color number.
- *
- * @param {ColorResolvable} color Color to resolve
- * @returns {number} A color
- */
-export function resolveColor(color: any): number {
-	let resolvedColor: any;
+export function resolveColor(color: ColorResolvable): number {
+	let resolvedColor: number;
 
 	if (typeof color === 'string') {
 		if (color === 'Random') return Math.floor(Math.random() * (0xffffff + 1));
@@ -308,7 +277,7 @@ export function resolveColor(color: any): number {
 	} else if (Array.isArray(color)) {
 		resolvedColor = (color[0] << 16) + (color[1] << 8) + color[2];
 	} else {
-		resolvedColor = color;
+		resolvedColor = color as number;
 	}
 
 	if (!Number.isInteger(resolvedColor)) {
@@ -322,13 +291,9 @@ export function resolveColor(color: any): number {
 	return resolvedColor;
 }
 
-/**
- * Sorts by Discord's position and id.
- *
- * @param {Collection} collection Collection of objects to sort
- * @returns {Collection}
- */
-export function discordSort(collection: Collection<string, any>): Collection<string, any> {
+export function discordSort<T extends { id: Snowflake; rawPosition: number }>(
+	collection: Collection<string, T>,
+): Collection<string, T> {
 	const isGuildChannel = collection.first() instanceof getGuildChannel();
 	return collection.toSorted(
 		isGuildChannel
@@ -337,32 +302,19 @@ export function discordSort(collection: Collection<string, any>): Collection<str
 	);
 }
 
-/**
- * Sets the position of a Channel or Role.
- *
- * @param {BaseChannel|Role} item Object to set the position of
- * @param {number} position New position for the object
- * @param {boolean} relative Whether `position` is relative to its current position
- * @param {Collection<string, BaseChannel|Role>} sorted A collection of the objects sorted properly
- * @param {Client} client The client to use to patch the data
- * @param {string} route Route to call PATCH on
- * @param {string} [reason] Reason for the change
- * @returns {Promise<BaseChannel[]|Role[]>} Updated item list, with `id` and `position` properties
- * @private
- */
-export async function setPosition(
-	item: any,
+export async function setPosition<T extends { id: Snowflake }>(
+	item: T,
 	position: number,
 	relative: boolean,
-	sorted: Collection<string, any>,
-	client: any,
+	sorted: Collection<string, T>,
+	client: Client,
 	route: string,
 	reason?: string,
-): Promise<any[]> {
-	let updatedItems = [...sorted.values()];
-	moveElementInArray(updatedItems, item, position, relative);
-	updatedItems = updatedItems.map((innerItem, index) => ({ id: innerItem.id, position: index }));
-	await client.rest.patch(route, { body: updatedItems, reason });
+): Promise<{ id: Snowflake; position: number }[]> {
+	const updatedItemsList = [...sorted.values()];
+	moveElementInArray(updatedItemsList, item, position, relative);
+	const updatedItems = updatedItemsList.map((innerItem, index) => ({ id: innerItem.id, position: index }));
+	await (client as { rest: { patch: Function } }).rest.patch(route, { body: updatedItems, reason });
 	return updatedItems;
 }
 
@@ -381,16 +333,9 @@ export function basename(filePath: string, ext?: string): string {
 	return base;
 }
 
-/**
- * Find the filename to use for attachments.
- *
- * @param {BufferResolvable|Stream} thing The thing to attach as attachment
- * @returns {string} filename to use
- */
-export function findName(thing: any): string {
+export function findName(thing: unknown): string {
 	if (!thing) return 'file.bin';
 
-	// Binary data types — no path available
 	if (Buffer.isBuffer(thing) || thing instanceof Uint8Array || thing instanceof ArrayBuffer || thing instanceof Blob) {
 		return 'file.bin';
 	}
@@ -399,49 +344,42 @@ export function findName(thing: any): string {
 		return basename(thing);
 	}
 
-	if (thing.path) {
+	if (thing && typeof thing === 'object' && 'path' in thing && typeof thing.path === 'string') {
 		return basename(thing.path);
 	}
 
 	return 'file.jpg';
 }
 
-/**
- * The content to have all mentions replaced by the equivalent text.
- *
- * @param {string} str The string to be converted
- * @param {TextBasedChannels} channel The channel the string was sent in
- * @returns {string}
- */
 export function cleanContent(str: string, channel: any): string {
 	return str.replaceAll(
 		/<(?:(?<type>@[!&]?|#)|(?:\/(?<commandName>[-_\p{L}\p{N}\p{sc=Deva}\p{sc=Thai} ]+):)|(?:a?:(?<emojiName>[\w]+):))(?<id>\d{17,19})>/gu,
 		(match, type, commandName, emojiName, id) => {
-			if (commandName) return `/${commandName}`;
+			if (commandName) return `/${commandName as string}`;
 
-			if (emojiName) return `:${emojiName}:`;
+			if (emojiName) return `:${emojiName as string}:`;
 
 			switch (type) {
 				case '@':
 				case '@!': {
 					const member = channel.guild?.members.cache.get(id);
 					if (member) {
-						return `@${member.displayName}`;
+						return `@${member.displayName as string}`;
 					}
 
 					const user = channel.client.users.cache.get(id);
-					return user ? `@${user.displayName}` : match;
+					return user ? `@${user.displayName as string}` : match;
 				}
 
 				case '@&': {
 					if (channel.type === ChannelType.DM) return match;
 					const role = channel.guild.roles.cache.get(id);
-					return role ? `@${role.name}` : match;
+					return role ? `@${role.name as string}` : match;
 				}
 
 				case '#': {
 					const mentionedChannel = channel.client.channels.cache.get(id);
-					return mentionedChannel ? `#${mentionedChannel.name}` : match;
+					return mentionedChannel ? `#${mentionedChannel.name as string}` : match;
 				}
 
 				default: {
@@ -462,102 +400,82 @@ export function cleanCodeBlockContent(text: string): string {
 	return text.replaceAll('```', '`\u200B``');
 }
 
-/**
- * Parses a webhook URL for the id and token.
- *
- * @param {string} url The URL to parse
- * @returns {?WebhookDataIdWithToken} `null` if the URL is invalid, otherwise the id and the token
- */
-export function parseWebhookURL(url: string): any {
+export function parseWebhookURL(url: string): { id: Snowflake; token: string } | null {
 	const matches =
 		/https?:\/\/(?:ptb\.|canary\.)?discord\.com\/api(?:\/v\d{1,2})?\/webhooks\/(?<id>\d{17,19})\/(?<token>[\w-]{68})/i.exec(
 			url,
 		);
 
-	return matches && { id: matches.groups?.id, token: matches.groups?.token };
+	if (!matches?.groups) return null;
+	return { id: matches.groups.id as Snowflake, token: matches.groups.token };
 }
 
-/**
- * Transforms the resolved data received from the API.
- *
- * @param {SupportingInteractionResolvedData} supportingData Data to support the transformation
- * @param {APIInteractionDataResolved} [data] The received resolved objects
- * @returns {CommandInteractionResolvedData}
- * @private
- */
 export function transformResolved(
-	{ client, guild, channel }: any,
-	{ members, users, channels, roles, messages, attachments }: any = {},
-): any {
-	const result = {};
+	{ client, guild, channel }: SupportingInteractionResolvedData,
+	{ members, users, channels, roles, attachments, ...other }: APIInteractionDataResolved = {},
+): Record<string, Collection<Snowflake, any>> {
+	const result: Record<string, Collection<Snowflake, any>> = {};
+	const messages = (other as { messages?: Record<string, unknown> }).messages;
 
 	if (members) {
-		// @ts-expect-error
-		result.members = new Collection();
+		result.members = new Collection<Snowflake, any>();
 		for (const [id, member] of Object.entries(members)) {
-			const user = (users as any)[id];
-			// @ts-expect-error
-			result.members.set(id, guild?.members._add(Object.assign({ user }, member)) ?? member);
+			const user = (users as Record<string, any> | undefined)?.[id];
+			result.members.set(id as Snowflake, (guild?.members as { _add: Function })?._add({ user, ...member }) ?? member);
 		}
 	}
 
 	if (users) {
-		// @ts-expect-error
-		result.users = new Collection();
+		result.users = new Collection<Snowflake, any>();
 		for (const user of Object.values(users)) {
-			// @ts-expect-error
-			result.users.set((user as any).id, client.users._add(user));
+			result.users.set(user.id as Snowflake, (client.users as { _add: Function })._add(user));
 		}
 	}
 
 	if (roles) {
-		// @ts-expect-error
-		result.roles = new Collection();
+		result.roles = new Collection<Snowflake, any>();
 		for (const role of Object.values(roles)) {
-			// @ts-expect-error
-			result.roles.set((role as any).id, guild?.roles._add(role) ?? role);
+			result.roles.set(
+				(role as { id: string }).id as Snowflake,
+				(guild?.roles as { _add: Function })?._add(role) ?? role,
+			);
 		}
 	}
 
 	if (channels) {
-		// @ts-expect-error
-		result.channels = new Collection();
+		result.channels = new Collection<Snowflake, BaseChannel | APIChannel>();
 		for (const apiChannel of Object.values(channels)) {
-			// @ts-expect-error
-			result.channels.set((apiChannel as any).id, client.channels._add(apiChannel, guild) ?? apiChannel);
+			result.channels.set(
+				(apiChannel as { id: string }).id as Snowflake,
+				(client.channels as unknown as { unify: Function }).unify(apiChannel, guild) ?? apiChannel,
+			);
 		}
 	}
 
 	if (messages) {
-		// @ts-expect-error
-		result.messages = new Collection();
+		result.messages = new Collection<Snowflake, any>();
 		for (const message of Object.values(messages)) {
-			// @ts-expect-error
-			result.messages.set((message as any).id, channel?.messages?._add(message) ?? message);
+			result.messages.set(
+				(message as { id: string }).id as Snowflake,
+				(channel?.messages as { _add: Function })?._add(message) ?? message,
+			);
 		}
 	}
 
 	if (attachments) {
-		// @ts-expect-error
-		result.attachments = new Collection();
+		result.attachments = new Collection<Snowflake, any>();
 		for (const attachment of Object.values(attachments)) {
-			const patched = new (getAttachment())(attachment);
-			// @ts-expect-error
-			result.attachments.set((attachment as any).id, patched);
+			const patched = new (getAttachment() as { new (data: unknown): any })(attachment);
+			result.attachments.set((attachment as { id: string }).id as Snowflake, patched);
 		}
 	}
 
 	return result;
 }
 
-/**
- * Resolves a SKU id from a SKU resolvable.
- *
- * @param {SKUResolvable} resolvable The SKU resolvable to resolve
- * @returns {?Snowflake} The resolved SKU id, or `null` if the resolvable was invalid
- */
-export function resolveSKUId(resolvable: any): string | null {
+export function resolveSKUId(resolvable: Snowflake | { id: Snowflake }): Snowflake | null {
 	if (typeof resolvable === 'string') return resolvable;
-	if (resolvable instanceof getSKU()) return resolvable.id;
+	if (resolvable instanceof (getSKU() as { new (...args: any[]): any })) return (resolvable as { id: Snowflake }).id;
+	if (typeof resolvable === 'object' && 'id' in resolvable) return resolvable.id;
 	return null;
 }

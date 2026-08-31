@@ -1,5 +1,10 @@
 import { isJSONEncodable } from '@ovencord/util';
-import type { APIAutoModerationAction, APIIncidentsData, APIMessageInteractionMetadata } from 'discord-api-types/v10';
+import type {
+	APIAutoModerationAction,
+	APIGuildScheduledEventRecurrenceRule,
+	APIMessageInteractionMetadata,
+} from 'discord-api-types/v10';
+import type { Client } from '../client/Client.js';
 import { AuthorizingIntegrationOwners } from '../structures/AuthorizingIntegrationOwners.js';
 
 /**
@@ -13,10 +18,10 @@ const snakeCase = (str: string): string => str.replace(/[A-Z]/g, (letter) => `_$
 /**
  * Transforms camel-cased keys into snake cased keys
  *
- * @param {*} obj The object to transform
- * @returns {*}
+ * @param {unknown} obj The object to transform
+ * @returns {unknown}
  */
-export function toSnakeCase(obj: any): any {
+export function toSnakeCase(obj: unknown): unknown {
 	if (typeof obj !== 'object' || !obj) return obj;
 	if (obj instanceof Date) return obj;
 	if (isJSONEncodable(obj)) return toSnakeCase(obj.toJSON());
@@ -28,16 +33,16 @@ export function toSnakeCase(obj: any): any {
  * Transforms an API auto moderation action object to a camel-cased variant.
  *
  * @param {APIAutoModerationAction} autoModerationAction The action to transform
- * @returns {any}
+ * @returns {unknown}
  * @ignore
  */
 export function _transformAPIAutoModerationAction(autoModerationAction: APIAutoModerationAction): any {
 	return {
 		type: autoModerationAction.type,
 		metadata: {
-			durationSeconds: autoModerationAction.metadata?.duration_seconds ?? null,
-			channelId: autoModerationAction.metadata?.channel_id ?? null,
-			customMessage: autoModerationAction.metadata?.custom_message ?? null,
+			durationSeconds: (autoModerationAction.metadata as any).duration_seconds ?? null,
+			channelId: (autoModerationAction.metadata as any).channel_id ?? null,
+			customMessage: (autoModerationAction.metadata as any).custom_message ?? null,
 		},
 	};
 }
@@ -45,33 +50,31 @@ export function _transformAPIAutoModerationAction(autoModerationAction: APIAutoM
 /**
  * Transforms an API message interaction metadata object to a camel-cased variant.
  *
- * @param {any} client The client
+ * @param {Client} client The client
  * @param {APIMessageInteractionMetadata} messageInteractionMetadata The metadata to transform
- * @returns {any}
+ * @returns {unknown}
  * @ignore
  */
 export function _transformAPIMessageInteractionMetadata(
-	client: any,
+	client: Client,
 	messageInteractionMetadata: APIMessageInteractionMetadata,
 ): any {
 	return {
 		id: messageInteractionMetadata.id,
 		type: messageInteractionMetadata.type,
-		user: client.users._add(messageInteractionMetadata.user),
+		user: (client.users as any)._add(messageInteractionMetadata.user),
 		authorizingIntegrationOwners: new AuthorizingIntegrationOwners(
 			client,
 			messageInteractionMetadata.authorizing_integration_owners,
 		),
-		originalResponseMessageId: messageInteractionMetadata.original_response_message_id ?? null,
-		interactedMessageId:
-			'interacted_message_id' in messageInteractionMetadata
-				? (messageInteractionMetadata.interacted_message_id ?? null)
-				: null,
-		triggeringInteractionMetadata:
-			'triggering_interaction_metadata' in messageInteractionMetadata &&
-			messageInteractionMetadata.triggering_interaction_metadata
-				? _transformAPIMessageInteractionMetadata(client, messageInteractionMetadata.triggering_interaction_metadata)
-				: null,
+		originalResponseMessageId: (messageInteractionMetadata as any).original_response_message_id ?? null,
+		interactedMessageId: (messageInteractionMetadata as any).interacted_message_id ?? null,
+		triggeringInteractionMetadata: (messageInteractionMetadata as any).triggering_interaction_metadata
+			? _transformAPIMessageInteractionMetadata(
+					client,
+					(messageInteractionMetadata as any).triggering_interaction_metadata,
+				)
+			: null,
 	};
 }
 
@@ -97,11 +100,11 @@ export function _transformGuildScheduledEventRecurrenceRule(recurrenceRule: any)
 /**
  * Transforms API incidents data to a camel-cased variant.
  *
- * @param {APIIncidentsData} data The incidents data to transform
+ * @param {any} data The incidents data to transform
  * @returns {any}
  * @ignore
  */
-export function _transformAPIIncidentsData(data: APIIncidentsData): any {
+export function _transformAPIIncidentsData(data: any): any {
 	return {
 		invitesDisabledUntil: data.invites_disabled_until ? new Date(data.invites_disabled_until) : null,
 		dmsDisabledUntil: data.dms_disabled_until ? new Date(data.dms_disabled_until) : null,

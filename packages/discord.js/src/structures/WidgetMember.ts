@@ -1,4 +1,15 @@
+import type { APIGuildWidgetMember, Snowflake } from 'discord-api-types/v10';
+import type { Client } from '../client/Client.js';
 import { Base } from './Base.js';
+
+interface WidgetVoiceState {
+	deaf?: boolean;
+	mute?: boolean;
+	self_deaf?: boolean;
+	self_mute?: boolean;
+	suppress?: boolean;
+	channel_id?: Snowflake | null;
+}
 
 /**
  * Represents a WidgetMember.
@@ -6,19 +17,19 @@ import { Base } from './Base.js';
  * @extends {Base}
  */
 export class WidgetMember extends Base {
-	public id: any;
-	public username: any;
-	public discriminator: any;
-	public avatar: any;
-	public status: any;
-	public deaf: any;
-	public mute: any;
-	public selfDeaf: any;
-	public selfMute: any;
-	public suppress: any;
-	public channelId: any;
-	public avatarURL: any;
-	public activity: any;
+	public id: string;
+	public username: string;
+	public discriminator: string;
+	public avatar: string | null;
+	public status: string;
+	public deaf: boolean | null;
+	public mute: boolean | null;
+	public selfDeaf: boolean | null;
+	public selfMute: boolean | null;
+	public suppress: boolean | null;
+	public channelId: Snowflake | null;
+	public avatarURL: string;
+	public activity: { name: string } | null;
 	/**
 	 * Activity sent in a {@link WidgetMember}.
 	 *
@@ -26,7 +37,7 @@ export class WidgetMember extends Base {
 	 * @property {string} name The name of the activity
 	 */
 
-	constructor(client: any, data: any) {
+	constructor(client: Client, data: APIGuildWidgetMember) {
 		super(client);
 
 		/**
@@ -55,7 +66,7 @@ export class WidgetMember extends Base {
 		 *
 		 * @type {?string}
 		 */
-		this.avatar = data.avatar;
+		this.avatar = data.avatar ?? null;
 
 		/**
 		 * The status of the member.
@@ -64,47 +75,48 @@ export class WidgetMember extends Base {
 		 */
 		this.status = data.status;
 
+		const widgetData = data as unknown as WidgetVoiceState;
 		/**
 		 * If the member is server deafened
 		 *
 		 * @type {?boolean}
 		 */
-		this.deaf = data.deaf ?? null;
+		this.deaf = widgetData.deaf ?? null;
 
 		/**
 		 * If the member is server muted
 		 *
 		 * @type {?boolean}
 		 */
-		this.mute = data.mute ?? null;
+		this.mute = widgetData.mute ?? null;
 
 		/**
 		 * If the member is self deafened
 		 *
 		 * @type {?boolean}
 		 */
-		this.selfDeaf = data.self_deaf ?? null;
+		this.selfDeaf = widgetData.self_deaf ?? null;
 
 		/**
 		 * If the member is self muted
 		 *
 		 * @type {?boolean}
 		 */
-		this.selfMute = data.self_mute ?? null;
+		this.selfMute = widgetData.self_mute ?? null;
 
 		/**
 		 * If the member is suppressed
 		 *
 		 * @type {?boolean}
 		 */
-		this.suppress = data.suppress ?? null;
+		this.suppress = widgetData.suppress ?? null;
 
 		/**
 		 * The id of the voice channel the member is in, if any
 		 *
 		 * @type {?Snowflake}
 		 */
-		this.channelId = data.channel_id ?? null;
+		this.channelId = widgetData.channel_id ?? null;
 
 		/**
 		 * The avatar URL of the member.

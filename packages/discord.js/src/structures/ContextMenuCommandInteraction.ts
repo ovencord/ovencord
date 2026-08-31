@@ -1,13 +1,13 @@
 import { lazy } from '@ovencord/util';
-import type {
-	APIApplicationCommandInteraction,
-	APIApplicationCommandInteractionData,
-	Snowflake,
+import {
+	type APIApplicationCommandInteraction,
+	type APIApplicationCommandInteractionData,
+	ApplicationCommandOptionType,
+	type Snowflake,
 } from 'discord-api-types/v10';
-import { ApplicationCommandOptionType } from 'discord-api-types/v10';
 import type { Client } from '../client/Client.js';
 import { transformResolved } from '../util/Util.js';
-import { CommandInteraction } from './CommandInteraction.js';
+import { CommandInteraction, type CommandInteractionOption } from './CommandInteraction.js';
 import { CommandInteractionOptionResolver } from './CommandInteractionOptionResolver.js';
 
 const getMessage = lazy(() => require('./Message.js').Message);
@@ -22,23 +22,18 @@ export class ContextMenuCommandInteraction extends CommandInteraction {
 	public targetId: Snowflake;
 	constructor(client: Client, data: APIApplicationCommandInteraction) {
 		super(client, data);
-		/**
-		 * The target of the interaction, parsed into options
-		 *
-		 * @type {CommandInteractionOptionResolver}
-		 */
+
+		const dataPayload = data.data as APIApplicationCommandInteractionData;
 		this.options = new CommandInteractionOptionResolver(
 			this.client,
-			this.resolveContextMenuOptions(data.data as any),
-			transformResolved({ client: this.client, guild: this.guild, channel: this.channel }, (data.data as any).resolved),
+			this.resolveContextMenuOptions(dataPayload),
+			transformResolved(
+				{ client: this.client, guild: this.guild, channel: this.channel },
+				(dataPayload as any).resolved,
+			),
 		);
 
-		/**
-		 * The id of the target of this interaction
-		 *
-		 * @type {Snowflake}
-		 */
-		this.targetId = (data.data as any).target_id;
+		this.targetId = (dataPayload as any).target_id;
 	}
 
 	/**
@@ -48,24 +43,31 @@ export class ContextMenuCommandInteraction extends CommandInteraction {
 	 * @returns {CommandInteractionOption[]}
 	 * @private
 	 */
-	resolveContextMenuOptions({ target_id, resolved }: Record<string, any>) {
-		const result = [];
+	resolveContextMenuOptions(data: APIApplicationCommandInteractionData): CommandInteractionOption[] {
+		const target_id = (data as any).target_id as Snowflake;
+		const resolved = (data as any).resolved;
+		if (!resolved) return [];
+
+		const result: CommandInteractionOption[] = [];
 
 		if (resolved.users?.[target_id]) {
 			result.push(
-				this.transformOption({ name: 'user', type: ApplicationCommandOptionType.User, value: target_id }, resolved),
+				this.transformOption(
+					{ name: 'user', type: ApplicationCommandOptionType.User, value: target_id } as any,
+					resolved as any,
+				),
 			);
 		}
 
 		if (resolved.messages?.[target_id]) {
 			result.push({
 				name: 'message',
-				type: '_MESSAGE',
+				type: '_MESSAGE' as any,
 				value: target_id,
 				message:
-					this.channel?.messages._add(resolved.messages[target_id]) ??
-					new (getMessage())(this.client, resolved.messages[target_id]),
-			});
+					this.channel?.messages._add(resolved.messages[target_id] as any) ??
+					new (getMessage())(this.client, resolved.messages[target_id] as any),
+			} as any);
 		}
 
 		return result;

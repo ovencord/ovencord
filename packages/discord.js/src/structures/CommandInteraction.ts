@@ -1,7 +1,44 @@
+import type { Collection } from '@ovencord/collection';
+import type {
+	APIApplicationCommandInteraction,
+	APIApplicationCommandOption,
+	APIInteractionDataResolved,
+	ApplicationCommandOptionType,
+	ApplicationCommandType,
+	Snowflake,
+} from 'discord-api-types/v10';
+import type { Client } from '../client/Client.js';
 import { Attachment } from './Attachment.js';
+import type { BaseChannel } from './BaseChannel.js';
 import { BaseInteraction } from './BaseInteraction.js';
+import type { GuildMember } from './GuildMember.js';
 import { InteractionWebhook } from './InteractionWebhook.js';
 import { InteractionResponses } from './interfaces/InteractionResponses.js';
+import type { Message } from './Message.js';
+import type { Role } from './Role.js';
+import type { User } from './User.js';
+
+export interface CommandInteractionResolvedData {
+	users?: Collection<Snowflake, User>;
+	members?: Collection<Snowflake, GuildMember | any>;
+	roles?: Collection<Snowflake, Role | any>;
+	channels?: Collection<Snowflake, BaseChannel | any>;
+	attachments?: Collection<Snowflake, Attachment>;
+	messages?: Collection<Snowflake, Message | any>;
+}
+
+export interface CommandInteractionOption {
+	name: string;
+	type: ApplicationCommandOptionType;
+	autocomplete?: boolean;
+	value?: string | number | boolean;
+	options?: CommandInteractionOption[];
+	user?: User;
+	member?: GuildMember | any;
+	channel?: BaseChannel | any;
+	role?: Role | any;
+	attachment?: Attachment;
+}
 
 /**
  * Represents a command interaction.
@@ -11,15 +48,15 @@ import { InteractionResponses } from './interfaces/InteractionResponses.js';
  * @abstract
  */
 export class CommandInteraction extends BaseInteraction {
-	public commandId: any;
-	public commandName: any;
-	public commandType: any;
-	public commandGuildId: any;
-	public deferred: any;
-	public replied: any;
-	public ephemeral: any;
-	public webhook: any;
-	constructor(client: any, data: any) {
+	public commandId: Snowflake;
+	public commandName: string;
+	public commandType: ApplicationCommandType;
+	public commandGuildId: Snowflake | null;
+	public deferred: boolean;
+	public replied: boolean;
+	public ephemeral: boolean | null;
+	public webhook: InteractionWebhook;
+	constructor(client: Client, data: APIApplicationCommandInteraction) {
 		super(client, data);
 
 		/**
@@ -139,30 +176,32 @@ export class CommandInteraction extends BaseInteraction {
 	 * @returns {CommandInteractionOption}
 	 * @private
 	 */
-	transformOption(option: any, resolved: any) {
-		const result: any = {
+	transformOption(option: APIApplicationCommandOption, resolved: APIInteractionDataResolved): CommandInteractionOption {
+		const result: CommandInteractionOption = {
 			name: option.name,
 			type: option.type,
 		};
 
-		if ('value' in option) result.value = option.value;
-		// @ts-expect-error
-		if ('options' in option) result.options = option.options.map((opt) => this.transformOption(opt, resolved));
+		if ('value' in option) result.value = (option as any).value;
+		if ('options' in option)
+			result.options = (option as any).options.map((opt: APIApplicationCommandOption) =>
+				this.transformOption(opt, resolved),
+			);
 
 		if (resolved) {
-			const user = resolved.users?.[option.value];
+			const user = resolved.users?.[(option as any).value as Snowflake];
 			if (user) result.user = this.client.users._add(user);
 
-			const member = resolved.members?.[option.value];
-			if (member) result.member = this.guild?.members._add({ user, ...member }) ?? member;
+			const member = resolved.members?.[(option as any).value as Snowflake];
+			if (member) result.member = this.guild?.members._add({ user, ...member } as any) ?? member;
 
-			const channel = resolved.channels?.[option.value];
-			if (channel) result.channel = this.client.channels._add(channel, this.guild) ?? channel;
+			const channel = resolved.channels?.[(option as any).value as Snowflake];
+			if (channel) result.channel = this.client.channels._add(channel as any, this.guild) ?? channel;
 
-			const role = resolved.roles?.[option.value];
-			if (role) result.role = this.guild?.roles._add(role) ?? role;
+			const role = resolved.roles?.[(option as any).value as Snowflake];
+			if (role) result.role = this.guild?.roles._add(role as any) ?? role;
 
-			const attachment = resolved.attachments?.[option.value];
+			const attachment = resolved.attachments?.[(option as any).value as Snowflake];
 			if (attachment) result.attachment = new Attachment(attachment);
 		}
 
@@ -190,4 +229,4 @@ export class CommandInteraction extends BaseInteraction {
 	awaitModalSubmit(_options?: any): any {}
 }
 
-InteractionResponses.applyToClass(CommandInteraction, ['deferUpdate', 'update'] as any);
+InteractionResponses.applyToClass(CommandInteraction, ['deferUpdate', 'update']);

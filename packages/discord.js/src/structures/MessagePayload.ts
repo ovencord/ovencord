@@ -103,7 +103,7 @@ export class MessagePayload {
 		if (this.options.content === null) {
 			content = '';
 		} else if (this.options.content !== undefined) {
-			content = verifyString(this.options.content, DiscordjsRangeError, ErrorCodes.MessageContentType, true);
+			content = verifyString(this.options.content, DiscordjsRangeError as any, ErrorCodes.MessageContentType, true);
 		}
 
 		return content;
@@ -269,7 +269,7 @@ export class MessagePayload {
 		if (this.files) return this;
 
 		this.files = await Promise.all(
-			this.options.files?.map((file: any) => (this.constructor as typeof MessagePayload).resolveFile(file)) ?? [],
+			this.options.files?.map((file: any) => (this.constructor as any).resolveFile(file)) ?? [],
 		);
 		return this;
 	}

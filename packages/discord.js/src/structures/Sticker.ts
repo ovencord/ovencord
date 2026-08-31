@@ -1,8 +1,11 @@
 import { DiscordSnowflake } from '@ovencord/util';
+import type { APISticker, Snowflake, StickerFormatType, StickerType } from 'discord-api-types/v10';
 import { Routes } from 'discord-api-types/v10';
+import type { Client } from '../client/Client.js';
 import { DiscordjsError, ErrorCodes } from '../errors/index.js';
 import { StickerFormatExtensionMap } from '../util/Constants.js';
 import { Base } from './Base.js';
+import type { User } from './User.js';
 
 /**
  * Represents a Sticker.
@@ -10,30 +13,30 @@ import { Base } from './Base.js';
  * @extends {Base}
  */
 export class Sticker extends Base {
-	public id: any;
-	public description: any;
-	public type: any;
-	public format: any;
-	public name: any;
-	public packId: any;
-	public tags: any;
-	public available: any;
-	public guildId: any;
-	public user: any;
-	public sortValue: any;
-	constructor(client: any, sticker: any) {
+	public id: Snowflake;
+	public description: string | null;
+	public type: StickerType | null;
+	public format: StickerFormatType;
+	public name: string;
+	public packId: Snowflake | null;
+	public tags: string | null;
+	public available: boolean | null;
+	public guildId: Snowflake | null;
+	public user: User | null;
+	public sortValue: number | null;
+	constructor(client: Client, sticker: APISticker) {
 		super(client);
 
 		this._patch(sticker);
 	}
 
-	_patch(sticker: any) {
+	_patch(sticker: Partial<APISticker>) {
 		/**
 		 * The sticker's id
 		 *
 		 * @type {Snowflake}
 		 */
-		this.id = sticker.id;
+		this.id = sticker.id!;
 
 		if ('description' in sticker) {
 			/**
@@ -41,7 +44,7 @@ export class Sticker extends Base {
 			 *
 			 * @type {?string}
 			 */
-			this.description = sticker.description;
+			this.description = sticker.description ?? null;
 		} else {
 			this.description ??= null;
 		}
@@ -52,7 +55,7 @@ export class Sticker extends Base {
 			 *
 			 * @type {?StickerType}
 			 */
-			this.type = sticker.type;
+			this.type = sticker.type ?? null;
 		} else {
 			this.type ??= null;
 		}
@@ -63,7 +66,7 @@ export class Sticker extends Base {
 			 *
 			 * @type {StickerFormatType}
 			 */
-			this.format = sticker.format_type;
+			this.format = sticker.format_type!;
 		}
 
 		if ('name' in sticker) {
@@ -72,7 +75,7 @@ export class Sticker extends Base {
 			 *
 			 * @type {string}
 			 */
-			this.name = sticker.name;
+			this.name = sticker.name!;
 		}
 
 		if ('pack_id' in sticker) {
@@ -81,7 +84,7 @@ export class Sticker extends Base {
 			 *
 			 * @type {?Snowflake}
 			 */
-			this.packId = sticker.pack_id;
+			this.packId = sticker.pack_id ?? null;
 		} else {
 			this.packId ??= null;
 		}
@@ -92,7 +95,7 @@ export class Sticker extends Base {
 			 *
 			 * @type {?string}
 			 */
-			this.tags = sticker.tags;
+			this.tags = sticker.tags ?? null;
 		} else {
 			this.tags ??= null;
 		}
@@ -103,7 +106,7 @@ export class Sticker extends Base {
 			 *
 			 * @type {?boolean}
 			 */
-			this.available = sticker.available;
+			this.available = sticker.available ?? null;
 		} else {
 			this.available ??= null;
 		}
@@ -114,12 +117,12 @@ export class Sticker extends Base {
 			 *
 			 * @type {?Snowflake}
 			 */
-			this.guildId = sticker.guild_id;
+			this.guildId = sticker.guild_id ?? null;
 		} else {
 			this.guildId ??= null;
 		}
 
-		if ('user' in sticker) {
+		if (sticker.user) {
 			/**
 			 * The user that uploaded the guild sticker
 			 *
@@ -136,7 +139,7 @@ export class Sticker extends Base {
 			 *
 			 * @type {?number}
 			 */
-			this.sortValue = sticker.sort_value;
+			this.sortValue = sticker.sort_value ?? null;
 		} else {
 			this.sortValue ??= null;
 		}
@@ -202,7 +205,7 @@ export class Sticker extends Base {
 	 */
 	async fetch() {
 		const data = await this.client.rest.get(Routes.sticker(this.id));
-		this._patch(data);
+		this._patch(data as Record<string, unknown>);
 		return this;
 	}
 
@@ -248,7 +251,7 @@ export class Sticker extends Base {
 	 *   .then(sticker => console.log(`Updated the name of the sticker to ${sticker.name}`))
 	 *   .catch(console.error);
 	 */
-	async edit(options: any) {
+	async edit(options: Record<string, unknown>) {
 		return this.guild.stickers.edit(this, options);
 	}
 
@@ -263,7 +266,7 @@ export class Sticker extends Base {
 	 *   .then(sticker => console.log(`Deleted sticker ${sticker.name}`))
 	 *   .catch(console.error);
 	 */
-	async delete(reason: any) {
+	async delete(reason?: string) {
 		await this.guild.stickers.delete(this, reason);
 		return this;
 	}
@@ -274,7 +277,7 @@ export class Sticker extends Base {
 	 * @param {Sticker|APISticker} other The sticker to compare it to
 	 * @returns {boolean}
 	 */
-	equals(other: any) {
+	equals(other: Sticker | APISticker) {
 		if (other instanceof Sticker) {
 			return (
 				other.id === this.id &&

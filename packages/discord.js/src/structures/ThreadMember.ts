@@ -1,5 +1,8 @@
+import type { APIThreadMember, Snowflake } from 'discord-api-types/v10';
 import { ThreadMemberFlagsBitField } from '../util/ThreadMemberFlagsBitField.js';
 import { Base } from './Base.js';
+import type { GuildMember } from './GuildMember.js';
+import type { ThreadChannel } from './ThreadChannel.js';
 
 /**
  * Represents a Member for a Thread.
@@ -7,12 +10,12 @@ import { Base } from './Base.js';
  * @extends {Base}
  */
 export class ThreadMember extends Base {
-	public thread: any;
-	public joinedTimestamp: any;
-	public flags: any;
-	public id: any;
-	public member: any;
-	constructor(thread: any, data: any, extra = {}) {
+	public thread: ThreadChannel;
+	public joinedTimestamp: number | null;
+	public flags: ThreadMemberFlagsBitField | null;
+	public id: Snowflake;
+	public member: GuildMember | null;
+	constructor(thread: ThreadChannel, data: APIThreadMember, extra: { cache?: boolean } = {}) {
 		super(thread.client);
 
 		/**
@@ -41,14 +44,14 @@ export class ThreadMember extends Base {
 		 *
 		 * @type {Snowflake}
 		 */
-		this.id = data.user_id;
+		this.id = data.user_id as Snowflake;
 
 		this._patch(data, extra);
 	}
 
-	_patch(data: any, extra = {}) {
-		if ('join_timestamp' in data) this.joinedTimestamp = Date.parse(data.join_timestamp);
-		if ('flags' in data) this.flags = new ThreadMemberFlagsBitField(data.flags).freeze();
+	_patch(data: Partial<APIThreadMember>, extra: { cache?: boolean } = {}) {
+		if ('join_timestamp' in data) this.joinedTimestamp = Date.parse(data.join_timestamp!);
+		if ('flags' in data) this.flags = new ThreadMemberFlagsBitField(data.flags!).freeze();
 
 		if ('member' in data) {
 			/**
@@ -57,7 +60,6 @@ export class ThreadMember extends Base {
 			 * @type {?GuildMember}
 			 * @private
 			 */
-			// @ts-expect-error
 			this.member = this.thread.guild.members._add(data.member, extra.cache);
 		} else {
 			this.member ??= null;
@@ -111,7 +113,7 @@ export class ThreadMember extends Base {
 	 * @readonly
 	 */
 	get manageable() {
-		return !this.thread.archived && this.thread.editable;
+		return !this.thread.archived && this.thread.manageable;
 	}
 
 	/**

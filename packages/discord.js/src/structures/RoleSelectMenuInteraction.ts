@@ -1,5 +1,8 @@
 import { Collection } from '@ovencord/collection';
+import type { APIMessageComponentInteraction, Snowflake } from 'discord-api-types/v10';
+import type { Client } from '../client/Client.js';
 import { MessageComponentInteraction } from './MessageComponentInteraction.js';
+import type { Role } from './Role.js';
 
 /**
  * Represents a {@link ComponentType.RoleSelect} select menu interaction.
@@ -7,11 +10,11 @@ import { MessageComponentInteraction } from './MessageComponentInteraction.js';
  * @extends {MessageComponentInteraction}
  */
 export class RoleSelectMenuInteraction extends MessageComponentInteraction {
-	public values: any;
-	public roles: any;
-	constructor(client: any, data: any) {
+	public values: Snowflake[];
+	public roles: Collection<Snowflake, Role | any>;
+	constructor(client: Client, data: APIMessageComponentInteraction) {
 		super(client, data);
-		const { resolved, values } = data.data;
+		const { resolved, values } = data.data as any;
 
 		/**
 		 * An array of the selected role ids
@@ -27,8 +30,10 @@ export class RoleSelectMenuInteraction extends MessageComponentInteraction {
 		 */
 		this.roles = new Collection();
 
-		for (const role of Object.values((resolved?.roles ?? {}) as any) as any[]) {
-			this.roles.set(role.id, this.guild?.roles._add(role) ?? role);
+		if (resolved?.roles) {
+			for (const role of Object.values(resolved.roles)) {
+				this.roles.set((role as any).id, this.guild?.roles._add(role as any) ?? role);
+			}
 		}
 	}
 }

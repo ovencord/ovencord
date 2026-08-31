@@ -13,7 +13,7 @@ export class SKUFlagsBitField extends BitField {
 	 * @type {SKUFlags}
 	 * @memberof SKUFlagsBitField
 	 */
-	static Flags = SKUFlags;
+	static override Flags: Record<string, number | bigint> = SKUFlags as unknown as Record<string, number | bigint>;
 }
 
 /**

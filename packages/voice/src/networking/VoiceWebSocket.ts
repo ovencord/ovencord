@@ -1,5 +1,5 @@
 import { AsyncEventEmitter } from '@ovencord/util';
-import type { VoiceSendPayload } from 'discord-api-types/voice/v8';
+import type { VoiceReceivePayload, VoiceSendPayload } from 'discord-api-types/voice/v8';
 import { VoiceOpcodes } from 'discord-api-types/voice/v8';
 
 /**
@@ -26,7 +26,7 @@ export interface VoiceWebSocket extends AsyncEventEmitter {
 	 *
 	 * @eventProperty
 	 */
-	on(event: 'packet', listener: (packet: any) => void): this;
+	on(event: 'packet', listener: (packet: VoiceReceivePayload) => void): this;
 	/**
 	 * Binary message event.
 	 *
@@ -148,7 +148,7 @@ export class VoiceWebSocket extends AsyncEventEmitter {
 
 		this.debug?.(`<< ${event.data}`);
 
-		let packet: any;
+		let packet: VoiceReceivePayload;
 		try {
 			packet = JSON.parse(event.data);
 		} catch (error) {

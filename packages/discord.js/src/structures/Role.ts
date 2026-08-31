@@ -1,10 +1,40 @@
 import { roleMention } from '@ovencord/formatters';
 import { DiscordSnowflake } from '@ovencord/util';
-import { PermissionFlagsBits } from 'discord-api-types/v10';
+import { type APIRole, PermissionFlagsBits } from 'discord-api-types/v10';
+import type { Client } from '../client/Client.js';
 import { DiscordjsError, ErrorCodes } from '../errors/index.js';
 import { PermissionsBitField } from '../util/PermissionsBitField.js';
 import { RoleFlagsBitField } from '../util/RoleFlagsBitField.js';
 import { Base } from './Base.js';
+import type { Guild } from './Guild.js';
+import type { GuildChannel } from './GuildChannel.js';
+
+export interface RoleColors {
+	primaryColor: number;
+	secondaryColor: number | null;
+	tertiaryColor: number | null;
+}
+
+export interface RoleTags {
+	botId?: string;
+	integrationId?: string;
+	premiumSubscriberRole?: true;
+	subscriptionListingId?: string;
+	availableForPurchase?: true;
+	guildConnections?: true;
+}
+
+export interface RoleEditOptions {
+	name?: string;
+	colors?: RoleColors | { primaryColor: number; secondaryColor?: number; tertiaryColor?: number };
+	hoist?: boolean;
+	position?: number;
+	permissions?: bigint | Readonly<PermissionsBitField> | string | number | PermissionsBitField;
+	mentionable?: boolean;
+	icon?: string | null;
+	unicodeEmoji?: string | null;
+	reason?: string;
+}
 
 /**
  * Represents a role on Discord.
@@ -12,21 +42,21 @@ import { Base } from './Base.js';
  * @extends {Base}
  */
 export class Role extends Base {
-	public guild: any;
-	public id: any;
+	public guild: Guild;
+	public id: string;
 
-	public icon: any;
-	public unicodeEmoji: any;
-	public name: any;
-	public colors: any;
-	public hoist: any;
-	public rawPosition: any;
-	public permissions: any;
-	public managed: any;
-	public mentionable: any;
-	public flags: any;
-	public tags: any;
-	constructor(client: any, data: any, guild: any) {
+	public icon: string | null;
+	public unicodeEmoji: string | null;
+	public name!: string;
+	public colors!: RoleColors;
+	public hoist!: boolean;
+	public rawPosition!: number;
+	public permissions!: Readonly<PermissionsBitField>;
+	public managed!: boolean;
+	public mentionable!: boolean;
+	public flags!: Readonly<RoleFlagsBitField>;
+	public tags!: RoleTags | null;
+	constructor(client: Client, data: APIRole, guild: Guild) {
 		super(client);
 
 		/**
@@ -53,7 +83,7 @@ export class Role extends Base {
 		this._patch(data);
 	}
 
-	_patch(data: any) {
+	_patch(data: Partial<APIRole>) {
 		/**
 		 * The role's id (unique to the guild it is part of)
 		 *
@@ -230,8 +260,7 @@ export class Role extends Base {
 	get members() {
 		return this.id === this.guild.id
 			? this.guild.members.cache.clone()
-			: // @ts-expect-error
-				this.guild.members.cache.filter((member) => member._roles.includes(this.id));
+			: this.guild.members.cache.filter((member: any) => member._roles.includes(this.id));
 	}
 
 	/**
@@ -255,11 +284,15 @@ export class Role extends Base {
 	 */
 	get position() {
 		return this.guild.roles.cache.reduce(
-			(acc: any, role: any) =>
+			(acc: number, role: Role) =>
 				acc +
-				(this.rawPosition === role.rawPosition
-					? BigInt(this.id) < BigInt(role.id)
-					: this.rawPosition > role.rawPosition),
+				((
+					this.rawPosition === role.rawPosition
+						? BigInt(this.id) < BigInt(role.id)
+						: this.rawPosition > role.rawPosition
+				)
+					? 1
+					: 0),
 			0,
 		);
 	}
@@ -275,7 +308,7 @@ export class Role extends Base {
 	 * const roleCompare = role.comparePositionTo(otherRole);
 	 * if (roleCompare >= 1) console.log(`${role.name} is higher than ${otherRole.name}`);
 	 */
-	comparePositionTo(role: any) {
+	comparePositionTo(role: Role | string) {
 		return this.guild.roles.comparePositions(this, role);
 	}
 
@@ -306,7 +339,7 @@ export class Role extends Base {
 	 *   .then(updated => console.log(`Edited role name to ${updated.name}`))
 	 *   .catch(console.error);
 	 */
-	async edit(options: any) {
+	async edit(options: RoleEditOptions): Promise<Role> {
 		return this.guild.roles.edit(this, options);
 	}
 
@@ -319,7 +352,7 @@ export class Role extends Base {
 	 * will return all permissions
 	 * @returns {Readonly<PermissionsBitField>}
 	 */
-	permissionsIn(channel: any, checkAdmin = true) {
+	permissionsIn(channel: GuildChannel | string, checkAdmin = true) {
 		const resolvedChannel = this.guild.channels.resolve(channel);
 		if (!resolvedChannel) throw new DiscordjsError(ErrorCodes.GuildChannelResolve);
 		return resolvedChannel.rolePermissions(this, checkAdmin);
@@ -337,7 +370,7 @@ export class Role extends Base {
 	 *   .then(updated => console.log(`Updated role name to ${updated.name}`))
 	 *   .catch(console.error);
 	 */
-	async setName(name: any, reason: any) {
+	async setName(name: string, reason?: string): Promise<Role> {
 		return this.edit({ name, reason });
 	}
 
@@ -362,7 +395,10 @@ export class Role extends Base {
 	 *   .then(updated => console.log(`Set holographic colors for role ${updated.name}`))
 	 *   .catch(console.error);
 	 */
-	async setColors(colors: any, reason: any) {
+	async setColors(
+		colors: RoleColors | { primaryColor: number; secondaryColor?: number; tertiaryColor?: number },
+		reason?: string,
+	): Promise<Role> {
 		return this.edit({ colors, reason });
 	}
 
@@ -378,7 +414,7 @@ export class Role extends Base {
 	 *   .then(updated => console.log(`Role hoisted: ${updated.hoist}`))
 	 *   .catch(console.error);
 	 */
-	async setHoist(hoist: any = true, reason: any = undefined) {
+	async setHoist(hoist: boolean = true, reason?: string): Promise<Role> {
 		return this.edit({ hoist, reason });
 	}
 
@@ -399,7 +435,10 @@ export class Role extends Base {
 	 *   .then(updated => console.log(`Updated permissions to ${updated.permissions.bitfield}`))
 	 *   .catch(console.error);
 	 */
-	async setPermissions(permissions: any, reason: any) {
+	async setPermissions(
+		permissions: bigint | Readonly<PermissionsBitField> | string | number | PermissionsBitField,
+		reason?: string,
+	): Promise<Role> {
 		return this.edit({ permissions, reason });
 	}
 
@@ -415,7 +454,7 @@ export class Role extends Base {
 	 *   .then(updated => console.log(`Role updated ${updated.name}`))
 	 *   .catch(console.error);
 	 */
-	async setMentionable(mentionable: any = true, reason: any = undefined) {
+	async setMentionable(mentionable: boolean = true, reason?: string): Promise<Role> {
 		return this.edit({ mentionable, reason });
 	}
 
@@ -428,7 +467,7 @@ export class Role extends Base {
 	 * @param {string} [reason] Reason for changing the role's icon
 	 * @returns {Promise<Role>}
 	 */
-	async setIcon(icon: any, reason: any) {
+	async setIcon(icon: string | null, reason?: string): Promise<Role> {
 		return this.edit({ icon, reason });
 	}
 
@@ -444,7 +483,7 @@ export class Role extends Base {
 	 *   .then(updated => console.log(`Set unicode emoji for the role to ${updated.unicodeEmoji}`))
 	 *   .catch(console.error);
 	 */
-	async setUnicodeEmoji(unicodeEmoji: any, reason: any) {
+	async setUnicodeEmoji(unicodeEmoji: string | null, reason?: string): Promise<Role> {
 		return this.edit({ unicodeEmoji, reason });
 	}
 
@@ -468,7 +507,7 @@ export class Role extends Base {
 	 *   .then(updated => console.log(`Role position: ${updated.position}`))
 	 *   .catch(console.error);
 	 */
-	async setPosition(position: any, options = {}) {
+	async setPosition(position: number, options: Record<string, unknown> = {}) {
 		return this.guild.roles.setPosition(this, position, options);
 	}
 
@@ -483,7 +522,7 @@ export class Role extends Base {
 	 *   .then(deleted => console.log(`Deleted role ${deleted.name}`))
 	 *   .catch(console.error);
 	 */
-	async delete(reason: any) {
+	async delete(reason?: string): Promise<Role> {
 		await this.guild.roles.delete(this.id, reason);
 		return this;
 	}
@@ -494,7 +533,7 @@ export class Role extends Base {
 	 * @param {ImageURLOptions} [options={}] Options for the image URL
 	 * @returns {?string}
 	 */
-	iconURL(options = {}) {
+	iconURL(options: Record<string, unknown> = {}) {
 		return this.icon && this.client.rest.cdn.roleIcon(this.id, this.icon, options);
 	}
 
@@ -506,7 +545,7 @@ export class Role extends Base {
 	 * @param {Role} role Role to compare with
 	 * @returns {boolean}
 	 */
-	equals(role: any) {
+	equals(role: Role | null | undefined) {
 		return (
 			role &&
 			this.id === role.id &&
@@ -536,7 +575,7 @@ export class Role extends Base {
 		return roleMention(this.id);
 	}
 
-	toJSON() {
+	toJSON(): Record<string, unknown> {
 		return {
 			...super.toJSON({ createdTimestamp: true }),
 			permissions: this.permissions.toJSON(),

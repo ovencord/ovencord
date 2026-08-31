@@ -1,3 +1,5 @@
+import type { APISKU, SKUType, Snowflake } from 'discord-api-types/v10';
+import type { Client } from '../client/Client.js';
 import { SKUFlagsBitField } from '../util/SKUFlagsBitField.js';
 import { Base } from './Base.js';
 
@@ -7,13 +9,13 @@ import { Base } from './Base.js';
  * @extends {Base}
  */
 export class SKU extends Base {
-	public id: any;
-	public type: any;
-	public applicationId: any;
-	public name: any;
-	public slug: any;
-	public flags: any;
-	constructor(client: any, data: any) {
+	public id: Snowflake;
+	public type: SKUType;
+	public applicationId: Snowflake;
+	public name: string;
+	public slug: string;
+	public flags: Readonly<SKUFlagsBitField>;
+	constructor(client: Client, data: APISKU) {
 		super(client);
 
 		/**

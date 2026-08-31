@@ -1,4 +1,8 @@
+import type { GatewayTypingStartDispatchData } from 'discord-api-types/v10';
+import type { Client } from '../client/Client.js';
 import { Base } from './Base.js';
+import type { TextBasedChannel } from './interfaces/TextBasedChannel.js';
+import type { User } from './User.js';
 
 /**
  * Represents a typing state for a user in a channel.
@@ -6,11 +10,11 @@ import { Base } from './Base.js';
  * @extends {Base}
  */
 export class Typing extends Base {
-	public channel: any;
-	public user: any;
-	public startedTimestamp: any;
-	constructor(channel: any, user: any, data: any) {
-		super(channel.client);
+	public channel: TextBasedChannel;
+	public user: User;
+	public startedTimestamp: number;
+	constructor(channel: TextBasedChannel, user: User, data: GatewayTypingStartDispatchData) {
+		super(channel.client as Client);
 
 		/**
 		 * The channel the status is from
@@ -29,14 +33,14 @@ export class Typing extends Base {
 		this._patch(data);
 	}
 
-	_patch(data: any) {
+	_patch(data: GatewayTypingStartDispatchData) {
 		if ('timestamp' in data) {
 			/**
 			 * The UNIX timestamp in milliseconds the user started typing at
 			 *
 			 * @type {number}
 			 */
-			this.startedTimestamp = data.timestamp * 1_000;
+			this.startedTimestamp = (data.timestamp as number) * 1_000;
 		}
 	}
 

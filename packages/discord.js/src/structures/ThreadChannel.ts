@@ -1,9 +1,21 @@
 import { lazy } from '@ovencord/util';
-import { ChannelType, PermissionFlagsBits } from 'discord-api-types/v10';
+import {
+	type APIThreadChannel,
+	ChannelType,
+	PermissionFlagsBits,
+	type Snowflake,
+	type ThreadAutoArchiveDuration,
+} from 'discord-api-types/v10';
+import type { Client } from '../client/Client.js';
 import { GuildMessageManager } from '../managers/GuildMessageManager.js';
 import { ThreadMemberManager } from '../managers/ThreadMemberManager.js';
 import { BaseChannel } from './BaseChannel.js';
+import type { Guild } from './Guild.js';
+import type { GuildMember } from './GuildMember.js';
 import { TextBasedChannel } from './interfaces/TextBasedChannel.js';
+import type { Message } from './Message.js';
+import type { Role } from './Role.js';
+import type { User } from './User.js';
 
 const _getThreadOnlyChannel = lazy(() => require('./ThreadOnlyChannel.js').ThreadOnlyChannel);
 
@@ -14,33 +26,33 @@ const _getThreadOnlyChannel = lazy(() => require('./ThreadOnlyChannel.js').Threa
  * @implements {TextBasedChannel}
  */
 export class ThreadChannel extends BaseChannel {
-	public guild: any;
-	public guildId: any;
-	public ownerId: any;
-	public messages: any;
-	public members: any;
-	public name: any;
-	public parentId: any;
-	public locked: any;
-	public invitable: any;
-	public type: any = null;
-	public archived: any;
-	public autoArchiveDuration: any;
-	public archiveTimestamp: any;
-	public _createdTimestamp: any;
-	public lastMessageId: any;
-	public lastPinTimestamp: any;
-	public rateLimitPerUser: any;
-	public messageCount: any;
-	public memberCount: any;
-	public totalMessageSent: any;
-	public appliedTags: any;
-	public joined: any;
+	public guild: Guild;
+	public guildId: Snowflake;
+	public ownerId: Snowflake | null;
+	public messages: GuildMessageManager;
+	public members: ThreadMemberManager;
+	public name: string;
+	public parentId: Snowflake | null;
+	public locked: boolean | null;
+	public invitable: boolean | null;
+	public type: ChannelType = null as unknown as ChannelType;
+	public archived: boolean | null;
+	public autoArchiveDuration: ThreadAutoArchiveDuration | null;
+	public archiveTimestamp: number | null;
+	public _createdTimestamp: number | null;
+	public lastMessageId: Snowflake | null;
+	public lastPinTimestamp: number | null;
+	public rateLimitPerUser: number | null;
+	public messageCount: number | null;
+	public memberCount: number | null;
+	public totalMessageSent: number | null;
+	public appliedTags: Snowflake[];
+	public joined: boolean | null;
 	get parent() {
-		return this.guild?.channels.resolve(this.parentId);
+		return this.guild?.channels.resolve(this.parentId as Snowflake);
 	}
-	constructor(guild: any, data: any, client: any) {
-		super(guild?.client ?? client, data, false);
+	constructor(guild: Guild, data: Partial<APIThreadChannel> | Record<string, unknown>, client?: Client) {
+		super(guild?.client ?? client, data as any, false);
 
 		/**
 		 * The guild the thread is in
@@ -54,14 +66,14 @@ export class ThreadChannel extends BaseChannel {
 		 *
 		 * @type {Snowflake}
 		 */
-		this.guildId = guild?.id ?? data.guild_id;
+		this.guildId = guild?.id ?? (data.guild_id as Snowflake);
 
 		/**
 		 * The id of the member who created this thread
 		 *
 		 * @type {Snowflake}
 		 */
-		this.ownerId = data.owner_id;
+		this.ownerId = data.owner_id as Snowflake;
 
 		/**
 		 * A manager of the messages sent to this thread
@@ -76,7 +88,7 @@ export class ThreadChannel extends BaseChannel {
 		 * @type {ThreadMemberManager}
 		 */
 		this.members = new ThreadMemberManager(this, []);
-		this._patch(data);
+		this._patch(data as any);
 	}
 
 	// ... (skipping unchanged parts)
@@ -90,7 +102,7 @@ export class ThreadChannel extends BaseChannel {
 	 * will return all permissions
 	 * @returns {?Readonly<PermissionsBitField>}
 	 */
-	permissionsFor(memberOrRole: any, checkAdmin = true) {
+	permissionsFor(memberOrRole: GuildMember | Role | User | string | undefined | null, checkAdmin = true) {
 		return this.parent?.permissionsFor(memberOrRole, checkAdmin) ?? null;
 	}
 
@@ -167,10 +179,13 @@ export class ThreadChannel extends BaseChannel {
 	 * @param {BaseFetchOptions} [options] Additional options for this fetch
 	 * @returns {Promise<Message<true>|null>}
 	 */
-	async fetchStarterMessage(options = {}) {
+	async fetchStarterMessage(options: Record<string, unknown> = {}) {
 		try {
-			// @ts-expect-error
-			return await this.messages.fetch({ message: this.id, force: options.force ?? true, cache: options.cache });
+			return await this.messages.fetch({
+				message: this.id,
+				force: (options.force as boolean) ?? true,
+				cache: options.cache as boolean,
+			});
 		} catch {
 			return null;
 		}
@@ -194,31 +209,46 @@ export class ThreadChannel extends BaseChannel {
 
 	// These are here only for documentation purposes - they are implemented by TextBasedChannel
 
-	get lastMessage(): any {
+	get lastMessage(): Message | null {
 		return null;
 	}
 
-	get lastPinAt(): any {
+	get lastPinAt(): Date | null {
 		return null;
 	}
 
-	send(): any {
+	send(_options: unknown): Promise<unknown> {
+		return Promise.resolve(null as unknown);
+	}
+
+	sendTyping(): Promise<void> {
+		return Promise.resolve();
+	}
+
+	createMessageCollector(_options?: Record<string, unknown>): unknown {
 		return null;
 	}
 
-	sendTyping() {}
+	awaitMessages(_options?: Record<string, unknown>): Promise<unknown> {
+		return Promise.resolve(null);
+	}
 
-	createMessageCollector() {}
+	createMessageComponentCollector(_options?: Record<string, unknown>): unknown {
+		return null;
+	}
 
-	awaitMessages() {}
+	awaitMessageComponent(_options?: Record<string, unknown>): Promise<unknown> {
+		return Promise.resolve(null);
+	}
 
-	createMessageComponentCollector() {}
-
-	awaitMessageComponent() {}
-
-	bulkDelete() {}
+	bulkDelete(
+		_messages: number | Iterable<Message | string> | readonly (Message | string)[],
+		_filterOld?: boolean,
+	): Promise<unknown> {
+		return Promise.resolve(null);
+	}
 	// Doesn't work on Thread channels; setRateLimitPerUser() {}
 	// Doesn't work on Thread channels; setNSFW() {}
 }
 
-TextBasedChannel.applyToClass(ThreadChannel, ['fetchWebhooks', 'setRateLimitPerUser', 'setNSFW'] as any);
+TextBasedChannel.applyToClass(ThreadChannel, ['fetchWebhooks', 'setRateLimitPerUser', 'setNSFW'] as never[]);

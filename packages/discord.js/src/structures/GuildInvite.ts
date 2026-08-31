@@ -1,10 +1,20 @@
-import { InviteType, PermissionFlagsBits, Routes } from 'discord-api-types/v10';
+import {
+	type APIInvite,
+	type InviteTargetType,
+	InviteType,
+	PermissionFlagsBits,
+	Routes,
+	type Snowflake,
+} from 'discord-api-types/v10';
+import type { Client } from '../client/Client.js';
 import { DiscordjsError, ErrorCodes } from '../errors/index.js';
 import { InviteFlagsBitField } from '../util/InviteFlagsBitField.js';
 import { BaseInvite } from './BaseInvite.js';
+import type { Guild } from './Guild.js';
 import { GuildScheduledEvent } from './GuildScheduledEvent.js';
 import { IntegrationApplication } from './IntegrationApplication.js';
 import { InviteGuild } from './InviteGuild.js';
+import type { User } from './User.js';
 
 /**
  * A channel invite leading to a guild.
@@ -12,20 +22,21 @@ import { InviteGuild } from './InviteGuild.js';
  * @extends {BaseInvite}
  */
 export class GuildInvite extends BaseInvite {
-	public type: any;
-	public guildId: any;
-	public flags: any;
-	public guild: any;
-	public channel: any;
-	public targetType: any;
-	public targetUser: any;
-	public targetApplication: any;
-	public guildScheduledEvent: any;
-	public uses: any;
-	public maxUses: any;
-	public temporary: any;
-	public approximatePresenceCount: any;
-	constructor(client: any, data: any) {
+	public override type: InviteType.Guild;
+	public guildId: Snowflake;
+	public flags!: Readonly<InviteFlagsBitField>;
+	public guild: Guild | InviteGuild | null;
+	public channel: any; // Keep any for now as GuildInvitableChannel is complex
+	public targetType: InviteTargetType | null;
+	public targetUser: User | null;
+	public targetApplication: IntegrationApplication | null;
+	public guildScheduledEvent: GuildScheduledEvent | null;
+	public uses: number | null;
+	public maxUses: number | null;
+	public temporary: boolean | null;
+	public approximatePresenceCount: number | null;
+
+	constructor(client: Client, data: APIInvite) {
 		super(client, data);
 
 		// Type may be missing from audit logs.
@@ -37,27 +48,10 @@ export class GuildInvite extends BaseInvite {
 		 * @type {Snowflake}
 		 */
 		// Guild id may be missing from audit logs.
-		this.guildId = data.guild_id ?? data.guild.id;
-
-		/**
-		 * The maximum age of the invite in seconds. `0` for no expiry.
-		 * <info>This is only available when the invite was fetched through {@link GuildInviteManager#fetch}
-		 * or created through {@link GuildInviteManager#create}.</info>
-		 *
-		 * @name GuildInvite#maxAge
-		 * @type {?number}
-		 */
-
-		/**
-		 * The approximate total number of members of the guild.
-		 * <info>This is only available when the invite was fetched through {@link Client#fetchInvite}.</info>
-		 *
-		 * @name GuildInvite#approximateMemberCount
-		 * @type {?number}
-		 */
+		this.guildId = ((data as any).guild_id ?? (data.guild as any)?.id) as Snowflake;
 	}
 
-	_patch(data: any) {
+	_patch(data: Partial<APIInvite>) {
 		super._patch(data);
 
 		if ('flags' in data) {
@@ -71,18 +65,19 @@ export class GuildInvite extends BaseInvite {
 			this.flags ??= new InviteFlagsBitField().freeze();
 		}
 
-		if ('guild' in data) {
+		if ('guild' in data && data.guild) {
 			/**
 			 * The guild the invite is for. May include welcome screen data.
 			 *
 			 * @type {?(Guild|InviteGuild)}
 			 */
-			this.guild = this.client.guilds.cache.get(data.guild.id) ?? new InviteGuild(this.client, data.guild);
+			this.guild =
+				this.client.guilds.cache.get((data.guild as any).id) ?? new InviteGuild(this.client, data.guild as any);
 		} else {
 			this.guild ??= null;
 		}
 
-		if ('channel' in data) {
+		if ('channel' in data && data.channel) {
 			/**
 			 * The channel this invite is for.
 			 *
@@ -90,7 +85,7 @@ export class GuildInvite extends BaseInvite {
 			 */
 			this.channel =
 				this.client.channels._add(data.channel, this.guild, { cache: false }) ??
-				this.client.channels.cache.get(this.channelId);
+				this.client.channels.cache.get(this.channelId as Snowflake);
 
 			this.channelId ??= data.channel.id;
 		}
@@ -101,12 +96,12 @@ export class GuildInvite extends BaseInvite {
 			 *
 			 * @type {?InviteTargetType}
 			 */
-			this.targetType = data.target_type;
+			this.targetType = data.target_type as InviteTargetType | null;
 		} else {
 			this.targetType ??= null;
 		}
 
-		if ('target_user' in data) {
+		if ('target_user' in data && data.target_user) {
 			/**
 			 * The user whose stream to display for this voice channel stream invite.
 			 *
@@ -117,7 +112,7 @@ export class GuildInvite extends BaseInvite {
 			this.targetUser ??= null;
 		}
 
-		if ('target_application' in data) {
+		if ('target_application' in data && data.target_application) {
 			/**
 			 * The embedded application to open for this voice channel embedded application invite.
 			 *
@@ -128,7 +123,7 @@ export class GuildInvite extends BaseInvite {
 			this.targetApplication ??= null;
 		}
 
-		if ('guild_scheduled_event' in data) {
+		if ('guild_scheduled_event' in data && data.guild_scheduled_event) {
 			/**
 			 * The guild scheduled event data if there is a {@link GuildScheduledEvent} in the channel.
 			 *
@@ -147,7 +142,7 @@ export class GuildInvite extends BaseInvite {
 			 *
 			 * @type {?number}
 			 */
-			this.uses = data.uses;
+			this.uses = (data as any).uses as number | null;
 		} else {
 			this.uses ??= null;
 		}
@@ -160,7 +155,7 @@ export class GuildInvite extends BaseInvite {
 			 *
 			 * @type {?number}
 			 */
-			this.maxUses = data.max_uses;
+			this.maxUses = (data as any).max_uses as number | null;
 		} else {
 			this.maxUses ??= null;
 		}
@@ -173,7 +168,7 @@ export class GuildInvite extends BaseInvite {
 			 *
 			 * @type {?boolean}
 			 */
-			this.temporary = data.temporary ?? null;
+			this.temporary = ((data as any).temporary ?? null) as boolean | null;
 		} else {
 			this.temporary ??= null;
 		}
@@ -185,7 +180,7 @@ export class GuildInvite extends BaseInvite {
 			 *
 			 * @type {?number}
 			 */
-			this.approximatePresenceCount = data.approximate_presence_count;
+			this.approximatePresenceCount = (data as any).approximate_presence_count as number | null;
 		} else {
 			this.approximatePresenceCount ??= null;
 		}
@@ -200,6 +195,7 @@ export class GuildInvite extends BaseInvite {
 	get deletable() {
 		const guild = this.guild;
 		if (!guild || !this.client.guilds.cache.has(guild.id)) return false;
+		if (!('members' in guild)) return false;
 		if (!guild.members.me) throw new DiscordjsError(ErrorCodes.GuildUncachedMe);
 		return Boolean(
 			this.channel?.permissionsFor(this.client.user).has(PermissionFlagsBits.ManageChannels, false) ||
@@ -213,7 +209,7 @@ export class GuildInvite extends BaseInvite {
 	 * @param {string} [reason] Reason for deleting this invite
 	 * @returns {Promise<void>}
 	 */
-	async delete(reason: any) {
+	async delete(reason?: string): Promise<void> {
 		await this.client.rest.delete(Routes.invite(this.code), { reason });
 	}
 

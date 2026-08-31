@@ -1,8 +1,17 @@
 import { lazy } from '@ovencord/util';
+import type {
+	APIMessage,
+	APIMessageComponentInteraction,
+	APIMessageComponentInteractionData,
+	ComponentType,
+	Snowflake,
+} from 'discord-api-types/v10';
+import type { Client } from '../client/Client.js';
 import { findComponentByCustomId } from '../util/Components.js';
 import { BaseInteraction } from './BaseInteraction.js';
 import { InteractionWebhook } from './InteractionWebhook.js';
 import { InteractionResponses } from './interfaces/InteractionResponses.js';
+import type { Message } from './Message.js';
 
 const getMessage = lazy(() => require('./Message.js').Message);
 
@@ -13,14 +22,14 @@ const getMessage = lazy(() => require('./Message.js').Message);
  * @implements {InteractionResponses}
  */
 export class MessageComponentInteraction extends BaseInteraction {
-	public message: any;
-	public customId: any;
-	public componentType: any;
-	public deferred: any;
-	public ephemeral: any;
-	public replied: any;
-	public webhook: any;
-	constructor(client: any, data: any) {
+	public message: Message;
+	public customId: string;
+	public componentType: ComponentType;
+	public deferred: boolean;
+	public ephemeral: boolean | null;
+	public replied: boolean;
+	public webhook: InteractionWebhook;
+	constructor(client: Client, data: APIMessageComponentInteraction) {
 		super(client, data);
 
 		/**
@@ -35,21 +44,22 @@ export class MessageComponentInteraction extends BaseInteraction {
 		 *
 		 * @type {Message}
 		 */
-		this.message = this.channel?.messages._add(data.message) ?? new (getMessage())(client, data.message);
+		this.message =
+			this.channel?.messages._add(data.message as APIMessage) ?? new (getMessage())(client, data.message as APIMessage);
 
 		/**
 		 * The custom id of the component which was interacted with
 		 *
 		 * @type {string}
 		 */
-		this.customId = data.data.custom_id;
+		this.customId = (data.data as APIMessageComponentInteractionData).custom_id;
 
 		/**
 		 * The type of component which was interacted with
 		 *
 		 * @type {ComponentType}
 		 */
-		this.componentType = data.data.component_type;
+		this.componentType = (data.data as APIMessageComponentInteractionData).component_type;
 
 		/**
 		 * Whether the reply to this interaction has been deferred

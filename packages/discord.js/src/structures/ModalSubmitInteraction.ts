@@ -1,10 +1,26 @@
 import { Collection } from '@ovencord/collection';
 import { lazy } from '@ovencord/util';
+
+import {
+	type APIInteractionDataResolved,
+	type APIModalSubmission,
+	type APIModalSubmitInteraction,
+	ComponentType,
+	type Snowflake,
+} from 'discord-api-types/v10';
+
+import type { Client } from '../client/Client.js';
 import { transformResolved } from '../util/Util.js';
+import type { Attachment } from './Attachment.js';
+import type { BaseChannel } from './BaseChannel.js';
 import { BaseInteraction } from './BaseInteraction.js';
+import type { GuildMember } from './GuildMember.js';
 import { InteractionWebhook } from './InteractionWebhook.js';
 import { InteractionResponses } from './interfaces/InteractionResponses.js';
+import type { Message } from './Message.js';
 import { ModalComponentResolver } from './ModalComponentResolver.js';
+import type { Role } from './Role.js';
+import type { User } from './User.js';
 
 const getMessage = lazy(() => require('./Message.js').Message);
 const getAttachment = lazy(() => require('./Attachment.js').Attachment);
@@ -63,15 +79,15 @@ const getAttachment = lazy(() => require('./Attachment.js').Attachment);
  * @implements {InteractionResponses}
  */
 export class ModalSubmitInteraction extends BaseInteraction {
-	public customId: any;
-	public message: any;
-	public components: any;
-	public fields: any;
-	public deferred: any;
-	public replied: any;
-	public ephemeral: any;
-	public webhook: any;
-	constructor(client: any, data: any) {
+	public customId: string;
+	public message: Message | null;
+	public components: ModalComponentResolver;
+	public fields: ModalComponentResolver;
+	public deferred: boolean;
+	public replied: boolean;
+	public ephemeral: boolean | null;
+	public webhook: InteractionWebhook;
+	constructor(client: Client, data: APIModalSubmitInteraction) {
 		super(client, data);
 		/**
 		 * The custom id of the modal.
@@ -98,9 +114,13 @@ export class ModalSubmitInteraction extends BaseInteraction {
 		 */
 		this.components = new ModalComponentResolver(
 			this.client,
-			// @ts-expect-error
-			data.data.components?.map((component) => this.transformComponent(component, data.data.resolved)),
-			transformResolved({ client: this.client, guild: this.guild, channel: this.channel }, data.data.resolved),
+			(data.data as APIModalSubmission).components?.map((component: any) =>
+				this.transformComponent(component, (data.data as APIModalSubmission).resolved),
+			),
+			transformResolved(
+				{ client: this.client, guild: this.guild, channel: this.channel },
+				(data.data as APIModalSubmission).resolved as APIInteractionDataResolved,
+			),
 		);
 
 		/**
@@ -149,7 +169,7 @@ export class ModalSubmitInteraction extends BaseInteraction {
 	 * @private
 	 */
 	// @ts-expect-error
-	transformComponent(rawComponent: any, resolved: any) {
+	transformComponent(rawComponent: any, resolved: APIInteractionDataResolved | undefined): ModalData[] | any {
 		if ('components' in rawComponent) {
 			return {
 				type: rawComponent.type,
@@ -181,54 +201,57 @@ export class ModalSubmitInteraction extends BaseInteraction {
 			data.values = rawComponent.values;
 			if (resolved) {
 				const { members, users, channels, roles, attachments } = resolved;
-				const valueSet = new Set(rawComponent.values);
+				const valueSet = new Set(rawComponent.values as string[]);
 
 				if (users) {
-					data.users = new Collection();
+					data.users = new Collection<Snowflake, User>();
 
 					for (const [id, user] of Object.entries(users)) {
 						if (valueSet.has(id)) {
-							data.users.set(id, this.client.users._add(user));
+							data.users.set(id as Snowflake, this.client.users._add(user));
 						}
 					}
 				}
 
 				if (channels) {
-					data.channels = new Collection();
+					data.channels = new Collection<Snowflake, BaseChannel | any>();
 
 					for (const [id, apiChannel] of Object.entries(channels)) {
 						if (valueSet.has(id)) {
-							data.channels.set(id, this.client.channels._add(apiChannel, this.guild) ?? apiChannel);
+							data.channels.set(
+								id as Snowflake,
+								this.client.channels._add(apiChannel as any, this.guild) ?? apiChannel,
+							);
 						}
 					}
 				}
 
 				if (members) {
-					data.members = new Collection();
+					data.members = new Collection<Snowflake, GuildMember | any>();
 
 					for (const [id, member] of Object.entries(members)) {
 						if (valueSet.has(id)) {
 							const user = users?.[id];
-							data.members.set(id, this.guild?.members._add(Object.assign({ user }, member)) ?? member);
+							data.members.set(id as Snowflake, this.guild?.members._add({ user, ...member } as any) ?? member);
 						}
 					}
 				}
 
 				if (roles) {
-					data.roles = new Collection();
+					data.roles = new Collection<Snowflake, Role | any>();
 
 					for (const [id, role] of Object.entries(roles)) {
 						if (valueSet.has(id)) {
-							data.roles.set(id, this.guild?.roles._add(role) ?? role);
+							data.roles.set(id as Snowflake, this.guild?.roles._add(role as any) ?? role);
 						}
 					}
 				}
 
 				if (attachments) {
-					data.attachments = new Collection();
+					data.attachments = new Collection<Snowflake, Attachment>();
 					for (const [id, attachment] of Object.entries(attachments)) {
 						if (valueSet.has(id)) {
-							data.attachments.set(id, new (getAttachment())(attachment));
+							data.attachments.set(id as Snowflake, new (getAttachment() as any)(attachment));
 						}
 					}
 				}

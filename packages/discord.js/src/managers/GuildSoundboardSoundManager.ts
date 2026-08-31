@@ -65,7 +65,7 @@ export class GuildSoundboardSoundManager extends CachedManager {
 
 		const resolvedContentType = contentType ?? resolvedFile.contentType ?? detectAudioMime(resolvedFile.data as any)[0];
 
-		const sound = resolveBase64(resolvedFile.data, resolvedContentType);
+		const sound = resolveBase64(resolvedFile.data as any, resolvedContentType);
 
 		const body = { emoji_id: emojiId, emoji_name: emojiName, name, sound, volume };
 

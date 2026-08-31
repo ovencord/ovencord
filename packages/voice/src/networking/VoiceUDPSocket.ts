@@ -60,7 +60,10 @@ export class VoiceUDPSocket extends AsyncEventEmitter {
 	/**
 	 * The underlying network Socket for the VoiceUDPSocket.
 	 */
-	private socket?: any;
+	private socket?: {
+		send(data: string | Uint8Array | Buffer, port: number, address: string): boolean | number;
+		close(): void;
+	} | null;
 
 	/**
 	 * The socket details for Discord (remote)
@@ -153,8 +156,7 @@ export class VoiceUDPSocket extends AsyncEventEmitter {
 	 * @param buffer - The buffer to send
 	 */
 	public send(buffer: Uint8Array) {
-		// biome-ignore lint/suspicious/noExplicitAny: Internal socket send
-		(this.socket as any)?.send(buffer, this.remote.port, this.remote.ip);
+		this.socket?.send(buffer, this.remote.port, this.remote.ip);
 	}
 
 	/**

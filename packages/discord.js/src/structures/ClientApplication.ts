@@ -1,5 +1,12 @@
 import { Collection } from '@ovencord/collection';
-import { Routes } from 'discord-api-types/v10';
+import {
+	type APIApplication,
+	type ApplicationRoleConnectionMetadataType,
+	type OAuth2Scopes,
+	Routes,
+	type Snowflake,
+} from 'discord-api-types/v10';
+import type { Client } from '../client/Client.js';
 import { ApplicationCommandManager } from '../managers/ApplicationCommandManager.js';
 import { ApplicationEmojiManager } from '../managers/ApplicationEmojiManager.js';
 import { EntitlementManager } from '../managers/EntitlementManager.js';
@@ -11,7 +18,47 @@ import { ApplicationRoleConnectionMetadata } from './ApplicationRoleConnectionMe
 import { Application } from './interfaces/Application.js';
 import { SKU } from './SKU.js';
 import { Team } from './Team.js';
+import type { User } from './User.js';
 
+export interface ClientApplicationInstallParams {
+	scopes: OAuth2Scopes[];
+	permissions: Readonly<PermissionsBitField>;
+}
+
+export interface IntegrationTypesConfigurationParameters {
+	scopes: OAuth2Scopes[];
+	permissions: Readonly<PermissionsBitField>;
+}
+
+export interface IntegrationTypesConfigurationContext {
+	oauth2InstallParams: IntegrationTypesConfigurationParameters | null;
+}
+
+export type IntegrationTypesConfiguration = Record<string, IntegrationTypesConfigurationContext>;
+
+export interface ApplicationRoleConnectionMetadataEditOptions {
+	name: string;
+	nameLocalizations?: Record<string, string> | null;
+	description: string;
+	descriptionLocalizations?: Record<string, string> | null;
+	key: string;
+	type: ApplicationRoleConnectionMetadataType;
+}
+
+export interface ClientApplicationEditOptions {
+	customInstallURL?: string;
+	description?: string;
+	roleConnectionsVerificationURL?: string;
+	installParams?: ClientApplicationInstallParams;
+	flags?: number | ApplicationFlagsBitField;
+	icon?: string | null;
+	coverImage?: string | null;
+	interactionsEndpointURL?: string;
+	eventWebhooksURL?: string;
+	eventWebhooksStatus?: number;
+	eventWebhooksTypes?: string[];
+	tags?: string[];
+}
 /**
  * @typedef {Object} ClientApplicationInstallParams
  * @property {OAuth2Scopes[]} scopes Scopes that will be set upon adding this application
@@ -24,29 +71,29 @@ import { Team } from './Team.js';
  * @extends {Application}
  */
 export class ClientApplication extends Application {
-	public commands: any;
-	public emojis: any;
-	public entitlements: any;
-	public subscriptions: any;
-	public tags: any;
-	public installParams: any;
-	public integrationTypesConfig: any;
-	public customInstallURL: any;
-	public flags: any;
-	public approximateGuildCount: any;
-	public approximateUserInstallCount: any;
-	public approximateUserAuthorizationCount: any;
-	public guildId: any;
-	public botRequireCodeGrant: any;
-	public bot: any;
-	public botPublic: any;
-	public interactionsEndpointURL: any;
-	public roleConnectionsVerificationURL: any;
-	public eventWebhooksURL: any;
-	public eventWebhooksStatus: any;
-	public eventWebhooksTypes: any;
-	public owner: any;
-	constructor(client: any, data: any) {
+	public commands: ApplicationCommandManager;
+	public emojis: ApplicationEmojiManager;
+	public entitlements: EntitlementManager;
+	public subscriptions: SubscriptionManager;
+	public tags: string[];
+	public installParams: ClientApplicationInstallParams | null;
+	public integrationTypesConfig: IntegrationTypesConfiguration | null;
+	public customInstallURL: string | null;
+	public flags: Readonly<PermissionsBitField> | ApplicationFlagsBitField | null;
+	public approximateGuildCount: number | null;
+	public approximateUserInstallCount: number | null;
+	public approximateUserAuthorizationCount: number | null;
+	public guildId: Snowflake | null;
+	public botRequireCodeGrant: boolean | null;
+	public bot: User | null;
+	public botPublic: boolean | null;
+	public interactionsEndpointURL: string | null;
+	public roleConnectionsVerificationURL: string | null;
+	public eventWebhooksURL: string | null;
+	public eventWebhooksStatus: number | null;
+	public eventWebhooksTypes: string[] | null;
+	public owner: User | Team | null;
+	constructor(client: Client, data: Partial<APIApplication> | Record<string, unknown>) {
 		super(client, data);
 
 		// Initialize managers after super() to ensure this.client is set
@@ -79,7 +126,7 @@ export class ClientApplication extends Application {
 		this.subscriptions = new SubscriptionManager(client, undefined);
 	}
 
-	_patch(data: any) {
+	_patch(data: Partial<APIApplication> | Record<string, unknown>) {
 		super._patch(data);
 
 		/**
@@ -87,7 +134,7 @@ export class ClientApplication extends Application {
 		 *
 		 * @type {string[]}
 		 */
-		this.tags = data.tags ?? [];
+		this.tags = (data.tags as string[]) ?? [];
 
 		if ('install_params' in data) {
 			/**
@@ -95,9 +142,10 @@ export class ClientApplication extends Application {
 			 *
 			 * @type {?ClientApplicationInstallParams}
 			 */
+			const installParams = data.install_params as Record<string, unknown>;
 			this.installParams = {
-				scopes: data.install_params.scopes,
-				permissions: new PermissionsBitField(data.install_params.permissions).freeze(),
+				scopes: installParams.scopes as OAuth2Scopes[],
+				permissions: new PermissionsBitField((installParams as any).permissions).freeze(),
 			};
 		} else {
 			this.installParams ??= null;
@@ -137,12 +185,14 @@ export class ClientApplication extends Application {
 			 * @type {?IntegrationTypesConfiguration}
 			 */
 			this.integrationTypesConfig = Object.fromEntries(
-				Object.entries(data.integration_types_config).map(([key, config]: any) => {
+				Object.entries(data.integration_types_config as Record<string, unknown>).map(([key, configValue]) => {
+					const config = configValue as Record<string, unknown>;
 					let oauth2InstallParams = null;
 					if (config.oauth2_install_params) {
+						const oauth2 = config.oauth2_install_params as Record<string, unknown>;
 						oauth2InstallParams = {
-							scopes: config.oauth2_install_params.scopes,
-							permissions: new PermissionsBitField(config.oauth2_install_params.permissions).freeze(),
+							scopes: oauth2.scopes as OAuth2Scopes[],
+							permissions: new PermissionsBitField((oauth2 as any).permissions).freeze(),
 						};
 					}
 
@@ -163,7 +213,7 @@ export class ClientApplication extends Application {
 			 *
 			 * @type {?string}
 			 */
-			this.customInstallURL = data.custom_install_url;
+			this.customInstallURL = data.custom_install_url as string;
 		} else {
 			this.customInstallURL = null;
 		}
@@ -174,7 +224,7 @@ export class ClientApplication extends Application {
 			 *
 			 * @type {ApplicationFlagsBitField}
 			 */
-			this.flags = new ApplicationFlagsBitField(data.flags).freeze();
+			this.flags = new ApplicationFlagsBitField(data.flags as number).freeze();
 		}
 
 		if ('approximate_guild_count' in data) {
@@ -183,7 +233,7 @@ export class ClientApplication extends Application {
 			 *
 			 * @type {?number}
 			 */
-			this.approximateGuildCount = data.approximate_guild_count;
+			this.approximateGuildCount = data.approximate_guild_count as number;
 		} else {
 			this.approximateGuildCount ??= null;
 		}
@@ -194,7 +244,7 @@ export class ClientApplication extends Application {
 			 *
 			 * @type {?number}
 			 */
-			this.approximateUserInstallCount = data.approximate_user_install_count;
+			this.approximateUserInstallCount = data.approximate_user_install_count as number;
 		} else {
 			this.approximateUserInstallCount ??= null;
 		}
@@ -205,7 +255,7 @@ export class ClientApplication extends Application {
 			 *
 			 * @type {?number}
 			 */
-			this.approximateUserAuthorizationCount = data.approximate_user_authorization_count;
+			this.approximateUserAuthorizationCount = data.approximate_user_authorization_count as number;
 		} else {
 			this.approximateUserAuthorizationCount ??= null;
 		}
@@ -216,7 +266,7 @@ export class ClientApplication extends Application {
 			 *
 			 * @type {?Snowflake}
 			 */
-			this.guildId = data.guild_id;
+			this.guildId = data.guild_id as Snowflake;
 		} else {
 			this.guildId ??= null;
 		}
@@ -227,7 +277,7 @@ export class ClientApplication extends Application {
 			 *
 			 * @type {?boolean}
 			 */
-			this.botRequireCodeGrant = data.bot_require_code_grant;
+			this.botRequireCodeGrant = data.bot_require_code_grant as boolean;
 		} else {
 			this.botRequireCodeGrant ??= null;
 		}
@@ -238,7 +288,7 @@ export class ClientApplication extends Application {
 			 *
 			 * @type {?User}
 			 */
-			this.bot = this.client.users._add(data.bot);
+			this.bot = this.client.users._add((data as any).bot);
 		} else {
 			this.bot ??= null;
 		}
@@ -249,7 +299,7 @@ export class ClientApplication extends Application {
 			 *
 			 * @type {?boolean}
 			 */
-			this.botPublic = data.bot_public;
+			this.botPublic = data.bot_public as boolean;
 		} else {
 			this.botPublic ??= null;
 		}
@@ -260,7 +310,7 @@ export class ClientApplication extends Application {
 			 *
 			 * @type {?string}
 			 */
-			this.interactionsEndpointURL = data.interactions_endpoint_url;
+			this.interactionsEndpointURL = data.interactions_endpoint_url as string;
 		} else {
 			this.interactionsEndpointURL ??= null;
 		}
@@ -271,7 +321,7 @@ export class ClientApplication extends Application {
 			 *
 			 * @type {?string}
 			 */
-			this.roleConnectionsVerificationURL = data.role_connections_verification_url;
+			this.roleConnectionsVerificationURL = data.role_connections_verification_url as string;
 		} else {
 			this.roleConnectionsVerificationURL ??= null;
 		}
@@ -282,7 +332,7 @@ export class ClientApplication extends Application {
 			 *
 			 * @type {?string}
 			 */
-			this.eventWebhooksURL = data.event_webhooks_url;
+			this.eventWebhooksURL = data.event_webhooks_url as string;
 		} else {
 			this.eventWebhooksURL ??= null;
 		}
@@ -293,7 +343,7 @@ export class ClientApplication extends Application {
 			 *
 			 * @type {?ApplicationWebhookEventStatus}
 			 */
-			this.eventWebhooksStatus = data.event_webhooks_status;
+			this.eventWebhooksStatus = data.event_webhooks_status as number;
 		} else {
 			this.eventWebhooksStatus ??= null;
 		}
@@ -304,7 +354,7 @@ export class ClientApplication extends Application {
 			 *
 			 * @type {?ApplicationWebhookEventType[]}
 			 */
-			this.eventWebhooksTypes = data.event_webhooks_types;
+			this.eventWebhooksTypes = data.event_webhooks_types as string[];
 		} else {
 			this.eventWebhooksTypes ??= null;
 		}
@@ -315,9 +365,9 @@ export class ClientApplication extends Application {
 		 * @type {?(User|Team)}
 		 */
 		this.owner = data.team
-			? new Team(this.client, data.team)
+			? new Team(this.client, data.team as import('discord-api-types/v10').APITeam)
 			: data.owner
-				? this.client.users._add(data.owner)
+				? this.client.users._add(data.owner as Record<string, unknown>)
 				: (this.owner ?? null);
 	}
 
@@ -380,7 +430,7 @@ export class ClientApplication extends Application {
 		eventWebhooksStatus,
 		eventWebhooksTypes,
 		tags,
-	}: any = {}) {
+	}: ClientApplicationEditOptions = {}) {
 		const data = await this.client.rest.patch(Routes.currentApplication(), {
 			body: {
 				custom_install_url: customInstallURL,
@@ -442,9 +492,8 @@ export class ClientApplication extends Application {
 	 * @param {ApplicationRoleConnectionMetadataEditOptions[]} records The new role connection metadata records
 	 * @returns {Promise<ApplicationRoleConnectionMetadata[]>}
 	 */
-	async editRoleConnectionMetadataRecords(records: any) {
+	async editRoleConnectionMetadataRecords(records: ApplicationRoleConnectionMetadataEditOptions[]) {
 		const newRecords = await this.client.rest.put(Routes.applicationRoleConnectionMetadata(this.client.user.id), {
-			// @ts-expect-error
 			body: records.map((record) => ({
 				type: record.type,
 				key: record.key,
@@ -465,7 +514,12 @@ export class ClientApplication extends Application {
 	 * @returns {Promise<Collection<Snowflake, SKU>>}
 	 */
 	async fetchSKUs() {
-		const skus = await this.client.rest.get(Routes.skus(this.id));
-		return skus.reduce((coll: any, sku: any) => coll.set(sku.id, new SKU(this.client, sku)), new Collection());
+		const skus = (await this.client.rest.get(Routes.skus(this.id))) as Record<string, unknown>[];
+		return skus.reduce(
+			(coll: Collection<Snowflake, SKU>, sku: Record<string, unknown>) =>
+				coll.set(sku.id as Snowflake, new SKU(this.client, sku as unknown as import('discord-api-types/v10').APISKU)),
+
+			new Collection<Snowflake, SKU>(),
+		);
 	}
 }

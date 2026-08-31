@@ -9,19 +9,20 @@ import { Messages } from './Messages.js';
  * @returns {DiscordjsError}
  * @ignore
  */
-export function makeDiscordjsError(Base: any) {
+export function makeDiscordjsError(Base: typeof Error) {
 	return class extends Base {
+		public code: keyof typeof ErrorCodes;
 		static {
 			Object.defineProperty(this, 'name', { value: `Discordjs${Base.name}` });
 		}
 
-		constructor(code: any, ...args: any[]) {
+		constructor(code: keyof typeof ErrorCodes, ...args: unknown[]) {
 			super(message(code, args));
 			this.code = code;
 			Error.captureStackTrace(this, this.constructor);
 		}
 
-		get name() {
+		override get name() {
 			return `${this.constructor.name} [${this.code}]`;
 		}
 	};
@@ -35,14 +36,14 @@ export function makeDiscordjsError(Base: any) {
  * @returns {string} Formatted string
  * @ignore
  */
-export function message(code: any, args: any[]) {
+export function message(code: keyof typeof ErrorCodes, args: unknown[]) {
 	if (!(code in ErrorCodes)) throw new Error('Error code must be a valid DiscordjsErrorCodes');
 	const msg = Messages[code];
 	if (!msg) throw new Error(`No message associated with error code: ${code}.`);
-	if (typeof msg === 'function') return (msg as any).apply(null, args);
+	if (typeof msg === 'function') return (msg as (...args: unknown[]) => string)(...args);
 	if (!args?.length) return msg;
-	args.unshift(msg);
-	return String(...args);
+	(args as unknown[]).unshift(msg);
+	return String(...(args as unknown[]));
 }
 
 export const DiscordjsError = makeDiscordjsError(Error);

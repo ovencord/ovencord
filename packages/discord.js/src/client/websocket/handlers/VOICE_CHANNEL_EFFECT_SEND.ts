@@ -13,5 +13,5 @@ export default (client: Client, { d: data }: GatewayVoiceChannelEffectSendDispat
 	 * @event Client#voiceChannelEffectSend
 	 * @param {VoiceChannelEffect} voiceChannelEffect The sent voice channel effect
 	 */
-	client.emit(Events.VoiceChannelEffectSend, new VoiceChannelEffect(data, guild));
+	client.emit(Events.VoiceChannelEffectSend, new VoiceChannelEffect(data as any, guild));
 };

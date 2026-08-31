@@ -1,8 +1,10 @@
 import { calculateShardId } from '@ovencord/util';
 import { WebSocketShardEvents } from '@ovencord/ws';
+import type { Client } from '../client/Client.js';
 import { DiscordjsError, DiscordjsTypeError, ErrorCodes } from '../errors/index.js';
 import { Events } from '../util/Events.js';
 import { makeError, makePlainError } from '../util/Util.js';
+import type { BroadcastEvalOptions, ShardingManagerMode } from './ShardingManager.js';
 
 // Declare self for worker thread context
 declare var self: Worker;
@@ -12,12 +14,12 @@ declare var self: Worker;
  * Utilizes IPC to send and receive data to/from the master process and other shards.
  */
 export class ShardClientUtil {
-	public client: any;
-	public mode: any;
+	public client: Client;
+	public mode: ShardingManagerMode;
 
 	private static _singleton: ShardClientUtil | null = null;
 
-	constructor(client: any, mode: any) {
+	constructor(client: Client, mode: ShardingManagerMode) {
 		/**
 		 * Client for the shard
 		 *
@@ -71,7 +73,7 @@ export class ShardClientUtil {
 	 * @returns {Promise<void>}
 	 * @emits Shard#message
 	 */
-	async send(message: any): Promise<void> {
+	async send(message: unknown): Promise<void> {
 		return new Promise((resolve, reject) => {
 			switch (this.mode) {
 				case 'process':
@@ -102,7 +104,7 @@ export class ShardClientUtil {
 	 *   .catch(console.error);
 	 * @see {@link ShardingManager#fetchClientValues}
 	 */
-	async fetchClientValues(prop: any, shard: any): Promise<any> {
+	async fetchClientValues(prop: string, shard?: number): Promise<any> {
 		return new Promise((resolve, reject) => {
 			if (this.mode === 'worker') {
 				const originalOnMessage = self.onmessage;
@@ -144,21 +146,22 @@ export class ShardClientUtil {
 	 *   .catch(console.error);
 	 * @see {@link ShardingManager#broadcastEval}
 	 */
-	async broadcastEval(script: any, options = {}): Promise<any> {
+	async broadcastEval<T>(
+		script: (client: Client, context: unknown) => T,
+		options: BroadcastEvalOptions = {},
+	): Promise<T | T[]> {
 		return new Promise((resolve, reject) => {
 			if (typeof script !== 'function') {
 				reject(new DiscordjsTypeError(ErrorCodes.ShardingInvalidEvalBroadcast));
 				return;
 			}
 
-			// @ts-expect-error
 			const evalScript = `(${script})(this, ${JSON.stringify(options.context)})`;
 
 			if (this.mode === 'worker') {
 				const originalOnMessage = self.onmessage;
 				self.onmessage = (event: MessageEvent) => {
 					const message = event.data;
-					// @ts-expect-error
 					if (message?._sEval === evalScript && message._sEvalShard === options.shard) {
 						self.onmessage = originalOnMessage;
 						if (message._error) reject(makeError(message._error));
@@ -169,7 +172,6 @@ export class ShardClientUtil {
 				};
 			} else {
 				const listener = (message: any) => {
-					// @ts-expect-error
 					if (message?._sEval !== evalScript || message._sEvalShard !== options.shard) return;
 					process.removeListener('message', listener);
 					if (message._error) reject(makeError(message._error));
@@ -178,7 +180,6 @@ export class ShardClientUtil {
 				process.on('message', listener);
 			}
 
-			// @ts-expect-error
 			this.send({ _sEval: evalScript, _sEvalShard: options.shard }).catch((error) => {
 				reject(error);
 			});
@@ -202,22 +203,28 @@ export class ShardClientUtil {
 	 * @param {*} message Message received
 	 * @private
 	 */
-	async _handleMessage(message: any): Promise<void> {
+	async _handleMessage(message: unknown): Promise<void> {
 		if (!message) return;
-		if (message._fetchProp) {
+		if (typeof message === 'object' && message !== null && '_fetchProp' in message) {
 			try {
-				const props = message._fetchProp.split('.');
-				let value = this.client;
+				const props = (message as { _fetchProp: string })._fetchProp.split('.');
+				let value: any = this.client;
 				for (const prop of props) value = value[prop];
-				this._respond('fetchProp', { _fetchProp: message._fetchProp, _result: value });
+				this._respond('fetchProp', { _fetchProp: (message as { _fetchProp: string })._fetchProp, _result: value });
 			} catch (error) {
-				this._respond('fetchProp', { _fetchProp: message._fetchProp, _error: makePlainError(error as Error) });
+				this._respond('fetchProp', {
+					_fetchProp: (message as { _fetchProp: string })._fetchProp,
+					_error: makePlainError(error as Error),
+				});
 			}
-		} else if (message._eval) {
+		} else if (typeof message === 'object' && message !== null && '_eval' in message) {
 			try {
-				this._respond('eval', { _eval: message._eval, _result: await this.client._eval(message._eval) });
+				this._respond('eval', {
+					_eval: (message as { _eval: string })._eval,
+					_result: await this.client._eval((message as { _eval: string })._eval),
+				});
 			} catch (error) {
-				this._respond('eval', { _eval: message._eval, _error: makePlainError(error as Error) });
+				this._respond('eval', { _eval: (message as { _eval: string })._eval, _error: makePlainError(error as Error) });
 			}
 		}
 	}
@@ -229,7 +236,7 @@ export class ShardClientUtil {
 	 * @param {*} message Message to send
 	 * @private
 	 */
-	_respond(type: string, message: any): void {
+	_respond(type: string, message: unknown): void {
 		this.send(message).catch((error_) => {
 			const error = new Error(`Error when sending ${type} response to master process: ${error_.message}`);
 			error.stack = error_.stack;
@@ -250,7 +257,7 @@ export class ShardClientUtil {
 	 * @param {ShardingManagerMode} mode Mode the shard was spawned with
 	 * @returns {ShardClientUtil}
 	 */
-	static singleton(client: any, mode: any): ShardClientUtil {
+	static singleton(client: Client, mode: ShardingManagerMode): ShardClientUtil {
 		if (ShardClientUtil._singleton) {
 			client.emit(
 				Events.Warn,

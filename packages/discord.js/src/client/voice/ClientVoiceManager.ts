@@ -1,19 +1,19 @@
 import { CloseCodes, WebSocketShardEvents } from '@ovencord/ws';
-import type {
-	GatewayVoiceServerUpdateDispatchData,
-	GatewayVoiceStateUpdateDispatchData,
-	Snowflake,
-} from 'discord-api-types/v10';
-import type { Client } from '../Client.js';
+import type { Client as DiscordClient } from '../Client.js';
+
+interface VoiceAdapter {
+	onVoiceServerUpdate(data: unknown): void;
+	onVoiceStateUpdate(data: unknown): void;
+	destroy(): void;
+}
 
 /**
  * Manages voice connections for the client
  */
 export class ClientVoiceManager {
-	// biome-ignore lint/suspicious/noExplicitAny: voice adapter structure is dynamic/managed by @ovencord/voice
-	public adapters: Map<Snowflake, any>;
-	public client!: Client;
-	constructor(client: Client) {
+	public adapters: Map<string, VoiceAdapter>;
+	public client: DiscordClient;
+	constructor(client: DiscordClient) {
 		/**
 		 * The client that instantiated this voice manager
 		 *
@@ -41,11 +41,11 @@ export class ClientVoiceManager {
 		});
 	}
 
-	onVoiceServer(payload: GatewayVoiceServerUpdateDispatchData) {
+	onVoiceServer(payload: { guild_id: string }) {
 		this.adapters.get(payload.guild_id)?.onVoiceServerUpdate(payload);
 	}
 
-	onVoiceStateUpdate(payload: GatewayVoiceStateUpdateDispatchData) {
+	onVoiceStateUpdate(payload: { guild_id?: string; session_id?: string; user_id: string }) {
 		if (payload.guild_id && payload.session_id && payload.user_id === this.client.user?.id) {
 			this.adapters.get(payload.guild_id)?.onVoiceStateUpdate(payload);
 		}

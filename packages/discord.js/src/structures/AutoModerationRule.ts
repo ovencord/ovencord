@@ -1,6 +1,54 @@
 import { Collection } from '@ovencord/collection';
+import type {
+	APIAutoModerationRule,
+	AutoModerationActionType,
+	AutoModerationRuleEventType,
+	AutoModerationRuleKeywordPresetType,
+	AutoModerationRuleTriggerType,
+} from 'discord-api-types/v10';
+import type { Client } from '../client/Client.js';
 import { _transformAPIAutoModerationAction } from '../util/Transformers.js';
 import { Base } from './Base.js';
+import type { Guild } from './Guild.js';
+import type { GuildChannel } from './GuildChannel.js';
+import type { Role } from './Role.js';
+import type { ThreadChannel } from './ThreadChannel.js';
+
+export interface AutoModerationTriggerMetadata {
+	keywordFilter: string[];
+	regexPatterns: string[];
+	presets: AutoModerationRuleKeywordPresetType[];
+	allowList: string[];
+	mentionTotalLimit: number | null;
+	mentionRaidProtectionEnabled: boolean;
+}
+
+export interface AutoModerationActionMetadata {
+	channelId?: string | null;
+	durationSeconds?: number | null;
+	customMessage?: string | null;
+}
+
+export interface AutoModerationAction {
+	type: AutoModerationActionType;
+	metadata: AutoModerationActionMetadata;
+}
+
+export interface AutoModerationActionOptions {
+	type: AutoModerationActionType;
+	metadata?: AutoModerationActionMetadata;
+}
+
+export interface AutoModerationRuleEditOptions {
+	name?: string;
+	eventType?: AutoModerationRuleEventType;
+	triggerMetadata?: AutoModerationTriggerMetadata;
+	actions?: AutoModerationActionOptions[];
+	enabled?: boolean;
+	exemptRoles?: Collection<string, Role> | string[] | Role[];
+	exemptChannels?: Collection<string, GuildChannel | ThreadChannel> | string[] | GuildChannel[] | ThreadChannel[];
+	reason?: string;
+}
 
 /**
  * Represents an auto moderation rule.
@@ -8,18 +56,19 @@ import { Base } from './Base.js';
  * @extends {Base}
  */
 export class AutoModerationRule extends Base {
-	public id: any;
-	public guild: any;
-	public creatorId: any;
-	public triggerType: any;
-	public name: any;
-	public eventType: any;
-	public triggerMetadata: any;
-	public actions: any;
-	public enabled: any;
-	public exemptRoles: any;
-	public exemptChannels: any;
-	constructor(client: any, data: any, guild: any) {
+	public id: string;
+	public guild: Guild;
+	public creatorId: string;
+	public triggerType: AutoModerationRuleTriggerType;
+	public name!: string;
+	public eventType!: AutoModerationRuleEventType;
+	public triggerMetadata!: AutoModerationTriggerMetadata;
+	public actions!: AutoModerationAction[];
+	public enabled!: boolean;
+	public exemptRoles!: Collection<string, Role>;
+	public exemptChannels!: Collection<string, GuildChannel | ThreadChannel>;
+
+	constructor(client: Client, data: APIAutoModerationRule, guild: Guild) {
 		super(client);
 
 		/**
@@ -53,7 +102,7 @@ export class AutoModerationRule extends Base {
 		this._patch(data);
 	}
 
-	_patch(data: any) {
+	_patch(data: Partial<APIAutoModerationRule>) {
 		if ('name' in data) {
 			/**
 			 * The name of this auto moderation rule.
@@ -128,7 +177,6 @@ export class AutoModerationRule extends Base {
 			 *
 			 * @type {AutoModerationAction[]}
 			 */
-			// @ts-expect-error
 			this.actions = data.actions.map((action) => _transformAPIAutoModerationAction(action));
 		}
 
@@ -148,8 +196,10 @@ export class AutoModerationRule extends Base {
 			 * @type {Collection<Snowflake, Role>}
 			 */
 			this.exemptRoles = new Collection(
-				// @ts-expect-error
-				data.exempt_roles.map((exemptRole) => [exemptRole, this.guild.roles.cache.get(exemptRole)]),
+				(data.exempt_roles as string[]).map((exemptRole) => [
+					exemptRole,
+					this.guild.roles.cache.get(exemptRole) as Role,
+				]),
 			);
 		}
 
@@ -160,8 +210,10 @@ export class AutoModerationRule extends Base {
 			 * @type {Collection<Snowflake, GuildChannel|ThreadChannel>}
 			 */
 			this.exemptChannels = new Collection(
-				// @ts-expect-error
-				data.exempt_channels.map((exemptChannel) => [exemptChannel, this.guild.channels.cache.get(exemptChannel)]),
+				(data.exempt_channels as string[]).map((exemptChannel) => [
+					exemptChannel,
+					this.guild.channels.cache.get(exemptChannel) as GuildChannel | ThreadChannel,
+				]),
 			);
 		}
 	}
@@ -172,7 +224,7 @@ export class AutoModerationRule extends Base {
 	 * @param {AutoModerationRuleEditOptions} options Options for editing this auto moderation rule
 	 * @returns {Promise<AutoModerationRule>}
 	 */
-	async edit(options: any) {
+	async edit(options: AutoModerationRuleEditOptions): Promise<AutoModerationRule> {
 		return this.guild.autoModerationRules.edit(this.id, options);
 	}
 
@@ -182,7 +234,7 @@ export class AutoModerationRule extends Base {
 	 * @param {string} [reason] The reason for deleting this auto moderation rule
 	 * @returns {Promise<void>}
 	 */
-	async delete(reason: any) {
+	async delete(reason?: string): Promise<void> {
 		return this.guild.autoModerationRules.delete(this.id, reason);
 	}
 
@@ -193,7 +245,7 @@ export class AutoModerationRule extends Base {
 	 * @param {string} [reason] The reason for changing the name of this auto moderation rule
 	 * @returns {Promise<AutoModerationRule>}
 	 */
-	async setName(name: any, reason: any) {
+	async setName(name: string, reason?: string): Promise<AutoModerationRule> {
 		return this.edit({ name, reason });
 	}
 
@@ -204,7 +256,7 @@ export class AutoModerationRule extends Base {
 	 * @param {string} [reason] The reason for changing the event type of this auto moderation rule
 	 * @returns {Promise<AutoModerationRule>}
 	 */
-	async setEventType(eventType: any, reason: any) {
+	async setEventType(eventType: AutoModerationRuleEventType, reason?: string): Promise<AutoModerationRule> {
 		return this.edit({ eventType, reason });
 	}
 
@@ -215,7 +267,7 @@ export class AutoModerationRule extends Base {
 	 * @param {string} [reason] The reason for changing the keyword filter of this auto moderation rule
 	 * @returns {Promise<AutoModerationRule>}
 	 */
-	async setKeywordFilter(keywordFilter: any, reason: any) {
+	async setKeywordFilter(keywordFilter: string[], reason?: string): Promise<AutoModerationRule> {
 		return this.edit({ triggerMetadata: { ...this.triggerMetadata, keywordFilter }, reason });
 	}
 
@@ -227,7 +279,7 @@ export class AutoModerationRule extends Base {
 	 * @param {string} [reason] The reason for changing the regular expression patterns of this auto moderation rule
 	 * @returns {Promise<AutoModerationRule>}
 	 */
-	async setRegexPatterns(regexPatterns: any, reason: any) {
+	async setRegexPatterns(regexPatterns: string[], reason?: string): Promise<AutoModerationRule> {
 		return this.edit({ triggerMetadata: { ...this.triggerMetadata, regexPatterns }, reason });
 	}
 
@@ -238,7 +290,7 @@ export class AutoModerationRule extends Base {
 	 * @param {string} [reason] The reason for changing the presets of this auto moderation rule
 	 * @returns {Promise<AutoModerationRule>}
 	 */
-	async setPresets(presets: any, reason: any) {
+	async setPresets(presets: AutoModerationRuleKeywordPresetType[], reason?: string): Promise<AutoModerationRule> {
 		return this.edit({ triggerMetadata: { ...this.triggerMetadata, presets }, reason });
 	}
 
@@ -252,7 +304,7 @@ export class AutoModerationRule extends Base {
 	 * @param {string} [reason] The reason for changing the allow list of this auto moderation rule
 	 * @returns {Promise<AutoModerationRule>}
 	 */
-	async setAllowList(allowList: any, reason: any) {
+	async setAllowList(allowList: string[], reason?: string): Promise<AutoModerationRule> {
 		return this.edit({ triggerMetadata: { ...this.triggerMetadata, allowList }, reason });
 	}
 
@@ -263,7 +315,7 @@ export class AutoModerationRule extends Base {
 	 * @param {string} [reason] The reason for changing the mention total limit of this auto moderation rule
 	 * @returns {Promise<AutoModerationRule>}
 	 */
-	async setMentionTotalLimit(mentionTotalLimit: any, reason: any) {
+	async setMentionTotalLimit(mentionTotalLimit: number, reason?: string): Promise<AutoModerationRule> {
 		return this.edit({ triggerMetadata: { ...this.triggerMetadata, mentionTotalLimit }, reason });
 	}
 
@@ -275,7 +327,10 @@ export class AutoModerationRule extends Base {
 	 * @param {string} [reason] The reason for changing the mention raid protection of this auto moderation rule
 	 * @returns {Promise<AutoModerationRule>}
 	 */
-	async setMentionRaidProtectionEnabled(mentionRaidProtectionEnabled: any, reason: any) {
+	async setMentionRaidProtectionEnabled(
+		mentionRaidProtectionEnabled: boolean,
+		reason?: string,
+	): Promise<AutoModerationRule> {
 		return this.edit({ triggerMetadata: { ...this.triggerMetadata, mentionRaidProtectionEnabled }, reason });
 	}
 
@@ -286,7 +341,7 @@ export class AutoModerationRule extends Base {
 	 * @param {string} [reason] The reason for changing the actions of this auto moderation rule
 	 * @returns {Promise<AutoModerationRule>}
 	 */
-	async setActions(actions: any, reason: any) {
+	async setActions(actions: AutoModerationActionOptions[], reason?: string): Promise<AutoModerationRule> {
 		return this.edit({ actions, reason });
 	}
 
@@ -297,7 +352,7 @@ export class AutoModerationRule extends Base {
 	 * @param {string} [reason] The reason for enabling or disabling this auto moderation rule
 	 * @returns {Promise<AutoModerationRule>}
 	 */
-	async setEnabled(enabled: any = true, reason: any = undefined) {
+	async setEnabled(enabled: boolean = true, reason?: string): Promise<AutoModerationRule> {
 		return this.edit({ enabled, reason });
 	}
 
@@ -309,7 +364,10 @@ export class AutoModerationRule extends Base {
 	 * @param {string} [reason] The reason for changing the exempt roles of this auto moderation rule
 	 * @returns {Promise<AutoModerationRule>}
 	 */
-	async setExemptRoles(exemptRoles: any, reason: any) {
+	async setExemptRoles(
+		exemptRoles: Collection<string, Role> | string[] | Role[],
+		reason?: string,
+	): Promise<AutoModerationRule> {
 		return this.edit({ exemptRoles, reason });
 	}
 
@@ -321,7 +379,10 @@ export class AutoModerationRule extends Base {
 	 * @param {string} [reason] The reason for changing the exempt channels of this auto moderation rule
 	 * @returns {Promise<AutoModerationRule>}
 	 */
-	async setExemptChannels(exemptChannels: any, reason: any) {
+	async setExemptChannels(
+		exemptChannels: Collection<string, GuildChannel | ThreadChannel> | string[] | GuildChannel[] | ThreadChannel[],
+		reason?: string,
+	): Promise<AutoModerationRule> {
 		return this.edit({ exemptChannels, reason });
 	}
 }

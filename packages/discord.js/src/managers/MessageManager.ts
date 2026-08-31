@@ -37,7 +37,7 @@ export class MessageManager extends CachedManager {
 	 * @name MessageManager#cache
 	 */
 
-	_add(data: any, cache: any) {
+	_add(data: any, cache = true) {
 		return super._add(data, cache);
 	}
 
@@ -301,9 +301,9 @@ export class MessageManager extends CachedManager {
 		const resolvedEmoji = resolvePartialEmoji(emoji);
 		if (!resolvedEmoji) throw new DiscordjsTypeError(ErrorCodes.EmojiType, 'emoji', 'EmojiIdentifierResolvable');
 
-		const emojiId = resolvedEmoji.id
-			? `${resolvedEmoji.animated ? 'a:' : ''}${resolvedEmoji.name}:${resolvedEmoji.id}`
-			: encodeURIComponent(resolvedEmoji.name);
+		const emojiId = (resolvedEmoji as any).id
+			? `${(resolvedEmoji as any).animated ? 'a:' : ''}${(resolvedEmoji as any).name}:${(resolvedEmoji as any).id}`
+			: encodeURIComponent((resolvedEmoji as any).name);
 
 		await this.client.rest.put(Routes.channelMessageOwnReaction(this.channel.id, messageId, emojiId));
 	}

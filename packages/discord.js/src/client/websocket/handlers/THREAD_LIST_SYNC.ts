@@ -23,11 +23,11 @@ export default (client: Client, { d: data }: GatewayThreadListSyncDispatch) => {
 		return coll.set(thread.id, thread);
 	}, new Collection());
 
-	for (const rawMember of Object.values(data.members)) {
+	for (const rawMember of data.members) {
 		// Discord sends the thread id as id in this object
-		const thread = client.channels.cache.get(rawMember.id);
+		const thread = client.channels.cache.get(rawMember.id as never);
 		if (thread) {
-			(thread as any).members?._add(rawMember);
+			thread.members._add(rawMember);
 		}
 	}
 
@@ -42,9 +42,10 @@ export default (client: Client, { d: data }: GatewayThreadListSyncDispatch) => {
 };
 
 function removeStaleThreads(client: Client, channel: any) {
-	if (!channel.threads) return;
+	if (!('threads' in channel)) return;
+	const threadableChannel = channel as { threads: { cache: Collection<string, any> } };
 
-	for (const thread of channel.threads.cache.values()) {
+	for (const thread of threadableChannel.threads.cache.values()) {
 		if (!thread.archived) {
 			client.channels._remove(thread.id);
 		}

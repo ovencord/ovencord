@@ -1,5 +1,4 @@
 import type { Collection } from '@ovencord/collection';
-import type { Snowflake } from 'discord-api-types/v10';
 import type { Client } from '../client/Client.js';
 import { MakeCacheOverrideSymbol } from '../util/Symbols.js';
 import { DataManager } from './DataManager.js';
@@ -10,23 +9,17 @@ import { DataManager } from './DataManager.js';
  * @extends {DataManager}
  * @abstract
  */
-export abstract class CachedManager<K extends Snowflake | string = Snowflake, Holds = any, R = any> extends DataManager<
-	K,
-	Holds,
-	R
-> {
-	public _cache!: Collection<K, Holds>;
-	// biome-ignore lint/suspicious/noExplicitAny: holds class reference
-	public override holds: any;
+export abstract class CachedManager extends DataManager {
+	public _cache: Collection<any, any>;
+	public holds: any;
 
-	// biome-ignore lint/suspicious/noExplicitAny: constructor holds and iterable
 	constructor(client: Client, holds: any, iterable?: Iterable<any>) {
 		super(client, holds);
 
 		this.holds = holds;
 
 		Object.defineProperty(this, '_cache', {
-			value: (this.client as any).options.makeCache({
+			value: this.client.options.makeCache({
 				holds: this.holds,
 				manager: this.constructor,
 				managerType: (this.constructor as any)[MakeCacheOverrideSymbol] ?? this.constructor,
@@ -40,26 +33,31 @@ export abstract class CachedManager<K extends Snowflake | string = Snowflake, Ho
 		}
 	}
 
-	override get cache(): Collection<K, Holds> {
+	override get cache(): Collection<any, any> {
 		return this._cache;
 	}
 
-	// biome-ignore lint/suspicious/noExplicitAny: internal cache hydration
-	_add(data: any, cache = true, { id, extras = [] }: any = {}): Holds {
-		const existing = (this.cache as any).get(id ?? data.id);
+	_add(data: any, ...args: unknown[]): any {
+		const cache = args[0];
+		const options = args[1] as { id?: any; extras?: any[] } | undefined;
+
+		const isCache = typeof cache === 'boolean' ? cache : true;
+		const extraOptions = typeof cache === 'object' ? (cache as any) : (options ?? {});
+
+		const existing = this.cache.get(extraOptions.id ?? data.id);
 		if (existing) {
-			if (cache) {
-				if (typeof existing._patch === 'function') existing._patch(data);
+			if (isCache) {
+				if (typeof (existing as any)._patch === 'function') (existing as any)._patch(data);
 				return existing;
 			}
 
-			const clone = typeof existing._clone === 'function' ? existing._clone() : existing;
-			if (typeof clone._patch === 'function') clone._patch(data);
+			const clone = typeof (existing as any)._clone === 'function' ? (existing as any)._clone() : existing;
+			if (typeof (clone as any)._patch === 'function') (clone as any)._patch(data);
 			return clone;
 		}
 
-		const entry = this.holds ? new this.holds(this.client, data, ...extras) : data;
-		if (cache) (this.cache as any).set(id ?? entry.id, entry);
+		const entry = this.holds ? new this.holds(this.client, data, ...(extraOptions.extras ?? [])) : data;
+		if (isCache) this.cache.set(extraOptions.id ?? entry.id, entry);
 		return entry;
 	}
 }
