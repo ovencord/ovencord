@@ -1,38 +1,32 @@
+import type { Snowflake } from 'discord-api-types/v10';
 import { ChannelType, Routes } from 'discord-api-types/v10';
+import type { Client } from '../client/Client.js';
 import { DiscordjsError, ErrorCodes } from '../errors/index.js';
+import type { DMChannel } from '../structures/DMChannel.js';
 import { GuildMember } from '../structures/GuildMember.js';
 import { Message } from '../structures/Message.js';
+import type { MessagePayload } from '../structures/MessagePayload.js';
 import { ThreadMember } from '../structures/ThreadMember.js';
 import { User } from '../structures/User.js';
 import { CachedManager } from './CachedManager.js';
+
+export type UserResolvable = User | Snowflake | Message | GuildMember | ThreadMember | string;
+
+export interface BaseFetchOptions {
+	cache?: boolean;
+	force?: boolean;
+}
 
 /**
  * Manages API methods for users and stores their cache.
  *
  * @extends {CachedManager}
  */
-export class UserManager extends CachedManager {
-	constructor(client: any, iterable?: any) {
+export class UserManager extends CachedManager<Snowflake, User, UserResolvable> {
+	// biome-ignore lint/suspicious/noExplicitAny: iterable hydration
+	constructor(client: Client, iterable?: Iterable<any>) {
 		super(client, User, iterable);
 	}
-
-	/**
-	 * The cache of this manager
-	 *
-	 * @type {Collection<Snowflake, User>}
-	 * @name UserManager#cache
-	 */
-
-	/**
-	 * Data that resolves to give a User object. This can be:
-	 * - A User object
-	 * - A Snowflake
-	 * - A Message object (resolves to the message author)
-	 * - A GuildMember object
-	 * - A ThreadMember object
-	 *
-	 * @typedef {User|Snowflake|Message|GuildMember|ThreadMember} UserResolvable
-	 */
 
 	/**
 	 * The DM between the client's user and a user
@@ -41,11 +35,12 @@ export class UserManager extends CachedManager {
 	 * @returns {?DMChannel}
 	 * @private
 	 */
-	dmChannel(userId: any) {
+	dmChannel(userId: Snowflake): DMChannel | null {
 		return (
-			// @ts-expect-error
-			this.client.channels.cache.find((channel) => channel.type === ChannelType.DM && channel.recipientId === userId) ??
-			null
+			(this.client.channels.cache.find(
+				// biome-ignore lint/suspicious/noExplicitAny: channel type check
+				(channel: any) => channel.type === ChannelType.DM && channel.recipientId === userId,
+			) as DMChannel | undefined) ?? null
 		);
 	}
 
@@ -56,16 +51,19 @@ export class UserManager extends CachedManager {
 	 * @param {BaseFetchOptions} [options] Additional options for this fetch
 	 * @returns {Promise<DMChannel>}
 	 */
-	async createDM(user: any, { cache = true, force = false } = {}) {
+	async createDM(user: UserResolvable, { cache = true, force = false }: BaseFetchOptions = {}): Promise<DMChannel> {
 		const id = this.resolveId(user);
+		if (!id) throw new DiscordjsError(ErrorCodes.InvalidType, 'user', 'UserResolvable');
 
 		if (!force) {
 			const dmChannel = this.dmChannel(id);
-			if (dmChannel && !dmChannel.partial) return dmChannel;
+			// biome-ignore lint/suspicious/noExplicitAny: partial check
+			if (dmChannel && !(dmChannel as any).partial) return dmChannel;
 		}
 
-		const data = await this.client.rest.post(Routes.userChannels(), { body: { recipient_id: id } });
-		return this.client.channels._add(data, null, { cache });
+		// biome-ignore lint/suspicious/noExplicitAny: post REST body
+		const data = (await this.client.rest.post(Routes.userChannels(), { body: { recipient_id: id } })) as any;
+		return this.client.channels._add(data, null, { cache }) as DMChannel;
 	}
 
 	/**
@@ -74,8 +72,9 @@ export class UserManager extends CachedManager {
 	 * @param {UserResolvable} user The UserResolvable to identify
 	 * @returns {Promise<DMChannel>}
 	 */
-	async deleteDM(user: any) {
+	async deleteDM(user: UserResolvable): Promise<DMChannel> {
 		const id = this.resolveId(user);
+		if (!id) throw new DiscordjsError(ErrorCodes.InvalidType, 'user', 'UserResolvable');
 		const dmChannel = this.dmChannel(id);
 		if (!dmChannel) throw new DiscordjsError(ErrorCodes.UserNoDMChannel);
 		await this.client.rest.delete(Routes.channel(dmChannel.id));
@@ -90,14 +89,17 @@ export class UserManager extends CachedManager {
 	 * @param {BaseFetchOptions} [options] Additional options for this fetch
 	 * @returns {Promise<User>}
 	 */
-	async fetch(user: any, { cache = true, force = false } = {}) {
+	async fetch(user: UserResolvable, { cache = true, force = false }: BaseFetchOptions = {}): Promise<User> {
 		const id = this.resolveId(user);
+		if (!id) throw new DiscordjsError(ErrorCodes.InvalidType, 'user', 'UserResolvable');
 		if (!force) {
 			const existing = this.cache.get(id);
-			if (existing && !existing.partial) return existing;
+			// biome-ignore lint/suspicious/noExplicitAny: partial check
+			if (existing && !(existing as any).partial) return existing;
 		}
 
-		const data = await this.client.rest.get(Routes.user(id));
+		// biome-ignore lint/suspicious/noExplicitAny: user REST response
+		const data = (await this.client.rest.get(Routes.user(id))) as any;
 		return this._add(data, cache);
 	}
 
@@ -105,11 +107,13 @@ export class UserManager extends CachedManager {
 	 * Sends a message to a user.
 	 *
 	 * @param {UserResolvable} user The UserResolvable to identify
-	 * @param {string|MessagePayload|MessageCreateOptions} options The options to provide
+	 * @param {string|MessagePayload|any} options The options to provide
 	 * @returns {Promise<Message>}
 	 */
-	async send(user: any, options: any) {
-		return (await this.createDM(user)).send(options);
+	// biome-ignore lint/suspicious/noExplicitAny: send message payload
+	async send(user: UserResolvable, options: string | MessagePayload | any): Promise<Message> {
+		// biome-ignore lint/suspicious/noExplicitAny: send message payload
+		return (await this.createDM(user)).send(options as any) as unknown as Message;
 	}
 
 	/**
@@ -118,7 +122,7 @@ export class UserManager extends CachedManager {
 	 * @param {UserResolvable} user The UserResolvable to identify
 	 * @returns {?User}
 	 */
-	resolve(user: any) {
+	override resolve(user: UserResolvable | null | undefined): User | null {
 		if (user instanceof GuildMember || user instanceof ThreadMember) return user.user;
 		if (user instanceof Message) return user.author;
 		return super.resolve(user);
@@ -130,7 +134,7 @@ export class UserManager extends CachedManager {
 	 * @param {UserResolvable} user The UserResolvable to identify
 	 * @returns {?Snowflake}
 	 */
-	resolveId(user: any) {
+	override resolveId(user: UserResolvable | null | undefined): Snowflake | null {
 		if (user instanceof ThreadMember) return user.id;
 		if (user instanceof GuildMember) return user.user.id;
 		if (user instanceof Message) return user.author.id;

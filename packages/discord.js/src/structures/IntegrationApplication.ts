@@ -1,3 +1,4 @@
+import type { APIGuildIntegrationApplication } from 'discord-api-types/v10';
 import { Application } from './interfaces/Application.js';
 
 /**
@@ -12,7 +13,7 @@ export class IntegrationApplication extends Application {
 	public declare rpcOrigins: any;
 	public declare cover: any;
 	public declare verifyKey: any;
-	_patch(data: any) {
+	_patch(data: Partial<APIGuildIntegrationApplication>) {
 		super._patch(data);
 
 		if ('bot' in data) {

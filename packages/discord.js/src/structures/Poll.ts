@@ -1,4 +1,5 @@
 import { Collection } from '@ovencord/collection';
+import type { APIPoll, APIPollMedia, PollLayoutType, Snowflake } from 'discord-api-types/v10';
 import { DiscordjsError, ErrorCodes } from '../errors/index.js';
 import { Base } from './Base.js';
 import { PollAnswer } from './PollAnswer.js';
@@ -9,17 +10,22 @@ import { PollAnswer } from './PollAnswer.js';
  * @extends {Base}
  */
 export class Poll extends Base {
-	public channelId: any;
-	public messageId: any;
-	public answers: any;
-	public resultsFinalized: any;
-	public allowMultiselect: any;
-	public layoutType: any;
-	public expiresTimestamp: any;
-	public question: any;
+	public channelId: Snowflake;
+	public messageId: Snowflake;
+	public answers: Collection<number, PollAnswer>;
+	public resultsFinalized: boolean;
+	public allowMultiselect: boolean;
+	public layoutType: PollLayoutType;
+	public expiresTimestamp: number | null;
+	public question: APIPollMedia;
 	public channel: any;
 	public message: any;
-	constructor(client: any, data: any, message: any, channel: any) {
+	constructor(
+		client: any,
+		data: APIPoll & { channel_id?: Snowflake; message_id?: Snowflake },
+		message: any,
+		channel: any,
+	) {
 		super(client);
 
 		/**

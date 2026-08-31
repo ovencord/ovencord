@@ -392,7 +392,14 @@ export class VoiceConnection extends AsyncEventEmitter<VoiceConnectionEvents> {
 	 */
 	public configureNetworking() {
 		const { server, state } = this.packets;
-		if (!server || !state || this.state.status === VoiceConnectionStatus.Destroyed || !server.endpoint) return;
+		if (
+			!server ||
+			!state ||
+			this.state.status === VoiceConnectionStatus.Destroyed ||
+			!server.endpoint ||
+			!state.channel_id
+		)
+			return;
 
 		const networking = new Networking(
 			{
@@ -401,7 +408,7 @@ export class VoiceConnection extends AsyncEventEmitter<VoiceConnectionEvents> {
 				token: server.token,
 				sessionId: state.session_id,
 				userId: state.user_id,
-				channelId: state.channel_id!,
+				channelId: state.channel_id,
 			},
 			{
 				debug: Boolean(this.debug),

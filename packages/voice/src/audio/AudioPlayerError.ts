@@ -14,6 +14,8 @@ export class AudioPlayerError extends Error {
 		super(error.message);
 		this.resource = resource;
 		this.name = error.name;
-		this.stack = error.stack!;
+		if (error.stack) {
+			this.stack = error.stack;
+		}
 	}
 }

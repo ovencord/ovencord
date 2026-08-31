@@ -1,17 +1,21 @@
 import { Collection } from '@ovencord/collection';
+import type { Snowflake } from 'discord-api-types/v10';
 import { DiscordjsTypeError, ErrorCodes } from '../errors/index.js';
+import type { Guild } from '../structures/Guild.js';
+import type { GuildEmoji } from '../structures/GuildEmoji.js';
 import { Role } from '../structures/Role.js';
 import { DataManager } from './DataManager.js';
+import type { RoleResolvable } from './RoleManager.js';
 
 /**
  * Manages API methods for roles belonging to emojis and stores their cache.
  *
  * @extends {DataManager}
  */
-export class GuildEmojiRoleManager extends DataManager {
-	public emoji: any;
-	public guild: any;
-	constructor(emoji: any) {
+export class GuildEmojiRoleManager extends DataManager<Snowflake, Role, RoleResolvable> {
+	public emoji: GuildEmoji;
+	public guild: Guild;
+	constructor(emoji: GuildEmoji) {
 		super(emoji.client, Role);
 
 		/**
@@ -34,9 +38,10 @@ export class GuildEmojiRoleManager extends DataManager {
 	 * @type {Collection<Snowflake, Role>}
 	 * @readonly
 	 */
-	get cache() {
-		const cache = new Collection();
-		for (const roleId of this.emoji._roles) {
+	override get cache(): Collection<Snowflake, Role> {
+		const cache = new Collection<Snowflake, Role>();
+		// biome-ignore lint/suspicious/noExplicitAny: internal roles list
+		for (const roleId of (this.emoji as any)._roles ?? []) {
 			const role = this.guild.roles.cache.get(roleId);
 			if (role !== undefined) {
 				cache.set(roleId, role);
@@ -52,11 +57,11 @@ export class GuildEmojiRoleManager extends DataManager {
 	 * @param {RoleResolvable|RoleResolvable[]|Collection<Snowflake, Role>} roleOrRoles The role or roles to add
 	 * @returns {Promise<GuildEmoji>}
 	 */
-	async add(roleOrRoles: any) {
+	async add(roleOrRoles: RoleResolvable | RoleResolvable[] | Collection<Snowflake, Role>): Promise<GuildEmoji> {
 		const roles = Array.isArray(roleOrRoles) || roleOrRoles instanceof Collection ? roleOrRoles : [roleOrRoles];
 
-		const resolvedRoleIds = [];
-		for (const role of roles.values()) {
+		const resolvedRoleIds: Snowflake[] = [];
+		for (const role of roles as Iterable<RoleResolvable>) {
 			const roleId = this.guild.roles.resolveId(role);
 			if (!roleId) {
 				throw new DiscordjsTypeError(ErrorCodes.InvalidElement, 'Array or Collection', 'roles', role);
@@ -75,12 +80,11 @@ export class GuildEmojiRoleManager extends DataManager {
 	 * @param {RoleResolvable|RoleResolvable[]|Collection<Snowflake, Role>} roleOrRoles The role or roles to remove
 	 * @returns {Promise<GuildEmoji>}
 	 */
-	async remove(roleOrRoles: any) {
+	async remove(roleOrRoles: RoleResolvable | RoleResolvable[] | Collection<Snowflake, Role>): Promise<GuildEmoji> {
 		const roles = Array.isArray(roleOrRoles) || roleOrRoles instanceof Collection ? roleOrRoles : [roleOrRoles];
 
-		// @ts-expect-error
-		const resolvedRoleIds = [];
-		for (const role of roles.values()) {
+		const resolvedRoleIds: Snowflake[] = [];
+		for (const role of roles as Iterable<RoleResolvable>) {
 			const roleId = this.guild.roles.resolveId(role);
 			if (!roleId) {
 				throw new DiscordjsTypeError(ErrorCodes.InvalidElement, 'Array or Collection', 'roles', role);
@@ -89,7 +93,6 @@ export class GuildEmojiRoleManager extends DataManager {
 			resolvedRoleIds.push(roleId);
 		}
 
-		// @ts-expect-error
 		const newRoles = [...this.cache.keys()].filter((id) => !resolvedRoleIds.includes(id));
 		return this.set(newRoles);
 	}
@@ -99,22 +102,13 @@ export class GuildEmojiRoleManager extends DataManager {
 	 *
 	 * @param {Collection<Snowflake, Role>|RoleResolvable[]} roles The roles or role ids to apply
 	 * @returns {Promise<GuildEmoji>}
-	 * @example
-	 * // Set the emoji's roles to a single role
-	 * guildEmoji.roles.set(['391156570408615936'])
-	 *   .then(console.log)
-	 *   .catch(console.error);
-	 * @example
-	 * // Remove all roles from an emoji
-	 * guildEmoji.roles.set([])
-	 *    .then(console.log)
-	 *    .catch(console.error);
 	 */
-	async set(roles: any) {
+	async set(roles: Collection<Snowflake, Role> | readonly RoleResolvable[]): Promise<GuildEmoji> {
 		return this.emoji.edit({ roles });
 	}
 
 	clone() {
+		// biome-ignore lint/suspicious/noExplicitAny: constructor dynamic instantiation
 		const clone = new (this.constructor as any)(this.emoji);
 		clone._patch([...this.cache.keys()]);
 		return clone;
@@ -126,11 +120,12 @@ export class GuildEmojiRoleManager extends DataManager {
 	 * @param {Snowflake[]} roles The new roles
 	 * @private
 	 */
-	_patch(roles: any) {
-		this.emoji._roles = roles;
+	_patch(roles: Snowflake[]) {
+		// biome-ignore lint/suspicious/noExplicitAny: internal roles list
+		(this.emoji as any)._roles = roles;
 	}
 
-	valueOf() {
+	override valueOf(): Collection<Snowflake, Role> {
 		return this.cache;
 	}
 }

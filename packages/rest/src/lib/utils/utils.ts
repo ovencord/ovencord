@@ -227,10 +227,10 @@ export function uuidv5(value: string | Uint8Array, namespace: string): string {
 	const hash = new Uint8Array(buffer);
 
 	// 6. Set version to 5 (0101)
-	hash[6] = (hash[6]! & 0x0f) | 0x50;
+	hash[6] = ((hash[6] ?? 0) & 0x0f) | 0x50;
 
 	// 7. Set variant to RFC 4122 (10xx)
-	hash[8] = (hash[8]! & 0x3f) | 0x80;
+	hash[8] = ((hash[8] ?? 0) & 0x3f) | 0x80;
 
 	// 8. Convert to hex string with dashes
 	const hexHash = Array.from(hash, (byte) => byte.toString(16).padStart(2, '0'));

@@ -1,4 +1,4 @@
-import { InviteType } from 'discord-api-types/v10';
+import { type APIInvite, InviteType } from 'discord-api-types/v10';
 import { BaseInvite } from '../structures/BaseInvite.js';
 import { GroupDMInvite } from '../structures/GroupDMInvite.js';
 import { GuildInvite } from '../structures/GuildInvite.js';
@@ -18,11 +18,11 @@ const InviteTypeToClass = {
  * Creates an invite.
  *
  * @param {Client} client The client
- * @param {Object} data The data
+ * @param {APIInvite} data The data
  * @returns {BaseInvite}
  * @ignore
  */
-export function createInvite(client: any, data: any) {
+export function createInvite(client: any, data: APIInvite) {
 	// @ts-expect-error
 	return new (InviteTypeToClass[data.type] ?? BaseInvite)(client, data);
 }

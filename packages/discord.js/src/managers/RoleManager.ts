@@ -1,11 +1,23 @@
 import { Collection } from '@ovencord/collection';
+import type { Snowflake } from 'discord-api-types/v10';
 import { Routes } from 'discord-api-types/v10';
 import { DiscordjsTypeError, ErrorCodes } from '../errors/index.js';
+import type { Guild } from '../structures/Guild.js';
 import { Role } from '../structures/Role.js';
+import type { Base64Resolvable, BufferResolvable } from '../util/DataResolver.js';
 import { resolveImage } from '../util/DataResolver.js';
+import type { PermissionResolvable } from '../util/PermissionsBitField.js';
 import { PermissionsBitField } from '../util/PermissionsBitField.js';
 import { resolveColor, setPosition } from '../util/Util.js';
 import { CachedManager } from './CachedManager.js';
+import type { BaseFetchOptions, UserResolvable } from './UserManager.js';
+
+export type RoleResolvable = Role | Snowflake | string;
+
+export interface RolePosition {
+	role: RoleResolvable;
+	position: number;
+}
 
 let cacheWarningEmitted = false;
 
@@ -14,9 +26,10 @@ let cacheWarningEmitted = false;
  *
  * @extends {CachedManager}
  */
-export class RoleManager extends CachedManager {
-	public guild: any;
-	constructor(guild: any, iterable?: any) {
+export class RoleManager extends CachedManager<Snowflake, Role, RoleResolvable> {
+	public guild: Guild;
+	// biome-ignore lint/suspicious/noExplicitAny: iterable hydration
+	constructor(guild: Guild, iterable?: Iterable<any>) {
 		super(guild.client, Role, iterable);
 		if (!cacheWarningEmitted && this._cache.constructor.name !== 'Collection') {
 			cacheWarningEmitted = true;
@@ -34,14 +47,8 @@ export class RoleManager extends CachedManager {
 		this.guild = guild;
 	}
 
-	/**
-	 * The role cache of this manager
-	 *
-	 * @type {Collection<Snowflake, Role>}
-	 * @name RoleManager#cache
-	 */
-
-	_add(data: any, cache: any) {
+	// biome-ignore lint/suspicious/noExplicitAny: internal cache hydration
+	override _add(data: any, cache?: boolean) {
 		return super._add(data, cache, { extras: [this.guild] });
 	}
 
@@ -51,32 +58,31 @@ export class RoleManager extends CachedManager {
 	 * @param {Snowflake} [id] The role's id
 	 * @param {BaseFetchOptions} [options] Additional options for this fetch
 	 * @returns {Promise<Role|Collection<Snowflake, Role>>}
-	 * @example
-	 * // Fetch all roles from the guild
-	 * message.guild.roles.fetch()
-	 *   .then(roles => console.log(`There are ${roles.size} roles.`))
-	 *   .catch(console.error);
-	 * @example
-	 * // Fetch a single role
-	 * message.guild.roles.fetch('222078108977594368')
-	 *   .then(role => console.log(`The role color is: ${role.colors.primaryColor}`))
-	 *   .catch(console.error);
 	 */
-	async fetch(id: any, { cache = true, force = false } = {}) {
+	async fetch(
+		id?: RoleResolvable,
+		{ cache = true, force = false }: BaseFetchOptions = {},
+	): Promise<Role | Collection<Snowflake, Role>> {
 		if (!id) {
-			const innerData = await this.client.rest.get(Routes.guildRoles(this.guild.id));
-			const roles = new Collection();
+			// biome-ignore lint/suspicious/noExplicitAny: roles REST payload
+			const innerData = (await this.client.rest.get(Routes.guildRoles(this.guild.id))) as any[];
+			const roles = new Collection<Snowflake, Role>();
 			for (const role of innerData) roles.set(role.id, this._add(role, cache));
 			return roles;
 		}
 
+		const resolvedId = this.resolveId(id);
+		if (!resolvedId) throw new DiscordjsTypeError(ErrorCodes.InvalidType, 'id', 'RoleResolvable');
 		if (!force) {
-			const existing = this.cache.get(id);
+			const existing = this.cache.get(resolvedId);
 			if (existing) return existing;
 		}
 
-		const data = await this.client.rest.get(Routes.guildRole(this.guild.id, id));
-		return this._add(data, cache);
+		// biome-ignore lint/suspicious/noExplicitAny: roles REST payload
+		const innerData = (await this.client.rest.get(Routes.guildRoles(this.guild.id))) as any[];
+		const role = innerData.find((r) => r.id === resolvedId);
+		if (!role) throw new DiscordjsTypeError(ErrorCodes.InvalidType, 'role', 'RoleResolvable');
+		return this._add(role, cache);
 	}
 
 	/**
@@ -181,10 +187,9 @@ export class RoleManager extends CachedManager {
 	 *   .then(console.log)
 	 *   .catch(console.error);
 	 */
-	async create(options = {}) {
-		// @ts-expect-error
+	// biome-ignore lint/suspicious/noExplicitAny: role creation options
+	async create(options: any = {}): Promise<Role> {
 		let { permissions, icon } = options;
-		// @ts-expect-error
 		const { name, hoist, position, mentionable, reason, unicodeEmoji } = options;
 		if (permissions !== undefined) permissions = new PermissionsBitField(permissions);
 		if (icon) {
@@ -193,17 +198,14 @@ export class RoleManager extends CachedManager {
 			if (typeof icon !== 'string') icon = undefined;
 		}
 
-		// @ts-expect-error
 		const colors = options.colors && {
-			// @ts-expect-error
 			primary_color: resolveColor(options.colors.primaryColor),
-			// @ts-expect-error
 			secondary_color: options.colors.secondaryColor && resolveColor(options.colors.secondaryColor),
-			// @ts-expect-error
 			tertiary_color: options.colors.tertiaryColor && resolveColor(options.colors.tertiaryColor),
 		};
 
-		const data = await this.client.rest.post(Routes.guildRoles(this.guild.id), {
+		// biome-ignore lint/suspicious/noExplicitAny: post REST payload
+		const data = (await this.client.rest.post(Routes.guildRoles(this.guild.id), {
 			body: {
 				name,
 				colors,
@@ -214,7 +216,7 @@ export class RoleManager extends CachedManager {
 				unicode_emoji: unicodeEmoji,
 			},
 			reason,
-		});
+		})) as any;
 		const { role } = this.client.actions.GuildRoleCreate.handle({
 			guild_id: this.guild.id,
 			role: data,
@@ -242,7 +244,8 @@ export class RoleManager extends CachedManager {
 	 *   .then(updated => console.log(`Edited role name to ${updated.name}`))
 	 *   .catch(console.error);
 	 */
-	async edit(role: any, options: any) {
+	// biome-ignore lint/suspicious/noExplicitAny: role edit options
+	async edit(role: RoleResolvable, options: any): Promise<Role> {
 		const resolvedRole = this.resolve(role);
 		if (!resolvedRole) throw new DiscordjsTypeError(ErrorCodes.InvalidType, 'role', 'RoleResolvable');
 
@@ -273,10 +276,11 @@ export class RoleManager extends CachedManager {
 			unicode_emoji: options.unicodeEmoji,
 		};
 
-		const data = await this.client.rest.patch(Routes.guildRole(this.guild.id, resolvedRole.id), {
+		// biome-ignore lint/suspicious/noExplicitAny: role patch response
+		const data = (await this.client.rest.patch(Routes.guildRole(this.guild.id, resolvedRole.id), {
 			body,
 			reason: options.reason,
-		});
+		})) as any;
 
 		const clone = resolvedRole._clone();
 		clone._patch(data);
@@ -289,14 +293,10 @@ export class RoleManager extends CachedManager {
 	 * @param {RoleResolvable} role The role to delete
 	 * @param {string} [reason] Reason for deleting the role
 	 * @returns {Promise<void>}
-	 * @example
-	 * // Delete a role
-	 * guild.roles.delete('222079219327434752', 'The role needed to go')
-	 *   .then(() => console.log('Deleted the role'))
-	 *   .catch(console.error);
 	 */
-	async delete(role: any, reason: any) {
+	async delete(role: RoleResolvable, reason?: string): Promise<void> {
 		const id = this.resolveId(role);
+		if (!id) throw new DiscordjsTypeError(ErrorCodes.InvalidType, 'role', 'RoleResolvable');
 		await this.client.rest.delete(Routes.guildRole(this.guild.id, id), { reason });
 		this.client.actions.GuildRoleDelete.handle({ guild_id: this.guild.id, role_id: id });
 	}
@@ -306,15 +306,14 @@ export class RoleManager extends CachedManager {
 	 *
 	 * @param {RoleResolvable} role The role to change the position of
 	 * @param {number} position The new position for the role
-	 * @param {SetRolePositionOptions} [options] Options for setting the position
+	 * @param {Object} [options] Options for setting the position
 	 * @returns {Promise<Role>}
-	 * @example
-	 * // Set the position of the role
-	 * guild.roles.setPosition('222197033908436994', 1)
-	 *   .then(updated => console.log(`Role position: ${updated.position}`))
-	 *   .catch(console.error);
 	 */
-	async setPosition(role: any, position: any, { relative, reason }: any = {}) {
+	async setPosition(
+		role: RoleResolvable,
+		position: number,
+		{ relative, reason }: { relative?: boolean; reason?: string } = {},
+	): Promise<Role> {
 		const resolvedRole = this.resolve(role);
 		if (!resolvedRole) throw new DiscordjsTypeError(ErrorCodes.InvalidType, 'role', 'RoleResolvable');
 		const updatedRoles = await setPosition(
@@ -335,32 +334,17 @@ export class RoleManager extends CachedManager {
 	}
 
 	/**
-	 * The data needed for updating a guild role's position
-	 *
-	 * @typedef {Object} GuildRolePosition
-	 * @property {RoleResolvable} role The role's id
-	 * @property {number} position The position to update
-	 */
-
-	/**
 	 * Batch-updates the guild's role positions
 	 *
-	 * @param {GuildRolePosition[]} rolePositions Role positions to update
+	 * @param {RolePosition[]} rolePositions Role positions to update
 	 * @returns {Promise<Guild>}
-	 * @example
-	 * guild.roles.setPositions([{ role: roleId, position: updatedRoleIndex }])
-	 *  .then(guild => console.log(`Role positions updated for ${guild}`))
-	 *  .catch(console.error);
 	 */
-	async setPositions(rolePositions: any) {
-		// Make sure rolePositions are prepared for API
-		// @ts-expect-error
+	async setPositions(rolePositions: RolePosition[]): Promise<Guild> {
 		const resolvedRolePositions = rolePositions.map((rolePosition) => ({
 			id: this.resolveId(rolePosition.role),
 			position: rolePosition.position,
 		}));
 
-		// Call the API to update role positions
 		await this.client.rest.patch(Routes.guildRoles(this.guild.id), { body: resolvedRolePositions });
 		return this.client.actions.GuildRolesPositionUpdate.handle({
 			guild_id: this.guild.id,
@@ -373,10 +357,9 @@ export class RoleManager extends CachedManager {
 	 *
 	 * @param {RoleResolvable} role1 First role to compare
 	 * @param {RoleResolvable} role2 Second role to compare
-	 * @returns {number} Negative number if the first role's position is lower (second role's is higher),
-	 * positive number if the first's is higher (second's is lower), 0 if equal
+	 * @returns {number}
 	 */
-	comparePositions(role1: any, role2: any) {
+	comparePositions(role1: RoleResolvable, role2: RoleResolvable): number {
 		const resolvedRole1 = this.resolve(role1);
 		const resolvedRole2 = this.resolve(role2);
 		if (!resolvedRole1 || !resolvedRole2) {
@@ -400,10 +383,9 @@ export class RoleManager extends CachedManager {
 	 * @param {UserResolvable} user The user to access the bot role for
 	 * @returns {?Role}
 	 */
-	botRoleFor(user: any) {
+	botRoleFor(user: UserResolvable): Role | null {
 		const userId = this.client.users.resolveId(user);
 		if (!userId) return null;
-		// @ts-expect-error
 		return this.cache.find((role) => role.tags?.botId === userId) ?? null;
 	}
 
@@ -413,7 +395,7 @@ export class RoleManager extends CachedManager {
 	 * @type {Role}
 	 * @readonly
 	 */
-	get everyone() {
+	get everyone(): Role | undefined {
 		return this.cache.get(this.guild.id);
 	}
 
@@ -423,9 +405,8 @@ export class RoleManager extends CachedManager {
 	 * @type {?Role}
 	 * @readonly
 	 */
-	get premiumSubscriberRole() {
-		// @ts-expect-error
-		return this.cache.find((role) => role.tags?.premiumSubscriberRole) ?? null;
+	get premiumSubscriberRole(): Role | null {
+		return this.cache.find((role) => Boolean(role.tags?.premiumSubscriberRole)) ?? null;
 	}
 
 	/**
@@ -434,8 +415,9 @@ export class RoleManager extends CachedManager {
 	 * @type {Role}
 	 * @readonly
 	 */
-	get highest() {
+	get highest(): Role | undefined {
 		return this.cache.reduce(
+			// biome-ignore lint/suspicious/noExplicitAny: reduce comparison
 			(prev: any, role: any) => (role.comparePositionTo(prev) > 0 ? role : prev),
 			this.cache.first(),
 		);

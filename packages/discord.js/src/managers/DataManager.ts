@@ -1,3 +1,6 @@
+import type { Collection } from '@ovencord/collection';
+import type { Snowflake } from 'discord-api-types/v10';
+import type { Client } from '../client/Client.js';
 import { DiscordjsError, ErrorCodes } from '../errors/index.js';
 import { BaseManager } from './BaseManager.js';
 
@@ -7,31 +10,33 @@ import { BaseManager } from './BaseManager.js';
  * @extends {BaseManager}
  * @abstract
  */
-export abstract class DataManager extends BaseManager {
+export abstract class DataManager<K extends Snowflake | string = Snowflake, Holds = any, R = any> extends BaseManager {
+	// biome-ignore lint/suspicious/noExplicitAny: holds class reference
 	public holds: any;
 
-	constructor(client: any, holds: any) {
+	// biome-ignore lint/suspicious/noExplicitAny: holds class reference
+	constructor(client: Client, holds: any) {
 		super(client);
 		this.holds = holds;
 	}
 
-	get cache(): any {
+	get cache(): Collection<K, Holds> {
 		throw new DiscordjsError(ErrorCodes.NotImplemented, 'get cache', this.constructor.name);
 	}
 
-	resolve(idOrInstance: any): any {
+	resolve(idOrInstance: Holds | K | R | null | undefined): Holds | null {
 		if (idOrInstance instanceof this.holds) return idOrInstance;
-		if (typeof idOrInstance === 'string') return this.cache.get(idOrInstance) ?? null;
+		if (typeof idOrInstance === 'string') return this.cache.get(idOrInstance as K) ?? null;
 		return null;
 	}
 
-	resolveId(idOrInstance: any): any {
+	resolveId(idOrInstance: Holds | K | R | null | undefined): K | null {
 		if (idOrInstance instanceof this.holds) return (idOrInstance as any).id;
-		if (typeof idOrInstance === 'string') return idOrInstance;
+		if (typeof idOrInstance === 'string') return idOrInstance as K;
 		return null;
 	}
 
-	override valueOf(): any {
+	override valueOf(): Collection<K, Holds> {
 		return this.cache;
 	}
 }

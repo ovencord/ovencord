@@ -1,5 +1,6 @@
 import { formatEmoji } from '@ovencord/formatters';
 import { DiscordSnowflake } from '@ovencord/util';
+import type { APIMessageComponentEmoji, APIPartialEmoji } from 'discord-api-types/v10';
 import { Base } from './Base.js';
 
 /**
@@ -12,7 +13,7 @@ export class Emoji extends Base {
 	public name: string | null;
 	public id: string | null;
 
-	constructor(client: any, emoji: any) {
+	constructor(client: any, emoji: APIPartialEmoji | APIMessageComponentEmoji) {
 		super(client);
 		this.animated = emoji.animated ?? null;
 		this.name = emoji.name ?? null;
@@ -21,7 +22,7 @@ export class Emoji extends Base {
 
 	get identifier(): string {
 		if (this.id) return `${this.animated ? 'a:' : ''}${this.name}:${this.id}`;
-		return encodeURIComponent(this.name!);
+		return this.name ? encodeURIComponent(this.name) : '';
 	}
 
 	imageURL(options = {}): string | null {
@@ -45,13 +46,14 @@ export class Emoji extends Base {
 	}
 
 	get createdAt(): Date | null {
-		return this.id ? new Date(this.createdTimestamp!) : null;
+		const timestamp = this.createdTimestamp;
+		return timestamp ? new Date(timestamp) : null;
 	}
 
 	override toString(): string {
 		return this.id
 			? formatEmoji({ animated: this.animated as boolean, id: this.id, name: this.name as string })
-			: this.name!;
+			: (this.name ?? '');
 	}
 
 	override toJSON(): any {

@@ -1,6 +1,6 @@
 import { Collection } from '@ovencord/collection';
 import { DiscordSnowflake } from '@ovencord/util';
-import { Routes } from 'discord-api-types/v10';
+import { type APIGuildPreview, type GuildFeature, Routes, type Snowflake } from 'discord-api-types/v10';
 import { Base } from './Base.js';
 import { GuildPreviewEmoji } from './GuildPreviewEmoji.js';
 import { Sticker } from './Sticker.js';
@@ -11,18 +11,18 @@ import { Sticker } from './Sticker.js';
  * @extends {Base}
  */
 export class GuildPreview extends Base {
-	public id: any;
-	public name: any;
-	public features: any;
-	public approximateMemberCount: any;
-	public approximatePresenceCount: any;
-	public description: any;
-	public emojis: any;
-	public stickers: any;
-	public icon: any;
-	public splash: any;
-	public discoverySplash: any;
-	constructor(client: any, data: any) {
+	public id: Snowflake;
+	public name: string;
+	public features: GuildFeature[];
+	public approximateMemberCount: number;
+	public approximatePresenceCount: number;
+	public description: string | null;
+	public emojis: Collection<Snowflake, GuildPreviewEmoji>;
+	public stickers: Collection<Snowflake, Sticker>;
+	public icon: string | null;
+	public splash: string | null;
+	public discoverySplash: string | null;
+	constructor(client: any, data: APIGuildPreview) {
 		super(client);
 
 		if (!data) return;
@@ -30,7 +30,7 @@ export class GuildPreview extends Base {
 		this._patch(data);
 	}
 
-	_patch(data: any) {
+	_patch(data: APIGuildPreview) {
 		/**
 		 * The id of this guild
 		 *
@@ -133,8 +133,9 @@ export class GuildPreview extends Base {
 		 * @type {Collection<Snowflake, Sticker>}
 		 */
 		this.stickers = data.stickers.reduce(
-			(stickers: any, sticker: any) => stickers.set(sticker.id, new Sticker(this.client, sticker)),
-			new Collection(),
+			(stickers: Collection<Snowflake, Sticker>, sticker) =>
+				stickers.set(sticker.id, new Sticker(this.client, sticker)),
+			new Collection<Snowflake, Sticker>(),
 		);
 	}
 

@@ -1,4 +1,5 @@
 import { isJSONEncodable } from '@ovencord/util';
+import type { APIAutoModerationAction, APIIncidentsData, APIMessageInteractionMetadata } from 'discord-api-types/v10';
 import { AuthorizingIntegrationOwners } from '../structures/AuthorizingIntegrationOwners.js';
 
 /**
@@ -26,17 +27,17 @@ export function toSnakeCase(obj: any): any {
 /**
  * Transforms an API auto moderation action object to a camel-cased variant.
  *
- * @param {any} autoModerationAction The action to transform
+ * @param {APIAutoModerationAction} autoModerationAction The action to transform
  * @returns {any}
  * @ignore
  */
-export function _transformAPIAutoModerationAction(autoModerationAction: any): any {
+export function _transformAPIAutoModerationAction(autoModerationAction: APIAutoModerationAction): any {
 	return {
 		type: autoModerationAction.type,
 		metadata: {
-			durationSeconds: autoModerationAction.metadata.duration_seconds ?? null,
-			channelId: autoModerationAction.metadata.channel_id ?? null,
-			customMessage: autoModerationAction.metadata.custom_message ?? null,
+			durationSeconds: autoModerationAction.metadata?.duration_seconds ?? null,
+			channelId: autoModerationAction.metadata?.channel_id ?? null,
+			customMessage: autoModerationAction.metadata?.custom_message ?? null,
 		},
 	};
 }
@@ -45,11 +46,14 @@ export function _transformAPIAutoModerationAction(autoModerationAction: any): an
  * Transforms an API message interaction metadata object to a camel-cased variant.
  *
  * @param {any} client The client
- * @param {any} messageInteractionMetadata The metadata to transform
+ * @param {APIMessageInteractionMetadata} messageInteractionMetadata The metadata to transform
  * @returns {any}
  * @ignore
  */
-export function _transformAPIMessageInteractionMetadata(client: any, messageInteractionMetadata: any): any {
+export function _transformAPIMessageInteractionMetadata(
+	client: any,
+	messageInteractionMetadata: APIMessageInteractionMetadata,
+): any {
 	return {
 		id: messageInteractionMetadata.id,
 		type: messageInteractionMetadata.type,
@@ -59,10 +63,15 @@ export function _transformAPIMessageInteractionMetadata(client: any, messageInte
 			messageInteractionMetadata.authorizing_integration_owners,
 		),
 		originalResponseMessageId: messageInteractionMetadata.original_response_message_id ?? null,
-		interactedMessageId: messageInteractionMetadata.interacted_message_id ?? null,
-		triggeringInteractionMetadata: messageInteractionMetadata.triggering_interaction_metadata
-			? _transformAPIMessageInteractionMetadata(client, messageInteractionMetadata.triggering_interaction_metadata)
-			: null,
+		interactedMessageId:
+			'interacted_message_id' in messageInteractionMetadata
+				? (messageInteractionMetadata.interacted_message_id ?? null)
+				: null,
+		triggeringInteractionMetadata:
+			'triggering_interaction_metadata' in messageInteractionMetadata &&
+			messageInteractionMetadata.triggering_interaction_metadata
+				? _transformAPIMessageInteractionMetadata(client, messageInteractionMetadata.triggering_interaction_metadata)
+				: null,
 	};
 }
 
@@ -88,11 +97,11 @@ export function _transformGuildScheduledEventRecurrenceRule(recurrenceRule: any)
 /**
  * Transforms API incidents data to a camel-cased variant.
  *
- * @param {any} data The incidents data to transform
+ * @param {APIIncidentsData} data The incidents data to transform
  * @returns {any}
  * @ignore
  */
-export function _transformAPIIncidentsData(data: any): any {
+export function _transformAPIIncidentsData(data: APIIncidentsData): any {
 	return {
 		invitesDisabledUntil: data.invites_disabled_until ? new Date(data.invites_disabled_until) : null,
 		dmsDisabledUntil: data.dms_disabled_until ? new Date(data.dms_disabled_until) : null,

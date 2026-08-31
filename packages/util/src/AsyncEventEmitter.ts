@@ -198,7 +198,10 @@ export class AsyncEventEmitter<Events extends Record<keyof Events, any[]> = any>
 				}
 				if (signal?.aborted && items.length === 0) break;
 
-				yield items.shift()! as any;
+				const nextItem = items.shift();
+				if (nextItem !== undefined) {
+					yield nextItem as any;
+				}
 			}
 		} finally {
 			emitter.off(eventName as any, listener);

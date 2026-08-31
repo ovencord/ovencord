@@ -1,16 +1,17 @@
 import { DiscordSnowflake } from '@ovencord/util';
+import type { InteractionType, RESTAPIInteractionCallbackObject, Snowflake } from 'discord-api-types/v10';
 
 /**
  * Represents an interaction callback response from Discord
  */
 export class InteractionCallback {
-	public id: any;
-	public type: any;
-	public activityInstanceId: any;
-	public responseMessageId: any;
-	public responseMessageLoading: any;
-	public responseMessageEphemeral: any;
-	constructor(client: any, data: any) {
+	public id: Snowflake;
+	public type: InteractionType;
+	public activityInstanceId: string | null;
+	public responseMessageId: Snowflake | null;
+	public responseMessageLoading: boolean | null;
+	public responseMessageEphemeral: boolean | null;
+	constructor(client: any, data: RESTAPIInteractionCallbackObject) {
 		/**
 		 * The client that instantiated this.
 		 *

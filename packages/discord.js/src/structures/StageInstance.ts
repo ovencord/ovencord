@@ -1,4 +1,5 @@
 import { DiscordSnowflake } from '@ovencord/util';
+import type { APIStageInstance, Snowflake, StageInstancePrivacyLevel } from 'discord-api-types/v10';
 import { Base } from './Base.js';
 
 /**
@@ -7,13 +8,13 @@ import { Base } from './Base.js';
  * @extends {Base}
  */
 export class StageInstance extends Base {
-	public id: any;
-	public guildId: any;
-	public channelId: any;
-	public topic: any;
-	public privacyLevel: any;
-	public guildScheduledEventId: any;
-	constructor(client: any, data: any) {
+	public id: Snowflake;
+	public guildId: Snowflake;
+	public channelId: Snowflake;
+	public topic: string;
+	public privacyLevel: StageInstancePrivacyLevel;
+	public guildScheduledEventId: Snowflake | null;
+	constructor(client: any, data: APIStageInstance) {
 		super(client);
 
 		/**
@@ -26,7 +27,7 @@ export class StageInstance extends Base {
 		this._patch(data);
 	}
 
-	_patch(data: any) {
+	_patch(data: Partial<APIStageInstance>) {
 		if ('guild_id' in data) {
 			/**
 			 * The id of the guild associated with the stage channel

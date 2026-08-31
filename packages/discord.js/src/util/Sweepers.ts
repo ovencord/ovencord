@@ -1,22 +1,20 @@
+import type { Client } from '../client/Client.js';
 import { DiscordjsTypeError, ErrorCodes } from '../errors/index.js';
 import { SweeperKeys, ThreadChannelTypes } from './Constants.js';
 import { Events } from './Events.js';
 
-/**
- * @typedef {Function} GlobalSweepFilter
- * @returns {?Function} Return `null` to skip sweeping, otherwise a function passed to `sweep()`,
- * See {@link https://discord.js.org/docs/packages/collection/stable/Collection:Class#sweep Collection#sweep}
- * for the definition of this function.
- */
+export type GlobalSweepFilter<K, V> = () => ((value: V, key: K) => boolean) | null;
 
 /**
  * A container for all cache sweeping intervals and their associated sweep methods.
  */
 export class Sweepers {
+	// biome-ignore lint/suspicious/noExplicitAny: sweeper configuration map
 	public options: any;
-	public intervals: any;
-	public client: any;
-	constructor(client: any, options: any) {
+	public intervals: Record<string, Timer | null>;
+	public client!: Client;
+	// biome-ignore lint/suspicious/noExplicitAny: sweeper options
+	constructor(client: Client, options: any) {
 		/**
 		 * The client that instantiated this
 		 *
@@ -37,8 +35,7 @@ export class Sweepers {
 		 *
 		 * @type {Object<SweeperKey, ?Timeout>}
 		 */
-		this.intervals = Object.fromEntries(SweeperKeys.map((key): [string, any] => [key, null]));
-		(this as any).intervals = this.intervals; // cast to satisfy TS if needed, but the directive was said to be unused
+		this.intervals = Object.fromEntries(SweeperKeys.map((key): [string, Timer | null] => [key, null]));
 
 		for (const key of SweeperKeys) {
 			if (!(key in options)) continue;

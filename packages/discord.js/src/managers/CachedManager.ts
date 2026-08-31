@@ -1,3 +1,6 @@
+import type { Collection } from '@ovencord/collection';
+import type { Snowflake } from 'discord-api-types/v10';
+import type { Client } from '../client/Client.js';
 import { MakeCacheOverrideSymbol } from '../util/Symbols.js';
 import { DataManager } from './DataManager.js';
 
@@ -7,11 +10,17 @@ import { DataManager } from './DataManager.js';
  * @extends {DataManager}
  * @abstract
  */
-export abstract class CachedManager extends DataManager {
-	public _cache: any;
-	public holds: any;
+export abstract class CachedManager<K extends Snowflake | string = Snowflake, Holds = any, R = any> extends DataManager<
+	K,
+	Holds,
+	R
+> {
+	public _cache!: Collection<K, Holds>;
+	// biome-ignore lint/suspicious/noExplicitAny: holds class reference
+	public override holds: any;
 
-	constructor(client: any, holds: any, iterable?: any) {
+	// biome-ignore lint/suspicious/noExplicitAny: constructor holds and iterable
+	constructor(client: Client, holds: any, iterable?: Iterable<any>) {
 		super(client, holds);
 
 		this.holds = holds;
@@ -31,11 +40,12 @@ export abstract class CachedManager extends DataManager {
 		}
 	}
 
-	override get cache(): any {
+	override get cache(): Collection<K, Holds> {
 		return this._cache;
 	}
 
-	_add(data: any, cache = true, { id, extras = [] }: any = {}) {
+	// biome-ignore lint/suspicious/noExplicitAny: internal cache hydration
+	_add(data: any, cache = true, { id, extras = [] }: any = {}): Holds {
 		const existing = (this.cache as any).get(id ?? data.id);
 		if (existing) {
 			if (cache) {

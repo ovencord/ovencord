@@ -1,7 +1,14 @@
 import { Collection } from '@ovencord/collection';
 import { makeURLSearchParams, REST, RESTEvents } from '@ovencord/rest';
 import { WebSocketManager, WebSocketShardEvents, WebSocketShardStatus } from '@ovencord/ws';
-import { GatewayDispatchEvents, GatewayIntentBits, OAuth2Scopes, Routes, type Snowflake } from 'discord-api-types/v10';
+import {
+	GatewayDispatchEvents,
+	type GatewayDispatchPayload,
+	GatewayIntentBits,
+	OAuth2Scopes,
+	Routes,
+	type Snowflake,
+} from 'discord-api-types/v10';
 import { DiscordjsError, DiscordjsTypeError, ErrorCodes } from '../errors/index.js';
 import { ChannelManager } from '../managers/ChannelManager.js';
 import { GuildManager } from '../managers/GuildManager.js';
@@ -19,7 +26,7 @@ import { VoiceRegion } from '../structures/VoiceRegion.js';
 import { Webhook } from '../structures/Webhook.js';
 import { Widget } from '../structures/Widget.js';
 import { AsyncEventEmitter } from '../util/AsyncEventEmitter.js';
-import { resolveGuildTemplateCode, resolveInviteCode } from '../util/DataResolver.js';
+import { type GuildTemplateResolvable, resolveGuildTemplateCode, resolveInviteCode } from '../util/DataResolver.js';
 import { Events } from '../util/Events.js';
 import { IntentsBitField } from '../util/IntentsBitField.js';
 import { createInvite } from '../util/Invites.js';
@@ -43,8 +50,12 @@ const BeforeReadyWhitelist = [
 	GatewayDispatchEvents.GuildMemberRemove,
 ];
 
-export type GuildResolvable = any;
-export type PermissionResolvable = any;
+import type { Guild } from '../structures/Guild.js';
+import type { InviteResolvable } from '../util/DataResolver.js';
+import type { PermissionResolvable } from '../util/PermissionsBitField.js';
+
+export type GuildResolvable = Guild | GuildPreview | GuildTemplate | Snowflake | string;
+export { type PermissionResolvable };
 
 /**
  * The main hub for interacting with the Discord API, and the starting point for any bot.
@@ -81,10 +92,34 @@ export interface InviteGenerationOptions {
 	disableGuildSelect?: boolean;
 }
 
+export interface ClientOptions {
+	// biome-ignore lint/suspicious/noExplicitAny: allowed mentions config
+	allowedMentions?: any;
+	closeTimeout?: number;
+	enforceNonce?: boolean;
+	failIfNotExists?: boolean;
+	// biome-ignore lint/suspicious/noExplicitAny: intents bitfield resolvable
+	intents: any;
+	jsonTransformer?(obj: unknown): unknown;
+	// biome-ignore lint/suspicious/noExplicitAny: cache factory function
+	makeCache?: any;
+	// biome-ignore lint/suspicious/noExplicitAny: partials list
+	partials?: any[];
+	// biome-ignore lint/suspicious/noExplicitAny: presence options
+	presence?: any;
+	// biome-ignore lint/suspicious/noExplicitAny: rest options
+	rest?: any;
+	// biome-ignore lint/suspicious/noExplicitAny: sweeper options
+	sweepers?: any;
+	waitGuildTimeout?: number;
+	// biome-ignore lint/suspicious/noExplicitAny: ws manager options
+	ws?: any;
+}
+
 export class Client extends AsyncEventEmitter {
-	public status: any;
-	public readyTimeout: any;
-	public options: any;
+	public status: Status;
+	public readyTimeout: Timer | null;
+	public options: ClientOptions & { intents: IntentsBitField };
 	public rest: REST;
 	public presence: ClientPresence;
 	public actions: ActionsManager;
@@ -102,12 +137,13 @@ export class Client extends AsyncEventEmitter {
 	public readyTimestamp: number | null;
 	public token: string | null;
 	public expectedGuilds: Set<string>;
+	// biome-ignore lint/suspicious/noExplicitAny: internal gateway packet queue
 	public incomingPacketQueue: any[];
 
 	/**
-	 * @param {any} options Options for the client
+	 * @param {ClientOptions} options Options for the client
 	 */
-	constructor(options: any) {
+	constructor(options: ClientOptions) {
 		super();
 		this.token = null;
 
@@ -432,7 +468,7 @@ export class Client extends AsyncEventEmitter {
 	 * @param {number} shardId The shardId that received this packet
 	 * @private
 	 */
-	async _handlePacket(packet: any, shardId: number) {
+	async _handlePacket(packet: GatewayDispatchPayload, shardId: number) {
 		// Emit raw packet for connectors (Bunraku/Shoukaku) that need VOICE_SERVER_UPDATE / VOICE_STATE_UPDATE
 		this.emit('raw', packet);
 
@@ -446,7 +482,8 @@ export class Client extends AsyncEventEmitter {
 				}).unref();
 			}
 
-			const handler = PacketHandlers[packet.t];
+			// biome-ignore lint/suspicious/noExplicitAny: packet handler dispatch lookup
+			const handler = (PacketHandlers as any)[packet.t];
 			if (handler) {
 				handler(this, packet, shardId);
 			}
@@ -454,7 +491,7 @@ export class Client extends AsyncEventEmitter {
 			if (packet.t === GatewayDispatchEvents.Ready) {
 				await this._checkReady();
 			} else if (this.status === Status.WaitingForGuilds && WaitingForGuildEvents.includes(packet.t)) {
-				this.expectedGuilds.delete(packet.d.id);
+				this.expectedGuilds.delete((packet.d as { id: string }).id);
 				await this._checkReady();
 			}
 		}
@@ -471,9 +508,10 @@ export class Client extends AsyncEventEmitter {
 	/**
 	 * Broadcasts a packet to every shard of this client handles.
 	 *
-	 * @param {Object} packet The packet to send
+	 * @param {GatewaySendPayload} packet The packet to send
 	 * @private
 	 */
+	// biome-ignore lint/suspicious/noExplicitAny: gateway payload send
 	async _broadcast(packet: any) {
 		const shardIds = await this.ws.getShardIds();
 		return Promise.all(shardIds.map((shardId) => this.ws.send(shardId, packet)));
@@ -579,7 +617,7 @@ export class Client extends AsyncEventEmitter {
 	 *   .then(invite => console.log(`Obtained invite with code: ${invite.code}`))
 	 *   .catch(console.error);
 	 */
-	async fetchInvite(invite: any, { withCounts, guildScheduledEventId }: ClientFetchInviteOptions = {}) {
+	async fetchInvite(invite: InviteResolvable, { withCounts, guildScheduledEventId }: ClientFetchInviteOptions = {}) {
 		const code = resolveInviteCode(invite);
 
 		const query = makeURLSearchParams({
@@ -588,7 +626,8 @@ export class Client extends AsyncEventEmitter {
 		});
 
 		const data = await this.rest.get(Routes.invite(code), { query });
-		return createInvite(this, data);
+		// biome-ignore lint/suspicious/noExplicitAny: invite payload instantiation
+		return createInvite(this, data as any);
 	}
 
 	/**
@@ -601,10 +640,11 @@ export class Client extends AsyncEventEmitter {
 	 *   .then(template => console.log(`Obtained template with code: ${template.code}`))
 	 *   .catch(console.error);
 	 */
-	async fetchGuildTemplate(template: string) {
+	async fetchGuildTemplate(template: GuildTemplateResolvable) {
 		const code = resolveGuildTemplateCode(template);
 		const data = await this.rest.get(Routes.template(code));
-		return new GuildTemplate(this, data);
+		// biome-ignore lint/suspicious/noExplicitAny: template payload instantiation
+		return new GuildTemplate(this, data as any);
 	}
 
 	/**
@@ -619,6 +659,7 @@ export class Client extends AsyncEventEmitter {
 	 *   .catch(console.error);
 	 */
 	async fetchWebhook(id: string, token?: string) {
+		// biome-ignore lint/suspicious/noExplicitAny: webhook REST response
 		const data = (await this.rest.get(Routes.webhook(id, token), { auth: token === undefined })) as any;
 		return new Webhook(this, { token, ...data });
 	}
@@ -633,6 +674,7 @@ export class Client extends AsyncEventEmitter {
 	 *   .catch(console.error);
 	 */
 	async fetchVoiceRegions() {
+		// biome-ignore lint/suspicious/noExplicitAny: voice region array
 		const apiRegions = (await this.rest.get(Routes.voiceRegions())) as any[];
 		const regions = new Collection();
 		for (const region of apiRegions) regions.set(region.id, new VoiceRegion(region));
@@ -651,7 +693,8 @@ export class Client extends AsyncEventEmitter {
 	 */
 	async fetchSticker(id: string) {
 		const data = await this.rest.get(Routes.sticker(id));
-		return new Sticker(this, data);
+		// biome-ignore lint/suspicious/noExplicitAny: sticker payload instantiation
+		return new Sticker(this, data as any);
 	}
 
 	/**
@@ -671,12 +714,15 @@ export class Client extends AsyncEventEmitter {
 	 */
 	async fetchStickerPacks({ packId }: StickerPackFetchOptions = {}) {
 		if (packId) {
+			// biome-ignore lint/suspicious/noExplicitAny: sticker pack REST payload
 			const innerData = (await this.rest.get(Routes.stickerPack(packId))) as any;
 			return new StickerPack(this, innerData);
 		}
 
+		// biome-ignore lint/suspicious/noExplicitAny: sticker packs REST payload
 		const data = (await this.rest.get(Routes.stickerPacks())) as any;
 		return new Collection(
+			// biome-ignore lint/suspicious/noExplicitAny: sticker pack item
 			data.sticker_packs.map((stickerPack: any) => [stickerPack.id, new StickerPack(this, stickerPack)]),
 		);
 	}
@@ -691,7 +737,9 @@ export class Client extends AsyncEventEmitter {
 	 *  .catch(console.error);
 	 */
 	async fetchDefaultSoundboardSounds() {
+		// biome-ignore lint/suspicious/noExplicitAny: soundboard sound REST payload
 		const data = (await this.rest.get(Routes.soundboardDefaultSounds())) as any;
+		// biome-ignore lint/suspicious/noExplicitAny: sound item
 		return new Collection(data.map((sound: any) => [sound.sound_id, new SoundboardSound(this, sound)]));
 	}
 
@@ -701,9 +749,10 @@ export class Client extends AsyncEventEmitter {
 	 * @param {GuildResolvable} guild The guild to fetch the preview for
 	 * @returns {Promise<GuildPreview>}
 	 */
-	async fetchGuildPreview(guild: any) {
+	async fetchGuildPreview(guild: GuildResolvable) {
 		const id = this.guilds.resolveId(guild);
 		if (!id) throw new DiscordjsTypeError(ErrorCodes.InvalidType, 'guild', 'GuildResolvable');
+		// biome-ignore lint/suspicious/noExplicitAny: guild preview REST payload
 		const data = (await this.rest.get(Routes.guildPreview(id))) as any;
 		return new GuildPreview(this, data);
 	}
@@ -714,9 +763,10 @@ export class Client extends AsyncEventEmitter {
 	 * @param {GuildResolvable} guild The guild to fetch the widget data for
 	 * @returns {Promise<Widget>}
 	 */
-	async fetchGuildWidget(guild: any) {
+	async fetchGuildWidget(guild: GuildResolvable) {
 		const id = this.guilds.resolveId(guild);
 		if (!id) throw new DiscordjsTypeError(ErrorCodes.InvalidType, 'guild', 'GuildResolvable');
+		// biome-ignore lint/suspicious/noExplicitAny: guild widget REST payload
 		const data = (await this.rest.get(Routes.guildWidgetJSON(id))) as any;
 		return new Widget(this, data);
 	}

@@ -191,7 +191,7 @@ export async function handleErrors(
 					authFalseWarningEmitted = true;
 				}
 
-				manager.setToken(null!);
+				manager.setToken(null as unknown as string);
 			}
 
 			// throw the API error

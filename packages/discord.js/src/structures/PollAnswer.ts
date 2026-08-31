@@ -1,3 +1,4 @@
+import type { APIPollAnswer } from 'discord-api-types/v10';
 import { PollAnswerVoterManager } from '../managers/PollAnswerVoterManager.js';
 import { resolveGuildEmoji } from '../util/Util.js';
 import { Base } from './Base.js';
@@ -9,13 +10,13 @@ import { Emoji } from './Emoji.js';
  * @extends {Base}
  */
 export class PollAnswer extends Base {
-	public id: any;
-	public voters: any;
-	public voteCount: any;
+	public id: number;
+	public voters: PollAnswerVoterManager;
+	public voteCount: number;
 	public _emoji: any;
-	public text: any;
+	public text: string | null;
 	public poll: any;
-	constructor(client: any, data: any, poll: any) {
+	constructor(client: any, data: APIPollAnswer, poll: any) {
 		super(client);
 
 		/**

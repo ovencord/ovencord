@@ -25,7 +25,7 @@ export class ThreadOnlyChannelMixinImpl<
 	 * @defaultValue `null` – indicates a preferred sort order hasn't been set.
 	 */
 	public get defaultSortOrder() {
-		return (this as any)[kData].default_sort_order!;
+		return (this as any)[kData].default_sort_order ?? null;
 	}
 
 	/**

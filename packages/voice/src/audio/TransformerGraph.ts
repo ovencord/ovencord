@@ -125,42 +125,51 @@ function canEnableFFmpegOptimizations(): boolean {
 }
 
 function initializeNodes(): Map<StreamType, Node> {
-	const nodes = new Map<StreamType, Node>();
-	for (const streamType of Object.values(StreamType)) {
-		nodes.set(streamType, new Node(streamType));
-	}
+	const raw = new Node(StreamType.Raw);
+	const opus = new Node(StreamType.Opus);
+	const oggOpus = new Node(StreamType.OggOpus);
+	const webmOpus = new Node(StreamType.WebmOpus);
+	const arbitrary = new Node(StreamType.Arbitrary);
 
-	nodes.get(StreamType.Raw)?.addEdge({
+	const nodes = new Map<StreamType, Node>([
+		[StreamType.Raw, raw],
+		[StreamType.Opus, opus],
+		[StreamType.OggOpus, oggOpus],
+		[StreamType.WebmOpus, webmOpus],
+		[StreamType.Arbitrary, arbitrary],
+	]);
+
+	raw.addEdge({
 		type: TransformerType.OpusEncoder,
-		to: nodes.get(StreamType.Opus)!,
+		to: opus,
 		cost: 1.5,
 		transformer: () => new prism.opus.Encoder({ rate: 48_000, channels: 2, frameSize: 960 }),
 	});
 
-	nodes.get(StreamType.Opus)?.addEdge({
+	opus.addEdge({
 		type: TransformerType.OpusDecoder,
-		to: nodes.get(StreamType.Raw)!,
+		to: raw,
 		cost: 1.5,
 		transformer: () => new prism.opus.Decoder({ rate: 48_000, channels: 2, frameSize: 960 }),
 	});
 
-	nodes.get(StreamType.OggOpus)?.addEdge({
+	oggOpus.addEdge({
 		type: TransformerType.OggOpusDemuxer,
-		to: nodes.get(StreamType.Opus)!,
+		to: opus,
 		cost: 1,
 		transformer: () => new prism.opus.OggDemuxer(),
 	});
 
-	nodes.get(StreamType.WebmOpus)?.addEdge({
+	webmOpus.addEdge({
 		type: TransformerType.WebmOpusDemuxer,
-		to: nodes.get(StreamType.Opus)!,
+		to: opus,
 		cost: 1,
 		transformer: () => new prism.opus.WebmDemuxer(),
 	});
 
 	const FFMPEG_PCM_EDGE: Omit<Edge, 'from'> = {
 		type: TransformerType.FFmpegPCM,
-		to: nodes.get(StreamType.Raw)!,
+		to: raw,
 		cost: 2,
 		transformer: (input) =>
 			new prism.FFmpeg({
@@ -168,13 +177,13 @@ function initializeNodes(): Map<StreamType, Node> {
 			}),
 	};
 
-	nodes.get(StreamType.Arbitrary)?.addEdge(FFMPEG_PCM_EDGE);
-	nodes.get(StreamType.OggOpus)?.addEdge(FFMPEG_PCM_EDGE);
-	nodes.get(StreamType.WebmOpus)?.addEdge(FFMPEG_PCM_EDGE);
+	arbitrary.addEdge(FFMPEG_PCM_EDGE);
+	oggOpus.addEdge(FFMPEG_PCM_EDGE);
+	webmOpus.addEdge(FFMPEG_PCM_EDGE);
 
-	nodes.get(StreamType.Raw)?.addEdge({
+	raw.addEdge({
 		type: TransformerType.InlineVolume,
-		to: nodes.get(StreamType.Raw)!,
+		to: raw,
 		cost: 0.5,
 		transformer: () => new prism.VolumeTransformer({ type: 's16le' }),
 	});
@@ -182,19 +191,19 @@ function initializeNodes(): Map<StreamType, Node> {
 	if (canEnableFFmpegOptimizations()) {
 		const FFMPEG_OGG_EDGE: Omit<Edge, 'from'> = {
 			type: TransformerType.FFmpegOgg,
-			to: nodes.get(StreamType.OggOpus)!,
+			to: oggOpus,
 			cost: 2,
 			transformer: (input) =>
 				new prism.FFmpeg({
 					args: ['-i', typeof input === 'string' ? input : '-', ...FFMPEG_OPUS_ARGUMENTS],
 				}),
 		};
-		nodes.get(StreamType.Arbitrary)?.addEdge(FFMPEG_OGG_EDGE);
+		arbitrary.addEdge(FFMPEG_OGG_EDGE);
 		// Include Ogg and WebM as well in case they have different sampling rates or are mono instead of stereo
 		// at the moment, this will not do anything. However, if/when detection for correct Opus headers is
 		// implemented, this will help inform the voice engine that it is able to transcode the audio.
-		nodes.get(StreamType.OggOpus)?.addEdge(FFMPEG_OGG_EDGE);
-		nodes.get(StreamType.WebmOpus)?.addEdge(FFMPEG_OGG_EDGE);
+		oggOpus.addEdge(FFMPEG_OGG_EDGE);
+		webmOpus.addEdge(FFMPEG_OGG_EDGE);
 	}
 
 	return nodes;

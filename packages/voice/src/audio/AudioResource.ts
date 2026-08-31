@@ -102,7 +102,7 @@ export class AudioResource<Metadata = unknown> {
 		silencePaddingFrames: number,
 	) {
 		this.edges = edges;
-		this.playStream = streams.length > 1 ? (pipeline(streams, noop) as any as Readable) : streams[0]!;
+		this.playStream = streams.length > 1 ? (pipeline(streams, noop) as any as Readable) : (streams[0] as Readable);
 		this.metadata = metadata;
 		this.silencePaddingFrames = silencePaddingFrames;
 

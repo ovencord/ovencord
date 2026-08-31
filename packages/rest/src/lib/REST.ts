@@ -391,10 +391,9 @@ export class REST extends AsyncEventEmitter<RestEvents> {
 
 		const method = request.method.toUpperCase();
 
-		// The non null assertions in the following block are due to exactOptionalPropertyTypes, they have been tested to work with undefined
 		const fetchOptions: RequestInit = {
 			// Set body to null on get / head requests. This does not follow fetch spec (likely because it causes subtle bugs) but is aligned with what request was doing
-			body: ['GET', 'HEAD'].includes(method) ? null : finalBody!,
+			body: ['GET', 'HEAD'].includes(method) ? null : (finalBody as BodyInit | null | undefined),
 			headers: { ...request.headers, ...additionalHeaders, ...headers } as Record<string, string>,
 			method,
 			// Prioritize setting an agent per request, use the agent for this instance otherwise.

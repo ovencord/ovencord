@@ -21,7 +21,8 @@ export class MediaGalleryItem {
 		 * @type {UnfurledMediaItem}
 		 * @readonly
 		 */
-		this.media = media instanceof UnfurledMediaItem ? media : new UnfurledMediaItem(media!);
+		this.media =
+			media instanceof UnfurledMediaItem ? media : new UnfurledMediaItem(media ?? ({} as APIUnfurledMediaItem));
 	}
 
 	/**

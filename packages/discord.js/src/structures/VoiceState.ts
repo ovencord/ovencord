@@ -1,4 +1,4 @@
-import { ChannelType, Routes } from 'discord-api-types/v10';
+import { type APIVoiceState, ChannelType, Routes, type Snowflake } from 'discord-api-types/v10';
 import { DiscordjsError, DiscordjsTypeError, ErrorCodes } from '../errors/index.js';
 import { Base } from './Base.js';
 
@@ -9,18 +9,18 @@ import { Base } from './Base.js';
  */
 export class VoiceState extends Base {
 	public guild: any;
-	public id: any;
-	public serverDeaf: any;
-	public serverMute: any;
-	public selfDeaf: any;
-	public selfMute: any;
-	public selfVideo: any;
-	public sessionId: any;
-	public streaming: any;
-	public channelId: any;
-	public suppress: any;
-	public requestToSpeakTimestamp: any;
-	constructor(guild: any, data: any) {
+	public id: Snowflake;
+	public serverDeaf: boolean | null;
+	public serverMute: boolean | null;
+	public selfDeaf: boolean | null;
+	public selfMute: boolean | null;
+	public selfVideo: boolean | null;
+	public sessionId: string | null;
+	public streaming: boolean;
+	public channelId: Snowflake | null;
+	public suppress: boolean;
+	public requestToSpeakTimestamp: number | null;
+	constructor(guild: any, data: APIVoiceState) {
 		super(guild.client);
 		/**
 		 * The guild of this voice state
@@ -37,7 +37,7 @@ export class VoiceState extends Base {
 		this._patch(data);
 	}
 
-	_patch(data: any) {
+	_patch(data: Partial<APIVoiceState>) {
 		if ('deaf' in data) {
 			/**
 			 * Whether this member is deafened server-wide

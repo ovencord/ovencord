@@ -1,4 +1,10 @@
-import { RouteBases, Routes } from 'discord-api-types/v10';
+import {
+	type APITemplate,
+	type APITemplateSerializedSourceGuild,
+	RouteBases,
+	Routes,
+	type Snowflake,
+} from 'discord-api-types/v10';
 import { Base } from './Base.js';
 
 /**
@@ -7,17 +13,17 @@ import { Base } from './Base.js';
  * @extends {Base}
  */
 export class GuildTemplate extends Base {
-	public code: any;
-	public name: any;
-	public description: any;
-	public usageCount: any;
-	public creatorId: any;
+	public code: string;
+	public name: string;
+	public description: string | null;
+	public usageCount: number;
+	public creatorId: Snowflake;
 	public creator: any;
-	public createdTimestamp: any;
-	public updatedTimestamp: any;
-	public guildId: any;
-	public serializedGuild: any;
-	public unSynced: any;
+	public createdTimestamp: number;
+	public updatedTimestamp: number;
+	public guildId: Snowflake;
+	public serializedGuild: APITemplateSerializedSourceGuild;
+	public unSynced: boolean | null;
 	/**
 	 * A regular expression that matches guild template links.
 	 * The `code` group property is present on the `exec()` result of this expression.
@@ -27,12 +33,12 @@ export class GuildTemplate extends Base {
 	 */
 	static GuildTemplatesPattern = /discord(?:app)?\.(?:com\/template|new)\/(?<code>[\w-]{2,255})/i;
 
-	constructor(client: any, data: any) {
+	constructor(client: any, data: APITemplate) {
 		super(client);
 		this._patch(data);
 	}
 
-	_patch(data: any) {
+	_patch(data: Partial<APITemplate>) {
 		if ('code' in data) {
 			/**
 			 * The unique code of this template

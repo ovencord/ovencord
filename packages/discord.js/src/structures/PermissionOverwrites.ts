@@ -1,4 +1,4 @@
-import { OverwriteType } from 'discord-api-types/v10';
+import { type APIOverwrite, OverwriteType, type Snowflake } from 'discord-api-types/v10';
 import { DiscordjsTypeError, ErrorCodes } from '../errors/index.js';
 import { PermissionsBitField } from '../util/PermissionsBitField.js';
 import { Base } from './Base.js';
@@ -10,12 +10,12 @@ import { Role } from './Role.js';
  * @extends {Base}
  */
 export class PermissionOverwrites extends Base {
-	public id: any;
-	public type: any;
-	public deny: any;
-	public allow: any;
+	public id: Snowflake;
+	public type: OverwriteType;
+	public deny: Readonly<PermissionsBitField>;
+	public allow: Readonly<PermissionsBitField>;
 	public channel: any;
-	constructor(client: any, data: any, channel: any) {
+	constructor(client: any, data: APIOverwrite, channel: any) {
 		super(client);
 
 		/**
@@ -30,7 +30,7 @@ export class PermissionOverwrites extends Base {
 		this._patch(data);
 	}
 
-	_patch(data: any) {
+	_patch(data: Partial<APIOverwrite>) {
 		/**
 		 * The overwrite's id, either a {@link User} or a {@link Role} id
 		 *

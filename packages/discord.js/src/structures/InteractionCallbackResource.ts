@@ -1,4 +1,9 @@
 import { lazy } from '@ovencord/util';
+import type {
+	InteractionResponseType,
+	RESTAPIInteractionCallbackActivityInstanceResource,
+	RESTAPIInteractionCallbackResourceObject,
+} from 'discord-api-types/v10';
 
 const getMessage = lazy(() => require('./Message.js').Message);
 
@@ -6,11 +11,11 @@ const getMessage = lazy(() => require('./Message.js').Message);
  * Represents the resource that was created by the interaction response.
  */
 export class InteractionCallbackResource {
-	public type: any;
-	public activityInstance: any;
+	public type: InteractionResponseType;
+	public activityInstance: RESTAPIInteractionCallbackActivityInstanceResource | null;
 	public message: any;
 	public client: any;
-	constructor(client: any, data: any) {
+	constructor(client: any, data: RESTAPIInteractionCallbackResourceObject) {
 		/**
 		 * The client that instantiated this
 		 *

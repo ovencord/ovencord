@@ -95,7 +95,7 @@ export class Collection<Key, Value> extends Map<Key, Value> {
 		const iter = this.keys();
 		const results: Key[] = new Array(amount);
 		for (let index = 0; index < amount; index++) {
-			results[index] = iter.next().value!;
+			results[index] = iter.next().value as Key;
 		}
 
 		return results;
@@ -158,7 +158,7 @@ export class Collection<Key, Value> extends Map<Key, Value> {
 			iter.next();
 		}
 
-		return iter.next().value!;
+		return iter.next().value;
 	}
 
 	/**
@@ -182,7 +182,7 @@ export class Collection<Key, Value> extends Map<Key, Value> {
 			iter.next();
 		}
 
-		return iter.next().value!;
+		return iter.next().value;
 	}
 
 	/**
@@ -201,7 +201,10 @@ export class Collection<Key, Value> extends Map<Key, Value> {
 		const values = [...this.values()];
 		for (let sourceIndex = 0; sourceIndex < amount; sourceIndex++) {
 			const targetIndex = sourceIndex + Math.floor(Math.random() * (values.length - sourceIndex));
-			[values[sourceIndex], values[targetIndex]] = [values[targetIndex]!, values[sourceIndex]!];
+			const sourceVal = values[sourceIndex] as Value;
+			const targetVal = values[targetIndex] as Value;
+			values[sourceIndex] = targetVal;
+			values[targetIndex] = sourceVal;
 		}
 
 		return values.slice(0, amount);
@@ -223,7 +226,10 @@ export class Collection<Key, Value> extends Map<Key, Value> {
 		const keys = [...this.keys()];
 		for (let sourceIndex = 0; sourceIndex < amount; sourceIndex++) {
 			const targetIndex = sourceIndex + Math.floor(Math.random() * (keys.length - sourceIndex));
-			[keys[sourceIndex], keys[targetIndex]] = [keys[targetIndex]!, keys[sourceIndex]!];
+			const sourceKey = keys[sourceIndex] as Key;
+			const targetKey = keys[targetIndex] as Key;
+			keys[sourceIndex] = targetKey;
+			keys[targetIndex] = sourceKey;
 		}
 
 		return keys.slice(0, amount);
@@ -334,8 +340,11 @@ export class Collection<Key, Value> extends Map<Key, Value> {
 		if (thisArg !== undefined) fn = fn.bind(thisArg);
 		const entries = [...this.entries()];
 		for (let index = entries.length - 1; index >= 0; index--) {
-			const { 0: key, 1: value } = entries[index]!;
-			if (fn(value, key, this)) return value;
+			const entry = entries[index];
+			if (entry) {
+				const [key, value] = entry;
+				if (fn(value, key, this)) return value;
+			}
 		}
 
 		return undefined;
@@ -366,8 +375,11 @@ export class Collection<Key, Value> extends Map<Key, Value> {
 		if (thisArg !== undefined) fn = fn.bind(thisArg);
 		const entries = [...this.entries()];
 		for (let index = entries.length - 1; index >= 0; index--) {
-			const { 0: key, 1: value } = entries[index]!;
-			if (fn(value, key, this)) return key;
+			const entry = entries[index];
+			if (entry) {
+				const [key, value] = entry;
+				if (fn(value, key, this)) return key;
+			}
 		}
 
 		return undefined;
@@ -533,11 +545,10 @@ export class Collection<Key, Value> extends Map<Key, Value> {
 	public map<NewValue>(fn: (value: Value, key: Key, collection: this) => NewValue, thisArg?: unknown): NewValue[] {
 		if (typeof fn !== 'function') throw new TypeError(`${fn} is not a function`);
 		if (thisArg !== undefined) fn = fn.bind(thisArg);
-		const iter = this.entries();
 		const results: NewValue[] = new Array(this.size);
-		for (let index = 0; index < this.size; index++) {
-			const { 0: key, 1: value } = iter.next().value!;
-			results[index] = fn(value, key, this);
+		let index = 0;
+		for (const [key, value] of this.entries()) {
+			results[index++] = fn(value, key, this);
 		}
 
 		return results;
@@ -706,8 +717,11 @@ export class Collection<Key, Value> extends Map<Key, Value> {
 		}
 
 		while (--index >= 0) {
-			const { 0: key, 1: value } = entries[index]!;
-			accumulator = fn(accumulator, value, key, this);
+			const entry = entries[index];
+			if (entry) {
+				const [key, value] = entry;
+				accumulator = fn(accumulator, value, key, this);
+			}
 		}
 
 		return accumulator;
@@ -989,15 +1003,18 @@ export class Collection<Key, Value> extends Map<Key, Value> {
 			const hasInOther = other.has(key);
 
 			if (hasInSelf) {
+				const selfVal = this.get(key) as Value;
 				if (hasInOther) {
-					const result = whenInBoth(this.get(key)!, other.get(key)!, key);
+					const otherVal = other.get(key) as OtherValue;
+					const result = whenInBoth(selfVal, otherVal, key);
 					if (result.keep) coll.set(key, result.value);
 				} else {
-					const result = whenInSelf(this.get(key)!, key);
+					const result = whenInSelf(selfVal, key);
 					if (result.keep) coll.set(key, result.value);
 				}
 			} else if (hasInOther) {
-				const result = whenInOther(other.get(key)!, key);
+				const otherVal = other.get(key) as OtherValue;
+				const result = whenInOther(otherVal, key);
 				if (result.keep) coll.set(key, result.value);
 			}
 		}
@@ -1066,9 +1083,10 @@ export class Collection<Key, Value> extends Map<Key, Value> {
 		combine: (firstValue: Value, secondValue: Value, key: Key) => Value,
 	): Collection<Key, Value> {
 		const coll = new Collection[Symbol.species]<Key, Value>();
-		for (const { 0: key, 1: value } of entries) {
-			if (coll.has(key)) {
-				coll.set(key, combine(coll.get(key)!, value, key));
+		for (const [key, value] of entries) {
+			const existing = coll.get(key);
+			if (existing !== undefined || coll.has(key)) {
+				coll.set(key, combine(existing as Value, value, key));
 			} else {
 				coll.set(key, value);
 			}

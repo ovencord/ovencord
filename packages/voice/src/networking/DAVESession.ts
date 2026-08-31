@@ -217,13 +217,11 @@ export class DAVESession extends AsyncEventEmitter {
 	 */
 	public executeTransition(transitionId: number) {
 		this.emit('debug', `Executing transition (${transitionId})`);
-		if (!this.pendingTransitions.has(transitionId)) {
-			this.emit('debug', `Received execute transition, but we don't have a pending transition for ${transitionId}`);
-			return false;
-		}
+		const nextVersion = this.pendingTransitions.get(transitionId);
+		if (nextVersion === undefined) return false;
 
 		const oldVersion = this.protocolVersion;
-		this.protocolVersion = this.pendingTransitions.get(transitionId)!;
+		this.protocolVersion = nextVersion;
 
 		// Handle upgrades & defer downgrades
 		if (oldVersion !== this.protocolVersion && this.protocolVersion === 0) {

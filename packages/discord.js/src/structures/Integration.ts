@@ -1,4 +1,11 @@
-import { Routes } from 'discord-api-types/v10';
+import {
+	type APIGuildIntegration,
+	type APIIntegrationAccount,
+	type IntegrationExpireBehavior,
+	type OAuth2Scopes,
+	Routes,
+	type Snowflake,
+} from 'discord-api-types/v10';
 import { Base } from './Base.js';
 import { IntegrationApplication } from './IntegrationApplication.js';
 
@@ -27,23 +34,23 @@ import { IntegrationApplication } from './IntegrationApplication.js';
  */
 export class Integration extends Base {
 	public guild: any;
-	public id: any;
-	public name: any;
-	public type: any;
-	public enabled: any;
-	public syncing: any;
+	public id: Snowflake;
+	public name: string;
+	public type: string;
+	public enabled: boolean | null;
+	public syncing: boolean | null;
 	public role: any;
-	public enableEmoticons: any;
+	public enableEmoticons: boolean | null;
 	public user: any;
-	public account: any;
-	public syncedTimestamp: any;
-	public subscriberCount: any;
-	public revoked: any;
-	public expireBehavior: any;
-	public expireGracePeriod: any;
-	public application: any;
-	public scopes: any;
-	constructor(client: any, data: any, guild: any) {
+	public account: APIIntegrationAccount;
+	public syncedTimestamp: number | null;
+	public subscriberCount: number | null;
+	public revoked: boolean | null;
+	public expireBehavior: IntegrationExpireBehavior | null;
+	public expireGracePeriod: number | null;
+	public application: IntegrationApplication | null;
+	public scopes: OAuth2Scopes[];
+	constructor(client: any, data: APIGuildIntegration, guild: any) {
 		super(client);
 
 		/**
@@ -186,7 +193,7 @@ export class Integration extends Base {
 		return roles.filter((role) => role.tags?.integrationId === this.id);
 	}
 
-	_patch(data: any) {
+	_patch(data: Partial<APIGuildIntegration>) {
 		if ('expire_behavior' in data) {
 			/**
 			 * The behavior of expiring subscribers

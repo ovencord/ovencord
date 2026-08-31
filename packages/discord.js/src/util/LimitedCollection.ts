@@ -3,29 +3,27 @@ import { DiscordjsTypeError, ErrorCodes } from '../errors/index.js';
 
 /**
  * Options for defining the behavior of a LimitedCollection
- *
- * @typedef {Object} LimitedCollectionOptions
- * @property {?number} [maxSize=Infinity] The maximum size of the Collection
- * @property {?Function} [keepOverLimit=null] A function, which is passed the value and key of an entry, ran to decide
- * to keep an entry past the maximum size
  */
+export interface LimitedCollectionOptions<K, V> {
+	maxSize?: number | null;
+	keepOverLimit?: ((value: V, key: K, collection: LimitedCollection<K, V>) => boolean) | null;
+}
 
 /**
  * A Collection which holds a max amount of entries.
  *
  * @extends {Collection}
- * @param {LimitedCollectionOptions} [options={}] Options for constructing the Collection.
- * @param {Iterable} [iterable=null] Optional entries passed to the Map constructor.
  */
 export class LimitedCollection<K, V> extends Collection<K, V> {
-	public maxSize: any;
-	public keepOverLimit: any;
-	constructor(options: any = {}, iterable: any = undefined) {
+	public maxSize: number;
+	public keepOverLimit: ((value: V, key: K, collection: LimitedCollection<K, V>) => boolean) | null;
+
+	constructor(options: LimitedCollectionOptions<K, V> = {}, iterable?: Iterable<readonly [K, V]> | null) {
 		if (typeof options !== 'object' || options === null) {
 			throw new DiscordjsTypeError(ErrorCodes.InvalidType, 'options', 'object', true);
 		}
 
-		const { maxSize = Infinity, keepOverLimit = null } = options as any;
+		const { maxSize = Infinity, keepOverLimit = null } = options;
 
 		if (typeof maxSize !== 'number') {
 			throw new DiscordjsTypeError(ErrorCodes.InvalidType, 'maxSize', 'number');
@@ -35,7 +33,7 @@ export class LimitedCollection<K, V> extends Collection<K, V> {
 			throw new DiscordjsTypeError(ErrorCodes.InvalidType, 'keepOverLimit', 'function');
 		}
 
-		super(iterable);
+		super(iterable ?? undefined);
 
 		/**
 		 * The max size of the Collection.
@@ -52,7 +50,7 @@ export class LimitedCollection<K, V> extends Collection<K, V> {
 		this.keepOverLimit = keepOverLimit;
 	}
 
-	set(key: any, value: any) {
+	override set(key: K, value: V): this {
 		if (this.maxSize === 0 && !this.keepOverLimit?.(value, key, this)) return this;
 		if (this.size >= this.maxSize && !this.has(key)) {
 			for (const [iteratedKey, iteratedValue] of this.entries()) {
@@ -67,7 +65,7 @@ export class LimitedCollection<K, V> extends Collection<K, V> {
 		return super.set(key, value);
 	}
 
-	static get [Symbol.species]() {
+	static override get [Symbol.species]() {
 		return Collection;
 	}
 }

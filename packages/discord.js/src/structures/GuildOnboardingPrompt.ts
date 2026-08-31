@@ -1,4 +1,5 @@
 import { Collection } from '@ovencord/collection';
+import type { APIGuildOnboardingPrompt, GuildOnboardingPromptType, Snowflake } from 'discord-api-types/v10';
 import { Base } from './Base.js';
 import { GuildOnboardingPromptOption } from './GuildOnboardingPromptOption.js';
 
@@ -8,15 +9,15 @@ import { GuildOnboardingPromptOption } from './GuildOnboardingPromptOption.js';
  * @extends {Base}
  */
 export class GuildOnboardingPrompt extends Base {
-	public guildId: any;
-	public id: any;
-	public options: any;
-	public title: any;
-	public singleSelect: any;
-	public required: any;
-	public inOnboarding: any;
-	public type: any;
-	constructor(client: any, data: any, guildId: any) {
+	public guildId: Snowflake;
+	public id: Snowflake;
+	public options: Collection<Snowflake, GuildOnboardingPromptOption>;
+	public title: string;
+	public singleSelect: boolean;
+	public required: boolean;
+	public inOnboarding: boolean;
+	public type: GuildOnboardingPromptType;
+	constructor(client: any, data: APIGuildOnboardingPrompt, guildId: Snowflake) {
 		super(client);
 
 		/**
@@ -39,8 +40,9 @@ export class GuildOnboardingPrompt extends Base {
 		 * @type {Collection<Snowflake, GuildOnboardingPromptOption>}
 		 */
 		this.options = data.options.reduce(
-			(options: any, option: any) => options.set(option.id, new GuildOnboardingPromptOption(client, option, guildId)),
-			new Collection(),
+			(options: Collection<Snowflake, GuildOnboardingPromptOption>, option) =>
+				options.set(option.id, new GuildOnboardingPromptOption(client, option, guildId)),
+			new Collection<Snowflake, GuildOnboardingPromptOption>(),
 		);
 
 		/**

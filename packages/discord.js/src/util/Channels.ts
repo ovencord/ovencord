@@ -1,5 +1,5 @@
 import { lazy } from '@ovencord/util';
-import { ChannelType } from 'discord-api-types/v10';
+import { type APIGuildForumDefaultReactionEmoji, type APIGuildForumTag, ChannelType } from 'discord-api-types/v10';
 
 const getCategoryChannel = lazy(() => require('../structures/CategoryChannel.js').CategoryChannel);
 const getDMChannel = lazy(() => require('../structures/DMChannel.js').DMChannel);
@@ -102,7 +102,7 @@ export function createChannel(client: any, data: any, guild: any, { allowUnknown
  * @returns {GuildForumTag}
  * @ignore
  */
-export function transformAPIGuildForumTag(tag: any) {
+export function transformAPIGuildForumTag(tag: APIGuildForumTag) {
 	return {
 		id: tag.id,
 		name: tag.name,
@@ -124,7 +124,7 @@ export function transformAPIGuildForumTag(tag: any) {
  * @returns {APIGuildForumTag}
  * @ignore
  */
-export function transformGuildForumTag(tag: any) {
+export function transformGuildForumTag(tag: any): APIGuildForumTag {
 	return {
 		id: tag.id,
 		name: tag.name,
@@ -142,7 +142,7 @@ export function transformGuildForumTag(tag: any) {
  * @returns {DefaultReactionEmoji}
  * @ignore
  */
-export function transformAPIGuildDefaultReaction(defaultReaction: any) {
+export function transformAPIGuildDefaultReaction(defaultReaction: APIGuildForumDefaultReactionEmoji) {
 	return {
 		id: defaultReaction.emoji_id,
 		name: defaultReaction.emoji_name,
@@ -157,7 +157,7 @@ export function transformAPIGuildDefaultReaction(defaultReaction: any) {
  * @returns {APIGuildForumDefaultReactionEmoji}
  * @ignore
  */
-export function transformGuildDefaultReaction(defaultReaction: any) {
+export function transformGuildDefaultReaction(defaultReaction: any): APIGuildForumDefaultReactionEmoji {
 	return {
 		emoji_id: defaultReaction.id,
 		emoji_name: defaultReaction.name,

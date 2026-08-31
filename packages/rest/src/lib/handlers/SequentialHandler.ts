@@ -140,7 +140,7 @@ export class SequentialHandler implements IHandler {
 		let queueType = QueueType.Standard;
 		// Separate sublimited requests when already sublimited
 		if (this.#sublimitedQueue && hasSublimit(routeId.bucketRoute, requestData.body, options.method)) {
-			queue = this.#sublimitedQueue!;
+			queue = this.#sublimitedQueue;
 			queueType = QueueType.Sublimit;
 		}
 
@@ -153,7 +153,7 @@ export class SequentialHandler implements IHandler {
 				 * Remove the request from the standard queue, it should never be possible to get here while processing the
 				 * sublimit queue so there is no need to worry about shifting the wrong request
 				 */
-				queue = this.#sublimitedQueue!;
+				queue = this.#sublimitedQueue;
 				const wait = queue.wait();
 				this.#asyncQueue.shift();
 				await wait;
@@ -403,9 +403,8 @@ export class SequentialHandler implements IHandler {
 				this.#sublimitPromise?.resolve();
 				this.#sublimitPromise = null;
 				await sleep(sublimitTimeout);
-				let resolve: () => void;
-				const promise = new Promise<void>((res) => (resolve = res));
-				this.#sublimitPromise = { promise, resolve: resolve! };
+				const { promise, resolve } = Promise.withResolvers<void>();
+				this.#sublimitPromise = { promise, resolve };
 				if (firstSublimit) {
 					// Re-queue this request so it can be shifted by the finally
 					await this.#asyncQueue.wait();

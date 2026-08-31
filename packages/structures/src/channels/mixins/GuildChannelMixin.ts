@@ -21,7 +21,7 @@ export class GuildChannelMixinImpl<_Type extends GuildChannelType = GuildChannel
 	 * THe id of the guild this channel is in.
 	 */
 	public get guildId() {
-		return (this as any)[kData].guild_id!;
+		return (this as any)[kData].guild_id;
 	}
 
 	/**

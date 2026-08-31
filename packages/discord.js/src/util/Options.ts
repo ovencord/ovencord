@@ -63,9 +63,19 @@ import { toSnakeCase } from './Transformers.js';
  * <info>This property is optional when the key is `invites`, `messages`, or `threads` and `lifetime` is set</info>
  */
 
-/**
- * Contains various utilities for client options.
- */
+import type { Partials } from './Partials.js';
+
+export interface CacheFactoryParams {
+	// biome-ignore lint/suspicious/noExplicitAny: constructor types for dynamic manager lookup
+	holds: any;
+	// biome-ignore lint/suspicious/noExplicitAny: constructor types for dynamic manager lookup
+	manager: any;
+	// biome-ignore lint/suspicious/noExplicitAny: constructor types for dynamic manager lookup
+	managerType: any;
+}
+
+export type CacheFactory = (params: CacheFactoryParams) => Collection<any, any>;
+
 export class Options extends null {
 	/**
 	 * The default user agent appendix.
@@ -87,7 +97,7 @@ export class Options extends null {
 			waitGuildTimeout: 15_000,
 			presence: {},
 			makeCache: Options.cacheWithLimits(Options.DefaultMakeCacheSettings),
-			partials: [] as any[],
+			partials: [] as Partials[],
 			failIfNotExists: true,
 			enforceNonce: false,
 			sweepers: Options.DefaultSweeperSettings,
@@ -122,9 +132,9 @@ export class Options extends null {
 	 *    },
 	 *  });
 	 */
-	static cacheWithLimits(settings = {}) {
-		return ({ managerType, manager }: any) => {
-			const setting = (settings as any)[manager.name] ?? (settings as any)[managerType.name];
+	static cacheWithLimits(settings: Record<string, any> = {}): CacheFactory {
+		return ({ managerType, manager }: CacheFactoryParams) => {
+			const setting = settings[manager.name] ?? settings[managerType.name];
 			if (setting == null) {
 				return new Collection();
 			}

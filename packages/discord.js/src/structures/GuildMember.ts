@@ -195,7 +195,7 @@ export class GuildMember extends Base {
 	 * @readonly
 	 */
 	get voice() {
-		return this.guild.voiceStates.cache.get(this.id) ?? new VoiceState(this.guild, { user_id: this.id });
+		return this.guild.voiceStates.cache.get(this.id) ?? new VoiceState(this.guild, { user_id: this.id } as any);
 	}
 
 	/**

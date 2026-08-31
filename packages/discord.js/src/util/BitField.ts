@@ -1,5 +1,17 @@
 import { DiscordjsRangeError, ErrorCodes } from '../errors/index.js';
 
+export type RecursiveArray<T> = ReadonlyArray<RecursiveArray<T> | T>;
+
+export type BitFieldResolvable<T extends string, N extends number | bigint> =
+	| RecursiveArray<T | N | `${bigint}` | Readonly<BitField> | null | undefined | boolean>
+	| T
+	| N
+	| `${bigint}`
+	| Readonly<BitField>
+	| null
+	| undefined
+	| boolean;
+
 /**
  * Data structure that makes it easy to interact with a bitfield.
  */
@@ -7,6 +19,7 @@ export class BitField {
 	/**
 	 * Numeric bitfield flags.
 	 */
+	// biome-ignore lint/suspicious/noExplicitAny: flags dictionary is dynamically populated by subclass implementations
 	static Flags: Record<string, any> = {};
 
 	/**
@@ -20,51 +33,60 @@ export class BitField {
 	public bitfield: number | bigint;
 
 	/**
-	 * @param {any} [bits] Bit(s) to read from
+	 * @param {BitFieldResolvable} [bits] Bit(s) to read from
 	 */
-	constructor(bits: any = (BitField as any).DefaultBit) {
-		this.bitfield = (this.constructor as any).resolve(bits);
+	constructor(
+		bits: BitFieldResolvable<string, number | bigint> = (BitField as unknown as { DefaultBit: number | bigint })
+			.DefaultBit,
+	) {
+		this.bitfield = (this.constructor as typeof BitField).resolve(bits);
 	}
 
 	/**
 	 * Checks whether the bitfield has a bit, or any of multiple bits.
 	 *
-	 * @param {any} bit Bit(s) to check for
+	 * @param {BitFieldResolvable} bit Bit(s) to check for
 	 * @returns {boolean}
 	 */
-	any(bit: any): boolean {
-		return ((this.bitfield as any) & (this.constructor as any).resolve(bit)) !== (this.constructor as any).DefaultBit;
+	any(bit: BitFieldResolvable<string, number | bigint>): boolean {
+		// biome-ignore lint/suspicious/noExplicitAny: bitwise operations on number | bigint
+		return (
+			((this.bitfield as any) & ((this.constructor as typeof BitField).resolve(bit) as any)) !==
+			(this.constructor as typeof BitField).DefaultBit
+		);
 	}
 
 	/**
 	 * Checks if this bitfield equals another
 	 *
-	 * @param {any} bit Bit(s) to check for
+	 * @param {BitFieldResolvable} bit Bit(s) to check for
 	 * @returns {boolean}
 	 */
-	equals(bit: any): boolean {
-		return this.bitfield === (this.constructor as any).resolve(bit);
+	equals(bit: BitFieldResolvable<string, number | bigint>): boolean {
+		return this.bitfield === (this.constructor as typeof BitField).resolve(bit);
 	}
 
 	/**
 	 * Checks whether the bitfield has a bit, or multiple bits.
 	 *
-	 * @param {any} bit Bit(s) to check for
+	 * @param {BitFieldResolvable} bit Bit(s) to check for
 	 * @returns {boolean}
 	 */
-	has(bit: any): boolean {
-		const resolvedBit = (this.constructor as any).resolve(bit);
-		return ((this.bitfield as any) & resolvedBit) === resolvedBit;
+	has(bit: BitFieldResolvable<string, number | bigint>): boolean {
+		const resolvedBit = (this.constructor as typeof BitField).resolve(bit);
+		// biome-ignore lint/suspicious/noExplicitAny: bitwise operations on number | bigint
+		return ((this.bitfield as any) & (resolvedBit as any)) === resolvedBit;
 	}
 
 	/**
 	 * Gets all given bits that are missing from the bitfield.
 	 *
-	 * @param {any} bits Bit(s) to check for
-	 * @param {...any} hasParams Additional parameters for the has method, if any
+	 * @param {BitFieldResolvable} bits Bit(s) to check for
+	 * @param {...unknown} hasParams Additional parameters for the has method, if any
 	 * @returns {string[]}
 	 */
-	missing(bits: any, ...hasParams: any[]): string[] {
+	missing(bits: BitFieldResolvable<string, number | bigint>, ...hasParams: unknown[]): string[] {
+		// biome-ignore lint/suspicious/noExplicitAny: constructor dynamic invocation
 		return new (this.constructor as any)(bits).remove(this).toArray(...hasParams);
 	}
 
@@ -80,16 +102,22 @@ export class BitField {
 	/**
 	 * Adds bits to these ones.
 	 *
-	 * @param {...any} bits Bits to add
+	 * @param {...BitFieldResolvable} bits Bits to add
 	 * @returns {BitField} These bits or new BitField if the instance is frozen.
 	 */
-	add(...bits: any[]): this {
-		let total: any = (this.constructor as any).DefaultBit;
+	add(...bits: BitFieldResolvable<string, number | bigint>[]): this {
+		// biome-ignore lint/suspicious/noExplicitAny: bitwise operations on number | bigint
+		let total: any = (this.constructor as typeof BitField).DefaultBit;
 		for (const bit of bits) {
-			total |= (this.constructor as any).resolve(bit);
+			// biome-ignore lint/suspicious/noExplicitAny: bitwise operations on number | bigint
+			total |= (this.constructor as typeof BitField).resolve(bit) as any;
 		}
 
-		if (Object.isFrozen(this)) return new (this.constructor as any)((this.bitfield as any) | total);
+		if (Object.isFrozen(this)) {
+			// biome-ignore lint/suspicious/noExplicitAny: constructor dynamic invocation
+			return new (this.constructor as any)((this.bitfield as any) | total);
+		}
+		// biome-ignore lint/suspicious/noExplicitAny: bitwise operations on number | bigint
 		(this.bitfield as any) |= total;
 		return this;
 	}
@@ -97,16 +125,22 @@ export class BitField {
 	/**
 	 * Removes bits from these.
 	 *
-	 * @param {...any} bits Bits to remove
+	 * @param {...BitFieldResolvable} bits Bits to remove
 	 * @returns {BitField} These bits or new BitField if the instance is frozen.
 	 */
-	remove(...bits: any[]): this {
-		let total: any = (this.constructor as any).DefaultBit;
+	remove(...bits: BitFieldResolvable<string, number | bigint>[]): this {
+		// biome-ignore lint/suspicious/noExplicitAny: bitwise operations on number | bigint
+		let total: any = (this.constructor as typeof BitField).DefaultBit;
 		for (const bit of bits) {
-			total |= (this.constructor as any).resolve(bit);
+			// biome-ignore lint/suspicious/noExplicitAny: bitwise operations on number | bigint
+			total |= (this.constructor as typeof BitField).resolve(bit) as any;
 		}
 
-		if (Object.isFrozen(this)) return new (this.constructor as any)((this.bitfield as any) & ~total);
+		if (Object.isFrozen(this)) {
+			// biome-ignore lint/suspicious/noExplicitAny: constructor dynamic invocation
+			return new (this.constructor as any)((this.bitfield as any) & ~total);
+		}
+		// biome-ignore lint/suspicious/noExplicitAny: bitwise operations on number | bigint
 		(this.bitfield as any) &= ~total;
 		return this;
 	}
@@ -115,12 +149,12 @@ export class BitField {
 	 * Gets an object mapping field names to a {@link boolean} indicating whether the
 	 * bit is available.
 	 *
-	 * @param {...any} hasParams Additional parameters for the has method, if any
+	 * @param {...unknown} _hasParams Additional parameters for the has method, if any
 	 * @returns {Object}
 	 */
-	serialize(..._hasParams: any[]): Record<string, boolean> {
+	serialize(..._hasParams: unknown[]): Record<string, boolean> {
 		const serialized: Record<string, boolean> = {};
-		for (const [flag, bit] of Object.entries((this.constructor as any).Flags)) {
+		for (const [flag, bit] of Object.entries((this.constructor as typeof BitField).Flags)) {
 			if (Number.isNaN(Number(flag))) serialized[flag] = this.has(bit);
 		}
 
@@ -130,10 +164,10 @@ export class BitField {
 	/**
 	 * Gets an {@link Array} of bitfield names based on the bits available.
 	 *
-	 * @param {...any} hasParams Additional parameters for the has method, if any
+	 * @param {...unknown} hasParams Additional parameters for the has method, if any
 	 * @returns {string[]}
 	 */
-	toArray(...hasParams: any[]): string[] {
+	toArray(...hasParams: unknown[]): string[] {
 		return [...this[Symbol.iterator](...hasParams)];
 	}
 
@@ -145,8 +179,8 @@ export class BitField {
 		return this.bitfield;
 	}
 
-	*[Symbol.iterator](..._hasParams: any[]): Generator<string> {
-		for (const bitName of Object.keys((this.constructor as any).Flags)) {
+	*[Symbol.iterator](..._hasParams: unknown[]): Generator<string> {
+		for (const bitName of Object.keys((this.constructor as typeof BitField).Flags)) {
 			if (Number.isNaN(Number(bitName)) && this.has(bitName)) yield bitName;
 		}
 	}
@@ -154,11 +188,11 @@ export class BitField {
 	/**
 	 * Resolves bitfields to their numeric form.
 	 *
-	 * @param {any} [bit] bit(s) to resolve
+	 * @param {BitFieldResolvable} [bit] bit(s) to resolve
 	 * @returns {number|bigint}
 	 */
-	static resolve(bit: any): number | bigint {
-		const { DefaultBit } = BitField as any;
+	static resolve(bit?: BitFieldResolvable<string, number | bigint>): number | bigint {
+		const { DefaultBit } = BitField as unknown as { DefaultBit: number | bigint };
 		if (typeof bit === 'number' || typeof bit === 'bigint') {
 			if (bit >= (typeof bit === 'bigint' ? 0n : 0)) {
 				return typeof DefaultBit === 'bigint' ? BigInt(bit) : Number(bit);
@@ -166,9 +200,12 @@ export class BitField {
 		}
 		if (bit instanceof BitField) return bit.bitfield;
 		if (Array.isArray(bit)) {
-			return bit
-				.map((bit_) => (BitField as any).resolve(bit_))
-				.reduce((prev, bit_) => (prev as any) | (bit_ as any), DefaultBit);
+			return (
+				bit
+					.map((bit_) => (BitField as typeof BitField).resolve(bit_))
+					// biome-ignore lint/suspicious/noExplicitAny: bitwise operations on number | bigint
+					.reduce((prev, bit_) => (prev as any) | (bit_ as any), DefaultBit)
+			);
 		}
 
 		if (typeof bit === 'string') {

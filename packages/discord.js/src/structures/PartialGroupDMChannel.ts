@@ -1,3 +1,4 @@
+import type { APIGroupDMChannel, Snowflake } from 'discord-api-types/v10';
 import { DiscordjsError, ErrorCodes } from '../errors/index.js';
 import { PartialGroupDMMessageManager } from '../managers/PartialGroupDMMessageManager.js';
 import { BaseChannel } from './BaseChannel.js';
@@ -11,15 +12,15 @@ import { TextBasedChannel } from './interfaces/TextBasedChannel.js';
  */
 export class PartialGroupDMChannel extends BaseChannel {
 	public flags: any;
-	public name: any;
-	public icon: any;
-	public recipients: any;
-	public messages: any;
-	public ownerId: any;
-	public lastMessageId: any;
-	public lastPinTimestamp: any;
-	constructor(client: any, data: any) {
-		super(client, data);
+	public name: string | null;
+	public icon: string | null;
+	public recipients: Array<{ username: string }>;
+	public messages: PartialGroupDMMessageManager;
+	public ownerId: Snowflake | null;
+	public lastMessageId: Snowflake | null;
+	public lastPinTimestamp: number | null;
+	constructor(client: any, data: Partial<APIGroupDMChannel> & { recipients?: Array<{ username: string }> }) {
+		super(client, data as any);
 
 		// No flags are present when fetching partial group DM channels.
 		this.flags = null;

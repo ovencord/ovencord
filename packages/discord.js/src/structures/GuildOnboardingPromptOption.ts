@@ -1,4 +1,5 @@
 import { Collection } from '@ovencord/collection';
+import type { APIGuildOnboardingPromptOption, APIPartialEmoji, Snowflake } from 'discord-api-types/v10';
 import { Base } from './Base.js';
 import { Emoji } from './Emoji.js';
 
@@ -8,14 +9,14 @@ import { Emoji } from './Emoji.js';
  * @extends {Base}
  */
 export class GuildOnboardingPromptOption extends Base {
-	public guildId: any;
-	public id: any;
-	public channels: any;
-	public roles: any;
-	public _emoji: any;
-	public title: any;
-	public description: any;
-	constructor(client: any, data: any, guildId: any) {
+	public guildId: Snowflake;
+	public id: Snowflake;
+	public channels: Collection<Snowflake, any>;
+	public roles: Collection<Snowflake, any>;
+	public _emoji: APIPartialEmoji;
+	public title: string;
+	public description: string | null;
+	constructor(client: any, data: APIGuildOnboardingPromptOption, guildId: Snowflake) {
 		super(client);
 
 		/**
@@ -40,8 +41,9 @@ export class GuildOnboardingPromptOption extends Base {
 		 * @type {Collection<Snowflake, GuildChannel>}
 		 */
 		this.channels = data.channel_ids.reduce(
-			(channels: any, channelId: any) => channels.set(channelId, guild.channels.cache.get(channelId)),
-			new Collection(),
+			(channels: Collection<Snowflake, any>, channelId) =>
+				channels.set(channelId, guild?.channels?.cache?.get(channelId)),
+			new Collection<Snowflake, any>(),
 		);
 
 		/**
@@ -50,8 +52,8 @@ export class GuildOnboardingPromptOption extends Base {
 		 * @type {Collection<Snowflake, Role>}
 		 */
 		this.roles = data.role_ids.reduce(
-			(roles: any, roleId: any) => roles.set(roleId, guild.roles.cache.get(roleId)),
-			new Collection(),
+			(roles: Collection<Snowflake, any>, roleId) => roles.set(roleId, guild?.roles?.cache?.get(roleId)),
+			new Collection<Snowflake, any>(),
 		);
 
 		/**
@@ -93,7 +95,9 @@ export class GuildOnboardingPromptOption extends Base {
 	 * @type {?(GuildEmoji|Emoji)}
 	 */
 	get emoji() {
-		if (!this._emoji.id && !this._emoji.name) return null;
-		return this.guild.emojis.cache.get(this._emoji.id) ?? new Emoji(this.client, this._emoji);
+		if (!this._emoji?.id && !this._emoji?.name) return null;
+		return (
+			(this._emoji.id ? this.guild?.emojis?.cache?.get(this._emoji.id) : null) ?? new Emoji(this.client, this._emoji)
+		);
 	}
 }

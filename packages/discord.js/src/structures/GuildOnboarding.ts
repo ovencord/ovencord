@@ -1,4 +1,5 @@
 import { Collection } from '@ovencord/collection';
+import type { APIGuildOnboarding, GuildOnboardingMode, Snowflake } from 'discord-api-types/v10';
 import { Base } from './Base.js';
 import { GuildOnboardingPrompt } from './GuildOnboardingPrompt.js';
 
@@ -8,12 +9,12 @@ import { GuildOnboardingPrompt } from './GuildOnboardingPrompt.js';
  * @extends {Base}
  */
 export class GuildOnboarding extends Base {
-	public guildId: any;
-	public prompts: any;
-	public defaultChannels: any;
-	public enabled: any;
-	public mode: any;
-	constructor(client: any, data: any) {
+	public guildId: Snowflake;
+	public prompts: Collection<Snowflake, GuildOnboardingPrompt>;
+	public defaultChannels: Collection<Snowflake, any>;
+	public enabled: boolean;
+	public mode: GuildOnboardingMode;
+	constructor(client: any, data: APIGuildOnboarding) {
 		super(client);
 
 		/**
@@ -31,8 +32,9 @@ export class GuildOnboarding extends Base {
 		 * @type {Collection<Snowflake, GuildOnboardingPrompt>}
 		 */
 		this.prompts = data.prompts.reduce(
-			(prompts: any, prompt: any) => prompts.set(prompt.id, new GuildOnboardingPrompt(client, prompt, this.guildId)),
-			new Collection(),
+			(prompts: Collection<Snowflake, GuildOnboardingPrompt>, prompt) =>
+				prompts.set(prompt.id, new GuildOnboardingPrompt(client, prompt, this.guildId)),
+			new Collection<Snowflake, GuildOnboardingPrompt>(),
 		);
 
 		/**
@@ -41,8 +43,9 @@ export class GuildOnboarding extends Base {
 		 * @type {Collection<Snowflake, GuildChannel>}
 		 */
 		this.defaultChannels = data.default_channel_ids.reduce(
-			(channels: any, channelId: any) => channels.set(channelId, guild.channels.cache.get(channelId)),
-			new Collection(),
+			(channels: Collection<Snowflake, any>, channelId) =>
+				channels.set(channelId, guild?.channels?.cache?.get(channelId)),
+			new Collection<Snowflake, any>(),
 		);
 
 		/**
