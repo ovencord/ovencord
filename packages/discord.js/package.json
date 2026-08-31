@@ -38,7 +38,7 @@
 	"homepage": "https://ovencord.dev",
 	"funding": "https://github.com/ovencord/ovencord?sponsor",
 	"dependencies": {
-		"discord-api-types": "^0.38.40",
+		"discord-api-types": "^0.38.54",
 		"@ovencord/builders": "^1.13.2",
 		"@ovencord/collection": "^2.1.4",
 		"@ovencord/formatters": "^0.6.4",

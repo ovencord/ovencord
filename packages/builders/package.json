@@ -40,7 +40,7 @@
 	"homepage": "https://ovencord.dev",
 	"funding": "https://github.com/ovencord/ovencord?sponsor",
 	"dependencies": {
-		"discord-api-types": "^0.38.40",
+		"discord-api-types": "^0.38.54",
 		"ts-mixer": "^6.0.4",
 		"zod": "^4.3.6",
 		"@ovencord/util": "^1.10.0"

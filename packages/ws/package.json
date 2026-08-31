@@ -38,7 +38,7 @@
 	"dependencies": {
 		"@ovencord/collection": "^2.1.4",
 		"@ovencord/util": "^1.10.0",
-		"discord-api-types": "^0.38.40"
+		"discord-api-types": "^0.38.54"
 	},
 	"devDependencies": {},
 	"engines": {

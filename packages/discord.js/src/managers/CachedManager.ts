@@ -53,7 +53,7 @@ export abstract class CachedManager<K = any, Holds = any, R = any> extends DataM
 			id = data;
 		}
 
-		let existing = this._cache?.get(id);
+		const existing = this._cache?.get(id);
 
 		if (existing && !(args[0] === false || (extraOptions && extraOptions.cache === false))) {
 			if (typeof (existing as any)._patch === 'function') {

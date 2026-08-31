@@ -56,7 +56,7 @@
 	"devDependencies": {
 		"@biomejs/biome": "latest",
 		"@types/bun": "latest",
-		"discord-api-types": "^0.38.40",
+		"discord-api-types": "^0.38.54",
 		"typescript": "^5.9.3"
 	},
 	"engines": {

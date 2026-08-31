@@ -17,7 +17,7 @@ export { ChannelFlagsBitField } from './util/ChannelFlagsBitField.js';
 export { Colors } from './util/Colors.js';
 
 import * as Constants from './util/Constants.js';
-export { Constants };
+
 export { Events } from './util/Events.js';
 export { GuildMemberFlagsBitField } from './util/GuildMemberFlagsBitField.js';
 export { IntentsBitField } from './util/IntentsBitField.js';
@@ -30,9 +30,10 @@ export { PermissionsBitField } from './util/PermissionsBitField.js';
 export { RoleFlagsBitField } from './util/RoleFlagsBitField.js';
 export { ShardEvents } from './util/ShardEvents.js';
 export { SKUFlagsBitField } from './util/SKUFlagsBitField.js';
+export { Constants };
 
 import { DiscordSnowflake as SnowflakeUtil } from '@ovencord/util';
-export { SnowflakeUtil };
+
 export type { ApplicationCommandOptionAllowedChannelType } from '@ovencord/builders';
 export * from '@ovencord/builders';
 export {
@@ -247,3 +248,4 @@ export {
 	resolveSKUId,
 	verifyString,
 } from './util/Util.js';
+export { SnowflakeUtil };
