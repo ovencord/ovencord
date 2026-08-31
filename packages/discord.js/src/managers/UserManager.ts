@@ -7,6 +7,11 @@ import { ThreadMember } from '../structures/ThreadMember.js';
 import { User } from '../structures/User.js';
 import { CachedManager } from './CachedManager.js';
 
+export interface BaseFetchOptions {
+	cache?: boolean;
+	force?: boolean;
+}
+
 /**
  * Data that resolves to give a User object. This can be:
  * - A User object

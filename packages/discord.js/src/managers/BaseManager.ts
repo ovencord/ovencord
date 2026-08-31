@@ -1,5 +1,10 @@
 import type { Client } from '../client/Client.js';
 
+export interface BaseFetchOptions {
+	cache?: boolean;
+	force?: boolean;
+}
+
 /**
  * Manages the API methods of a data model.
  *

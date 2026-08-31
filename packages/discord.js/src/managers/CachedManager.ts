@@ -9,9 +9,9 @@ import { DataManager } from './DataManager.js';
  * @extends {DataManager}
  * @abstract
  */
-export abstract class CachedManager extends DataManager {
-	public _cache: Collection<any, any>;
-	public holds: any;
+export abstract class CachedManager<K = any, Holds = any, R = any> extends DataManager<K, Holds, R> {
+	public _cache: Collection<K, Holds>;
+	public override holds: any;
 
 	constructor(client: Client, holds: any, iterable?: Iterable<any>) {
 		super(client, holds);
@@ -33,31 +33,41 @@ export abstract class CachedManager extends DataManager {
 		}
 	}
 
-	override get cache(): Collection<any, any> {
+	override get cache(): Collection<K, Holds> {
 		return this._cache;
 	}
 
-	_add(data: any, ...args: unknown[]): any {
+	_add(data: any, ...args: unknown[]): Holds {
 		const cache = args[0];
 		const options = args[1] as { id?: any; extras?: any[] } | undefined;
 
 		const isCache = typeof cache === 'boolean' ? cache : true;
 		const extraOptions = typeof cache === 'object' ? (cache as any) : (options ?? {});
 
-		const existing = this.cache.get(extraOptions.id ?? data.id);
-		if (existing) {
-			if (isCache) {
-				if (typeof (existing as any)._patch === 'function') (existing as any)._patch(data);
-				return existing;
-			}
+		let id: any;
+		if (extraOptions.id) {
+			id = extraOptions.id;
+		} else if (data && typeof data === 'object') {
+			id = data.id ?? data;
+		} else {
+			id = data;
+		}
 
-			const clone = typeof (existing as any)._clone === 'function' ? (existing as any)._clone() : existing;
-			if (typeof (clone as any)._patch === 'function') (clone as any)._patch(data);
-			return clone;
+		let existing = this._cache?.get(id);
+
+		if (existing && !(args[0] === false || (extraOptions && extraOptions.cache === false))) {
+			if (typeof existing._patch === 'function') {
+				existing._patch(data);
+			}
+			return existing;
 		}
 
 		const entry = this.holds ? new this.holds(this.client, data, ...(extraOptions.extras ?? [])) : data;
-		if (isCache) this.cache.set(extraOptions.id ?? entry.id, entry);
+
+		if (isCache && this._cache && id) {
+			this._cache.set(id, entry);
+		}
+
 		return entry;
 	}
 }

@@ -8,10 +8,10 @@ import { BaseManager } from './BaseManager.js';
  * @extends {BaseManager}
  * @abstract
  */
-export abstract class DataManager extends BaseManager {
-	public holds: { new (...args: any[]): any };
+export abstract class DataManager<K = any, Holds = any, _R = any> extends BaseManager {
+	public holds: { new (...args: any[]): Holds };
 
-	constructor(client: Client, holds: { new (...args: any[]): any }) {
+	constructor(client: Client, holds: { new (...args: any[]): Holds }) {
 		super(client);
 		this.holds = holds;
 	}
@@ -20,15 +20,15 @@ export abstract class DataManager extends BaseManager {
 		throw new DiscordjsError(ErrorCodes.NotImplemented, 'get cache', this.constructor.name);
 	}
 
-	resolve(idOrInstance: unknown): any {
+	resolve(idOrInstance: unknown): Holds | null {
 		if (idOrInstance instanceof this.holds) return idOrInstance;
-		if (typeof idOrInstance === 'string') return (this.cache as any).get(idOrInstance) ?? null;
+		if (typeof idOrInstance === 'string') return ((this.cache as any)?.get(idOrInstance) as Holds) ?? null;
 		return null;
 	}
 
-	resolveId(idOrInstance: unknown): string | null {
+	resolveId(idOrInstance: unknown): K | null {
 		if (idOrInstance instanceof this.holds) return (idOrInstance as any).id;
-		if (typeof idOrInstance === 'string') return idOrInstance;
+		if (typeof idOrInstance === 'string') return idOrInstance as unknown as K;
 		return null;
 	}
 
