@@ -1,5 +1,5 @@
 import { ChannelType, type GatewayVoiceState, Routes, type Snowflake } from 'discord-api-types/v10';
-import { DiscordjsError, DiscordjsTypeError, ErrorCodes } from '../errors/index.js';
+import { DiscordjsError, ErrorCodes } from '../errors/index.js';
 import { Base } from './Base.js';
 import type { Guild } from './Guild.js';
 

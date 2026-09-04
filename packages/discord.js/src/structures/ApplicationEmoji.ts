@@ -1,4 +1,4 @@
-import type { APIEmoji, Snowflake } from 'discord-api-types/v10';
+import type { APIEmoji } from 'discord-api-types/v10';
 import type { Client } from '../client/Client.js';
 import type { ClientApplication } from './ClientApplication.js';
 import { Emoji } from './Emoji.js';

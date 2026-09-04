@@ -1,9 +1,5 @@
 import { isJSONEncodable } from '@ovencord/util';
-import type {
-	APIAutoModerationAction,
-	APIGuildScheduledEventRecurrenceRule,
-	APIMessageInteractionMetadata,
-} from 'discord-api-types/v10';
+import type { APIAutoModerationAction, APIMessageInteractionMetadata } from 'discord-api-types/v10';
 import type { Client } from '../client/Client.js';
 import { AuthorizingIntegrationOwners } from '../structures/AuthorizingIntegrationOwners.js';
 

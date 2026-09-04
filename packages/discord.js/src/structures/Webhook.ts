@@ -1,7 +1,6 @@
 import { makeURLSearchParams } from '@ovencord/rest';
 import { DiscordSnowflake, lazy } from '@ovencord/util';
 import {
-	type APIEmbed,
 	type APIInteractionResponseCallbackData,
 	type APIWebhook,
 	type MessageFlags,

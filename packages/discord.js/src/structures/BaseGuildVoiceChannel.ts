@@ -12,7 +12,6 @@ import { GuildMessageManager } from '../managers/GuildMessageManager.js';
 import type { Guild } from './Guild.js';
 import { GuildChannel } from './GuildChannel.js';
 import { TextBasedChannel } from './interfaces/TextBasedChannel.js';
-import type { User } from './User.js';
 
 /**
  * Represents a voice-based guild channel on Discord.

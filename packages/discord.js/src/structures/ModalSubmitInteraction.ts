@@ -1,12 +1,11 @@
 import { Collection } from '@ovencord/collection';
 import { lazy } from '@ovencord/util';
 
-import {
-	type APIInteractionDataResolved,
-	type APIModalSubmission,
-	type APIModalSubmitInteraction,
-	ComponentType,
-	type Snowflake,
+import type {
+	APIInteractionDataResolved,
+	APIModalSubmission,
+	APIModalSubmitInteraction,
+	Snowflake,
 } from 'discord-api-types/v10';
 
 import type { Client } from '../client/Client.js';

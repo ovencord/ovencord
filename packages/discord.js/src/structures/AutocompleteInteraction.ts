@@ -1,6 +1,5 @@
 import {
 	type APIApplicationCommandAutocompleteInteraction,
-	type APIApplicationCommandOptionChoice,
 	type ApplicationCommandType,
 	InteractionResponseType,
 	type LocalizationMap,

@@ -1,4 +1,4 @@
-import type { APISelectMenuComponent, APISelectMenuOption } from 'discord-api-types/v10';
+import type { APISelectMenuComponent } from 'discord-api-types/v10';
 import { Component } from './Component.js';
 
 /**

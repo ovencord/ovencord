@@ -1,7 +1,7 @@
 import type { ChannelType } from 'discord-api-types/v10';
 import { kData } from '../../utils/symbols.js';
 import type { Channel } from '../Channel.js';
-import { TextChannelMixin, TextChannelMixinImpl } from './TextChannelMixin.js';
+import { TextChannelMixinImpl } from './TextChannelMixin.js';
 
 export interface VoiceChannelMixin<
 	Type extends ChannelType.GuildStageVoice | ChannelType.GuildVoice =

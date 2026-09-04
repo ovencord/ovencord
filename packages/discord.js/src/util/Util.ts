@@ -12,7 +12,6 @@ import {
 import type { Client } from '../client/Client.js';
 import { DiscordjsError, DiscordjsRangeError, DiscordjsTypeError, ErrorCodes } from '../errors/index.js';
 import type { BaseChannel } from '../structures/BaseChannel.js';
-import type { Role } from '../structures/Role.js';
 import { Colors } from './Colors.js';
 
 // Fixes circular dependencies.
@@ -314,7 +313,10 @@ export async function setPosition<T extends { id: Snowflake }>(
 	const updatedItemsList = [...sorted.values()];
 	moveElementInArray(updatedItemsList, item, position, relative);
 	const updatedItems = updatedItemsList.map((innerItem, index) => ({ id: innerItem.id, position: index }));
-	await (client as { rest: { patch: Function } }).rest.patch(route, { body: updatedItems, reason });
+	await (client as { rest: { patch: (route: string, options?: unknown) => Promise<unknown> } }).rest.patch(route, {
+		body: updatedItems,
+		reason,
+	});
 	return updatedItems;
 }
 
@@ -421,14 +423,21 @@ export function transformResolved(
 		result.members = new Collection<Snowflake, any>();
 		for (const [id, member] of Object.entries(members)) {
 			const user = (users as Record<string, any> | undefined)?.[id];
-			result.members.set(id as Snowflake, (guild?.members as { _add: Function })?._add({ user, ...member }) ?? member);
+			result.members.set(
+				id as Snowflake,
+				(guild?.members as { _add: (data: unknown, ...args: unknown[]) => unknown })?._add({ user, ...member }) ??
+					member,
+			);
 		}
 	}
 
 	if (users) {
 		result.users = new Collection<Snowflake, any>();
 		for (const user of Object.values(users)) {
-			result.users.set(user.id as Snowflake, (client.users as { _add: Function })._add(user));
+			result.users.set(
+				user.id as Snowflake,
+				(client.users as { _add: (data: unknown, ...args: unknown[]) => unknown })._add(user),
+			);
 		}
 	}
 
@@ -437,7 +446,7 @@ export function transformResolved(
 		for (const role of Object.values(roles)) {
 			result.roles.set(
 				(role as { id: string }).id as Snowflake,
-				(guild?.roles as { _add: Function })?._add(role) ?? role,
+				(guild?.roles as { _add: (data: unknown, ...args: unknown[]) => unknown })?._add(role) ?? role,
 			);
 		}
 	}
@@ -447,7 +456,10 @@ export function transformResolved(
 		for (const apiChannel of Object.values(channels)) {
 			result.channels.set(
 				(apiChannel as { id: string }).id as Snowflake,
-				(client.channels as unknown as { unify: Function }).unify(apiChannel, guild) ?? apiChannel,
+				(client.channels as unknown as { unify: (data: unknown, guild?: unknown) => unknown }).unify(
+					apiChannel,
+					guild,
+				) ?? apiChannel,
 			);
 		}
 	}
@@ -457,7 +469,7 @@ export function transformResolved(
 		for (const message of Object.values(messages)) {
 			result.messages.set(
 				(message as { id: string }).id as Snowflake,
-				(channel?.messages as { _add: Function })?._add(message) ?? message,
+				(channel?.messages as { _add: (data: unknown, ...args: unknown[]) => unknown })?._add(message) ?? message,
 			);
 		}
 	}

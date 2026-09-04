@@ -1,4 +1,4 @@
-import type { EnumLike, NonAbstract, RecursiveReadonlyArray } from '../utils/types.js';
+import type { EnumLike, RecursiveReadonlyArray } from '../utils/types.js';
 
 // TODO: this currently is mostly copied from mainlib discord.js v14 and definitely needs a refactor in a later iteration
 

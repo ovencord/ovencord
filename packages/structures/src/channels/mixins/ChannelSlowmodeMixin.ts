@@ -1,7 +1,7 @@
 import type { GuildTextChannelType } from 'discord-api-types/v10';
 import { kData } from '../../utils/symbols.js';
 import type { Channel } from '../Channel.js';
-import { TextChannelMixin, TextChannelMixinImpl } from './TextChannelMixin.js';
+import { TextChannelMixinImpl } from './TextChannelMixin.js';
 
 export interface ChannelSlowmodeMixin<Type extends GuildTextChannelType> extends Channel<Type> {}
 

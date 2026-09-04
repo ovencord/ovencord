@@ -1,7 +1,7 @@
 import type { ChannelType, GuildChannelType } from 'discord-api-types/v10';
 import { kData } from '../../utils/symbols.js';
 import type { Channel } from '../Channel.js';
-import { GuildChannelMixin, GuildChannelMixinImpl } from './GuildChannelMixin.js';
+import { GuildChannelMixinImpl } from './GuildChannelMixin.js';
 
 export interface ChannelParentMixin<
 	Type extends Exclude<GuildChannelType, ChannelType.GuildCategory | ChannelType.GuildDirectory>,

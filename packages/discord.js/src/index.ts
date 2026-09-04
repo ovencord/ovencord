@@ -49,7 +49,6 @@ export * from '@ovencord/formatters';
 export * from '@ovencord/rest';
 export * from '@ovencord/util';
 export * from '@ovencord/ws';
-export type { ApplicationCommandOptionAllowedChannelType } from 'discord-api-types/v10';
 // External
 export * from 'discord-api-types/v10';
 export {

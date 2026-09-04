@@ -1,8 +1,6 @@
 import { DiscordSnowflake } from '@ovencord/util';
 import {
 	type APIGuildScheduledEvent,
-	type APIGuildScheduledEventEntityMetadata,
-	type APIGuildScheduledEventRecurrenceRule,
 	GuildScheduledEventEntityType,
 	type GuildScheduledEventPrivacyLevel,
 	GuildScheduledEventStatus,

@@ -8,7 +8,6 @@ import {
 	type APIGuildPreview,
 	type APIGuildWelcomeScreen,
 	type APIGuildWidgetSettings,
-	type APIInvite,
 	type APITemplate,
 	type APIWebhook,
 	ChannelType,
@@ -43,7 +42,7 @@ import { VoiceStateManager } from '../managers/VoiceStateManager.js';
 import { resolveImage } from '../util/DataResolver.js';
 import { SystemChannelFlagsBitField } from '../util/SystemChannelFlagsBitField.js';
 import { _transformAPIIncidentsData } from '../util/Transformers.js';
-import { discordSort, getSortableGroupTypes, type PartialEmoji, resolvePartialEmoji } from '../util/Util.js';
+import { discordSort, getSortableGroupTypes, resolvePartialEmoji } from '../util/Util.js';
 import { AnonymousGuild } from './AnonymousGuild.js';
 import { GuildAuditLogs } from './GuildAuditLogs.js';
 import { GuildOnboarding } from './GuildOnboarding.js';
