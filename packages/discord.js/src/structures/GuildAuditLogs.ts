@@ -1,10 +1,5 @@
 import { Collection } from '@ovencord/collection';
-import type {
-	APIAutoModerationRule,
-	APIGuildAuditLog,
-	APIGuildScheduledEvent,
-	Snowflake,
-} from 'discord-api-types/v10';
+import type { APIAutoModerationRule, APIGuildAuditLog, APIGuildScheduledEvent, Snowflake } from 'discord-api-types/v10';
 import { flatten } from '../util/Util.js';
 import { ApplicationCommand } from './ApplicationCommand.js';
 import type { AutoModerationRule } from './AutoModerationRule.js';
@@ -60,10 +55,8 @@ export class GuildAuditLogs {
 		 * @private
 		 */
 		this.guildScheduledEvents = data.guild_scheduled_events.reduce(
-			(
-				guildScheduledEvents: Collection<Snowflake, GuildScheduledEvent>,
-				guildScheduledEvent: APIGuildScheduledEvent,
-			) => guildScheduledEvents.set(guildScheduledEvent.id, guild.scheduledEvents._add(guildScheduledEvent)),
+			(guildScheduledEvents: Collection<Snowflake, GuildScheduledEvent>, guildScheduledEvent: APIGuildScheduledEvent) =>
+				guildScheduledEvents.set(guildScheduledEvent.id, guild.scheduledEvents._add(guildScheduledEvent)),
 			new Collection(),
 		);
 
