@@ -1,8 +1,10 @@
-import { Routes } from 'discord-api-types/v10';
+import { type APIReaction, Routes } from 'discord-api-types/v10';
+import type { Client } from '../client/Client.js';
 import { ReactionUserManager } from '../managers/ReactionUserManager.js';
 import { flatten, resolveGuildEmoji } from '../util/Util.js';
 import { ApplicationEmoji } from './ApplicationEmoji.js';
 import { GuildEmoji } from './GuildEmoji.js';
+import type { Message } from './Message.js';
 import { ReactionEmoji } from './ReactionEmoji.js';
 
 /**
@@ -18,7 +20,7 @@ export class MessageReaction {
 	public countDetails: any;
 	public count: any;
 	public client: any;
-	constructor(client: any, data: any, message: any) {
+	constructor(client: Client, data: APIReaction, message: Message) {
 		/**
 		 * The client that instantiated this message reaction
 		 *

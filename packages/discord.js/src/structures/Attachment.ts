@@ -1,3 +1,4 @@
+import type { APIAttachment } from 'discord-api-types/v10';
 import { AttachmentFlagsBitField } from '../util/AttachmentFlagsBitField.js';
 import { basename, flatten } from '../util/Util.js';
 
@@ -30,7 +31,7 @@ export class Attachment {
 	public name: any;
 	public description: any;
 	public title: any;
-	constructor(data: any) {
+	constructor(data: APIAttachment) {
 		this.attachment = data.url;
 		/**
 		 * The name of this attachment
@@ -41,7 +42,7 @@ export class Attachment {
 		this._patch(data);
 	}
 
-	_patch(data: any) {
+	_patch(data: Partial<APIAttachment>) {
 		/**
 		 * The attachment's id
 		 *

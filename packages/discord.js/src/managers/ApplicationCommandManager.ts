@@ -1,7 +1,7 @@
 import { Collection } from '@ovencord/collection';
 import { makeURLSearchParams } from '@ovencord/rest';
 import { isJSONEncodable } from '@ovencord/util';
-import { Routes } from 'discord-api-types/v10';
+import { type RESTPatchAPIApplicationCommandJSONBody, Routes, type Snowflake } from 'discord-api-types/v10';
 import { DiscordjsTypeError, ErrorCodes } from '../errors/index.js';
 import { ApplicationCommand } from '../structures/ApplicationCommand.js';
 import { PermissionsBitField } from '../util/PermissionsBitField.js';
@@ -231,7 +231,11 @@ export class ApplicationCommandManager extends CachedManager {
 	 *   .then(console.log)
 	 *   .catch(console.error);
 	 */
-	async edit(command: any, data: any, guildId: any) {
+	async edit(
+		command: ApplicationCommand | Snowflake | string,
+		data: RESTPatchAPIApplicationCommandJSONBody | Record<string, unknown>,
+		guildId?: Snowflake,
+	) {
 		const id = this.resolveId(command);
 		if (!id) throw new DiscordjsTypeError(ErrorCodes.InvalidType, 'command', 'ApplicationCommandResolvable');
 

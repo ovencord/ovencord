@@ -294,7 +294,7 @@ export class MessageMentions {
 	 * @returns {boolean}
 	 */
 	has(
-		data: any,
+		data: unknown,
 		{ ignoreDirect = false, ignoreRoles = false, ignoreRepliedUser = false, ignoreEveryone = false } = {},
 	) {
 		const user = this.client.users.resolve(data);

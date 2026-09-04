@@ -1,7 +1,16 @@
 import { Collection } from '@ovencord/collection';
+import type {
+	APIAutoModerationRule,
+	APIGuildAuditLog,
+	APIGuildScheduledEvent,
+	Snowflake,
+} from 'discord-api-types/v10';
 import { flatten } from '../util/Util.js';
 import { ApplicationCommand } from './ApplicationCommand.js';
+import type { AutoModerationRule } from './AutoModerationRule.js';
+import type { Guild } from './Guild.js';
 import { GuildAuditLogsEntry } from './GuildAuditLogsEntry.js';
+import type { GuildScheduledEvent } from './GuildScheduledEvent.js';
 import { Integration } from './Integration.js';
 import { Webhook } from './Webhook.js';
 
@@ -9,13 +18,13 @@ import { Webhook } from './Webhook.js';
  * Audit logs entries are held in this class.
  */
 export class GuildAuditLogs {
-	public webhooks: any;
-	public integrations: any;
-	public guildScheduledEvents: any;
-	public applicationCommands: any;
-	public autoModerationRules: any;
-	public entries: any;
-	constructor(guild: any, data: any) {
+	public webhooks: Collection<Snowflake, Webhook>;
+	public integrations: Collection<Snowflake | string, Integration>;
+	public guildScheduledEvents: Collection<Snowflake, GuildScheduledEvent>;
+	public applicationCommands: Collection<Snowflake, ApplicationCommand>;
+	public autoModerationRules: Collection<Snowflake, AutoModerationRule>;
+	public entries: Collection<Snowflake, GuildAuditLogsEntry>;
+	constructor(guild: Guild, data: APIGuildAuditLog) {
 		if (data.users) for (const user of data.users) guild.client.users._add(user);
 		if (data.threads) for (const thread of data.threads) guild.client.channels._add(thread, guild);
 		/**
@@ -51,8 +60,10 @@ export class GuildAuditLogs {
 		 * @private
 		 */
 		this.guildScheduledEvents = data.guild_scheduled_events.reduce(
-			(guildScheduledEvents: any, guildScheduledEvent: any) =>
-				guildScheduledEvents.set(guildScheduledEvent.id, guild.scheduledEvents._add(guildScheduledEvent)),
+			(
+				guildScheduledEvents: Collection<Snowflake, GuildScheduledEvent>,
+				guildScheduledEvent: APIGuildScheduledEvent,
+			) => guildScheduledEvents.set(guildScheduledEvent.id, guild.scheduledEvents._add(guildScheduledEvent)),
 			new Collection(),
 		);
 
@@ -76,7 +87,7 @@ export class GuildAuditLogs {
 		 * @private
 		 */
 		this.autoModerationRules = data.auto_moderation_rules.reduce(
-			(autoModerationRules: any, autoModerationRule: any) =>
+			(autoModerationRules: Collection<Snowflake, AutoModerationRule>, autoModerationRule: APIAutoModerationRule) =>
 				autoModerationRules.set(autoModerationRule.id, guild.autoModerationRules._add(autoModerationRule)),
 			new Collection(),
 		);

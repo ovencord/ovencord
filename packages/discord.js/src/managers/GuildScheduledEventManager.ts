@@ -1,6 +1,12 @@
 import { Collection } from '@ovencord/collection';
 import { makeURLSearchParams } from '@ovencord/rest';
-import { GuildScheduledEventEntityType, Routes } from 'discord-api-types/v10';
+import {
+	type APIGuildScheduledEvent,
+	type APIGuildScheduledEventUser,
+	GuildScheduledEventEntityType,
+	Routes,
+	type Snowflake,
+} from 'discord-api-types/v10';
 import { DiscordjsError, DiscordjsTypeError, ErrorCodes } from '../errors/index.js';
 import { GuildScheduledEvent } from '../structures/GuildScheduledEvent.js';
 import { resolveImage } from '../util/DataResolver.js';
@@ -185,7 +191,7 @@ export class GuildScheduledEventManager extends CachedManager {
 		});
 
 		return data.reduce(
-			(coll: any, rawGuildScheduledEventData: any) =>
+			(coll: Collection<Snowflake, GuildScheduledEvent>, rawGuildScheduledEventData: APIGuildScheduledEvent) =>
 				// @ts-expect-error
 				coll.set(rawGuildScheduledEventData.id, this._add(rawGuildScheduledEventData, options.cache)),
 			new Collection(),
@@ -328,7 +334,7 @@ export class GuildScheduledEventManager extends CachedManager {
 		});
 
 		return data.reduce(
-			(coll: any, rawData: any) =>
+			(coll: Collection<Snowflake, unknown>, rawData: APIGuildScheduledEventUser) =>
 				coll.set(rawData.user.id, {
 					guildScheduledEventId: rawData.guild_scheduled_event_id,
 					user: this.client.users._add(rawData.user),

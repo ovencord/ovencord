@@ -13,7 +13,7 @@ import { DiscordjsTypeError, ErrorCodes } from '../errors/index.js';
  * A resolver for modal submit components
  */
 export class ModalComponentResolver {
-	public data: any;
+	public data: unknown[];
 	public hoistedComponents: any;
 	constructor(client: any, components: any, resolved: any) {
 		/**

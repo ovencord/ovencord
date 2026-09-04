@@ -1,4 +1,5 @@
 import type { RESTPostAPIInteractionCallbackWithResponseResult } from 'discord-api-types/v10';
+import type { Client } from '../client/Client.js';
 import { InteractionCallback } from './InteractionCallback.js';
 import { InteractionCallbackResource } from './InteractionCallbackResource.js';
 
@@ -8,7 +9,7 @@ import { InteractionCallbackResource } from './InteractionCallbackResource.js';
 export class InteractionCallbackResponse {
 	public interaction: InteractionCallback;
 	public resource: InteractionCallbackResource | null;
-	constructor(client: any, data: RESTPostAPIInteractionCallbackWithResponseResult) {
+	constructor(client: Client, data: RESTPostAPIInteractionCallbackWithResponseResult) {
 		/**
 		 * The client that instantiated this
 		 *

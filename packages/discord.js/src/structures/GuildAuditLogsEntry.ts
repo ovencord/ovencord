@@ -1,14 +1,17 @@
 import { DiscordSnowflake } from '@ovencord/util';
-import { AuditLogEvent, AuditLogOptionsType } from 'discord-api-types/v10';
+import { type APIAuditLogEntry, AuditLogEvent, AuditLogOptionsType, type Snowflake } from 'discord-api-types/v10';
 import { Partials } from '../util/Partials.js';
 import { flatten } from '../util/Util.js';
 import { AutoModerationRule } from './AutoModerationRule.js';
+import type { Guild } from './Guild.js';
+import type { GuildAuditLogs } from './GuildAuditLogs.js';
 import { GuildInvite } from './GuildInvite.js';
 import { GuildOnboardingPrompt } from './GuildOnboardingPrompt.js';
 import { GuildScheduledEvent } from './GuildScheduledEvent.js';
 import { Integration } from './Integration.js';
 import { StageInstance } from './StageInstance.js';
 import { Sticker } from './Sticker.js';
+import type { User } from './User.js';
 import { Webhook } from './Webhook.js';
 
 const Targets = {
@@ -99,8 +102,14 @@ const Targets = {
  * @returns {Object}
  * @ignore
  */
-export function changesReduce(changes: any, initialData = {}) {
-	return changes.reduce((accumulator: any, change: any) => {
+export interface AuditLogChange {
+	key: string;
+	old?: unknown;
+	new?: unknown;
+}
+
+export function changesReduce(changes: AuditLogChange[], initialData: Record<string, unknown> = {}) {
+	return changes.reduce((accumulator: Record<string, unknown>, change: AuditLogChange) => {
 		accumulator[change.key] = change.new ?? change.old;
 		return accumulator;
 	}, initialData);
@@ -110,17 +119,17 @@ export function changesReduce(changes: any, initialData = {}) {
  * Audit logs entry.
  */
 export class GuildAuditLogsEntry {
-	public action: any;
-	public reason: any;
-	public executorId: any;
-	public executor: any;
-	public changes: any;
-	public id: any;
-	public extra: any;
-	public targetId: any;
-	public target: any;
-	public targetType: any;
-	public actionType: any;
+	public action: AuditLogEvent;
+	public reason: string | null = null;
+	public executorId: Snowflake | null = null;
+	public executor: User | null = null;
+	public changes: AuditLogChange[];
+	public id: Snowflake;
+	public extra: unknown = null;
+	public targetId: Snowflake | null = null;
+	public target: unknown = null;
+	public targetType: keyof typeof Targets;
+	public actionType: string;
 	/**
 	 * Key mirror of all available audit log targets.
 	 *
@@ -129,7 +138,7 @@ export class GuildAuditLogsEntry {
 	 */
 	static Targets = Targets;
 
-	constructor(guild: any, data: any, logs?: any) {
+	constructor(guild: Guild, data: APIAuditLogEntry, logs?: GuildAuditLogs) {
 		/**
 		 * The target type of this entry
 		 *
@@ -411,7 +420,7 @@ export class GuildAuditLogsEntry {
 	 * @param {AuditLogEvent} target The action target
 	 * @returns {AuditLogTargetType}
 	 */
-	static targetType(target: any) {
+	static targetType(target: AuditLogEvent | number) {
 		if (target < 10) return Targets.Guild;
 		if (target < 20) return Targets.Channel;
 		if (target < 30) return Targets.User;
@@ -439,7 +448,7 @@ export class GuildAuditLogsEntry {
 	 * @param {AuditLogEvent} action The action target
 	 * @returns {AuditLogActionType}
 	 */
-	static actionType(action: any) {
+	static actionType(action: AuditLogEvent | number) {
 		if (
 			[
 				AuditLogEvent.ChannelCreate,
@@ -550,7 +559,7 @@ export class GuildAuditLogsEntry {
 	 * @param {AuditLogEvent} action The type to check for
 	 * @returns {boolean}
 	 */
-	isAction(action: any) {
+	isAction(action: AuditLogEvent | number) {
 		return this.action === action;
 	}
 

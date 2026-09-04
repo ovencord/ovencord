@@ -1,4 +1,7 @@
+import type { APIChannel, Snowflake } from 'discord-api-types/v10';
+import type { Client } from '../client/Client.js';
 import { BaseChannel } from './BaseChannel.js';
+import type { InviteGuild } from './InviteGuild.js';
 
 /**
  * Represents a channel that displays a directory of guilds.
@@ -6,10 +9,10 @@ import { BaseChannel } from './BaseChannel.js';
  * @extends {BaseChannel}
  */
 export class DirectoryChannel extends BaseChannel {
-	public guild: any;
-	public guildId: any;
-	public name: any;
-	constructor(guild: any, data: any, client: any) {
+	public guild: InviteGuild;
+	public guildId: Snowflake;
+	public name: string | null = null;
+	constructor(guild: InviteGuild, data: APIChannel, client: Client) {
 		super(client, data);
 
 		/**
@@ -27,7 +30,7 @@ export class DirectoryChannel extends BaseChannel {
 		this.guildId = guild.id;
 	}
 
-	_patch(data: any) {
+	override _patch(data: Partial<APIChannel>) {
 		super._patch(data);
 		/**
 		 * The channel's name

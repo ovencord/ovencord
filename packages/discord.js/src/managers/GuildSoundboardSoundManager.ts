@@ -1,4 +1,4 @@
-import { Routes, type Snowflake } from 'discord-api-types/v10';
+import { type APISoundboardSound, Routes, type Snowflake } from 'discord-api-types/v10';
 import { DiscordjsTypeError, ErrorCodes } from '../errors/index.js';
 import { SoundboardSound } from '../structures/SoundboardSound.js';
 import { resolveBase64, resolveFile } from '../util/DataResolver.js';
@@ -38,7 +38,7 @@ export class GuildSoundboardSoundManager extends CachedManager {
 		this.guild = guild;
 	}
 
-	override _add(data: any, cache: boolean) {
+	override _add(data: APISoundboardSound, cache: boolean) {
 		return super._add(data, cache, { extras: [this.guild], id: data.sound_id });
 	}
 

@@ -1,7 +1,7 @@
 import { Collection } from '@ovencord/collection';
 import { makeURLSearchParams } from '@ovencord/rest';
 import { isFileBodyEncodable, isJSONEncodable } from '@ovencord/util';
-import { Routes } from 'discord-api-types/v10';
+import { type APIMessage, Routes, type Snowflake } from 'discord-api-types/v10';
 import { DiscordjsTypeError, ErrorCodes } from '../errors/index.js';
 import { Message } from '../structures/Message.js';
 import { MessagePayload } from '../structures/MessagePayload.js';
@@ -121,7 +121,7 @@ export class MessageManager extends CachedManager {
 		});
 
 		return data.reduce(
-			(_data: any, message: any) => _data.set(message.id, this._add(message, cache)),
+			(_data: Collection<Snowflake, Message>, message: APIMessage) => _data.set(message.id, this._add(message, cache)),
 			new Collection(),
 		);
 	}

@@ -41,9 +41,11 @@ export default (client: Client, { d: data }: GatewayThreadListSyncDispatch) => {
 	client.emit(Events.ThreadListSync, syncedThreads, guild);
 };
 
-function removeStaleThreads(client: Client, channel: any) {
-	if (!('threads' in channel)) return;
-	const threadableChannel = channel as { threads: { cache: Collection<string, any> } };
+function removeStaleThreads(client: Client, channel: unknown) {
+	if (!channel || typeof channel !== 'object' || !('threads' in channel)) return;
+	const threadableChannel = channel as {
+		threads: { cache: Collection<string, { id: string; archived?: boolean }> };
+	};
 
 	for (const thread of threadableChannel.threads.cache.values()) {
 		if (!thread.archived) {

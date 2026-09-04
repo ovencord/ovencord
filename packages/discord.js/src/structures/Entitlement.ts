@@ -1,3 +1,5 @@
+import type { APIEntitlement, EntitlementType, Snowflake } from 'discord-api-types/v10';
+import type { Client } from '../client/Client.js';
 import { Base } from './Base.js';
 
 /**
@@ -16,7 +18,7 @@ export class Entitlement extends Base {
 	public startsTimestamp: any;
 	public endsTimestamp: any;
 	public consumed: any;
-	constructor(client: any, data: any) {
+	constructor(client: Client, data: APIEntitlement) {
 		super(client);
 
 		/**
@@ -29,7 +31,7 @@ export class Entitlement extends Base {
 		this._patch(data);
 	}
 
-	_patch(data: any) {
+	override _patch(data: Partial<APIEntitlement>) {
 		if ('sku_id' in data) {
 			/**
 			 * The id of the associated SKU

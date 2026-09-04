@@ -1,4 +1,6 @@
 import { DiscordSnowflake } from '@ovencord/util';
+import type { APIApplication } from 'discord-api-types/v10';
+import type { Client } from '../../client/Client.js';
 import { Base } from '../Base.js';
 
 /**
@@ -17,12 +19,12 @@ export class Application extends Base {
 	public rpcOrigins: any;
 	public cover: any;
 	public verifyKey: any;
-	constructor(client: any, data: any) {
+	constructor(client: Client, data: APIApplication) {
 		super(client);
 		this._patch(data);
 	}
 
-	_patch(data: any) {
+	override _patch(data: Partial<APIApplication>) {
 		/**
 		 * The application's id
 		 *
