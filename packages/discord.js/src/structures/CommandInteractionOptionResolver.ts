@@ -1,14 +1,36 @@
+import type { APIChannel, APIGuildMember, APIRole, ChannelType } from 'discord-api-types/v10';
 import { ApplicationCommandOptionType } from 'discord-api-types/v10';
+import type { Client } from '../client/Client.js';
 import { DiscordjsTypeError, ErrorCodes } from '../errors/index.js';
+import type { Attachment } from './Attachment.js';
+import type { BaseChannel } from './BaseChannel.js';
+import type { CommandInteractionOption, CommandInteractionResolvedData } from './CommandInteraction.js';
+import type { GuildChannel } from './GuildChannel.js';
+import type { GuildMember } from './GuildMember.js';
+import type { Message } from './Message.js';
+import type { Role } from './Role.js';
+import type { ThreadChannel } from './ThreadChannel.js';
+import type { User } from './User.js';
+
+export interface AutocompleteFocusedOption {
+	name: string;
+	type: ApplicationCommandOptionType;
+	value: string | number;
+	focused: boolean;
+}
 
 /**
  * A resolver for command interaction options.
  */
 export class CommandInteractionOptionResolver {
-	public _group: any;
-	public _subcommand: any;
-	public _hoistedOptions: any;
-	constructor(client: any, options: any, resolved: any) {
+	public client!: Client;
+	public _group: string | null;
+	public _subcommand: string | null;
+	public _hoistedOptions: CommandInteractionOption[];
+	public readonly data!: readonly CommandInteractionOption[];
+	public readonly resolved!: Readonly<CommandInteractionResolvedData> | null;
+
+	constructor(client: Client, options: CommandInteractionOption[], resolved?: CommandInteractionResolvedData | null) {
 		/**
 		 * The client that instantiated this.
 		 *
@@ -41,7 +63,7 @@ export class CommandInteractionOptionResolver {
 		 * @type {CommandInteractionOption[]}
 		 * @private
 		 */
-		this._hoistedOptions = options;
+		this._hoistedOptions = options ?? [];
 
 		// Hoist subcommand group if present
 		if (this._hoistedOptions[0]?.type === ApplicationCommandOptionType.SubcommandGroup) {
@@ -62,7 +84,7 @@ export class CommandInteractionOptionResolver {
 		 * @type {ReadonlyArray<CommandInteractionOption>}
 		 * @readonly
 		 */
-		Object.defineProperty(this, 'data', { value: Object.freeze([...options]) });
+		Object.defineProperty(this, 'data', { value: Object.freeze([...(options ?? [])]) });
 
 		/**
 		 * The interaction resolved data
@@ -80,8 +102,7 @@ export class CommandInteractionOptionResolver {
 	 * @param {boolean} [required=false] Whether to throw an error if the option is not found.
 	 * @returns {?CommandInteractionOption} The option, if found.
 	 */
-	get(name: any, required = false) {
-		// @ts-expect-error
+	get(name: string, required = false): CommandInteractionOption | null {
 		const option = this._hoistedOptions.find((opt) => opt.name === name);
 		if (!option) {
 			if (required) {
@@ -104,16 +125,18 @@ export class CommandInteractionOptionResolver {
 	 * @returns {?CommandInteractionOption} The option, if found.
 	 * @private
 	 */
-	_getTypedOption(name: any, allowedTypes: any, properties: any, required: any) {
+	_getTypedOption(
+		name: string,
+		allowedTypes: (ApplicationCommandOptionType | string)[],
+		properties: (keyof CommandInteractionOption)[],
+		required: boolean,
+	): CommandInteractionOption | null {
 		const option = this.get(name, required);
 		if (!option) {
 			return null;
-		} else if (!allowedTypes.includes(option.type)) {
+		} else if (!allowedTypes.includes(option.type as unknown as ApplicationCommandOptionType)) {
 			throw new DiscordjsTypeError(ErrorCodes.CommandInteractionOptionType, name, option.type, allowedTypes.join(', '));
-		} else if (
-			required &&
-			properties.every((prop: any) => (option as any)[prop] === null || (option as any)[prop] === undefined)
-		) {
+		} else if (required && properties.every((prop) => option[prop] === null || option[prop] === undefined)) {
 			throw new DiscordjsTypeError(ErrorCodes.CommandInteractionOptionEmpty, name, option.type);
 		}
 
@@ -126,7 +149,7 @@ export class CommandInteractionOptionResolver {
 	 * @param {boolean} [required=true] Whether to throw an error if there is no subcommand.
 	 * @returns {?string} The name of the selected subcommand, or null if not set and not required.
 	 */
-	getSubcommand(required = true) {
+	getSubcommand(required = true): string | null {
 		if (required && !this._subcommand) {
 			throw new DiscordjsTypeError(ErrorCodes.CommandInteractionOptionNoSubcommand);
 		}
@@ -140,7 +163,7 @@ export class CommandInteractionOptionResolver {
 	 * @param {boolean} [required=false] Whether to throw an error if there is no subcommand group.
 	 * @returns {?string} The name of the selected subcommand group, or null if not set and not required.
 	 */
-	getSubcommandGroup(required = false) {
+	getSubcommandGroup(required = false): string | null {
 		if (required && !this._group) {
 			throw new DiscordjsTypeError(ErrorCodes.CommandInteractionOptionNoSubcommandGroup);
 		}
@@ -155,9 +178,9 @@ export class CommandInteractionOptionResolver {
 	 * @param {boolean} [required=false] Whether to throw an error if the option is not found.
 	 * @returns {?boolean} The value of the option, or null if not set and not required.
 	 */
-	getBoolean(name: any, required = false) {
+	getBoolean(name: string, required = false): boolean | null {
 		const option = this._getTypedOption(name, [ApplicationCommandOptionType.Boolean], ['value'], required);
-		return option?.value ?? null;
+		return (option?.value as boolean) ?? null;
 	}
 
 	/**
@@ -166,14 +189,18 @@ export class CommandInteractionOptionResolver {
 	 * @param {string} name The name of the option.
 	 * @param {boolean} [required=false] Whether to throw an error if the option is not found.
 	 * @param {ChannelType[]} [channelTypes=[]] The allowed types of channels. If empty, all channel types are allowed.
-	 * @returns {?(GuildChannel|ThreadChannel|APIChannel)}
+	 * @returns {?(GuildChannel|ThreadChannel|APIChannel|BaseChannel)}
 	 * The value of the option, or null if not set and not required.
 	 */
-	getChannel(name: any, required: any = false, channelTypes: any[] = []) {
-		const option = (this as any)._getTypedOption(name, [ApplicationCommandOptionType.Channel], ['channel'], required);
-		const channel = option?.channel ?? null;
+	getChannel(
+		name: string,
+		required = false,
+		channelTypes: ChannelType[] = [],
+	): GuildChannel | ThreadChannel | APIChannel | BaseChannel | null {
+		const option = this._getTypedOption(name, [ApplicationCommandOptionType.Channel], ['channel'], required);
+		const channel = (option?.channel as GuildChannel | ThreadChannel | APIChannel | BaseChannel) ?? null;
 
-		if (channel && channelTypes.length > 0 && !channelTypes.includes(channel.type)) {
+		if (channel && channelTypes.length > 0 && !channelTypes.includes(channel.type as ChannelType)) {
 			throw new DiscordjsTypeError(
 				ErrorCodes.CommandInteractionOptionInvalidChannelType,
 				name,
@@ -192,9 +219,9 @@ export class CommandInteractionOptionResolver {
 	 * @param {boolean} [required=false] Whether to throw an error if the option is not found.
 	 * @returns {?string} The value of the option, or null if not set and not required.
 	 */
-	getString(name: any, required = false) {
+	getString(name: string, required = false): string | null {
 		const option = this._getTypedOption(name, [ApplicationCommandOptionType.String], ['value'], required);
-		return option?.value ?? null;
+		return (option?.value as string) ?? null;
 	}
 
 	/**
@@ -204,9 +231,9 @@ export class CommandInteractionOptionResolver {
 	 * @param {boolean} [required=false] Whether to throw an error if the option is not found.
 	 * @returns {?number} The value of the option, or null if not set and not required.
 	 */
-	getInteger(name: any, required = false) {
+	getInteger(name: string, required = false): number | null {
 		const option = this._getTypedOption(name, [ApplicationCommandOptionType.Integer], ['value'], required);
-		return option?.value ?? null;
+		return (option?.value as number) ?? null;
 	}
 
 	/**
@@ -216,9 +243,9 @@ export class CommandInteractionOptionResolver {
 	 * @param {boolean} [required=false] Whether to throw an error if the option is not found.
 	 * @returns {?number} The value of the option, or null if not set and not required.
 	 */
-	getNumber(name: any, required = false) {
+	getNumber(name: string, required = false): number | null {
 		const option = this._getTypedOption(name, [ApplicationCommandOptionType.Number], ['value'], required);
-		return option?.value ?? null;
+		return (option?.value as number) ?? null;
 	}
 
 	/**
@@ -228,7 +255,7 @@ export class CommandInteractionOptionResolver {
 	 * @param {boolean} [required=false] Whether to throw an error if the option is not found.
 	 * @returns {?User} The value of the option, or null if not set and not required.
 	 */
-	getUser(name: any, required = false) {
+	getUser(name: string, required = false): User | null {
 		const option = this._getTypedOption(
 			name,
 			[ApplicationCommandOptionType.User, ApplicationCommandOptionType.Mentionable],
@@ -245,7 +272,7 @@ export class CommandInteractionOptionResolver {
 	 * @returns {?(GuildMember|APIGuildMember)}
 	 * The value of the option, or null if the user is not present in the guild or the option is not set.
 	 */
-	getMember(name: any) {
+	getMember(name: string): GuildMember | APIGuildMember | null {
 		const option = this._getTypedOption(
 			name,
 			[ApplicationCommandOptionType.User, ApplicationCommandOptionType.Mentionable],
@@ -262,7 +289,7 @@ export class CommandInteractionOptionResolver {
 	 * @param {boolean} [required=false] Whether to throw an error if the option is not found.
 	 * @returns {?(Role|APIRole)} The value of the option, or null if not set and not required.
 	 */
-	getRole(name: any, required = false) {
+	getRole(name: string, required = false): Role | APIRole | null {
 		const option = this._getTypedOption(
 			name,
 			[ApplicationCommandOptionType.Role, ApplicationCommandOptionType.Mentionable],
@@ -279,7 +306,7 @@ export class CommandInteractionOptionResolver {
 	 * @param {boolean} [required=false] Whether to throw an error if the option is not found.
 	 * @returns {?Attachment} The value of the option, or null if not set and not required.
 	 */
-	getAttachment(name: any, required = false) {
+	getAttachment(name: string, required = false): Attachment | null {
 		const option = this._getTypedOption(name, [ApplicationCommandOptionType.Attachment], ['attachment'], required);
 		return option?.attachment ?? null;
 	}
@@ -292,7 +319,7 @@ export class CommandInteractionOptionResolver {
 	 * @returns {?(User|GuildMember|APIGuildMember|Role|APIRole)}
 	 * The value of the option, or null if not set and not required.
 	 */
-	getMentionable(name: any, required = false) {
+	getMentionable(name: string, required = false): User | GuildMember | APIGuildMember | Role | APIRole | null {
 		const option = this._getTypedOption(
 			name,
 			[ApplicationCommandOptionType.Mentionable],
@@ -310,31 +337,25 @@ export class CommandInteractionOptionResolver {
 	 * @returns {?Message}
 	 * The value of the option, or null if not set and not required.
 	 */
-	getMessage(name: any, required = false) {
-		const option = this._getTypedOption(name, ['_MESSAGE'], ['message'], required);
-		return option?.message ?? null;
+	getMessage(name: string, required = false): Message | null {
+		const option = this._getTypedOption(name, ['_MESSAGE'], ['message' as keyof CommandInteractionOption], required);
+		return (option as { message?: Message })?.message ?? null;
 	}
-
-	/**
-	 * The full autocomplete option object.
-	 *
-	 * @typedef {Object} AutocompleteFocusedOption
-	 * @property {string} name The name of the option
-	 * @property {ApplicationCommandOptionType} type The type of the application command option
-	 * @property {string} value The value of the option
-	 * @property {boolean} focused Whether this option is currently in focus for autocomplete
-	 */
 
 	/**
 	 * Gets the focused option.
 	 *
-	 * @returns {AutocompleteFocusedOption}
-	 * The whole object of the option that is focused
+	 * @param {boolean} [getFull=false] Whether to get the full option object
+	 * @returns {AutocompleteFocusedOption | string | number}
+	 * The option that is focused or its value
 	 */
-	getFocused() {
-		// @ts-expect-error
-		const focusedOption = this._hoistedOptions.find((option) => option.focused);
+	getFocused(getFull?: false): string | number;
+	getFocused(getFull: true): AutocompleteFocusedOption;
+	getFocused(getFull = false): AutocompleteFocusedOption | string | number {
+		const focusedOption = this._hoistedOptions.find((option) => (option as AutocompleteFocusedOption).focused) as
+			| AutocompleteFocusedOption
+			| undefined;
 		if (!focusedOption) throw new DiscordjsTypeError(ErrorCodes.AutocompleteInteractionOptionNoFocusedOption);
-		return focusedOption;
+		return getFull ? focusedOption : focusedOption.value;
 	}
 }

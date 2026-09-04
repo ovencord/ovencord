@@ -1,9 +1,16 @@
 import { Collection } from '@ovencord/collection';
 import { makeURLSearchParams } from '@ovencord/rest';
 import { isJSONEncodable } from '@ovencord/util';
-import { type RESTPatchAPIApplicationCommandJSONBody, Routes, type Snowflake } from 'discord-api-types/v10';
+import {
+	type APIApplicationCommand,
+	type RESTPatchAPIApplicationCommandJSONBody,
+	Routes,
+	type Snowflake,
+} from 'discord-api-types/v10';
+import type { Client } from '../client/Client.js';
 import { DiscordjsTypeError, ErrorCodes } from '../errors/index.js';
 import { ApplicationCommand } from '../structures/ApplicationCommand.js';
+import type { Guild } from '../structures/Guild.js';
 import { PermissionsBitField } from '../util/PermissionsBitField.js';
 import { ApplicationCommandPermissionsManager } from './ApplicationCommandPermissionsManager.js';
 import { CachedManager } from './CachedManager.js';
@@ -13,10 +20,10 @@ import { CachedManager } from './CachedManager.js';
  *
  * @extends {CachedManager}
  */
-export class ApplicationCommandManager extends CachedManager {
-	public permissions: any;
-	public guild: any; // Add guild property since subclasses use it
-	constructor(client: any, iterable?: any) {
+export class ApplicationCommandManager extends CachedManager<Snowflake, ApplicationCommand, typeof ApplicationCommand> {
+	public permissions: ApplicationCommandPermissionsManager;
+	public guild: Guild | null = null; // Add guild property since subclasses use it
+	constructor(client: Client, iterable?: Iterable<ApplicationCommand>) {
 		super(client, ApplicationCommand, iterable);
 
 		/**
@@ -34,7 +41,8 @@ export class ApplicationCommandManager extends CachedManager {
 	 * @name ApplicationCommandManager#cache
 	 */
 
-	_add(data: any, cache: any, guildId: any) {
+	// biome-ignore lint/suspicious/noExplicitAny: internal lifecycle method accepts heterogeneous payloads (API data, existing structure, or partial patch)
+	_add(data: any, cache?: boolean, guildId?: Snowflake) {
 		return super._add(data, cache, { extras: [this.guild, guildId] });
 	}
 
@@ -48,13 +56,14 @@ export class ApplicationCommandManager extends CachedManager {
 	 * @returns {string}
 	 * @private
 	 */
-	commandPath({ id, guildId }: any = {}) {
-		if (this.guild ?? guildId) {
+	commandPath({ id, guildId }: { id?: Snowflake; guildId?: Snowflake } = {}) {
+		const targetGuildId = this.guild?.id ?? guildId;
+		if (targetGuildId) {
 			if (id) {
-				return Routes.applicationGuildCommand(this.client.application.id, this.guild?.id ?? guildId, id);
+				return Routes.applicationGuildCommand(this.client.application.id, targetGuildId, id);
 			}
 
-			return Routes.applicationGuildCommands(this.client.application.id, this.guild?.id ?? guildId);
+			return Routes.applicationGuildCommands(this.client.application.id, targetGuildId);
 		}
 
 		if (id) {
@@ -65,76 +74,83 @@ export class ApplicationCommandManager extends CachedManager {
 	}
 
 	/**
-	 * Data that resolves to give an ApplicationCommand object. This can be:
-	 * - An ApplicationCommand object
-	 * - A Snowflake
+	 * Data that can be resolved to a Command. This can be:
+	 * * A Command
+	 * * A Snowflake
 	 *
 	 * @typedef {ApplicationCommand|Snowflake} ApplicationCommandResolvable
 	 */
 
 	/**
-	 * Data that resolves to the data of an ApplicationCommand
-	 *
-	 * @typedef {ApplicationCommandData|APIApplicationCommand} ApplicationCommandDataResolvable
-	 */
-
-	/**
-	 * Options used to fetch data from Discord
-	 *
-	 * @typedef {Object} BaseFetchOptions
-	 * @property {boolean} [cache=true] Whether to cache the fetched data if it wasn't already
-	 * @property {boolean} [force=false] Whether to skip the cache check and request the API
-	 */
-
-	/**
-	 * Options used to fetch Application Commands from Discord
+	 * Options for fetching a single command
 	 *
 	 * @typedef {BaseFetchOptions} FetchApplicationCommandOptions
-	 * @property {Snowflake} [id] The command's id to fetch
-	 * @property {Snowflake} [guildId] The guild's id to fetch commands for, for when the guild is not cached
-	 * @property {Locale} [locale] The locale to use when fetching this command
-	 * @property {boolean} [withLocalizations] Whether to fetch all localization data
+	 * @property {Snowflake} [guildId] The guild's id to fetch this command from,
+	 * ignored when using a {@link GuildApplicationCommandManager}
 	 */
 
 	/**
-	 * Obtains one or multiple application commands from Discord, or the cache if it's already available.
+	 * Options for fetching multiple commands
 	 *
-	 * @param {Snowflake|FetchApplicationCommandOptions} [options] Options for fetching application command(s)
+	 * @typedef {Object} FetchApplicationCommandsOptions
+	 * @property {Snowflake} [guildId] The guild's id to fetch commands from,
+	 * ignored when using a {@link GuildApplicationCommandManager}
+	 * @property {string} [locale] The target locale to fetch localized names and descriptions for
+	 * @property {boolean} [withLocalizations] Whether to also retrieve all localizations for each command
+	 */
+
+	/**
+	 * Fetches applications commands from the API.
+	 *
+	 * @param {ApplicationCommandResolvable|FetchApplicationCommandOptions|FetchApplicationCommandsOptions} [options]
+	 * The options for fetching the commands
 	 * @returns {Promise<ApplicationCommand|Collection<Snowflake, ApplicationCommand>>}
 	 * @example
-	 * // Fetch a single command
-	 * client.application.commands.fetch('123456789012345678')
-	 *   .then(command => console.log(`Fetched command ${command.name}`))
-	 *   .catch(console.error);
-	 * @example
 	 * // Fetch all commands
-	 * client.application.commands.fetch()
-	 *   .then(commands => console.log(`Fetched ${commands.size} commands`))
-	 *   .catch(console.error);
-	 * @example
-	 * // Fetch all commands in a guild
 	 * guild.commands.fetch()
 	 *   .then(commands => console.log(`Fetched ${commands.size} commands`))
+	 *   .catch(console.error);
+	 * @example
+	 * // Fetch a single command
+	 * guild.commands.fetch('123456789012345678')
+	 *   .then(command => console.log(`Fetched command ${command.name}`))
 	 *   .catch(console.error);
 	 * @example
 	 * // Fetch a single command without checking cache
 	 * guild.commands.fetch({ id: '123456789012345678', force: true })
 	 *   .then(command => console.log(`Fetched command ${command.name}`))
-	 *   .catch(console.error)
+	 *   .catch(console.error);
 	 */
-	async fetch(options: any) {
+	async fetch(options?: unknown) {
 		if (!options) return this._fetchMany();
 
 		if (typeof options === 'string') return this._fetchSingle({ id: options });
 
-		const { cache, force, guildId, id, locale, withLocalizations } = options;
+		const { cache, force, guildId, id, locale, withLocalizations } = options as {
+			cache?: boolean;
+			force?: boolean;
+			guildId?: Snowflake;
+			id?: Snowflake;
+			locale?: string;
+			withLocalizations?: boolean;
+		};
 
 		if (id) return this._fetchSingle({ cache, force, guildId, id });
 
 		return this._fetchMany({ cache, guildId, locale, withLocalizations });
 	}
 
-	async _fetchSingle({ cache, force = false, guildId, id }: any) {
+	async _fetchSingle({
+		cache,
+		force = false,
+		guildId,
+		id,
+	}: {
+		cache?: boolean;
+		force?: boolean;
+		guildId?: Snowflake;
+		id: Snowflake;
+	}) {
 		if (!force) {
 			const existing = this.cache.get(id);
 			if (existing) return existing;
@@ -144,17 +160,28 @@ export class ApplicationCommandManager extends CachedManager {
 		return this._add(command, cache, guildId);
 	}
 
-	async _fetchMany({ cache, guildId, locale, withLocalizations }: any = {}) {
-		const data = await this.client.rest.get(this.commandPath({ guildId }), {
+	async _fetchMany({
+		cache,
+		guildId,
+		locale,
+		withLocalizations,
+	}: {
+		cache?: boolean;
+		guildId?: Snowflake;
+		locale?: string;
+		withLocalizations?: boolean;
+	} = {}) {
+		const data = (await this.client.rest.get(this.commandPath({ guildId }), {
 			headers: {
 				'X-Discord-Locale': locale,
 			},
 			query: makeURLSearchParams({ with_localizations: withLocalizations }),
-		});
+		})) as APIApplicationCommand[];
 
 		return data.reduce(
-			(coll: any, command: any) => coll.set(command.id, this._add(command, cache, guildId)),
-			new Collection(),
+			(coll: Collection<Snowflake, ApplicationCommand>, command: APIApplicationCommand) =>
+				coll.set(command.id, this._add(command, cache, guildId)),
+			new Collection<Snowflake, ApplicationCommand>(),
 		);
 	}
 
@@ -174,7 +201,7 @@ export class ApplicationCommandManager extends CachedManager {
 	 *   .then(console.log)
 	 *   .catch(console.error);
 	 */
-	async create(command: any, guildId: any) {
+	async create(command: unknown, guildId?: Snowflake) {
 		const data = await this.client.rest.post(this.commandPath({ guildId }), {
 			body: (this.constructor as typeof ApplicationCommandManager).transformCommand(command),
 		});
@@ -204,14 +231,15 @@ export class ApplicationCommandManager extends CachedManager {
 	 *   .then(console.log)
 	 *   .catch(console.error);
 	 */
-	async set(commands: any, guildId: any) {
-		const data = await this.client.rest.put(this.commandPath({ guildId }), {
+	async set(commands: unknown[], guildId?: Snowflake) {
+		const data = (await this.client.rest.put(this.commandPath({ guildId }), {
 			// @ts-expect-error
 			body: commands.map((command) => (this.constructor as typeof ApplicationCommandManager).transformCommand(command)),
-		});
+		})) as APIApplicationCommand[];
 		return data.reduce(
-			(collection: any, command: any) => collection.set(command.id, this._add(command, true, guildId)),
-			new Collection(),
+			(collection: Collection<Snowflake, ApplicationCommand>, command: APIApplicationCommand) =>
+				collection.set(command.id, this._add(command, true, guildId)),
+			new Collection<Snowflake, ApplicationCommand>(),
 		);
 	}
 
@@ -258,8 +286,8 @@ export class ApplicationCommandManager extends CachedManager {
 	 *   .then(console.log)
 	 *   .catch(console.error);
 	 */
-	async delete(command: any, guildId: any) {
-		const id = this.resolveId(command);
+	async delete(command: unknown, guildId?: Snowflake) {
+		const id = this.resolveId(command as ApplicationCommand);
 		if (!id) throw new DiscordjsTypeError(ErrorCodes.InvalidType, 'command', 'ApplicationCommandResolvable');
 
 		await this.client.rest.delete(this.commandPath({ id, guildId }));
@@ -276,10 +304,11 @@ export class ApplicationCommandManager extends CachedManager {
 	 * @returns {APIApplicationCommand}
 	 * @private
 	 */
+	// biome-ignore lint/suspicious/noExplicitAny: internal lifecycle method accepts heterogeneous payloads (API data, existing structure, or partial patch)
 	static transformCommand(command: any) {
 		if (isJSONEncodable(command)) return command.toJSON();
 
-		let default_member_permissions: any;
+		let default_member_permissions: string | null | undefined;
 
 		if ('default_member_permissions' in command) {
 			default_member_permissions = command.default_member_permissions

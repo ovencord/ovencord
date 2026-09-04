@@ -12,6 +12,7 @@ import { Attachment } from './Attachment.js';
 import type { BaseChannel } from './BaseChannel.js';
 import { BaseInteraction } from './BaseInteraction.js';
 import type { GuildMember } from './GuildMember.js';
+import type { InteractionCallbackResponse } from './InteractionCallbackResponse.js';
 import { InteractionWebhook } from './InteractionWebhook.js';
 import { InteractionResponses } from './interfaces/InteractionResponses.js';
 import type { Message } from './Message.js';
@@ -207,26 +208,44 @@ export class CommandInteraction extends BaseInteraction {
 
 		return result;
 	}
-
 	// These are here only for documentation purposes - they are implemented by InteractionResponses
 
-	deferReply(_options?: any): any {}
+	deferReply(_options?: unknown): Promise<InteractionCallbackResponse | undefined> {
+		return Promise.resolve(undefined);
+	}
 
-	reply(_options?: any): any {}
+	reply(_options: unknown): Promise<InteractionCallbackResponse | undefined> {
+		return Promise.resolve(undefined);
+	}
 
-	fetchReply(_options?: any): any {}
+	fetchReply(_message?: string): Promise<Message> {
+		return Promise.resolve(null as unknown as Message);
+	}
 
-	editReply(_options?: any): any {}
+	editReply(_options: unknown): Promise<Message> {
+		return Promise.resolve(null as unknown as Message);
+	}
 
-	deleteReply(_options?: any): any {}
+	deleteReply(_message?: string): Promise<void> {
+		return Promise.resolve();
+	}
 
-	followUp(_options?: any): any {}
+	followUp(_options: unknown): Promise<Message> {
+		return Promise.resolve(null as unknown as Message);
+	}
 
-	launchActivity(_options?: any): any {}
+	launchActivity(): Promise<InteractionCallbackResponse | undefined> {
+		return Promise.resolve(undefined);
+	}
 
-	showModal(_modal?: any, _options?: any): any {}
+	showModal(_modal: unknown, _options?: unknown): Promise<void> {
+		return Promise.resolve();
+	}
 
-	awaitModalSubmit(_options?: any): any {}
+	awaitModalSubmit(_options: unknown): Promise<unknown> {
+		return Promise.resolve(undefined);
+	}
 }
 
-InteractionResponses.applyToClass(CommandInteraction, ['deferUpdate', 'update']);
+// biome-ignore lint/suspicious/noExplicitAny: constructor and prototype mixin constraint required by TypeScript dynamic class composition
+InteractionResponses.applyToClass(CommandInteraction, ['deferUpdate', 'update'] as any);

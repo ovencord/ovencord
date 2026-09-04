@@ -14,6 +14,7 @@ import type { Attachment } from './Attachment.js';
 import type { BaseChannel } from './BaseChannel.js';
 import { BaseInteraction } from './BaseInteraction.js';
 import type { GuildMember } from './GuildMember.js';
+import type { InteractionCallbackResponse } from './InteractionCallbackResponse.js';
 import { InteractionWebhook } from './InteractionWebhook.js';
 import { InteractionResponses } from './interfaces/InteractionResponses.js';
 import type { Message } from './Message.js';
@@ -271,23 +272,42 @@ export class ModalSubmitInteraction extends BaseInteraction {
 
 	// These are here only for documentation purposes - they are implemented by InteractionResponses
 
-	deferReply(_options?: any): any {}
+	deferReply(_options?: unknown): Promise<InteractionCallbackResponse | undefined> {
+		return Promise.resolve(undefined);
+	}
 
-	reply(_options?: any): any {}
+	reply(_options: unknown): Promise<InteractionCallbackResponse | undefined> {
+		return Promise.resolve(undefined);
+	}
 
-	fetchReply(_options?: any): any {}
+	fetchReply(_message?: string): Promise<Message> {
+		return Promise.resolve(null as unknown as Message);
+	}
 
-	editReply(_options?: any): any {}
+	editReply(_options: unknown): Promise<Message> {
+		return Promise.resolve(null as unknown as Message);
+	}
 
-	deleteReply(_options?: any): any {}
+	deleteReply(_message?: string): Promise<void> {
+		return Promise.resolve();
+	}
 
-	followUp(_options?: any): any {}
+	followUp(_options: unknown): Promise<Message> {
+		return Promise.resolve(null as unknown as Message);
+	}
 
-	deferUpdate(_options?: any): any {}
+	deferUpdate(_options?: unknown): Promise<InteractionCallbackResponse | undefined> {
+		return Promise.resolve(undefined);
+	}
 
-	update(_options?: any): any {}
+	update(_options: unknown): Promise<InteractionCallbackResponse | undefined> {
+		return Promise.resolve(undefined);
+	}
 
-	launchActivity(_options?: any): any {}
+	launchActivity(): Promise<InteractionCallbackResponse | undefined> {
+		return Promise.resolve(undefined);
+	}
 }
 
+// biome-ignore lint/suspicious/noExplicitAny: constructor and prototype mixin constraint required by TypeScript dynamic class composition
 InteractionResponses.applyToClass(ModalSubmitInteraction, ['showModal'] as any);
