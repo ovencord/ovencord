@@ -50,8 +50,8 @@ export class ThreadMember extends Base {
 	}
 
 	_patch(data: Partial<APIThreadMember>, extra: { cache?: boolean } = {}) {
-		if ('join_timestamp' in data) this.joinedTimestamp = Date.parse(data.join_timestamp!);
-		if ('flags' in data) this.flags = new ThreadMemberFlagsBitField(data.flags!).freeze();
+		if (data.join_timestamp !== undefined) this.joinedTimestamp = Date.parse(data.join_timestamp);
+		if (data.flags !== undefined) this.flags = new ThreadMemberFlagsBitField(data.flags).freeze();
 
 		if ('member' in data) {
 			/**

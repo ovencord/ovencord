@@ -109,7 +109,8 @@ export class GuildEmoji extends BaseGuildEmoji {
 	 *   .catch(console.error);
 	 */
 	async edit(options: { name?: string; roles?: Snowflake[] }) {
-		return this.guild.emojis.edit(this.id!, options);
+		if (!this.id) throw new Error('Emoji must have an ID to be edited.');
+		return this.guild.emojis.edit(this.id, options);
 	}
 
 	/**
@@ -130,7 +131,8 @@ export class GuildEmoji extends BaseGuildEmoji {
 	 * @returns {Promise<GuildEmoji>}
 	 */
 	async delete(reason?: string) {
-		await this.guild.emojis.delete(this.id!, reason);
+		if (!this.id) throw new Error('Emoji must have an ID to be deleted.');
+		await this.guild.emojis.delete(this.id, reason);
 		return this;
 	}
 

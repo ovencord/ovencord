@@ -31,12 +31,14 @@ export class Sticker extends Base {
 	}
 
 	_patch(sticker: Partial<APISticker>) {
-		/**
-		 * The sticker's id
-		 *
-		 * @type {Snowflake}
-		 */
-		this.id = sticker.id!;
+		if (sticker.id) {
+			/**
+			 * The sticker's id
+			 *
+			 * @type {Snowflake}
+			 */
+			this.id = sticker.id;
+		}
 
 		if ('description' in sticker) {
 			/**
@@ -60,22 +62,22 @@ export class Sticker extends Base {
 			this.type ??= null;
 		}
 
-		if ('format_type' in sticker) {
+		if (sticker.format_type !== undefined) {
 			/**
 			 * The format of the sticker
 			 *
 			 * @type {StickerFormatType}
 			 */
-			this.format = sticker.format_type!;
+			this.format = sticker.format_type;
 		}
 
-		if ('name' in sticker) {
+		if (sticker.name !== undefined) {
 			/**
 			 * The name of the sticker
 			 *
 			 * @type {string}
 			 */
-			this.name = sticker.name!;
+			this.name = sticker.name;
 		}
 
 		if ('pack_id' in sticker) {

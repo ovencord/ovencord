@@ -96,7 +96,8 @@ export class ApplicationEmoji extends Emoji {
 	 *   .catch(console.error);
 	 */
 	async edit(options: { name?: string }) {
-		return this.application.emojis.edit(this.id!, options);
+		if (!this.id) throw new Error('Emoji must have an ID to be edited.');
+		return this.application.emojis.edit(this.id, options);
 	}
 
 	/**
@@ -115,7 +116,8 @@ export class ApplicationEmoji extends Emoji {
 	 * @returns {Promise<ApplicationEmoji>}
 	 */
 	async delete() {
-		await this.application.emojis.delete(this.id!);
+		if (!this.id) throw new Error('Emoji must have an ID to be deleted.');
+		await this.application.emojis.delete(this.id);
 		return this;
 	}
 

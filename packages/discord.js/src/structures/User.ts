@@ -40,9 +40,9 @@ export class User extends Base {
 	public bot: boolean;
 	public system: boolean;
 	public flags: UserFlagsBitField | null;
-	public username: string;
+	public username: string | null = null;
 	public globalName: string | null;
-	public discriminator: string;
+	public discriminator: string | null = null;
 	public accentColor: number | null;
 	public avatarDecorationData: AvatarDecorationData | null;
 	public collectibles: Collectibles | null;
@@ -59,11 +59,16 @@ export class User extends Base {
 		 */
 		this.id = data.id;
 
-		this.bot = null;
-
-		this.system = null;
-
+		this.bot = Boolean(data.bot);
+		this.system = Boolean(data.system);
 		this.flags = null;
+		this.globalName = null;
+		this.accentColor = null;
+		this.avatarDecorationData = null;
+		this.collectibles = null;
+		this.primaryGuild = null;
+		this.avatar = null;
+		this.banner = null;
 
 		this._patch(data);
 	}
@@ -75,9 +80,9 @@ export class User extends Base {
 			 *
 			 * @type {?string}
 			 */
-			this.username = data.username!;
+			this.username = data.username ?? null;
 		} else {
-			this.username ??= null!;
+			this.username ??= null;
 		}
 
 		if ('global_name' in data) {
@@ -109,9 +114,9 @@ export class User extends Base {
 			 *
 			 * @type {?string}
 			 */
-			this.discriminator = data.discriminator!;
+			this.discriminator = data.discriminator ?? null;
 		} else {
-			this.discriminator ??= null!;
+			this.discriminator ??= null;
 		}
 
 		if ('avatar' in data) {
@@ -133,8 +138,8 @@ export class User extends Base {
 			 * @type {?string}
 			 */
 			this.banner = data.banner ?? null;
-		} else if (this.banner !== null) {
-			this.banner ??= undefined;
+		} else {
+			this.banner ??= null;
 		}
 
 		if ('accent_color' in data) {
@@ -145,8 +150,8 @@ export class User extends Base {
 			 * @type {?number}
 			 */
 			this.accentColor = data.accent_color ?? null;
-		} else if (this.accentColor !== null) {
-			this.accentColor ??= undefined;
+		} else {
+			this.accentColor ??= null;
 		}
 
 		if ('system' in data) {
@@ -160,13 +165,13 @@ export class User extends Base {
 			this.system = false;
 		}
 
-		if ('public_flags' in data) {
+		if (data.public_flags !== undefined) {
 			/**
 			 * The flags for this user
 			 *
 			 * @type {?UserFlagsBitField}
 			 */
-			this.flags = new UserFlagsBitField(data.public_flags!);
+			this.flags = new UserFlagsBitField(data.public_flags);
 		}
 
 		/**
@@ -352,8 +357,8 @@ export class User extends Base {
 	 * @returns {?string}
 	 */
 	guildTagBadgeURL(options = {}) {
-		return this.primaryGuild?.badge
-			? this.client.rest.cdn.guildTagBadge(this.primaryGuild.identityGuildId!, this.primaryGuild.badge, options)
+		return this.primaryGuild?.badge && this.primaryGuild.identityGuildId
+			? this.client.rest.cdn.guildTagBadge(this.primaryGuild.identityGuildId, this.primaryGuild.badge, options)
 			: null;
 	}
 

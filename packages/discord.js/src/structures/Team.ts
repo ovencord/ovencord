@@ -22,20 +22,22 @@ export class Team extends Base {
 	}
 
 	_patch(data: Partial<APITeam>) {
-		/**
-		 * The Team's id
-		 *
-		 * @type {Snowflake}
-		 */
-		this.id = data.id!;
+		if (data.id) {
+			/**
+			 * The Team's id
+			 *
+			 * @type {Snowflake}
+			 */
+			this.id = data.id;
+		}
 
-		if ('name' in data) {
+		if (data.name !== undefined) {
 			/**
 			 * The name of the Team
 			 *
 			 * @type {string}
 			 */
-			this.name = data.name!;
+			this.name = data.name;
 		}
 
 		if ('icon' in data) {
@@ -44,7 +46,7 @@ export class Team extends Base {
 			 *
 			 * @type {?string}
 			 */
-			this.icon = data.icon!;
+			this.icon = data.icon ?? null;
 		} else {
 			this.icon ??= null;
 		}
@@ -55,7 +57,7 @@ export class Team extends Base {
 			 *
 			 * @type {?Snowflake}
 			 */
-			this.ownerId = data.owner_user_id!;
+			this.ownerId = data.owner_user_id ?? null;
 		} else {
 			this.ownerId ??= null;
 		}

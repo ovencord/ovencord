@@ -55,7 +55,7 @@ const getMessage = lazy(() => require('./Message.js').Message);
  * Represents a webhook.
  */
 export class Webhook {
-	public name: string;
+	public name: string | null = null;
 	public id: Snowflake;
 	public type: WebhookType;
 	public guildId: Snowflake | null;
@@ -81,7 +81,7 @@ export class Webhook {
 
 	_patch(data: APIWebhook) {
 		if ('name' in data) {
-			this.name = data.name!;
+			this.name = data.name;
 		}
 
 		Object.defineProperty(this, 'token', {
@@ -110,8 +110,8 @@ export class Webhook {
 			this.channelId = data.channel_id as Snowflake;
 		}
 
-		if ('user' in data) {
-			this.owner = this.client.users._add(data.user!);
+		if (data.user) {
+			this.owner = this.client.users._add(data.user);
 		} else {
 			this.owner ??= null;
 		}

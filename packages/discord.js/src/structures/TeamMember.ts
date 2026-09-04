@@ -27,31 +27,31 @@ export class TeamMember extends Base {
 	}
 
 	_patch(data: Partial<APITeamMember>) {
-		if ('membership_state' in data) {
+		if (data.membership_state !== undefined) {
 			/**
 			 * The permissions this Team Member has with regard to the team
 			 *
 			 * @type {TeamMemberMembershipState}
 			 */
-			this.membershipState = data.membership_state!;
+			this.membershipState = data.membership_state;
 		}
 
-		if ('user' in data) {
+		if (data.user) {
 			/**
 			 * The user for this Team Member
 			 *
 			 * @type {User}
 			 */
-			this.user = this.client.users._add(data.user!);
+			this.user = this.client.users._add(data.user);
 		}
 
-		if ('role' in data) {
+		if (data.role !== undefined) {
 			/**
 			 * The role of this Team Member
 			 *
 			 * @type {TeamMemberRole}
 			 */
-			this.role = data.role!;
+			this.role = data.role;
 		}
 	}
 
