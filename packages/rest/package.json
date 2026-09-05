@@ -1,7 +1,7 @@
 {
 	"$schema": "https://json.schemastore.org/package.json",
 	"name": "@ovencord/rest",
-	"version": "2.6.1",
+	"version": "2.6.7",
 	"description": "The REST API for discord.js",
 	"scripts": {
 		"test": "bun test",
@@ -36,8 +36,8 @@
 	"homepage": "https://ovencord.dev",
 	"funding": "https://github.com/ovencord/ovencord?sponsor",
 	"dependencies": {
-		"@ovencord/collection": "^2.1.4",
-		"@ovencord/util": "^1.10.0",
+		"@ovencord/collection": "^2.1.9",
+		"@ovencord/util": "^1.10.5",
 		"discord-api-types": "^0.38.54"
 	},
 	"devDependencies": {},

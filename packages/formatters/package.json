@@ -1,7 +1,7 @@
 {
 	"$schema": "https://json.schemastore.org/package.json",
 	"name": "@ovencord/formatters",
-	"version": "0.6.4",
+	"version": "0.6.9",
 	"description": "A set of functions to format strings for Discord.",
 	"scripts": {
 		"test": "bun test",

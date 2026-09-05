@@ -1,7 +1,7 @@
 {
 	"$schema": "https://json.schemastore.org/package.json",
 	"name": "@ovencord/structures",
-	"version": "0.1.6",
+	"version": "0.2.0",
 	"description": "Wrapper around Discord's structures",
 	"scripts": {
 		"test": "bun test",
@@ -37,9 +37,9 @@
 	},
 	"homepage": "https://ovencord.dev",
 	"dependencies": {
-		"@ovencord/util": "^1.1.8",
+		"@ovencord/util": "^1.10.5",
 		"discord-api-types": "^0.38.54",
-		"@ovencord/formatters": "^0.6.4"
+		"@ovencord/formatters": "^0.6.9"
 	},
 	"devDependencies": {
 		"cpy-cli": "^6.0.0"

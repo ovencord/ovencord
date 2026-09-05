@@ -1,7 +1,7 @@
 {
 	"$schema": "https://json.schemastore.org/package.json",
 	"name": "@ovencord/discord.js",
-	"version": "14.16.53",
+	"version": "14.16.58",
 	"description": "A powerful library for interacting with the Discord API",
 	"scripts": {
 		"test": "bun test",
@@ -39,12 +39,12 @@
 	"funding": "https://github.com/ovencord/ovencord?sponsor",
 	"dependencies": {
 		"discord-api-types": "^0.38.54",
-		"@ovencord/builders": "^1.13.2",
-		"@ovencord/collection": "^2.1.4",
-		"@ovencord/formatters": "^0.6.4",
-		"@ovencord/rest": "^2.6.1",
-		"@ovencord/util": "^1.10.0",
-		"@ovencord/ws": "^2.0.8"
+		"@ovencord/builders": "^1.13.8",
+		"@ovencord/collection": "^2.1.9",
+		"@ovencord/formatters": "^0.6.9",
+		"@ovencord/rest": "^2.6.7",
+		"@ovencord/util": "^1.10.5",
+		"@ovencord/ws": "^2.1.0"
 	},
 	"devDependencies": {},
 	"engines": {
