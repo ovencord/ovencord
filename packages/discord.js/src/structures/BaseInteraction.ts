@@ -121,6 +121,8 @@ export class BaseInteraction extends Base {
 
 		this.type = data.type;
 
+		this.id = data.id;
+
 		Object.defineProperty(this, 'token', { value: data.token, configurable: true, writable: true });
 
 		this.applicationId = data.application_id;
