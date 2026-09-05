@@ -11,7 +11,7 @@ export class EmojiOrLabelButtonMixin {
 	/**
 	 * @internal
 	 */
-	protected declare readonly data: EmojiOrLabelButtonData;
+	declare protected readonly data: EmojiOrLabelButtonData;
 
 	/**
 	 * Sets the emoji to display on this button.

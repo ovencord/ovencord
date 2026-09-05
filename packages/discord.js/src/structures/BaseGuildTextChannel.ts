@@ -23,7 +23,7 @@ export class BaseGuildTextChannel extends GuildChannel {
 	public messages: GuildMessageManager;
 	public threads: GuildTextThreadManager;
 	public nsfw: boolean;
-	public declare topic: string | null;
+	declare public topic: string | null;
 	public lastMessageId: Snowflake | null;
 	public lastPinTimestamp: number | null;
 	public defaultAutoArchiveDuration: ThreadAutoArchiveDuration | null;

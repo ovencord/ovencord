@@ -17,7 +17,7 @@ export class SharedChatInputCommandSubcommands {
 	/**
 	 * @internal
 	 */
-	protected declare readonly data: SharedChatInputCommandSubcommandsData;
+	declare protected readonly data: SharedChatInputCommandSubcommandsData;
 
 	/**
 	 * Adds subcommand groups to this command.

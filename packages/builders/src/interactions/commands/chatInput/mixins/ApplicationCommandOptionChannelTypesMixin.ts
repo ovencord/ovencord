@@ -29,7 +29,7 @@ export class ApplicationCommandOptionChannelTypesMixin {
 	/**
 	 * @internal
 	 */
-	protected declare readonly data: ApplicationCommandOptionChannelTypesData;
+	declare protected readonly data: ApplicationCommandOptionChannelTypesData;
 
 	/**
 	 * Adds channel types to this option.

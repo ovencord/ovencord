@@ -22,7 +22,7 @@ export class SharedChatInputCommandOptions {
 	/**
 	 * @internal
 	 */
-	protected declare readonly data: SharedChatInputCommandOptionsData;
+	declare protected readonly data: SharedChatInputCommandOptionsData;
 
 	/**
 	 * The options within this command.

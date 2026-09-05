@@ -7,7 +7,7 @@ import { BaseGuildVoiceChannel } from './BaseGuildVoiceChannel.js';
  * @extends {BaseGuildVoiceChannel}
  */
 export class StageChannel extends BaseGuildVoiceChannel {
-	public declare topic: string | null;
+	declare public topic: string | null;
 	_patch(data: Partial<APIChannel>) {
 		super._patch(data);
 

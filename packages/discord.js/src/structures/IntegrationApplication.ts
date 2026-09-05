@@ -8,11 +8,11 @@ import { Application } from './interfaces/Application.js';
  */
 export class IntegrationApplication extends Application {
 	public bot: any;
-	public declare termsOfServiceURL: any;
-	public declare privacyPolicyURL: any;
-	public declare rpcOrigins: any;
-	public declare cover: any;
-	public declare verifyKey: any;
+	declare public termsOfServiceURL: any;
+	declare public privacyPolicyURL: any;
+	declare public rpcOrigins: any;
+	declare public cover: any;
+	declare public verifyKey: any;
 	_patch(data: Partial<APIGuildIntegrationApplication>) {
 		super._patch(data);
 

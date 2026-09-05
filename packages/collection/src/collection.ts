@@ -1109,7 +1109,7 @@ export class Collection<Key, Value> extends Map<Key, Value> {
 	/**
 	 * @internal
 	 */
-	public declare static readonly [Symbol.species]: typeof Collection;
+	declare public static readonly [Symbol.species]: typeof Collection;
 }
 
 export type Keep<Value> = { keep: false } | { keep: true; value: Value };

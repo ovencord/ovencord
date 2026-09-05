@@ -85,9 +85,9 @@ export class Guild extends AnonymousGuild {
 	public soundboardSounds: GuildSoundboardSoundManager;
 	public available: boolean;
 	public shardId: number;
-	public declare id: Snowflake;
-	public declare name: string;
-	public declare icon: string | null;
+	declare public id: Snowflake;
+	declare public name: string;
+	declare public icon: string | null;
 	public memberCount: number;
 	public large: boolean;
 	public premiumProgressBarEnabled: boolean;
@@ -117,12 +117,12 @@ export class Guild extends AnonymousGuild {
 	public emojis: GuildEmojiManager;
 	public stickers: GuildStickerManager;
 	public incidentsData: ReturnType<typeof _transformAPIIncidentsData> | null;
-	public declare vanityURLCode: string | null;
+	declare public vanityURLCode: string | null;
 	public vanityURLUses: number | null;
-	public declare splash: string | null;
+	declare public splash: string | null;
 	public discoverySplash: string | null;
-	public declare verificationLevel: GuildVerificationLevel;
-	public declare features: GuildFeature[];
+	declare public verificationLevel: GuildVerificationLevel;
+	declare public features: GuildFeature[];
 	constructor(client: Client, data: GuildPatchData) {
 		super(client, data, false);
 

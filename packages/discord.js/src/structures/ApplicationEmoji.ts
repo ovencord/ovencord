@@ -11,7 +11,7 @@ import type { User } from './User.js';
  */
 export class ApplicationEmoji extends Emoji {
 	public application: ClientApplication;
-	public declare name: string;
+	declare public name: string;
 	public author: User | null;
 	public managed: boolean;
 	public requiresColons: boolean;

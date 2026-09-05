@@ -27,7 +27,7 @@ export abstract class CommandBuilder<Command extends RESTPostAPIApplicationComma
 	 *
 	 * @internal
 	 */
-	protected declare readonly data: CommandData;
+	declare protected readonly data: CommandData;
 
 	/**
 	 * Sets the contexts of this command.

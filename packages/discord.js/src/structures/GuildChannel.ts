@@ -39,8 +39,8 @@ export class GuildChannel extends BaseChannel {
 	public name: string;
 	public rawPosition: number;
 	public parentId: string | null;
-	public declare type: ChannelType;
-	public declare id: string;
+	declare public type: ChannelType;
+	declare public id: string;
 	public topic: string | null;
 	constructor(
 		guild: Guild,

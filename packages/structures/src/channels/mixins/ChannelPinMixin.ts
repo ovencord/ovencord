@@ -12,7 +12,7 @@ export class ChannelPinMixinImpl<
 	/**
 	 * The timestamp of when the last pin in the channel happened
 	 */
-	protected declare [kLastPinTimestamp]: number | null;
+	declare protected [kLastPinTimestamp]: number | null;
 
 	/**
 	 * The template used for removing data from the raw data stored for each Channel.

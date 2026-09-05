@@ -31,7 +31,7 @@ export class ChatInputCommandSubcommandGroupBuilder
 	 *
 	 * @internal
 	 */
-	protected declare readonly data: ChatInputCommandSubcommandGroupData & SharedNameAndDescriptionData;
+	declare protected readonly data: ChatInputCommandSubcommandGroupData & SharedNameAndDescriptionData;
 
 	/**
 	 * The options within this subcommand group.

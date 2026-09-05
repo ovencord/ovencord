@@ -10,7 +10,7 @@ export abstract class ApplicationCommandNumericOptionMinMaxValueMixin {
 	/**
 	 * @internal
 	 */
-	protected declare readonly data: ApplicationCommandNumericOptionMinMaxValueData;
+	declare protected readonly data: ApplicationCommandNumericOptionMinMaxValueData;
 
 	/**
 	 * Sets the maximum number value of this option.

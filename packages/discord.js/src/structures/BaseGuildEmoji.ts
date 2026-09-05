@@ -15,7 +15,7 @@ export class BaseGuildEmoji extends Emoji {
 	public requiresColons: boolean | null;
 	public managed: boolean | null;
 	public available: boolean | null;
-	public declare name: string | null;
+	declare public name: string | null;
 
 	constructor(client: Client, data: APIEmoji, guild: Guild | GuildPreview) {
 		super(client, data);

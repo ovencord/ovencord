@@ -28,7 +28,7 @@ export abstract class ApplicationCommandOptionBase
 	/**
 	 * @internal
 	 */
-	protected declare readonly data: ApplicationCommandOptionBaseData & SharedNameAndDescriptionData;
+	declare protected readonly data: ApplicationCommandOptionBaseData & SharedNameAndDescriptionData;
 
 	/**
 	 * Creates a new application command option builder.
