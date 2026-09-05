@@ -81,18 +81,16 @@ This is NOT a simple port. Every line of code has been scrutinized and rewritten
 
 **WebSocketShard.ts** alone went from **977 lines** to **845 lines** (-132, -13.5%).
 
-What was removed:
-- ❌ 85 lines of `zlib`/`zlib-sync` initialization
-- ❌ 26 lines for ZlibNative setup
-- ❌ 14 lines for ZlibSync setup  
-- ❌ 29 lines for ZstdNative setup
-- ❌ All Buffer stream management
-- ❌ All Node.js event emitters for compression
+| `❌` What was removed | `✅` What was added |
+|---------|---------------|
+| `85` lines of `zlib`/`zlib-sync` initialization | **1 line**: `private bunInflate = new BunInflateHandler();` |
+| `26` lines for ZlibNative setup |
+| `14` lines for ZlibSync setup |  
+| `29` lines for ZstdNative setup |
+| All Buffer stream management |
+| All Node.js event emitters for compression |
 
-What was added:
-- ✅ **1 line**: `private bunInflate = new BunInflateHandler();`
-
-**Compression logic**: From 95 lines of stream-based Buffer juggling to **40 lines** of clean, functional Uint8Array handling.
+> **Compression logic**: From 95 lines of stream-based Buffer juggling to **40 lines** of clean, functional Uint8Array handling.
 
 ---
 
@@ -134,22 +132,16 @@ await manager.connect();
 
 Discord's gateway uses **zlib-stream compression** with a special suffix (`0x00 0x00 0xFF 0xFF`) to indicate message boundaries.
 
-**Old approach** (Node.js):
-1. Import `zlib-sync` or `node:zlib`
-2. Create inflate stream with event listeners
-3. Accumulate chunks in a `Buffer[]`
-4. Detect suffix manually
-5. Concatenate buffers with `Buffer.concat()`
-6. Decode with `TextDecoder` or `toString()`
+| **Old approach** (Node.js) | **New approach** (Bun) |
+|---------|---------------|
+| Import `zlib-sync` or `node:zlib` | Receive `Uint8Array` chunk |
+| Create inflate stream with event listeners | Check last 4 bytes for suffix |
+| Accumulate chunks in a `Buffer[]` | If suffix detected: `Bun.inflateSync(data)` |
+| Detect suffix manually | Otherwise: accumulate in buffer |
+| Concatenate buffers with `Buffer.concat()` | 
+| Decode with `TextDecoder` or `toString()` |
 
-**New approach** (Bun):
-1. Receive `Uint8Array` chunk
-2. Check last 4 bytes for suffix
-3. If suffix detected: `Bun.inflateSync(data)`
-4. Otherwise: accumulate in buffer
-5. Done.
-
-**Performance gain**: Bun's `inflateSync` is implemented in **Zig** and runs ~40% faster than V8's native zlib bindings.
+> **Performance gain**: Bun's `inflateSync` is implemented in **Zig** and runs ~40% faster than V8's native zlib bindings.
 
 ### Zero-Copy Binary Handling
 
@@ -200,24 +192,17 @@ That's the ONLY change needed.
 
 ## What's Different Under the Hood?
 
-### Removed:
-- ❌ `ws` library
-- ❌ `zlib-sync`
-- ❌ `node:zlib`
-- ❌ `node:buffer`
-- ❌ `node:events` (for compression)
-- ❌ `node:timers/promises`
-- ❌ `node:worker_threads`
-- ❌ `tslib`
-- ❌ All build tooling (tsup, vitest, ESLint, Prettier)
-
-### Added:
-- ✅ `Bun.inflateSync` / `Bun.deflateSync` (Zig-powered compression)
-- ✅ `BunInflateHandler` class (clean & streaming safe)
-- ✅ Web Standard `WebSocket`
-- ✅ Web Standard `Worker` for multi-threaded shard orchestration
-- ✅ Native `Uint8Array` zero-copy binary pipelines
-- ✅ Standardized tooling with Biome and Bun test runner
+| `❌` Removed | `✅` Added |
+|---------|---------------|
+| `ws` library | `Bun.inflateSync` / `Bun.deflateSync` (Zig-powered compression) |
+| `zlib-sync` | `BunInflateHandler` class (clean & streaming safe) |
+| `node:zlib` | Web Standard `WebSocket` |
+| `node:buffer` | Web Standard `Worker` for multi-threaded shard orchestration |
+| `node:events` (for compression) | Native `Uint8Array` zero-copy binary pipelines |
+| `node:timers/promises` | Standardized tooling with Biome and Bun test runner |
+| `node:worker_threads` |
+| `tslib` |
+| All build tooling (tsup, vitest, ESLint, Prettier) |
 
 ---
 
