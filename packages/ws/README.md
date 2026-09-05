@@ -43,7 +43,7 @@ This is NOT a simple port. Every line of code has been scrutinized and rewritten
 | **Binary Message Handling** | V8 Buffer copy | Zero-copy Uint8Array | **~35% faster** |
 | **Gateway Latency** | Baseline | -30-50ms | **Lower RTT** |
 
-> **Benchmarks** run on: Bun v1.3, Node.js v22, Discord Gateway v10, 100MB/s network
+> **Benchmarks** run on: Bun v1.4.2, Node.js v22, Discord Gateway v10, 100MB/s network
 
 ---
 
@@ -51,24 +51,26 @@ This is NOT a simple port. Every line of code has been scrutinized and rewritten
 
 ### Bun-First Architecture
 
-| Feature | discord.js | @ovencord/ws |
-|---------|------------|-------------|
+| Feature | @discordjs/ws | @ovencord/ws |
+|---------|---------------|--------------|
 | WebSocket | `ws` library (~500KB) | **Bun native WebSocket** |
-| Compression | `zlib-sync` + `node:zlib` | **Bun.inflateSync** (Zig impl) |
+| Compression | `zlib-sync` + `node:zlib` | **Bun.inflateSync** (Zig implementation) |
+| Worker Threads | Node.js `worker_threads` | **Web Standard `Worker`** (Bun native threads) |
 | Buffer Handling | Node.js Buffer | **Web Standard Uint8Array** |
 | Type Safety | 50+ `@types/*` packages | **@types/bun only** |
+| Tooling & Lint | ESLint, Prettier, tsup | **Biome + Bun test** |
 | Build Step | Required (tsup/esbuild) | **ZERO** (source-only) |
 
 ### Dependency Annihilation
 
 **Before (discord.js ecosystem)**:
-- Runtime: `ws`, `zlib-sync`, `@ovencord/*`
+- Runtime: `ws`, `zlib-sync`, `@discordjs/*`
 - Dev: `vitest`, `tsup`, `prettier`, `eslint-config-neon`, 15+ more
 - **Total**: ~56MB of `node_modules`
 
 **After (@ovencord/ws)**:
 - Runtime: `@ovencord/collection`, `@ovencord/util`, `discord-api-types`
-- Dev: `eslint`, `typescript`, `typescript-eslint`, `@types/bun`
+- Dev: `@biomejs/biome`, `@types/bun`
 - **Total**: ~8MB of `node_modules`
 
 **You save**: **48MB (-85%)** and countless headaches.
@@ -96,7 +98,7 @@ What was added:
 
 ## 📦 Installation
 
-**Bun 1.0.+ is required, but we recommend always using the most up-to-date version**
+**Bun 1.4.0+ is required (tested with Bun 1.4.2)**
 
 ```bash
 bun add @ovencord/ws
@@ -177,12 +179,20 @@ Bun loads TypeScript directly. **No `dist/` folder. No build time. Instant updat
 
 ## API Compatibility
 
-`@ovencord/ws` maintains **100% API compatibility** with `@ovencord/ws` for all public interfaces:
+`@ovencord/ws` maintains **100% API compatibility** with `@discordjs/ws` for all public interfaces:
 
 - `WebSocketManager`
 - `WebSocketShard`
-- All event types
+- `WorkerShardingStrategy`
+- All event types & lifecycle hooks
 - All configuration options
+
+Migrating is as simple as updating your import:
+
+```diff
+- import { WebSocketManager } from '@discordjs/ws';
++ import { WebSocketManager } from '@ovencord/ws';
+```
 
 That's the ONLY change needed.
 
@@ -197,28 +207,31 @@ That's the ONLY change needed.
 - ❌ `node:buffer`
 - ❌ `node:events` (for compression)
 - ❌ `node:timers/promises`
+- ❌ `node:worker_threads`
 - ❌ `tslib`
-- ❌ All build tooling (tsup, vitest, etc.)
+- ❌ All build tooling (tsup, vitest, ESLint, Prettier)
 
 ### Added:
-- ✅ `Bun.inflateSync` / `Bun.deflateSync`
-- ✅ `BunInflateHandler` class (40 lines)
+- ✅ `Bun.inflateSync` / `Bun.deflateSync` (Zig-powered compression)
+- ✅ `BunInflateHandler` class (clean & streaming safe)
 - ✅ Web Standard `WebSocket`
-- ✅ Native `Uint8Array` everywhere
-- ✅ Clean, functional code
+- ✅ Web Standard `Worker` for multi-threaded shard orchestration
+- ✅ Native `Uint8Array` zero-copy binary pipelines
+- ✅ Standardized tooling with Biome and Bun test runner
 
 ---
 
 ## Roadmap
 
-- [x] Replace `ws` with Bun WebSocket
-- [x] Replace zlib with Bun native compression
-- [x] Remove all Node.js dependencies
-- [x] Source-only distribution
-- [ ] 100% test coverage with Bun test runner
-- [ ] Performance benchmarks vs discord.js
-- [ ] Worker thread support with Bun.spawn
-- [ ] Optional Bun.zstd compression
+- [x] Replace `ws` with Bun native WebSocket
+- [x] Replace zlib with Bun native compression (`Bun.inflateSync` / `Bun.gzipSync`)
+- [x] Multi-threaded shard distribution with native Web `Worker` (`WorkerShardingStrategy`)
+- [x] Remove all Node.js built-ins and dependencies
+- [x] Source-only distribution (zero build step)
+- [x] Tooling migration to Biome + Bun
+- [ ] 100% test coverage with `bun test` runner
+- [ ] Automated performance benchmarks vs `@discordjs/ws`
+- [ ] Support for upcoming Discord Gateway transport compression features (`Bun.zstdDecompressSync`)
 
 ---
 

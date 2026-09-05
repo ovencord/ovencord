@@ -169,7 +169,7 @@ bun install
 |---------|--------|
 | `bun run build` | Build all packages (where necessary) |
 | `bun run test` | Run tests across the monorepo |
-| `bun run lint` | Run ESLint (Gold Standard, zero-warning) |
+| `bun run lint` | Run Biome (Gold Standard, zero-warning) |
 | `bun run typecheck` | Perform recursive TypeScript type checking |
 
 

@@ -590,7 +590,6 @@ export class WebSocketShard extends AsyncEventEmitter<WebSocketShardEventsMap> {
 					this.replayedEvents++;
 				}
 
-				// eslint-disable-next-line sonarjs/no-nested-switch
 				switch (payload.t) {
 					case GatewayDispatchEvents.Ready: {
 						this.#status = WebSocketShardStatus.Ready;
@@ -862,13 +861,11 @@ export class WebSocketShard extends AsyncEventEmitter<WebSocketShardEventsMap> {
 					return;
 				}
 				signal.addEventListener('abort', () => {
-					// eslint-disable-next-line @typescript-eslint/no-explicit-any
 					(this as AsyncEventEmitter<WebSocketShardEventsMap>).off(event, listener);
 					reject(signal.reason);
 				});
 			}
 
-			// eslint-disable-next-line @typescript-eslint/no-explicit-any
 			(this as AsyncEventEmitter<WebSocketShardEventsMap>).once(event, listener);
 		});
 	}
