@@ -4,9 +4,11 @@ import { WebSocketManager, WebSocketShardEvents, WebSocketShardStatus } from '@o
 import {
 	type APIGuildPreview,
 	type APIGuildWidget,
+	type APIInvite,
 	type APISoundboardSound,
 	type APISticker,
 	type APIStickerPack,
+	type APITemplate,
 	type APIVoiceRegion,
 	type APIWebhook,
 	GatewayDispatchEvents,
@@ -624,7 +626,7 @@ export class Client extends AsyncEventEmitter {
 			guild_scheduled_event_id: guildScheduledEventId,
 		});
 
-		const data = await this.rest.get(Routes.invite(code), { query });
+		const data = (await this.rest.get(Routes.invite(code), { query })) as APIInvite;
 		return createInvite(this, data);
 	}
 
@@ -640,7 +642,7 @@ export class Client extends AsyncEventEmitter {
 	 */
 	async fetchGuildTemplate(template: string) {
 		const code = resolveGuildTemplateCode(template);
-		const data = await this.rest.get(Routes.template(code));
+		const data = (await this.rest.get(Routes.template(code))) as APITemplate;
 		return new GuildTemplate(this, data);
 	}
 
@@ -749,7 +751,7 @@ export class Client extends AsyncEventEmitter {
 		const id = this.guilds.resolveId(guild);
 		if (!id) throw new DiscordjsTypeError(ErrorCodes.InvalidType, 'guild', 'GuildResolvable');
 		const data = (await this.rest.get(Routes.guildPreview(id))) as APIGuildPreview;
-		return new GuildPreview(this, data as unknown as Record<string, unknown>);
+		return new GuildPreview(this, data);
 	}
 
 	/**

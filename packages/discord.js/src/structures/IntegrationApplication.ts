@@ -1,4 +1,5 @@
-import type { APIGuildIntegrationApplication } from 'discord-api-types/v10';
+import type { APIApplication, APIGuildIntegrationApplication } from 'discord-api-types/v10';
+import type { Client } from '../client/Client.js';
 import { Application } from './interfaces/Application.js';
 
 /**
@@ -13,6 +14,11 @@ export class IntegrationApplication extends Application {
 	declare public rpcOrigins: any;
 	declare public cover: any;
 	declare public verifyKey: any;
+
+	constructor(client: Client, data: APIGuildIntegrationApplication | APIApplication) {
+		super(client, data as unknown as APIApplication);
+	}
+
 	_patch(data: Partial<APIGuildIntegrationApplication>) {
 		super._patch(data);
 

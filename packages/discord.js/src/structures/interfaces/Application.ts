@@ -19,9 +19,9 @@ export class Application extends Base {
 	public rpcOrigins: any;
 	public cover: any;
 	public verifyKey: any;
-	constructor(client: Client, data: APIApplication) {
+	constructor(client: Client, data: APIApplication | Partial<APIApplication> | Record<string, unknown>) {
 		super(client);
-		this._patch(data);
+		this._patch(data as Partial<APIApplication>);
 	}
 
 	override _patch(data: Partial<APIApplication>) {

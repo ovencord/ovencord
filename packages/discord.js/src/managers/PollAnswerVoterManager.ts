@@ -1,6 +1,6 @@
 import { Collection } from '@ovencord/collection';
 import { makeURLSearchParams } from '@ovencord/rest';
-import { Routes } from 'discord-api-types/v10';
+import { type RESTGetAPIPollAnswerVotersResult, Routes } from 'discord-api-types/v10';
 import { User } from '../structures/User.js';
 import { CachedManager } from './CachedManager.js';
 
@@ -46,9 +46,9 @@ export class PollAnswerVoterManager extends CachedManager {
 	async fetch({ after, limit }: any = {}) {
 		const poll = this.answer.poll;
 		const query = makeURLSearchParams({ limit, after });
-		const data = await this.client.rest.get(Routes.pollAnswerVoters(poll.channelId, poll.messageId, this.answer.id), {
+		const data = (await this.client.rest.get(Routes.pollAnswerVoters(poll.channelId, poll.messageId, this.answer.id), {
 			query,
-		});
+		})) as RESTGetAPIPollAnswerVotersResult;
 
 		return data.users.reduce((coll: any, rawUser: any) => {
 			const user = this.client.users._add(rawUser);

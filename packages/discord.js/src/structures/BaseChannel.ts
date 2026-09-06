@@ -5,6 +5,13 @@ import type { Client } from '../client/Client.js';
 import { ChannelFlagsBitField } from '../util/ChannelFlagsBitField.js';
 import { ThreadChannelTypes } from '../util/Constants.js';
 import { Base } from './Base.js';
+import type { BaseGuildVoiceChannel } from './BaseGuildVoiceChannel.js';
+import type { DMChannel } from './DMChannel.js';
+import type { GuildChannel } from './GuildChannel.js';
+import type { TextBasedChannel } from './interfaces/TextBasedChannel.js';
+import type { PartialGroupDMChannel } from './PartialGroupDMChannel.js';
+import type { ThreadChannel } from './ThreadChannel.js';
+import type { ThreadOnlyChannel } from './ThreadOnlyChannel.js';
 
 /**
  * Represents any channel on Discord.
@@ -43,14 +50,14 @@ export class BaseChannel extends Base {
 		if (data && immediatePatch) this._patch(data);
 	}
 
-	_patch(data: APIChannel) {
-		if ('flags' in data) {
+	_patch(data: Partial<APIChannel>) {
+		if ('flags' in data && data.flags !== undefined) {
 			this.flags = new ChannelFlagsBitField(data.flags).freeze();
 		} else {
 			this.flags ??= new ChannelFlagsBitField().freeze();
 		}
 
-		this.id = data.id;
+		if (data.id) this.id = data.id;
 	}
 
 	/**
@@ -79,7 +86,7 @@ export class BaseChannel extends Base {
 	 * @type {string}
 	 * @readonly
 	 */
-	get url() {
+	get url(): string {
 		return this.isDMBased() ? channelLink(this.id) : channelLink(this.id, this.guildId);
 	}
 
@@ -136,7 +143,7 @@ export class BaseChannel extends Base {
 	 *
 	 * @returns {boolean}
 	 */
-	isThread() {
+	isThread(): this is ThreadChannel {
 		return ThreadChannelTypes.includes(this.type);
 	}
 
@@ -145,7 +152,7 @@ export class BaseChannel extends Base {
 	 *
 	 * @returns {boolean}
 	 */
-	isTextBased() {
+	isTextBased(): this is BaseChannel & TextBasedChannel {
 		return 'messages' in this;
 	}
 
@@ -154,7 +161,7 @@ export class BaseChannel extends Base {
 	 *
 	 * @returns {boolean}
 	 */
-	isDMBased() {
+	isDMBased(): this is DMChannel | PartialGroupDMChannel {
 		return [ChannelType.DM, ChannelType.GroupDM].includes(this.type);
 	}
 
@@ -163,7 +170,7 @@ export class BaseChannel extends Base {
 	 *
 	 * @returns {boolean}
 	 */
-	isVoiceBased() {
+	isVoiceBased(): this is BaseGuildVoiceChannel {
 		return 'bitrate' in this;
 	}
 
@@ -172,8 +179,17 @@ export class BaseChannel extends Base {
 	 *
 	 * @returns {boolean}
 	 */
-	isThreadOnly() {
+	isThreadOnly(): this is ThreadOnlyChannel {
 		return 'availableTags' in this;
+	}
+
+	/**
+	 * Indicates whether this channel belongs to a guild.
+	 *
+	 * @returns {boolean}
+	 */
+	isGuildBased(): this is GuildChannel | ThreadChannel {
+		return 'guild' in this && Boolean(this.guildId);
 	}
 
 	/**

@@ -17,6 +17,7 @@ import type { CategoryChannel } from './CategoryChannel.js';
 import type { Guild } from './Guild.js';
 import type { GuildMember } from './GuildMember.js';
 import type { Role } from './Role.js';
+import type { User } from './User.js';
 
 /**
  * Represents a guild channel from any of the following:
@@ -131,8 +132,8 @@ export class GuildChannel extends BaseChannel {
 	 * @type {?CategoryChannel}
 	 * @readonly
 	 */
-	get parent() {
-		return this.guild.channels.resolve(this.parentId);
+	get parent(): CategoryChannel | null {
+		return (this.guild.channels.resolve(this.parentId) as CategoryChannel | null) ?? null;
 	}
 
 	/**
@@ -141,7 +142,7 @@ export class GuildChannel extends BaseChannel {
 	 * @type {?boolean}
 	 * @readonly
 	 */
-	get permissionsLocked() {
+	get permissionsLocked(): boolean | null {
 		if (!this.parent) return null;
 
 		// Get all overwrites
@@ -158,9 +159,11 @@ export class GuildChannel extends BaseChannel {
 			// Handle empty overwrite
 			if (
 				(!channelVal &&
+					parentVal &&
 					parentVal.deny.bitfield === PermissionsBitField.DefaultBit &&
 					parentVal.allow.bitfield === PermissionsBitField.DefaultBit) ||
 				(!parentVal &&
+					channelVal &&
 					channelVal.deny.bitfield === PermissionsBitField.DefaultBit &&
 					channelVal.allow.bitfield === PermissionsBitField.DefaultBit)
 			) {
@@ -189,7 +192,7 @@ export class GuildChannel extends BaseChannel {
 
 		let count = 0;
 		for (const channel of this.guild.channels.cache.values()) {
-			if (!types.includes(channel.type)) continue;
+			if (channel.isThread() || !types.includes(channel.type)) continue;
 			if (!selfIsCategory && channel.parentId !== this.parentId) continue;
 			if (this.rawPosition === channel.rawPosition) {
 				if (Snowflake.compare(channel.id, this.id) === -1) count++;
@@ -209,7 +212,10 @@ export class GuildChannel extends BaseChannel {
 	 * will return all permissions
 	 * @returns {?Readonly<PermissionsBitField>}
 	 */
-	permissionsFor(memberOrRole: GuildMember | Role | string | undefined | null, checkAdmin = true) {
+	permissionsFor(
+		memberOrRole: GuildMember | Role | User | string | undefined | null,
+		checkAdmin = true,
+	): Readonly<PermissionsBitField> | null {
 		const member = this.guild.members.resolve(memberOrRole);
 		if (member) return this.memberPermissions(member, checkAdmin);
 		const role = this.guild.roles.resolve(memberOrRole);
@@ -313,7 +319,6 @@ export class GuildChannel extends BaseChannel {
 	 */
 	async lockPermissions() {
 		if (!this.parent) throw new DiscordjsError(ErrorCodes.GuildChannelOrphan);
-		// @ts-expect-error
 		const permissionOverwrites = this.parent.permissionOverwrites.cache.map((overwrite) => overwrite.toJSON());
 		return this.edit({ permissionOverwrites });
 	}
@@ -327,9 +332,8 @@ export class GuildChannel extends BaseChannel {
 	 * @readonly
 	 */
 	get members() {
-		// @ts-expect-error
 		return this.guild.members.cache.filter((member) =>
-			this.permissionsFor(member).has(PermissionFlagsBits.ViewChannel, false),
+			this.permissionsFor(member)?.has(PermissionFlagsBits.ViewChannel, false),
 		);
 	}
 

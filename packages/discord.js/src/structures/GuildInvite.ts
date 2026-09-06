@@ -1,4 +1,6 @@
 import {
+	type APIChannel,
+	type APIGuildIntegrationApplication,
 	type APIInvite,
 	type InviteTargetType,
 	InviteType,
@@ -84,7 +86,7 @@ export class GuildInvite extends BaseInvite {
 			 * @type {?GuildInvitableChannel}
 			 */
 			this.channel =
-				this.client.channels._add(data.channel, this.guild, { cache: false }) ??
+				this.client.channels._add(data.channel as unknown as APIChannel, this.guild, { cache: false }) ??
 				this.client.channels.cache.get(this.channelId as Snowflake);
 
 			this.channelId ??= data.channel.id;
@@ -118,7 +120,10 @@ export class GuildInvite extends BaseInvite {
 			 *
 			 * @type {?IntegrationApplication}
 			 */
-			this.targetApplication = new IntegrationApplication(this.client, data.target_application);
+			this.targetApplication = new IntegrationApplication(
+				this.client,
+				data.target_application as unknown as APIGuildIntegrationApplication,
+			);
 		} else {
 			this.targetApplication ??= null;
 		}

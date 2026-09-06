@@ -1,5 +1,10 @@
 import { Collection } from '@ovencord/collection';
-import { ApplicationCommandPermissionType, RESTJSONErrorCodes, Routes } from 'discord-api-types/v10';
+import {
+	type APIGuildApplicationCommandPermissions,
+	ApplicationCommandPermissionType,
+	RESTJSONErrorCodes,
+	Routes,
+} from 'discord-api-types/v10';
 import { DiscordjsError, DiscordjsTypeError, ErrorCodes } from '../errors/index.js';
 import { BaseManager } from './BaseManager.js';
 
@@ -109,11 +114,13 @@ export class ApplicationCommandPermissionsManager extends BaseManager {
 	async fetch({ guild, command }: any = {}) {
 		const { guildId, commandId } = this._validateOptions(guild, command);
 		if (commandId) {
-			const innerData = await this.client.rest.get(this.permissionsPath(guildId, commandId));
+			const innerData = (await this.client.rest.get(
+				this.permissionsPath(guildId, commandId),
+			)) as APIGuildApplicationCommandPermissions;
 			return innerData.permissions;
 		}
 
-		const data = (await this.client.rest.get(this.permissionsPath(guildId))) as any[];
+		const data = (await this.client.rest.get(this.permissionsPath(guildId))) as APIGuildApplicationCommandPermissions[];
 		return data.reduce((coll: any, perm: any) => coll.set(perm.id, perm.permissions), new Collection<any, any>());
 	}
 
@@ -181,11 +188,11 @@ export class ApplicationCommandPermissionsManager extends BaseManager {
 
 		commandId ??= this.client.user.id;
 
-		const data = await this.client.rest.put(this.permissionsPath(options.guildId, commandId), {
+		const data = (await this.client.rest.put(this.permissionsPath(options.guildId, commandId), {
 			body: { permissions },
 			auth: false,
 			headers: { Authorization: `Bearer ${token}` },
-		});
+		})) as APIGuildApplicationCommandPermissions;
 		return data.permissions;
 	}
 

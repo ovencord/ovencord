@@ -2,6 +2,7 @@ import { Collection } from '@ovencord/collection';
 import { makeURLSearchParams } from '@ovencord/rest';
 import { DiscordSnowflake } from '@ovencord/util';
 import {
+	type APIAuditLog,
 	type APIGuild,
 	type APIGuildIntegration,
 	type APIGuildOnboarding,
@@ -26,9 +27,12 @@ import {
 import type { Client } from '../client/Client.js';
 import { DiscordjsError, DiscordjsTypeError, ErrorCodes } from '../errors/index.js';
 import { AutoModerationRuleManager } from '../managers/AutoModerationRuleManager.js';
+import type { ChannelResolvable } from '../managers/ChannelManager.js';
 import { GuildApplicationCommandManager } from '../managers/GuildApplicationCommandManager.js';
 import { GuildBanManager } from '../managers/GuildBanManager.js';
+import type { GuildChannelResolvable } from '../managers/GuildChannelManager.js';
 import { GuildChannelManager } from '../managers/GuildChannelManager.js';
+import type { EmojiResolvable } from '../managers/GuildEmojiManager.js';
 import { GuildEmojiManager } from '../managers/GuildEmojiManager.js';
 import { GuildInviteManager } from '../managers/GuildInviteManager.js';
 import { GuildMemberManager } from '../managers/GuildMemberManager.js';
@@ -36,6 +40,7 @@ import { GuildScheduledEventManager } from '../managers/GuildScheduledEventManag
 import { GuildSoundboardSoundManager } from '../managers/GuildSoundboardSoundManager.js';
 import { GuildStickerManager } from '../managers/GuildStickerManager.js';
 import { PresenceManager } from '../managers/PresenceManager.js';
+import type { RoleResolvable } from '../managers/RoleManager.js';
 import { RoleManager } from '../managers/RoleManager.js';
 import { StageInstanceManager } from '../managers/StageInstanceManager.js';
 import { VoiceStateManager } from '../managers/VoiceStateManager.js';
@@ -45,6 +50,7 @@ import { _transformAPIIncidentsData } from '../util/Transformers.js';
 import { discordSort, getSortableGroupTypes, resolvePartialEmoji } from '../util/Util.js';
 import { AnonymousGuild } from './AnonymousGuild.js';
 import { GuildAuditLogs } from './GuildAuditLogs.js';
+import type { GuildChannel } from './GuildChannel.js';
 import { GuildOnboarding } from './GuildOnboarding.js';
 import { GuildPreview } from './GuildPreview.js';
 import { GuildTemplate } from './GuildTemplate.js';
@@ -981,7 +987,7 @@ export class Guild extends AnonymousGuild {
 			query.set('user_id', userId);
 		}
 
-		const data = await this.client.rest.get(Routes.guildAuditLog(this.id), { query });
+		const data = (await this.client.rest.get(Routes.guildAuditLog(this.id), { query })) as APIAuditLog;
 		return new GuildAuditLogs(this, data);
 	}
 
@@ -1074,19 +1080,19 @@ export class Guild extends AnonymousGuild {
 		verificationLevel?: GuildVerificationLevel | null;
 		defaultMessageNotifications?: GuildDefaultMessageNotifications | null;
 		explicitContentFilter?: GuildExplicitContentFilter | null;
-		afkChannel?: unknown | null;
+		afkChannel?: ChannelResolvable | null;
 		afkTimeout?: number | null;
 		icon?: unknown | null;
 		splash?: unknown | null;
 		discoverySplash?: unknown | null;
 		banner?: unknown | null;
-		systemChannel?: unknown | null;
+		systemChannel?: ChannelResolvable | null;
 		systemChannelFlags?: unknown;
-		rulesChannel?: unknown | null;
-		publicUpdatesChannel?: unknown | null;
+		rulesChannel?: ChannelResolvable | null;
+		publicUpdatesChannel?: ChannelResolvable | null;
 		preferredLocale?: Locale | null;
 		premiumProgressBarEnabled?: boolean;
-		safetyAlertsChannel?: unknown | null;
+		safetyAlertsChannel?: ChannelResolvable | null;
 		reason?: string;
 	}) {
 		const data = (await this.client.rest.patch(Routes.guild(this.id), {
@@ -1179,19 +1185,19 @@ export class Guild extends AnonymousGuild {
 			type?: number;
 			options: {
 				id?: string;
-				channels?: unknown[];
-				roles?: unknown[];
+				channels?: GuildChannelResolvable[];
+				roles?: RoleResolvable[];
 				title: string;
 				description?: string;
 				emoji?: unknown;
 			}[];
 		}[];
-		defaultChannels?: unknown[];
+		defaultChannels?: GuildChannelResolvable[];
 		enabled?: boolean;
 		mode?: number;
 		reason?: string;
 	}) {
-		const newData = await this.client.rest.put(Routes.guildOnboarding(this.id), {
+		const newData = (await this.client.rest.put(Routes.guildOnboarding(this.id), {
 			body: {
 				prompts: options.prompts?.map((prompt) => ({
 					// Currently, the prompt ids are required even for new ones (which won't be used)
@@ -1206,8 +1212,8 @@ export class Guild extends AnonymousGuild {
 
 						return {
 							id: option.id,
-							channel_ids: option.channels?.map((channel: unknown) => this.channels.resolveId(channel)),
-							role_ids: option.roles?.map((role: unknown) => this.roles.resolveId(role)),
+							channel_ids: option.channels?.map((channel) => this.channels.resolveId(channel)),
+							role_ids: option.roles?.map((role) => this.roles.resolveId(role)),
 							title: option.title,
 							description: option.description,
 							emoji_animated: emoji && 'animated' in emoji ? emoji.animated : undefined,
@@ -1221,7 +1227,7 @@ export class Guild extends AnonymousGuild {
 				mode: options.mode,
 			},
 			reason: options.reason,
-		});
+		})) as APIGuildOnboarding;
 
 		return new GuildOnboarding(this.client, newData);
 	}
@@ -1283,7 +1289,7 @@ export class Guild extends AnonymousGuild {
 	async editWelcomeScreen(options: {
 		enabled?: boolean;
 		description?: string;
-		welcomeChannels?: { channel: unknown; description: string; emoji?: unknown }[];
+		welcomeChannels?: { channel: GuildChannelResolvable; description: string; emoji?: EmojiResolvable }[];
 	}) {
 		const { enabled, description, welcomeChannels } = options;
 		const welcome_channels = welcomeChannels?.map((welcomeChannelData) => {
@@ -1387,7 +1393,7 @@ export class Guild extends AnonymousGuild {
 	 *  .then(updated => console.log(`Updated guild AFK channel to ${guild.afkChannel.name}`))
 	 *  .catch(console.error);
 	 */
-	async setAFKChannel(afkChannel: unknown | null, reason?: string) {
+	async setAFKChannel(afkChannel: ChannelResolvable | null, reason?: string) {
 		return this.edit({ afkChannel, reason });
 	}
 
@@ -1403,7 +1409,7 @@ export class Guild extends AnonymousGuild {
 	 *  .then(updated => console.log(`Updated guild system channel to ${guild.systemChannel.name}`))
 	 *  .catch(console.error);
 	 */
-	async setSystemChannel(systemChannel: unknown | null, reason?: string) {
+	async setSystemChannel(systemChannel: ChannelResolvable | null, reason?: string) {
 		return this.edit({ systemChannel, reason });
 	}
 
@@ -1498,7 +1504,7 @@ export class Guild extends AnonymousGuild {
 	 *  .then(updated => console.log(`Updated guild rules channel to ${guild.rulesChannel.name}`))
 	 *  .catch(console.error);
 	 */
-	async setRulesChannel(rulesChannel: unknown | null, reason?: string) {
+	async setRulesChannel(rulesChannel: ChannelResolvable | null, reason?: string) {
 		return this.edit({ rulesChannel, reason });
 	}
 
@@ -1514,7 +1520,7 @@ export class Guild extends AnonymousGuild {
 	 *  .then(updated => console.log(`Updated guild community updates channel to ${guild.publicUpdatesChannel.name}`))
 	 *  .catch(console.error);
 	 */
-	async setPublicUpdatesChannel(publicUpdatesChannel: unknown | null, reason?: string) {
+	async setPublicUpdatesChannel(publicUpdatesChannel: ChannelResolvable | null, reason?: string) {
 		return this.edit({ publicUpdatesChannel, reason });
 	}
 
@@ -1557,7 +1563,7 @@ export class Guild extends AnonymousGuild {
 	 *  .then(updated => console.log(`Updated guild safety alerts channel to ${updated.safetyAlertsChannel.name}`))
 	 *  .catch(console.error);
 	 */
-	async setSafetyAlertsChannel(safetyAlertsChannel: unknown | null, reason?: string) {
+	async setSafetyAlertsChannel(safetyAlertsChannel: ChannelResolvable | null, reason?: string) {
 		return this.edit({ safetyAlertsChannel, reason });
 	}
 
@@ -1568,11 +1574,11 @@ export class Guild extends AnonymousGuild {
 	 * @param {string} [reason] Reason for changing the guild's widget settings
 	 * @returns {Promise<Guild>}
 	 */
-	async setWidgetSettings(settings: { enabled?: boolean; channel?: unknown }, reason?: string) {
+	async setWidgetSettings(settings: { enabled?: boolean; channel?: GuildChannelResolvable | null }, reason?: string) {
 		await this.client.rest.patch(Routes.guildWidgetSettings(this.id), {
 			body: {
 				enabled: settings.enabled,
-				channel_id: this.channels.resolveId(settings.channel),
+				channel_id: settings.channel ? this.channels.resolveId(settings.channel) : null,
 			},
 			reason,
 		});
@@ -1706,8 +1712,8 @@ export class Guild extends AnonymousGuild {
 		const types = getSortableGroupTypes(channel.type);
 		return discordSort(
 			this.channels.cache.filter(
-				({ parentId, type }: { parentId: string | null; type: ChannelType }) =>
-					types.includes(type) && (channelIsCategory || parentId === channel.parentId),
+				(c): c is GuildChannel =>
+					!c.isThread() && types.includes(c.type) && (channelIsCategory || c.parentId === channel.parentId),
 			),
 		);
 	}

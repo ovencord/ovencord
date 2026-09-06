@@ -2,7 +2,7 @@ import { Collection } from '@ovencord/collection';
 import { makeURLSearchParams } from '@ovencord/rest';
 import { DiscordSnowflake, GatewayRateLimitError } from '@ovencord/util';
 import { WebSocketShardEvents } from '@ovencord/ws';
-import { GatewayDispatchEvents, GatewayOpcodes, Routes } from 'discord-api-types/v10';
+import { type APIGuildMember, GatewayDispatchEvents, GatewayOpcodes, Routes } from 'discord-api-types/v10';
 import { DiscordjsError, DiscordjsRangeError, DiscordjsTypeError, ErrorCodes } from '../errors/index.js';
 import { BaseGuildVoiceChannel } from '../structures/BaseGuildVoiceChannel.js';
 import { GuildMember } from '../structures/GuildMember.js';
@@ -332,9 +332,9 @@ export class GuildMemberManager extends CachedManager {
 	 * @returns {Promise<Collection<Snowflake, GuildMember>>}
 	 */
 	async search({ query, limit, cache = true }: any = {}) {
-		const data = await this.client.rest.get(Routes.guildMembersSearch(this.guild.id), {
+		const data = (await this.client.rest.get(Routes.guildMembersSearch(this.guild.id), {
 			query: makeURLSearchParams({ query, limit }),
-		});
+		})) as APIGuildMember[];
 		return data.reduce((col: any, member: any) => col.set(member.user.id, this._add(member, cache)), new Collection());
 	}
 
@@ -355,7 +355,7 @@ export class GuildMemberManager extends CachedManager {
 	 */
 	async list({ after, limit, cache = true }: any = {}) {
 		const query = makeURLSearchParams({ limit, after });
-		const data = await this.client.rest.get(Routes.guildMembers(this.guild.id), { query });
+		const data = (await this.client.rest.get(Routes.guildMembers(this.guild.id), { query })) as APIGuildMember[];
 		return data.reduce((col: any, member: any) => col.set(member.user.id, this._add(member, cache)), new Collection());
 	}
 
@@ -506,9 +506,11 @@ export class GuildMemberManager extends CachedManager {
 
 		const endpoint = Routes.guildPrune(this.guild.id);
 
-		const { pruned } = await (dry
+		const { pruned } = (await (dry
 			? this.client.rest.get(endpoint, { query: makeURLSearchParams(query), reason })
-			: this.client.rest.post(endpoint, { body: { ...query, compute_prune_count }, reason }));
+			: this.client.rest.post(endpoint, { body: { ...query, compute_prune_count }, reason }))) as {
+			pruned: number | null;
+		};
 
 		return pruned;
 	}

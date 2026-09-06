@@ -15,7 +15,8 @@ import {
 	type Snowflake,
 } from 'discord-api-types/v10';
 import type { Client } from '../client/Client.js';
-import { DiscordjsError, ErrorCodes } from '../errors/index.js';
+import { DiscordjsError, DiscordjsTypeError, ErrorCodes } from '../errors/index.js';
+import type { ChannelResolvable } from '../managers/ChannelManager.js';
 import { ReactionManager } from '../managers/ReactionManager.js';
 import { createComponent, findComponentByCustomId } from '../util/Components.js';
 import { MaxBulkDeletableMessageAge, NonSystemMessageTypes, UndeletableMessageTypes } from '../util/Constants.js';
@@ -138,7 +139,9 @@ export class Message extends Base {
 		 *
 		 * @type {?Snowflake}
 		 */
-		this.guildId = (data.guild_id ?? this.channel?.guild?.id ?? null) as Snowflake | null;
+		this.guildId = (data.guild_id ??
+			(this.channel?.isGuildBased() ? this.channel.guild.id : null) ??
+			null) as Snowflake | null;
 
 		this._patch(data);
 	}
@@ -493,7 +496,10 @@ export class Message extends Base {
 		}
 
 		if (data.referenced_message) {
-			this.channel?.messages._add({ guild_id: data.message_reference?.guild_id, ...data.referenced_message });
+			const channel = this.channel;
+			if (channel?.isTextBased()) {
+				channel.messages._add({ guild_id: data.message_reference?.guild_id, ...data.referenced_message });
+			}
 		}
 
 		if (data.interaction_metadata) {
@@ -558,7 +564,7 @@ export class Message extends Base {
 
 				return coll.set(
 					this.reference?.messageId as string,
-					channel
+					channel?.isTextBased()
 						? channel.messages._add(snapshotData)
 						: new (this.constructor as typeof Message)(
 								this.client,
@@ -655,7 +661,9 @@ export class Message extends Base {
 	 * @readonly
 	 */
 	get guild() {
-		return this.client.guilds.resolve(this.guildId) ?? this.channel?.guild ?? null;
+		return (
+			this.client.guilds.resolve(this.guildId) ?? (this.channel?.isGuildBased() ? this.channel.guild : null) ?? null
+		);
 	}
 
 	/**
@@ -677,7 +685,8 @@ export class Message extends Base {
 	 * @readonly
 	 */
 	get thread() {
-		return this.channel?.threads?.cache.get(this.id) ?? null;
+		const channel = this.channel;
+		return (channel && 'threads' in channel ? (channel as any).threads.cache.get(this.id) : null) ?? null;
 	}
 
 	/**
@@ -787,7 +796,7 @@ export class Message extends Base {
 	get editable() {
 		const precheck = Boolean(
 			this.author.id === this.client.user.id &&
-				(!this.guild || this.channel?.viewable) &&
+				(!this.guild || (this.channel?.isGuildBased() && this.channel.viewable)) &&
 				this.reference?.type !== MessageReferenceType.Forward,
 		);
 
@@ -818,11 +827,12 @@ export class Message extends Base {
 		}
 
 		// DMChannel does not have viewable property, so check viewable after proved that message is on a guild.
-		if (!this.channel?.viewable) {
+		const channel = this.channel;
+		if (!channel?.isGuildBased() || !channel.viewable) {
 			return false;
 		}
 
-		const permissions = this.channel?.permissionsFor(this.client.user);
+		const permissions = channel.permissionsFor(this.client.user);
 		if (!permissions) return false;
 		// This flag allows deleting even if timed out
 		if (permissions.has(PermissionFlagsBits.Administrator, false)) return true;
@@ -844,11 +854,13 @@ export class Message extends Base {
 	 * channel.bulkDelete(messages.filter(message => message.bulkDeletable));
 	 */
 	get bulkDeletable() {
+		const channel = this.channel;
 		return (
 			(this.inGuild() &&
+				channel?.isGuildBased() &&
 				Date.now() - this.createdTimestamp < MaxBulkDeletableMessageAge &&
 				this.deletable &&
-				this.channel?.permissionsFor(this.client.user).has(PermissionFlagsBits.ManageMessages, false)) ??
+				channel.permissionsFor(this.client.user)?.has(PermissionFlagsBits.ManageMessages, false)) ??
 			false
 		);
 	}
@@ -864,7 +876,7 @@ export class Message extends Base {
 
 		if (this.system) return false;
 		if (!this.guild) return true;
-		if (!channel || channel.isVoiceBased() || !channel.viewable) return false;
+		if (!channel || channel.isVoiceBased() || !channel.isGuildBased() || !channel.viewable) return false;
 
 		const permissions = channel.permissionsFor(this.client.user);
 		if (!permissions) return false;
@@ -883,6 +895,7 @@ export class Message extends Base {
 		if (!messageId) throw new DiscordjsError(ErrorCodes.MessageReferenceMissing);
 		const channel = this.client.channels.resolve(channelId);
 		if (!channel) throw new DiscordjsError(ErrorCodes.GuildChannelResolve);
+		if (!channel.isTextBased()) throw new DiscordjsTypeError(ErrorCodes.InvalidType, 'channel', 'TextBasedChannel');
 		return channel.messages.fetch(messageId);
 	}
 
@@ -898,7 +911,8 @@ export class Message extends Base {
 			(this.author.id === this.client.user.id ? PermissionsBitField.DefaultBit : PermissionFlagsBits.ManageMessages);
 		const { channel } = this;
 		return Boolean(
-			channel?.type === ChannelType.GuildAnnouncement &&
+			channel?.isGuildBased() &&
+				channel.type === ChannelType.GuildAnnouncement &&
 				!this.flags.has(MessageFlags.Crossposted) &&
 				this.reference?.type !== MessageReferenceType.Forward &&
 				this.type === MessageType.Default &&
@@ -920,8 +934,9 @@ export class Message extends Base {
 	 *   .catch(console.error);
 	 */
 	async edit(options: unknown) {
-		if (!this.channel) throw new DiscordjsError(ErrorCodes.ChannelNotCached);
-		return this.channel.messages.edit(this, options);
+		const channel = this.channel;
+		if (!channel?.isTextBased()) throw new DiscordjsError(ErrorCodes.ChannelNotCached);
+		return channel.messages.edit(this, options);
 	}
 
 	/**
@@ -937,8 +952,9 @@ export class Message extends Base {
 	 * }
 	 */
 	async crosspost() {
-		if (!this.channel) throw new DiscordjsError(ErrorCodes.ChannelNotCached);
-		return this.channel.messages.crosspost(this.id);
+		const channel = this.channel;
+		if (!channel?.isTextBased()) throw new DiscordjsError(ErrorCodes.ChannelNotCached);
+		return channel.messages.crosspost(this.id);
 	}
 
 	/**
@@ -953,8 +969,9 @@ export class Message extends Base {
 	 *   .catch(console.error)
 	 */
 	async pin(reason?: string) {
-		if (!this.channel) throw new DiscordjsError(ErrorCodes.ChannelNotCached);
-		await this.channel.messages.pin(this.id, reason);
+		const channel = this.channel;
+		if (!channel?.isTextBased()) throw new DiscordjsError(ErrorCodes.ChannelNotCached);
+		await channel.messages.pin(this.id, reason);
 		return this;
 	}
 
@@ -970,8 +987,9 @@ export class Message extends Base {
 	 *   .catch(console.error)
 	 */
 	async unpin(reason?: string) {
-		if (!this.channel) throw new DiscordjsError(ErrorCodes.ChannelNotCached);
-		await this.channel.messages.unpin(this.id, reason);
+		const channel = this.channel;
+		if (!channel?.isTextBased()) throw new DiscordjsError(ErrorCodes.ChannelNotCached);
+		await channel.messages.unpin(this.id, reason);
 		return this;
 	}
 
@@ -992,13 +1010,14 @@ export class Message extends Base {
 	 *   .catch(console.error);
 	 */
 	async react(emoji: unknown) {
-		if (!this.channel) throw new DiscordjsError(ErrorCodes.ChannelNotCached);
-		await this.channel.messages.react(this.id, emoji);
+		const channel = this.channel;
+		if (!channel?.isTextBased()) throw new DiscordjsError(ErrorCodes.ChannelNotCached);
+		await channel.messages.react(this.id, emoji);
 
 		const result = this.client.actions.MessageReactionAdd.handle(
 			{
 				[this.client.actions.injectedUser]: this.client.user,
-				[this.client.actions.injectedChannel]: this.channel,
+				[this.client.actions.injectedChannel]: channel,
 				[this.client.actions.injectedMessage]: this,
 				emoji: resolvePartialEmoji(emoji),
 			} as unknown as GatewayMessageReactionAddDispatchData,
@@ -1018,8 +1037,9 @@ export class Message extends Base {
 	 *   .catch(console.error);
 	 */
 	async delete() {
-		if (!this.channel) throw new DiscordjsError(ErrorCodes.ChannelNotCached);
-		await this.channel.messages.delete(this.id);
+		const channel = this.channel;
+		if (!channel?.isTextBased()) throw new DiscordjsError(ErrorCodes.ChannelNotCached);
+		await channel.messages.delete(this.id);
 		return this;
 	}
 
@@ -1060,7 +1080,7 @@ export class Message extends Base {
 	 * @param {TextChannelResolvable} channel The channel to forward this message to.
 	 * @returns {Promise<Message>}
 	 */
-	async forward(channel: unknown) {
+	async forward(channel: ChannelResolvable) {
 		return this.client.channels.createMessage(channel, {
 			messageReference: {
 				messageId: this.id,
@@ -1076,7 +1096,7 @@ export class Message extends Base {
 	 *
 	 * @typedef {Object} StartThreadOptions
 	 * @property {string} name The name of the new thread
-	 * @property {ThreadAutoArchiveDuration} [autoArchiveDuration=this.channel.defaultAutoArchiveDuration] The amount of
+	 * @property {ThreadAutoArchiveDuration} [autoArchiveDuration] The amount of
 	 * time after which the thread should automatically archive in case of no recent activity
 	 * @property {string} [reason] Reason for creating the thread
 	 * @property {number} [rateLimitPerUser] The rate limit per user (slowmode) for the thread in seconds
@@ -1090,13 +1110,15 @@ export class Message extends Base {
 	 * @returns {Promise<ThreadChannel>}
 	 */
 	async startThread(options = {}) {
-		if (!this.channel) throw new DiscordjsError(ErrorCodes.ChannelNotCached);
-		if (![ChannelType.GuildText, ChannelType.GuildAnnouncement].includes(this.channel.type)) {
+		const channel = this.channel;
+		if (!channel?.isTextBased()) throw new DiscordjsError(ErrorCodes.ChannelNotCached);
+		if (![ChannelType.GuildText, ChannelType.GuildAnnouncement].includes(channel.type)) {
 			throw new DiscordjsError(ErrorCodes.MessageThreadParent);
 		}
 
 		if (this.hasThread) throw new DiscordjsError(ErrorCodes.MessageExistingThread);
-		return this.channel.threads.create({ ...options, startMessage: this });
+		if (!('threads' in channel)) throw new DiscordjsError(ErrorCodes.MessageThreadParent);
+		return (channel as any).threads.create({ ...options, startMessage: this });
 	}
 
 	/**
@@ -1106,8 +1128,9 @@ export class Message extends Base {
 	 * @returns {Promise<Message>}
 	 */
 	async fetch(force = true) {
-		if (!this.channel) throw new DiscordjsError(ErrorCodes.ChannelNotCached);
-		return this.channel.messages.fetch({ message: this.id, force });
+		const channel = this.channel;
+		if (!channel?.isTextBased()) throw new DiscordjsError(ErrorCodes.ChannelNotCached);
+		return channel.messages.fetch({ message: this.id, force });
 	}
 
 	/**

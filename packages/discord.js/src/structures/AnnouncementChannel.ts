@@ -1,3 +1,4 @@
+import type { GuildChannelResolvable } from '../managers/GuildChannelManager.js';
 import { BaseGuildTextChannel } from './BaseGuildTextChannel.js';
 
 /**
@@ -19,7 +20,7 @@ export class AnnouncementChannel extends BaseGuildTextChannel {
 	 *     .catch(console.error);
 	 * }
 	 */
-	async addFollower(channel: string | { id: string }, reason?: string) {
+	async addFollower(channel: GuildChannelResolvable, reason?: string) {
 		return this.guild.channels.addFollower(this, channel, reason);
 	}
 }

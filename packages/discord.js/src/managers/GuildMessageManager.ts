@@ -1,4 +1,4 @@
-import { Routes } from 'discord-api-types/v10';
+import { type APIMessage, Routes } from 'discord-api-types/v10';
 import { DiscordjsTypeError, ErrorCodes } from '../errors/index.js';
 import { MessageManager } from './MessageManager.js';
 
@@ -25,7 +25,9 @@ export class GuildMessageManager extends MessageManager {
 		const messageId = this.resolveId(message);
 		if (!messageId) throw new DiscordjsTypeError(ErrorCodes.InvalidType, 'message', 'MessageResolvable');
 
-		const data = await this.client.rest.post(Routes.channelMessageCrosspost(this.channel.id, messageId));
+		const data = (await this.client.rest.post(
+			Routes.channelMessageCrosspost(this.channel.id, messageId),
+		)) as APIMessage;
 		return this.cache.get(data.id) ?? this._add(data, true);
 	}
 }

@@ -1,6 +1,6 @@
 import { Collection } from '@ovencord/collection';
 import { makeURLSearchParams } from '@ovencord/rest';
-import { ReactionType, Routes } from 'discord-api-types/v10';
+import { type APIUser, ReactionType, Routes } from 'discord-api-types/v10';
 import { DiscordjsError, ErrorCodes } from '../errors/index.js';
 import { User } from '../structures/User.js';
 import { CachedManager } from './CachedManager.js';
@@ -48,10 +48,10 @@ export class ReactionUserManager extends CachedManager {
 	async fetch({ type = ReactionType.Normal, limit = 100, after }: any = {}) {
 		const message = this.reaction.message;
 		const query = makeURLSearchParams({ limit, after, type });
-		const data = await this.client.rest.get(
+		const data = (await this.client.rest.get(
 			Routes.channelMessageReaction(message.channelId, message.id, this.reaction.emoji.identifier),
 			{ query },
-		);
+		)) as APIUser[];
 		const users = new Collection();
 		for (const rawUser of data) {
 			const user = this.client.users._add(rawUser);

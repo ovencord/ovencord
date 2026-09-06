@@ -2,6 +2,7 @@ import type { APIEmoji, Snowflake } from 'discord-api-types/v10';
 import { PermissionFlagsBits } from 'discord-api-types/v10';
 import type { Client } from '../client/Client.js';
 import { DiscordjsError, ErrorCodes } from '../errors/index.js';
+import type { GuildEmojiEditOptions } from '../managers/GuildEmojiManager.js';
 import { GuildEmojiRoleManager } from '../managers/GuildEmojiRoleManager.js';
 import { BaseGuildEmoji } from './BaseGuildEmoji.js';
 import type { Guild } from './Guild.js';
@@ -13,6 +14,7 @@ import type { User } from './User.js';
  * @extends {BaseGuildEmoji}
  */
 export class GuildEmoji extends BaseGuildEmoji {
+	declare public guild: Guild;
 	public author: User | null;
 	public _roles: Snowflake[];
 	constructor(client: Client, data: APIEmoji, guild: Guild) {
@@ -108,7 +110,7 @@ export class GuildEmoji extends BaseGuildEmoji {
 	 *   .then(emoji => console.log(`Edited emoji ${emoji}`))
 	 *   .catch(console.error);
 	 */
-	async edit(options: { name?: string; roles?: Snowflake[] }) {
+	async edit(options: GuildEmojiEditOptions) {
 		if (!this.id) throw new Error('Emoji must have an ID to be edited.');
 		return this.guild.emojis.edit(this.id, options);
 	}
@@ -151,7 +153,6 @@ export class GuildEmoji extends BaseGuildEmoji {
 				other.available === this.available &&
 				other.requiresColons === this.requiresColons &&
 				other.roles.cache.size === this.roles.cache.size &&
-				// @ts-expect-error
 				other.roles.cache.every((role) => this.roles.cache.has(role.id))
 			);
 		} else {

@@ -1,5 +1,5 @@
 import { Collection } from '@ovencord/collection';
-import { Routes } from 'discord-api-types/v10';
+import { type APISticker, Routes } from 'discord-api-types/v10';
 import { DiscordjsTypeError, ErrorCodes } from '../errors/index.js';
 import { MessagePayload } from '../structures/MessagePayload.js';
 import { Sticker } from '../structures/Sticker.js';
@@ -67,12 +67,12 @@ export class GuildStickerManager extends CachedManager {
 
 		const body = { name, tags, description: description ?? '' };
 
-		const sticker = await this.client.rest.post(Routes.guildStickers(this.guild.id), {
+		const sticker = (await this.client.rest.post(Routes.guildStickers(this.guild.id), {
 			appendToFormData: true,
 			body,
 			files: [resolvedFile],
 			reason,
-		});
+		})) as APISticker;
 		return this.client.actions.GuildStickerCreate.handle(this.guild, sticker).sticker;
 	}
 

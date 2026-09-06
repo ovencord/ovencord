@@ -1,4 +1,4 @@
-import type { APIBan } from 'discord-api-types/v10';
+import type { APIBan, GatewayGuildBanModifyDispatchData } from 'discord-api-types/v10';
 import type { Client } from '../client/Client.js';
 import { Base } from './Base.js';
 import type { Guild } from './Guild.js';
@@ -13,7 +13,7 @@ export class GuildBan extends Base {
 	public guild: Guild;
 	public user: User | null = null;
 	public reason: string | null = null;
-	constructor(client: Client, data: APIBan, guild: Guild) {
+	constructor(client: Client, data: APIBan | GatewayGuildBanModifyDispatchData, guild: Guild) {
 		super(client);
 
 		/**
@@ -26,7 +26,7 @@ export class GuildBan extends Base {
 		this._patch(data);
 	}
 
-	override _patch(data: Partial<APIBan>) {
+	override _patch(data: Partial<APIBan> | GatewayGuildBanModifyDispatchData) {
 		if ('user' in data) {
 			/**
 			 * The user this ban applies to

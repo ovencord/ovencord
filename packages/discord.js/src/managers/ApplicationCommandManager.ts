@@ -233,7 +233,6 @@ export class ApplicationCommandManager extends CachedManager<Snowflake, Applicat
 	 */
 	async set(commands: unknown[], guildId?: Snowflake) {
 		const data = (await this.client.rest.put(this.commandPath({ guildId }), {
-			// @ts-expect-error
 			body: commands.map((command) => (this.constructor as typeof ApplicationCommandManager).transformCommand(command)),
 		})) as APIApplicationCommand[];
 		return data.reduce(

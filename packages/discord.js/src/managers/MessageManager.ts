@@ -1,7 +1,7 @@
 import { Collection } from '@ovencord/collection';
 import { makeURLSearchParams } from '@ovencord/rest';
 import { isFileBodyEncodable, isJSONEncodable } from '@ovencord/util';
-import { type APIMessage, Routes, type Snowflake } from 'discord-api-types/v10';
+import { type APIMessage, type RESTGetAPIPollAnswerVotersResult, Routes, type Snowflake } from 'discord-api-types/v10';
 import { DiscordjsTypeError, ErrorCodes } from '../errors/index.js';
 import { Message } from '../structures/Message.js';
 import { MessagePayload } from '../structures/MessagePayload.js';
@@ -116,9 +116,9 @@ export class MessageManager extends CachedManager {
 	}
 
 	async _fetchMany({ cache, ...apiOptions }: any = {}) {
-		const data = await this.client.rest.get(Routes.channelMessages(this.channel.id), {
+		const data = (await this.client.rest.get(Routes.channelMessages(this.channel.id), {
 			query: makeURLSearchParams(apiOptions),
-		});
+		})) as APIMessage[];
 
 		return data.reduce(
 			(_data: Collection<Snowflake, Message>, message: APIMessage) => _data.set(message.id, this._add(message, cache)),
@@ -166,15 +166,14 @@ export class MessageManager extends CachedManager {
 	 *   .catch(console.error);
 	 */
 	async fetchPins({ cache, ...apiOptions }: any = {}) {
-		const data = await this.client.rest.get(Routes.channelMessagesPins(this.channel.id), {
+		const data = (await this.client.rest.get(Routes.channelMessagesPins(this.channel.id), {
 			query: makeURLSearchParams({
 				...apiOptions,
 				before: apiOptions.before && new Date(apiOptions.before).toISOString(),
 			}),
-		});
+		})) as { items: Array<{ pinned_at: string; message: APIMessage }>; has_more: boolean };
 
 		return {
-			// @ts-expect-error
 			items: data.items.map((item) => ({
 				pinnedTimestamp: Date.parse(item.pinned_at),
 				get pinnedAt() {
@@ -347,9 +346,9 @@ export class MessageManager extends CachedManager {
 	 * @returns {Promise<Collection<Snowflake, User>>}
 	 */
 	async fetchPollAnswerVoters({ messageId, answerId, after, limit }: any) {
-		const voters = await this.client.rest.get(Routes.pollAnswerVoters(this.channel.id, messageId, answerId), {
+		const voters = (await this.client.rest.get(Routes.pollAnswerVoters(this.channel.id, messageId, answerId), {
 			query: makeURLSearchParams({ limit, after }),
-		});
+		})) as RESTGetAPIPollAnswerVotersResult;
 
 		return voters.users.reduce(
 			(acc: any, user: any) => acc.set(user.id, this.client.users._add(user, false)),

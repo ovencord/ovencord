@@ -47,7 +47,6 @@ export class ChatInputCommandInteraction extends CommandInteraction {
 			this.commandName,
 			this.options._group,
 			this.options._subcommand,
-			// @ts-expect-error
 			...this.options._hoistedOptions.map((option) => `${option.name}:${option.value}`),
 		];
 		return `/${properties.filter(Boolean).join(' ')}`;

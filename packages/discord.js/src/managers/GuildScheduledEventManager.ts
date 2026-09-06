@@ -177,18 +177,18 @@ export class GuildScheduledEventManager extends CachedManager {
 				if (existing) return existing;
 			}
 
-			const innerData = await this.client.rest.get(Routes.guildScheduledEvent(this.guild.id, id), {
+			const innerData = (await this.client.rest.get(Routes.guildScheduledEvent(this.guild.id, id), {
 				// @ts-expect-error
 				query: makeURLSearchParams({ with_user_count: options.withUserCount ?? true }),
-			});
+			})) as APIGuildScheduledEvent;
 			// @ts-expect-error
 			return this._add(innerData, options.cache);
 		}
 
-		const data = await this.client.rest.get(Routes.guildScheduledEvents(this.guild.id), {
+		const data = (await this.client.rest.get(Routes.guildScheduledEvents(this.guild.id), {
 			// @ts-expect-error
 			query: makeURLSearchParams({ with_user_count: options.withUserCount ?? true }),
-		});
+		})) as APIGuildScheduledEvent[];
 
 		return data.reduce(
 			(coll: Collection<Snowflake, GuildScheduledEvent>, rawGuildScheduledEventData: APIGuildScheduledEvent) =>
@@ -329,9 +329,9 @@ export class GuildScheduledEventManager extends CachedManager {
 			after: options.after,
 		});
 
-		const data = await this.client.rest.get(Routes.guildScheduledEventUsers(this.guild.id, guildScheduledEventId), {
+		const data = (await this.client.rest.get(Routes.guildScheduledEventUsers(this.guild.id, guildScheduledEventId), {
 			query,
-		});
+		})) as APIGuildScheduledEventUser[];
 
 		return data.reduce(
 			(coll: Collection<Snowflake, unknown>, rawData: APIGuildScheduledEventUser) =>

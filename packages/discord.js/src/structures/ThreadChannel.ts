@@ -9,6 +9,7 @@ import {
 import type { Client } from '../client/Client.js';
 import { GuildMessageManager } from '../managers/GuildMessageManager.js';
 import { ThreadMemberManager } from '../managers/ThreadMemberManager.js';
+import type { PermissionsBitField } from '../util/PermissionsBitField.js';
 import { BaseChannel } from './BaseChannel.js';
 import type { Guild } from './Guild.js';
 import type { GuildMember } from './GuildMember.js';
@@ -102,7 +103,10 @@ export class ThreadChannel extends BaseChannel {
 	 * will return all permissions
 	 * @returns {?Readonly<PermissionsBitField>}
 	 */
-	permissionsFor(memberOrRole: GuildMember | Role | User | string | undefined | null, checkAdmin = true) {
+	permissionsFor(
+		memberOrRole: GuildMember | Role | User | string | undefined | null,
+		checkAdmin = true,
+	): Readonly<PermissionsBitField> | null {
 		return this.parent?.permissionsFor(memberOrRole, checkAdmin) ?? null;
 	}
 

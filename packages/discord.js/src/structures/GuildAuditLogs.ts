@@ -1,5 +1,5 @@
 import { Collection } from '@ovencord/collection';
-import type { APIAutoModerationRule, APIGuildAuditLog, APIGuildScheduledEvent, Snowflake } from 'discord-api-types/v10';
+import type { APIAuditLog, APIAutoModerationRule, APIGuildScheduledEvent, Snowflake } from 'discord-api-types/v10';
 import { flatten } from '../util/Util.js';
 import { ApplicationCommand } from './ApplicationCommand.js';
 import type { AutoModerationRule } from './AutoModerationRule.js';
@@ -19,7 +19,7 @@ export class GuildAuditLogs {
 	public applicationCommands: Collection<Snowflake, ApplicationCommand>;
 	public autoModerationRules: Collection<Snowflake, AutoModerationRule>;
 	public entries: Collection<Snowflake, GuildAuditLogsEntry>;
-	constructor(guild: Guild, data: APIGuildAuditLog) {
+	constructor(guild: Guild, data: APIAuditLog) {
 		if (data.users) for (const user of data.users) guild.client.users._add(user);
 		if (data.threads) for (const thread of data.threads) guild.client.channels._add(thread, guild);
 		/**

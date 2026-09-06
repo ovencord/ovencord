@@ -1,4 +1,5 @@
 import type { APIChannel } from 'discord-api-types/v10';
+import type { StageInstanceCreateOptions } from '../managers/StageInstanceManager.js';
 import { BaseGuildVoiceChannel } from './BaseGuildVoiceChannel.js';
 
 /**
@@ -28,7 +29,6 @@ export class StageChannel extends BaseGuildVoiceChannel {
 	 * @readonly
 	 */
 	get stageInstance() {
-		// @ts-expect-error
 		return this.guild.stageInstances.cache.find((stageInstance) => stageInstance.channelId === this.id) ?? null;
 	}
 
@@ -38,7 +38,7 @@ export class StageChannel extends BaseGuildVoiceChannel {
 	 * @param {StageInstanceCreateOptions} options The options to create the stage instance
 	 * @returns {Promise<StageInstance>}
 	 */
-	async createStageInstance(options: Record<string, unknown>) {
+	async createStageInstance(options: StageInstanceCreateOptions) {
 		return this.guild.stageInstances.create(this.id, options);
 	}
 

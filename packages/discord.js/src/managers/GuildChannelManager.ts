@@ -300,7 +300,7 @@ export class GuildChannelManager extends CachedManager<
 						PermissionOverwrites.resolve(overwrite, this.guild),
 					);
 				}
-			} else if (resolvedChannel.parent) {
+			} else if (resolvedChannel.parent && 'permissionOverwrites' in resolvedChannel.parent) {
 				// biome-ignore lint/suspicious/noExplicitAny: permission overwrite resolve
 				permission_overwrites = resolvedChannel.parent.permissionOverwrites.cache.map((overwrite: any) =>
 					PermissionOverwrites.resolve(overwrite, this.guild),
@@ -353,14 +353,15 @@ export class GuildChannelManager extends CachedManager<
 		{ relative, reason }: { relative?: boolean; reason?: string } = {},
 	): Promise<GuildChannel> {
 		const resolvedChannel = this.resolve(channel);
-		if (!resolvedChannel) throw new DiscordjsTypeError(ErrorCodes.InvalidType, 'channel', 'GuildChannelResolvable');
+		if (!resolvedChannel || resolvedChannel.isThread()) {
+			throw new DiscordjsTypeError(ErrorCodes.InvalidType, 'channel', 'GuildChannelResolvable');
+		}
 
 		const updatedChannels = await setPosition(
 			resolvedChannel,
 			position,
-			relative,
-			// biome-ignore lint/suspicious/noExplicitAny: guild sorted channels
-			this.guild._sortedChannels(resolvedChannel as any),
+			Boolean(relative),
+			this.guild._sortedChannels(resolvedChannel),
 			this.client,
 			Routes.guildChannels(this.guild.id),
 			reason,

@@ -1,4 +1,4 @@
-import { Routes } from 'discord-api-types/v10';
+import { type GatewayThreadCreateDispatchData, Routes } from 'discord-api-types/v10';
 import { DiscordjsTypeError, ErrorCodes } from '../errors/index.js';
 import { MessagePayload } from '../structures/MessagePayload.js';
 import { ThreadManager } from './ThreadManager.js';
@@ -67,7 +67,7 @@ export class GuildForumThreadManager extends ThreadManager {
 			.resolveBody()
 			.resolveFiles();
 
-		const data = await this.client.rest.post(Routes.threads(this.channel.id), {
+		const data = (await this.client.rest.post(Routes.threads(this.channel.id), {
 			body: {
 				name,
 				auto_archive_duration: autoArchiveDuration,
@@ -77,7 +77,7 @@ export class GuildForumThreadManager extends ThreadManager {
 			},
 			files,
 			reason,
-		});
+		})) as GatewayThreadCreateDispatchData;
 
 		return this.client.actions.ThreadCreate.handle(data).thread;
 	}

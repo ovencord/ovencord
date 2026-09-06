@@ -1,4 +1,4 @@
-import { ChannelType, Routes } from 'discord-api-types/v10';
+import { ChannelType, type GatewayThreadCreateDispatchData, Routes } from 'discord-api-types/v10';
 import { DiscordjsTypeError, ErrorCodes } from '../errors/index.js';
 import { ThreadManager } from './ThreadManager.js';
 
@@ -75,7 +75,7 @@ export class GuildTextThreadManager extends ThreadManager {
 			resolvedType = type ?? resolvedType;
 		}
 
-		const data = await this.client.rest.post(Routes.threads(this.channel.id, startMessageId), {
+		const data = (await this.client.rest.post(Routes.threads(this.channel.id, startMessageId), {
 			body: {
 				name,
 				auto_archive_duration: autoArchiveDuration,
@@ -84,7 +84,7 @@ export class GuildTextThreadManager extends ThreadManager {
 				rate_limit_per_user: rateLimitPerUser,
 			},
 			reason,
-		});
+		})) as GatewayThreadCreateDispatchData;
 
 		return this.client.actions.ThreadCreate.handle(data).thread;
 	}

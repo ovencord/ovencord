@@ -1,5 +1,17 @@
 import { DiscordSnowflake } from '@ovencord/util';
-import { type APIAuditLogEntry, AuditLogEvent, AuditLogOptionsType, type Snowflake } from 'discord-api-types/v10';
+import {
+	type APIAuditLogEntry,
+	type APIAutoModerationRule,
+	type APIGuildIntegration,
+	type APIGuildOnboardingPrompt,
+	type APIInvite,
+	type APIStageInstance,
+	type APISticker,
+	type APIWebhook,
+	AuditLogEvent,
+	AuditLogOptionsType,
+	type Snowflake,
+} from 'discord-api-types/v10';
 import { Partials } from '../util/Partials.js';
 import { flatten } from '../util/Util.js';
 import { AutoModerationRule } from './AutoModerationRule.js';
@@ -33,7 +45,7 @@ const Targets = {
 	GuildOnboardingPrompt: 'GuildOnboardingPrompt',
 	SoundboardSound: 'SoundboardSound',
 	Unknown: 'Unknown',
-};
+} as const;
 
 /**
  * The target of a guild audit log entry. It can be one of:
@@ -203,7 +215,6 @@ export class GuildAuditLogsEntry {
 		 * @type {AuditLogChange[]}
 		 */
 		this.changes =
-			// @ts-expect-error
 			data.changes?.map((change) => ({
 				key: change.key,
 				...('old_value' in change ? { old: change.old_value } : {}),
@@ -305,9 +316,9 @@ export class GuildAuditLogsEntry {
 
 			case AuditLogEvent.MemberKick:
 			case AuditLogEvent.MemberRoleUpdate: {
-				if (data.integration_type) {
+				if (data.options && 'integration_type' in data.options && data.options.integration_type) {
 					this.extra = {
-						integrationType: data.integration_type,
+						integrationType: data.options.integration_type,
 					};
 				}
 
@@ -332,8 +343,9 @@ export class GuildAuditLogsEntry {
 		 */
 		this.target = null;
 		if (targetType === Targets.Unknown) {
-			this.target = changesReduce(this.changes);
-			this.target.id = data.target_id;
+			const targetObj = changesReduce(this.changes);
+			targetObj.id = data.target_id;
+			this.target = targetObj;
 			// MemberDisconnect and similar types do not provide a target_id.
 		} else if (targetType === Targets.User && data.target_id) {
 			this.target = guild.client.options.partials.includes(Partials.User)
@@ -349,14 +361,15 @@ export class GuildAuditLogsEntry {
 					changesReduce(this.changes, {
 						id: data.target_id,
 						guild_id: guild.id,
-					}),
+					}) as unknown as APIWebhook,
 				);
 		} else if (targetType === Targets.Invite) {
-			const inviteChange = this.changes.find(({ key }: any) => key === 'code');
+			const inviteChange = this.changes.find(({ key }) => key === 'code');
+			const inviteCode = (inviteChange?.new ?? inviteChange?.old) as string | undefined;
 
 			this.target =
-				guild.invites.cache.get(inviteChange.new ?? inviteChange.old) ??
-				new GuildInvite(guild.client, changesReduce(this.changes, { guild }));
+				(inviteCode ? guild.invites.cache.get(inviteCode) : undefined) ??
+				new GuildInvite(guild.client, changesReduce(this.changes, { guild }) as unknown as APIInvite);
 		} else if (targetType === Targets.Message) {
 			// Discord sends a channel id for the MessageBulkDelete action type.
 			this.target =
@@ -366,7 +379,11 @@ export class GuildAuditLogsEntry {
 		} else if (targetType === Targets.Integration) {
 			this.target =
 				logs?.integrations.get(data.target_id) ??
-				new Integration(guild.client, changesReduce(this.changes, { id: data.target_id }), guild);
+				new Integration(
+					guild.client,
+					changesReduce(this.changes, { id: data.target_id }) as unknown as APIGuildIntegration,
+					guild,
+				);
 		} else if (targetType === Targets.Channel || targetType === Targets.Thread) {
 			this.target = guild.channels.cache.get(data.target_id) ?? changesReduce(this.changes, { id: data.target_id });
 		} else if (targetType === Targets.StageInstance) {
@@ -378,12 +395,12 @@ export class GuildAuditLogsEntry {
 						id: data.target_id,
 						channel_id: data.options?.channel_id,
 						guild_id: guild.id,
-					}),
+					}) as unknown as APIStageInstance,
 				);
 		} else if (targetType === Targets.Sticker) {
 			this.target =
 				guild.stickers.cache.get(data.target_id) ??
-				new Sticker(guild.client, changesReduce(this.changes, { id: data.target_id }));
+				new Sticker(guild.client, changesReduce(this.changes, { id: data.target_id }) as unknown as APISticker);
 		} else if (targetType === Targets.GuildScheduledEvent) {
 			this.target =
 				guild.scheduledEvents.cache.get(data.target_id) ??
@@ -395,13 +412,17 @@ export class GuildAuditLogsEntry {
 				guild.autoModerationRules.cache.get(data.target_id) ??
 				new AutoModerationRule(
 					guild.client,
-					changesReduce(this.changes, { id: data.target_id, guild_id: guild.id }),
+					changesReduce(this.changes, { id: data.target_id, guild_id: guild.id }) as unknown as APIAutoModerationRule,
 					guild,
 				);
 		} else if (targetType === Targets.GuildOnboardingPrompt) {
 			this.target =
 				data.action_type === AuditLogEvent.OnboardingPromptCreate
-					? new GuildOnboardingPrompt(guild.client, changesReduce(this.changes, { id: data.target_id }), guild.id)
+					? new GuildOnboardingPrompt(
+							guild.client,
+							changesReduce(this.changes, { id: data.target_id }) as unknown as APIGuildOnboardingPrompt,
+							guild.id,
+						)
 					: changesReduce(this.changes, { id: data.target_id });
 		} else if (targetType === Targets.Role) {
 			this.target = guild.roles.cache.get(data.target_id) ?? { id: data.target_id };

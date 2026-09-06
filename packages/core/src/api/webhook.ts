@@ -133,14 +133,14 @@ export class WebhooksAPI {
 		token: string,
 		{ wait, thread_id, with_components, files, ...body }: CreateWebhookMessageOptions,
 		{ signal }: Pick<RequestData, 'signal'> = {},
-	) {
+	): Promise<RESTPostAPIWebhookWithTokenWaitResult | void> {
 		return this.rest.post(Routes.webhook(id, token), {
 			query: makeURLSearchParams({ wait, thread_id, with_components }),
 			files,
 			body,
 			auth: false,
 			signal,
-		}) as Promise<RESTPostAPIWebhookWithTokenWaitResult | undefined>;
+		}) as Promise<RESTPostAPIWebhookWithTokenWaitResult | void>;
 	}
 
 	/**

@@ -1,5 +1,5 @@
 import { Collection } from '@ovencord/collection';
-import { Routes } from 'discord-api-types/v10';
+import { type APIAutoModerationRule, Routes } from 'discord-api-types/v10';
 import { AutoModerationRule } from '../structures/AutoModerationRule.js';
 import { CachedManager } from './CachedManager.js';
 
@@ -286,12 +286,16 @@ export class AutoModerationRuleManager extends CachedManager {
 			if (existing) return existing;
 		}
 
-		const data = await this.client.rest.get(Routes.guildAutoModerationRule(this.guild.id, autoModerationRule));
+		const data = (await this.client.rest.get(
+			Routes.guildAutoModerationRule(this.guild.id, autoModerationRule),
+		)) as APIAutoModerationRule;
 		return this._add(data, cache);
 	}
 
 	async _fetchMany(options = {}) {
-		const data = await this.client.rest.get(Routes.guildAutoModerationRules(this.guild.id));
+		const data = (await this.client.rest.get(
+			Routes.guildAutoModerationRules(this.guild.id),
+		)) as APIAutoModerationRule[];
 
 		return data.reduce(
 			(col: any, autoModerationRule: any) =>

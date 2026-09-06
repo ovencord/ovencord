@@ -355,7 +355,9 @@ export class Role extends Base {
 	permissionsIn(channel: GuildChannel | string, checkAdmin = true) {
 		const resolvedChannel = this.guild.channels.resolve(channel);
 		if (!resolvedChannel) throw new DiscordjsError(ErrorCodes.GuildChannelResolve);
-		return resolvedChannel.rolePermissions(this, checkAdmin);
+		return 'rolePermissions' in resolvedChannel
+			? resolvedChannel.rolePermissions(this, checkAdmin)
+			: resolvedChannel.permissionsFor(this, checkAdmin);
 	}
 
 	/**

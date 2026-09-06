@@ -1,6 +1,6 @@
 import { Collection } from '@ovencord/collection';
 import { makeURLSearchParams } from '@ovencord/rest';
-import { EntitlementOwnerType, Routes } from 'discord-api-types/v10';
+import { type APIEntitlement, EntitlementOwnerType, Routes } from 'discord-api-types/v10';
 import { DiscordjsTypeError, ErrorCodes } from '../errors/index.js';
 import { Entitlement } from '../structures/Entitlement.js';
 import { resolveSKUId } from '../util/Util.js';
@@ -107,7 +107,9 @@ export class EntitlementManager extends CachedManager {
 			after,
 		});
 
-		const entitlements = await this.client.rest.get(Routes.entitlements(this.client.application.id), { query });
+		const entitlements = (await this.client.rest.get(Routes.entitlements(this.client.application.id), {
+			query,
+		})) as APIEntitlement[];
 
 		return entitlements.reduce(
 			(coll: any, entitlement: any) => coll.set(entitlement.id, this._add(entitlement, cache)),
@@ -146,13 +148,13 @@ export class EntitlementManager extends CachedManager {
 			throw new DiscordjsTypeError(ErrorCodes.InvalidType, name, type);
 		}
 
-		const entitlement = await this.client.rest.post(Routes.entitlements(this.client.application.id), {
+		const entitlement = (await this.client.rest.post(Routes.entitlements(this.client.application.id), {
 			body: {
 				sku_id: skuId,
 				owner_id: resolved,
 				owner_type: guild ? EntitlementOwnerType.Guild : EntitlementOwnerType.User,
 			},
-		});
+		})) as APIEntitlement;
 		return new Entitlement(this.client, entitlement);
 	}
 

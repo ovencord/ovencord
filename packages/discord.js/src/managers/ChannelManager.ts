@@ -3,6 +3,7 @@ import { type APIChannel, Routes, type Snowflake } from 'discord-api-types/v10';
 import type { Client } from '../client/Client.js';
 import { BaseChannel } from '../structures/BaseChannel.js';
 import type { Guild } from '../structures/Guild.js';
+import type { InviteGuild } from '../structures/InviteGuild.js';
 import { MessagePayload } from '../structures/MessagePayload.js';
 import { createChannel } from '../util/Channels.js';
 import { ThreadChannelTypes } from '../util/Constants.js';
@@ -62,7 +63,7 @@ export class ChannelManager extends CachedManager {
 
 	_add(
 		data: APIChannel & { id: Snowflake },
-		guild?: Guild,
+		guild?: Guild | InviteGuild,
 		{ cache = true, allowUnknownGuild = false }: { cache?: boolean; allowUnknownGuild?: boolean } = {},
 	) {
 		const existing = this.cache.get(data.id);

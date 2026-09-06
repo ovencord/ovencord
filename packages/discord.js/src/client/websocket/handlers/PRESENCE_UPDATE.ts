@@ -11,7 +11,8 @@ export default (client: Client, { d: data }: GatewayPresenceUpdateDispatch) => {
 
 	if (!user) return;
 
-	if (data.user.username && !user._equals(data.user)) client.actions.UserUpdate.handle(data.user as unknown as APIUser);
+	if (data.user.username && !user._equals(data.user as APIUser))
+		client.actions.UserUpdate.handle(data.user as unknown as APIUser);
 
 	const guild = client.guilds.cache.get(data.guild_id);
 	if (!guild) return;

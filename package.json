@@ -27,7 +27,9 @@
 		"check:ws": "biome check ./packages/ws",
 		"update": "bun --recursive update --interactive",
 		"update:latest": "bun --recursive update --interactive --latest",
-		"typecheck": "bun run --recursive typecheck"
+		"typecheck": "bunx tsc -b --noEmit",
+		"typecheck:discord": "bunx tsc -p packages/discord.js/tsconfig.json --noEmit --noErrorTruncation --pretty false > typecheck-discord.log",
+		"typecheck:discord:full": "bun scripts/typecheck-full.mjs packages/discord.js/tsconfig.json > typecheck-full.log"
 	},
 	"type": "module",
 	"contributors": [
