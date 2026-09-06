@@ -1,10 +1,10 @@
 # 𝗢 𝗩 𝗘 𝗡 𝗖 𝗢 𝗥 𝗗
 
 
-[![Bun](https://img.shields.io/badge/Bun-1.0%2B-black?logo=bun)](https://bun.sh)
+[![Bun](https://img.shields.io/badge/Bun-1.4%2B-black?logo=bun)](https://bun.sh)
 [![CI](https://github.com/ovencord/ovencord/actions/workflows/ci.yml/badge.svg)](https://github.com/ovencord/ovencord/actions/workflows/ci.yml)
 [![License](https://img.shields.io/badge/license-Apache--2.0-blue)](https://github.com/ovencord/ovencord/blob/main/LICENSE)
-<img src="https://saizu.dev/badge/ovencord/ovencord?type=install" alt="install size">
+![GitHub repo size](https://img.shields.io/github/repo-size/ovencord/ovencord)
 [![GitHub Stars](https://img.shields.io/github/stars/ovencord/ovencord?style=social)](https://github.com/ovencord/ovencord)
 
 
@@ -20,29 +20,29 @@ Ovencord is a **technical collective** dedicated to building high-performance, B
 ## What is Ovencord?
 
 **Ovencord is not a simple refactor, it is an Engine Re-engineering.**                                                                                  
-We believe that **emulation is the enemy of performance**. Our mission is to eliminate the legacy Node.js overhead from Discord tools, replacing it with pure, Zig-powered Bun native implementations.
+We believe that **emulation is the enemy of performance**. Our mission is to eliminate the legacy Node.js overhead, replacing it with Bun native implementations.
 
 > **Ovencord = Oven + Discord**  
 > We're cooking something special. 🔥
 
 ##
 
-## 📦 Packages
+## Packages
 
-| Package | Description | Status |
+| `📦` Packages | Description | Status |
 |---------|-------------|--------|
-| [@ovencord/rest](./packages/rest) | Bun-native Discord REST client | ✅ **Stable** |
-| [@ovencord/ws](./packages/ws) | Bun-native WebSocket gateway client | ✅ **Stable** |
-| [@ovencord/builders](./packages/builders) | Payload builders standardized for Zod 3 | ✅ **Stable** |
-| [@ovencord/util](./packages/util) | Shared utilities for Ovencord packages | ✅ **Stable** |
-| [@ovencord/collection](./packages/collection) | High-performance Collection class | ✅ **Stable** |
-| [@ovencord/discord.js](./packages/discord.js) | Full Bun-native Discord.js fork | ✅ **Stable** |
-| [@ovencord/brokers](./packages/brokers) | Cross-environment pub/sub message brokers | ✅ **Stable** |
-| [@ovencord/core](./packages/core) | High-level client abstraction | ✅ **Stable** |
-| [@ovencord/formatters](./packages/formatters) | Message formatting utilities | ✅ **Stable** |
-| [@ovencord/structures](./packages/structures) | Discord data structures | ✅ **Stable** |
-| [@ovencord/voice](./packages/voice) | Implementation of the Discord Voice API | ✅ **Stable** |
-| [@ovencord/next](./packages/next) | Next-generation components | ✅ **Stable** |
+| [@ovencord/rest](./packages/rest) | Bun-native Discord REST client | **Stable** |
+| [@ovencord/ws](./packages/ws) | Bun-native WebSocket gateway client | **Stable** |
+| [@ovencord/builders](./packages/builders) | Payload builders standardized for Zod 3 | **Stable** |
+| [@ovencord/util](./packages/util) | Shared utilities for Ovencord packages | **Stable** |
+| [@ovencord/collection](./packages/collection) | High-performance Collection class | **Stable** |
+| [@ovencord/discord.js](./packages/discord.js) | Full Bun-native Discord.js fork | **Stable** |
+| [@ovencord/brokers](./packages/brokers) | Cross-environment pub/sub message brokers | **Stable** |
+| [@ovencord/core](./packages/core) | High-level client abstraction | **Stable** |
+| [@ovencord/formatters](./packages/formatters) | Message formatting utilities | **Stable** |
+| [@ovencord/structures](./packages/structures) | Discord data structures | **Stable** |
+| [@ovencord/voice](./packages/voice) | Implementation of the Discord Voice API | **Stable** |
+| [@ovencord/next](./packages/next) | Next-generation components | **Stable** |
 
 
 ## Our Philosophy
@@ -150,7 +150,7 @@ await client.login();
 
 ### Prerequisites
 
-- [Bun](https://bun.sh) >= 1.0.0
+- [Bun](https://bun.sh) >= 1.4.0
 
 ### Setup
 
@@ -224,7 +224,6 @@ Ovencord stands on the shoulders of giants:
 
 - **discord.js** - The original library that powers millions of bots
 - **Bun** - The runtime that makes this all possible
-- **Zig** - The low-level magic behind Bun's performance
 
 **This is NOT an official Discord library.**
 
